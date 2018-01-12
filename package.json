@@ -71,5 +71,5 @@
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once"
   },
-  "version": "0.0.2"
+  "version": "0.0.0-development"
 }
