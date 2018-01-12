@@ -1,10 +1,10 @@
 export default {
-    input: 'tmp/esm5/voetbaljs.js',
+    input: 'tmp/esm5/ngx-sport.js',
     output: {
-        file: 'dist/bundles/voetbaljs.umd.js',
+        file: 'dist/bundles/ngx-sport.umd.js',
         format: 'umd'
     },
-    name: 'voetbaljs',
+    name: 'ngx-sport',
     globals: {
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',

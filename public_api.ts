@@ -15,7 +15,7 @@
 export * from './src/competition';
 export * from './src/association';
 export * from './src/team';
-export * from './src/voetbaljs.module';
+export * from './src/ngx-sport.module';
 // export { registerLocaleData as ɵregisterLocaleData } from './src/i18n/locale_data';
 
 // This file only reexports content of the `src` folder. Keep it that way.

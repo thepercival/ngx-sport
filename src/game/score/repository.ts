@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Game } from 'voetbaljs/src/game';
-import { GameScore } from 'voetbaljs/src/game/score';
+
+import { Game } from '../../game';
+import { GameScore } from '../score';
 
 @Injectable()
 export class GameScoreRepository {

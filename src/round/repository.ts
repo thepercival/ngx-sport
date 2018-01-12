@@ -2,10 +2,10 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
-import { IPoule } from 'voetbaljs/src/poule/repository';
 
 import { Competitionseason } from '../competitionseason';
 import { CompetitionseasonRepository } from '../competitionseason/repository';
+import { IPoule } from '../poule/repository';
 import { PouleRepository } from '../poule/repository';
 import { QualifyRuleRepository } from '../qualifyrule/repository';
 import { QualifyService } from '../qualifyrule/service';

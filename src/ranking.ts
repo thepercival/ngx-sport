@@ -1,5 +1,5 @@
-import { Game } from 'voetbaljs/src/game';
-import { PoulePlace } from 'voetbaljs/src/pouleplace';
+import { Game } from './game';
+import { PoulePlace } from './pouleplace';
 
 /* tslint:disable:no-bitwise */
 

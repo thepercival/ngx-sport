@@ -1,6 +1,5 @@
-import { Game } from 'voetbaljs/src/game';
-
 import { Competitionseason } from '../competitionseason';
+import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { QualifyService } from '../qualifyrule/service';

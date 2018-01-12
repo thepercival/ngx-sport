@@ -1,2 +1,2 @@
-# voetbaljs
-angular module for voetbal
+# ngx-sport
+angular module for sports

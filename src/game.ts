@@ -1,10 +1,9 @@
-import { Round } from 'voetbaljs/src/round';
-
 import { Field } from './field';
 import { GameScore } from './game/score';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { Referee } from './referee';
+import { Round } from './round';
 
 /**
  * Created by coen on 20-3-17.

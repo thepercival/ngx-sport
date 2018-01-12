@@ -1,5 +1,5 @@
-import { Game } from 'voetbaljs/src/game';
-import { RoundScoreConfig } from 'voetbaljs/src/round/scoreconfig';
+import { Game } from '../game';
+import { RoundScoreConfig } from '../round/scoreconfig';
 
 export class GameScore {
 
