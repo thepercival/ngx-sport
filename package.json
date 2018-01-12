@@ -1,0 +1,71 @@
+{
+  "author": {
+    "name": "Coen Dunnink"
+  },
+  "bugs": {
+    "url": "https://github.com/thepercival/ngx-sport/issues"
+  },
+  "dependencies": {},
+  "description": "jslib for voetbal and angular 5",
+  "peerDependencies": {
+    "@angular/core": "^5.0.0",
+    "@angular/common": "^5.0.0",
+    "rxjs": "^5.5.2"
+  },
+  "devDependencies": {
+    "@angular/core": "^5.0.2",
+    "@angular/common": "^5.0.2",
+    "@angular/compiler": "^5.0.2",
+    "@angular/compiler-cli": "^5.0.2",
+    "rxjs": "^5.5.2",
+    "typescript": "2.4.2",
+    "rollup": "^0.51.8",
+    "uglify-js": "^3.0.7",
+    "semantic-release": "^8.2.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "55275b077b45970c2fc0d103a9b34e010a873509",
+    "tarball": "https://registry.npmjs.org/ngx-sport/-/ngx-sport-0.0.10.tgz"
+  },
+  "gitHead": "7424d3d736f9a01d00144c62117ac5e51d59961f",
+  "homepage": "https://github.com/thepercival/ngx-sport#readme",
+  "keywords": [
+    "football",
+    "voetbal",
+    "sport",
+    "library",
+    "bibliotheek"
+  ],
+  "license": "ISC",
+  "main": "./bundles/ngx-sport.umd.js",
+  "module": "./esm5/ngx-sport.js",
+  "es2015": "./esm2015/ngx-sport.js",
+  "typings": "./ngx-sport.d.ts",
+  "maintainers": [
+    {
+      "name": "thepercival",
+      "email": "coendunnink@gmail.com"
+    }
+  ],
+  "name": "ngx-sport",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thepercival/ngx-sport.git"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:inline && npm run build:esm2015 && npm run build:fesm2015 && npm run build:esm5 && npm run build:fesm5 && npm run build:umd && npm run build:umd-min && npm run move:assets",
+    "build:inline": "mkdir tmp && cp *.ts ./tmp && cp -r ./src ./tmp",
+    "build:esm2015": "ngc -p tsconfig-esm2015.json",
+    "build:fesm2015": "rollup -c rollup-esm2015.conf.js",
+    "build:esm5": "ngc -p tsconfig-esm5.json",
+    "build:fesm5": "rollup -c rollup-esm5.conf.js",
+    "build:umd": "rollup -c rollup-umd.conf.js",
+    "build:umd-min": "uglifyjs dist/bundles/ngx-sport.umd.js -c -m -o dist/bundles/ngx-sport.umd.min.js",
+    "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json README.md dist/ && rm dist/src/*.js",
+    "clean": "rm -rf ./tmp && rm -rf ./dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.1"
+}
