@@ -1,3 +1,5 @@
+// import 'rxjs/Rx';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { Association } from './association';
@@ -38,8 +40,9 @@ import { StructureService } from './structure/service';
 import { Team } from './team';
 import { TeamRepository } from './team/repository';
 
+
 @NgModule({
-    imports: [],
+    imports: [HttpClientModule],
     declarations: [
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,

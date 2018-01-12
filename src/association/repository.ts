@@ -1,15 +1,15 @@
 /**
  * Created by coen on 30-1-17.
  */
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
+// import 'rxjs/Rx';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { Association } from '../association';
 import { SportRepository } from '../repository';
+
+
 
 @Injectable()
 export class AssociationRepository extends SportRepository {
@@ -25,7 +25,7 @@ export class AssociationRepository extends SportRepository {
     getUrlpostfix(): string {
         return 'associations';
     }
-
+    // import { map, filter, reduce } from 'rxjs/operators';
     getObjects(): Observable<Association[]> {
         if (this.objects !== undefined) {
             return Observable.create(observer => {

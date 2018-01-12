@@ -1,6 +1,3 @@
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { Injectable } from '@angular/core';
 
 import { Competitionseason } from '../competitionseason';
@@ -12,6 +9,7 @@ import { QualifyService } from '../qualifyrule/service';
 import { Round } from '../round';
 import { IRoundConfig, RoundConfigRepository } from './config/repository';
 import { IRoundScoreConfig, RoundScoreConfigRepository } from './scoreconfig/repository';
+
 
 /**
  * Created by coen on 3-3-17.

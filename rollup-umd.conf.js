@@ -8,6 +8,8 @@ export default {
     globals: {
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',
-        '@angular/common/http': 'ng.common.http'
-    }
+        '@angular/common/http': 'ng.common.http',
+        'rxjs/Rx': 'Rx'
+    },
+    external: ['@angular/common/http', '@angular/core', 'rxjs/Rx'] // <-- suppresses the warning
 };

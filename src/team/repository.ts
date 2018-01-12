@@ -1,6 +1,3 @@
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
@@ -8,6 +5,7 @@ import { Observable } from 'rxjs/Rx';
 import { Association } from '../association';
 import { SportRepository } from '../repository';
 import { Team } from '../team';
+
 
 /**
  * Created by coen on 26-2-17.

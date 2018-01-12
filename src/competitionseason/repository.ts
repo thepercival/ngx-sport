@@ -1,9 +1,6 @@
 /**
  * Created by coen on 16-2-17.
  */
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
