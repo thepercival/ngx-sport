@@ -4,5 +4,5 @@ export default {
         file: 'dist/esm5/ngx-sport.js',
         format: 'es'
     },
-    external: ['@angular/common/http', '@angular/core','rxjs/Rx'] // <-- suppresses the warning
+    external: ['@angular/common/http', '@angular/core', 'rxjs/Rx'] // <-- suppresses the warning
 }
