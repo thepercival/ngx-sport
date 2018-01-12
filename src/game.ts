@@ -5,6 +5,7 @@ import { PoulePlace } from './pouleplace';
 import { Referee } from './referee';
 import { Round } from './round';
 
+
 /**
  * Created by coen on 20-3-17.
  */
