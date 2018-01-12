@@ -68,7 +68,7 @@
     "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json README.md dist/ && rm dist/src/*.js",
     "clean": "rm -rf ./tmp && rm -rf ./dist",
     "copyPackageJson": "cp package.json dist",
-    "semantic-release": "npm run semantic-release pre && npm run copyPackageJson && npm publish dist && npm run semantic-release post",
+    "semantic-release": "semantic-release pre && npm run copyPackageJson && npm publish dist && semantic-release post",
     "travis-deploy-once": "travis-deploy-once"
   },
   "version": "0.0.0-development"
