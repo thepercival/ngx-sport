@@ -1,8 +1,8 @@
 /**
  * Created by coen on 30-1-17.
  */
-
 import { Team } from './team';
+
 
 export class Association {
     protected id: number;
@@ -11,7 +11,6 @@ export class Association {
     protected parent: Association;
     protected teams: Team[] = [];
 
-    // constructor
     constructor(name: string) {
         this.setName(name);
     }
