@@ -13,6 +13,7 @@ import { Game } from './game';
 import { GameRepository } from './game/repository';
 import { GameScore } from './game/score';
 import { GameScoreRepository } from './game/score/repository';
+import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { PouleRepository } from './poule/repository';
 import { PoulePlace } from './pouleplace';
@@ -43,14 +44,14 @@ import { TeamRepository } from './team/repository';
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
-        PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
+        PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
     ],
     exports: [
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
-        PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
+        PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
     ]
 })

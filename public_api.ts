@@ -26,6 +26,7 @@ export * from './src/game';
 export * from './src/game/repository';
 export * from './src/game/score';
 export * from './src/game/score/repository';
+export * from './src/planning/service';
 export * from './src/poule';
 export * from './src/poule/repository';
 export * from './src/pouleplace';
