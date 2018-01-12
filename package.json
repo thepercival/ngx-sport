@@ -23,7 +23,7 @@
     "typescript": "2.4.2",
     "uglify-js": "^3.0.7",
     "zone.js": "^0.8.20",
-    "travis-deploy-once": "^4.3.0"
+    "travis-deploy-once": "^4.3.1"
   },
   "directories": {},
   "dist": {
