@@ -1,6 +1,3 @@
-/**
- * Created by cdunnink on 7-2-2017.
- */
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -8,14 +5,17 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { VoetbalRepository } from '../../repository';
+import { SportRepository } from '../../repository';
 import { ExternalSystem } from '../system';
 import { ExternalSystemSoccerOdds } from './soccerodds';
 import { ExternalSystemSoccerSports } from './soccersports';
 
+/**
+ * Created by cdunnink on 7-2-2017.
+ */
 
 @Injectable()
-export class ExternalSystemRepository extends VoetbalRepository {
+export class ExternalSystemRepository extends SportRepository {
 
     private url: string;
     private http: Http;

@@ -1,22 +1,21 @@
-/**
- * Created by coen on 3-3-17.
- */
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { Observable, Observer } from 'rxjs/Rx';
 
 import { Competitionseason } from '../competitionseason';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 import { Round } from '../round';
 import { IRound, RoundRepository } from '../round/repository';
 
+/**
+ * Created by coen on 3-3-17.
+ */
 
 @Injectable()
-export class StructureRepository extends VoetbalRepository {
+export class StructureRepository extends SportRepository {
 
     private url: string;
     private cache: Round[] = [];

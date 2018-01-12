@@ -4,17 +4,16 @@
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { Competition } from '../competition';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 
 
 @Injectable()
-export class CompetitionRepository extends VoetbalRepository {
+export class CompetitionRepository extends SportRepository {
 
     private url: string;
     private objects: Competition[];
@@ -109,7 +108,7 @@ export class CompetitionRepository extends VoetbalRepository {
         return this.http
             .delete(url, { headers: super.getHeaders() })
             // ...and calling .json() on the response to return data
-            .map((res: Response) => res)
+            .map((res: HttpResponse<Competition>) => res)
             .catch(this.handleError);
     }
 }

@@ -1,6 +1,3 @@
-/**
- * Created by coen on 20-3-17.
- */
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -13,11 +10,14 @@ import { Game } from '../game';
 import { Poule } from '../poule';
 import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
 import { IReferee, RefereeRepository } from '../referee/repository';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 import { GameScoreRepository, IGameScore } from './score/repository';
 
+/**
+ * Created by coen on 20-3-17.
+ */
 @Injectable()
-export class GameRepository extends VoetbalRepository {
+export class GameRepository extends SportRepository {
 
     private url: string;
 

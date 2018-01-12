@@ -4,9 +4,8 @@
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { AssociationRepository, IAssociation } from '../association/repository';
@@ -14,12 +13,12 @@ import { CompetitionRepository, ICompetition } from '../competition/repository';
 import { Competitionseason } from '../competitionseason';
 import { FieldRepository, IField } from '../field/repository';
 import { IReferee, RefereeRepository } from '../referee/repository';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 import { ISeason, SeasonRepository } from '../season/repository';
 
 
 @Injectable()
-export class CompetitionseasonRepository extends VoetbalRepository {
+export class CompetitionseasonRepository extends SportRepository {
 
     private url: string;
     private objects: Competitionseason[];
@@ -125,7 +124,6 @@ export class CompetitionseasonRepository extends VoetbalRepository {
     createObject(jsonObject: ICompetitionseason): Observable<Competitionseason> {
         return this.http
             .post(this.url, jsonObject, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
             .map((res: ICompetitionseason) => this.jsonToObjectHelper(res))
             .catch(this.handleError);
     }
@@ -135,7 +133,6 @@ export class CompetitionseasonRepository extends VoetbalRepository {
 
         return this.http
             .put(url, JSON.stringify(object), { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
             .map((res: ICompetitionseason) => { console.log(res); return this.jsonToObjectHelper(res); })
             .catch(this.handleError);
     }
@@ -144,8 +141,7 @@ export class CompetitionseasonRepository extends VoetbalRepository {
         const url = this.url + '/' + object.getId();
         return this.http
             .delete(url, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: Response) => res)
+            .map((res: HttpResponse<Competitionseason>) => res)
             .catch(this.handleError);
     }
 }

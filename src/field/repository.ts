@@ -7,10 +7,10 @@ import { Observable } from 'rxjs/Rx';
 
 import { Competitionseason } from '../competitionseason';
 import { Field } from '../field';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 
 @Injectable()
-export class FieldRepository extends VoetbalRepository {
+export class FieldRepository extends SportRepository {
 
     private url: string;
 

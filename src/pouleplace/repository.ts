@@ -7,11 +7,11 @@ import { Observable } from 'rxjs/Rx';
 
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 import { ITeam, TeamRepository } from '../team/repository';
 
 @Injectable()
-export class PoulePlaceRepository extends VoetbalRepository {
+export class PoulePlaceRepository extends SportRepository {
 
     private url: string;
 

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { Association } from '../association';
-import { VoetbalRepository } from '../repository';
+import { SportRepository } from '../repository';
 import { Team } from '../team';
 
 /**
@@ -14,7 +14,7 @@ import { Team } from '../team';
  */
 
 @Injectable()
-export class TeamRepository extends VoetbalRepository {
+export class TeamRepository extends SportRepository {
 
     private url: string;
     // private teams: Team[];

@@ -1,23 +1,23 @@
-/**
- * Created by coen on 10-10-17.
- */
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 
-import { VoetbalConfig } from './config';
+import { SportConfig } from './config';
 
-export class VoetbalRepository {
+/**
+ * Created by coen on 10-10-17.
+ */
+export class SportRepository {
 
     constructor() {
     }
 
     getApiUrl(): string {
-        return VoetbalConfig.apiurl;
+        return SportConfig.apiurl;
     }
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        const token = VoetbalConfig.getToken();
+        const token = SportConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);
         }

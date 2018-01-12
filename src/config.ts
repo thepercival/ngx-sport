@@ -3,7 +3,7 @@
  */
 // import { environment } from '../../src/environments/environment';
 
-export class VoetbalConfig {
+export class SportConfig {
     static readonly apiurl = 'http://localhost:2499/'; // environment.apiurl;
 
     static getToken(): string {
