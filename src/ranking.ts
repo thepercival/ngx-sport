@@ -15,7 +15,6 @@ export class Ranking {
     private gameStates: number;
     private subtractPenaltyPoints = true;
 
-
     constructor(
         rulesSet: number,
         gameStates?: number
@@ -24,6 +23,7 @@ export class Ranking {
         if (gameStates === undefined) {
             gameStates = Game.STATE_PLAYED;
         }
+        
         this.gameStates = gameStates;
         this.initFunctions();
     }
