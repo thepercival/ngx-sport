@@ -31,7 +31,6 @@ export class Round {
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
 
-    // constructor
     constructor(competitionseason: Competitionseason, parentRound: Round, winnersOrLosers: number) {
         this.setCompetitionseason(competitionseason);
         this.winnersOrLosers = winnersOrLosers;
