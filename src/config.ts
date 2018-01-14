@@ -4,7 +4,7 @@
 // import { environment } from '../../src/environments/environment';
 
 export class SportConfig {
-    static readonly apiurl = 'http://localhost:2499/'; // environment.apiurl;
+    static apiurl = 'http://localhost:2999/'; // environment.apiurl;
 
     static getToken(): string {
         const auth = JSON.parse(localStorage.getItem('auth'));

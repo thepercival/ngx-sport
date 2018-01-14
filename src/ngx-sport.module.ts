@@ -1,5 +1,4 @@
 // import 'rxjs/Rx';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { Association } from './association';
@@ -42,13 +41,13 @@ import { TeamRepository } from './team/repository';
 
 
 @NgModule({
-    imports: [HttpClientModule],
-    declarations: [
-        Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
+    imports: [Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
+        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository],
+    declarations: [
+
     ],
     exports: [
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
