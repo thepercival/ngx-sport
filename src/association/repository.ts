@@ -9,8 +9,6 @@ import { Observable } from 'rxjs/Rx';
 import { Association } from '../association';
 import { SportRepository } from '../repository';
 
-
-
 @Injectable()
 export class AssociationRepository extends SportRepository {
 
