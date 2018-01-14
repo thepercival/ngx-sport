@@ -12,7 +12,6 @@
  * @description
  * Entry point for all public APIs of this package.
  */
-export * from './src/competition';
 export * from './src/association';
 export * from './src/association/repository';
 export * from './src/competition';
@@ -50,7 +49,7 @@ export * from './src/structure/repository';
 export * from './src/structure/service';
 export * from './src/team';
 export * from './src/team/repository';
-export * from './src/ngx-sport.module';
+// export * from './src/ngx-sport.module';
 // export { registerLocaleData as ɵregisterLocaleData } from './src/i18n/locale_data';
 
 // This file only reexports content of the `src` folder. Keep it that way.

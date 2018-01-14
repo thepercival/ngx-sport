@@ -41,13 +41,13 @@ import { TeamRepository } from './team/repository';
 
 
 @NgModule({
-    imports: [Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
+    imports: [],
+    declarations: [
+        Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository],
-    declarations: [
-
+        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
     ],
     exports: [
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
