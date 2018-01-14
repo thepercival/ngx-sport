@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@angular/common": "^5.0.0",
-    "@angular/compiler": "^5.0.2",
+    "@angular/compiler": "^5.0.0",
     "@angular/core": "^5.0.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.20"
@@ -17,7 +17,6 @@
     "@angular/compiler-cli": "^5.0.0",
     "@semantic-release/git": "^2.0.2",
     "@semantic-release/npm": "^2.6.4",
-    "npm-shrinkwrap": "^6.1.0",
     "rollup": "^0.51.8",
     "semantic-release": "^11.0.2",
     "travis-deploy-once": "^4.3.1",
@@ -64,9 +63,9 @@
     "build:fesm5": "rollup -c rollup-esm5.conf.js",
     "build:umd": "rollup -c rollup-umd.conf.js",
     "build:umd-min": "uglifyjs dist/bundles/ngx-sport.umd.js -c -m -o dist/bundles/ngx-sport.umd.min.js",
-    "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json npm-shrinkwrap.json README.md dist/ && rm dist/src/*.js",
+    "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json README.md dist/ && rm dist/src/*.js",
     "clean": "rm -rf ./tmp && rm -rf ./dist",
-    "postpublish": "cp -r dist/package.json . && cp -r dist/npm-shrinkwrap.json .",
+    "postpublish": "cp -r dist/package.json .",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "npm run build",
     "build:dev": "rm -rf /home/coen/Projecten/fctoernooi51/node_modules/ngx-sport && cp -r dist/ /home/coen/Projecten/fctoernooi51/node_modules/ && mv /home/coen/Projecten/fctoernooi51/node_modules/dist/ /home/coen/Projecten/fctoernooi51/node_modules/ngx-sport/"
@@ -85,8 +84,7 @@
       {
         "path": "@semantic-release/git",
         "assets": [
-          "package.json",
-          "npm-shrinkwrap.json"
+          "package.json"
         ]
       }
     ]
