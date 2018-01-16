@@ -38,7 +38,7 @@ export class ExternalSystemSoccerOddsRepository {
     getCompetitions(): Observable<Competition[]> {
         const url = this.externalSystem.getApiurl() + 'leagues';
         return this.http.get(url, { headers: this.getHeaders() }).pipe(
-            map((res: Competition[]) => this.jsonCompetitionsToArrayHelper(res)),
+            map((res) => this.jsonCompetitionsToArrayHelper(res)),
             catchError(super.handleError)
         );
     }

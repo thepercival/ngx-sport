@@ -141,11 +141,4 @@ export class ExternalSystemRepository extends SportRepository {
             catchError(super.handleError)
         );
     }
-
-    // this could also be a private method of the component class
-    handleError(res: Response): Observable<any> {
-        console.error(res);
-        // throw an application level error
-        return Observable.throw(res.statusText);
-    }
 }
