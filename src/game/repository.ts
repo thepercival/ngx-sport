@@ -45,7 +45,7 @@ export class GameRepository extends SportRepository {
             map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 

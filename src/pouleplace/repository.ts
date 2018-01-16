@@ -39,7 +39,7 @@ export class PoulePlaceRepository extends SportRepository {
             map((res: IPoulePlace) => {
                 return this.jsonToObjectHelper(res, poulePlace.getPoule(), poulePlace);
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 

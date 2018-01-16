@@ -43,7 +43,7 @@ export class ExternalSystemRepository extends SportRepository {
                 this.objects = objects;
                 return this.objects;
             }),
-            catchError(this.handleError)
+            catchError(super.handleError)
         );
     }
 
@@ -60,7 +60,7 @@ export class ExternalSystemRepository extends SportRepository {
         const url = this.url + '/' + id;
         return this.http.get(url).pipe(
             map((res) => this.jsonToObjectHelper(res)),
-            catchError(this.handleError)
+            catchError(super.handleError)
         );
     }
 
@@ -101,7 +101,7 @@ export class ExternalSystemRepository extends SportRepository {
     createObject(jsonObject: any): Observable<ExternalSystem> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
             map((res) => this.jsonToObjectHelper(res)),
-            catchError(this.handleError)
+            catchError(super.handleError)
         );
     }
 
@@ -109,7 +109,7 @@ export class ExternalSystemRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() }).pipe(
             map((res) => this.jsonToObjectHelper(res)),
-            catchError(this.handleError)
+            catchError(super.handleError)
         );
     }
 
@@ -138,7 +138,7 @@ export class ExternalSystemRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res) => res),
-            catchError(this.handleError)
+            catchError(super.handleError)
         );
     }
 

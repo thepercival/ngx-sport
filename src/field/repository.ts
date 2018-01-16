@@ -38,7 +38,7 @@ export class FieldRepository extends SportRepository {
                 const fieldRes = this.jsonToObjectHelper(res, competitionseason);
                 return fieldRes;
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 
@@ -53,7 +53,7 @@ export class FieldRepository extends SportRepository {
             map((res: IField) => {
                 return this.jsonToObjectHelper(res, competitionseason, field);
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 
@@ -63,7 +63,7 @@ export class FieldRepository extends SportRepository {
             map((res) => {
                 field.getCompetitionseason().removeField(field);
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 

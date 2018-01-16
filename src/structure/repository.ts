@@ -54,7 +54,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(round, competitionseason);
                 return round;
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 
@@ -74,7 +74,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(roundOut, competitionseason);
                 return roundOut;
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 
@@ -94,7 +94,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(roundOut, competitionseason);
                 return roundOut;
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 
@@ -104,7 +104,7 @@ export class StructureRepository extends SportRepository {
             map((res: Response) => {
                 this.removeFromCache(round, round.getCompetitionseason());
             }),
-            catchError( this.handleError )
+            catchError( super.handleError )
         );
     }
 

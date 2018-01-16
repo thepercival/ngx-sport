@@ -89,7 +89,7 @@ export class ExternalSystemSoccerSportsRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.data.leagues), this.getExpireDate('Association'));
                 return associations;
             }),
-            catchError( this.handleError )        
+            catchError( super.handleError )        
         );
     }
 
@@ -152,7 +152,7 @@ export class ExternalSystemSoccerSportsRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.leagues), this.getExpireDate(Competition.classname));
                 return objects;
             }),
-            catchError( this.handleError )        
+            catchError( super.handleError )        
         );
     }
 
@@ -200,7 +200,7 @@ export class ExternalSystemSoccerSportsRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.seasons), this.getExpireDate('Season'));
                 return objects;
             }),
-            catchError( this.handleError )        
+            catchError( super.handleError )        
         );
     }
 
@@ -299,7 +299,7 @@ export class ExternalSystemSoccerSportsRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.seasons), this.getExpireDate('Competitionseason'));
                 return objects;
             }),
-            catchError( this.handleError )        
+            catchError( super.handleError )        
         );
     }
 
@@ -347,7 +347,7 @@ export class ExternalSystemSoccerSportsRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.teams), this.getExpireDate('Team'));
                 return objects;
             }),
-            catchError( this.handleError )        
+            catchError( super.handleError )        
         );
     }
 
