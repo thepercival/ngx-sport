@@ -30,7 +30,6 @@ export class CompetitionseasonRepository extends SportRepository {
         private refereeRepository: RefereeRepository
     ) {
         super();
-        this.http = http;
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 

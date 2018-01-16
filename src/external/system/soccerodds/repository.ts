@@ -1,6 +1,7 @@
 /**
  * Created by coen on 30-1-17.
  */
+import { SportRepository } from '../../../repository';
 
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
@@ -14,13 +15,14 @@ import { ExternalSystemSoccerOdds } from '../soccerodds';
 
 
 @Injectable()
-export class ExternalSystemSoccerOddsRepository {
+export class ExternalSystemSoccerOddsRepository extends SportRepository {
 
     constructor(
         private http: HttpClient,
         private externalSystem: ExternalSystemSoccerOdds,
         private externalSystemRepository: ExternalSystemRepository
     ) {
+        super();
     }
 
     getToken(): string {
