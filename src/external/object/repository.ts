@@ -1,29 +1,20 @@
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { SportRepository } from '../../repository';
 import { ExternalObject } from '../object';
 import { ExternalSystem } from '../system';
 import { ExternalSystemRepository } from '../system/repository';
 
-/**
- * Created by coen on 13-2-17.
- */
-
-/**
- * Created by cdunnink on 7-2-2017.
- */
-
 @Injectable()
 export class ExternalObjectRepository extends SportRepository {
 
     private url: string;
 
-    constructor(private http: Http, private externalSystemRepository: ExternalSystemRepository) {
+    constructor(private http: HttpClient, private externalSystemRepository: ExternalSystemRepository) {
         super();
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
@@ -34,11 +25,12 @@ export class ExternalObjectRepository extends SportRepository {
 
     getObjects(importableObjectRepository: any): Observable<ExternalObject[]> {
         let url = this.url + '/' + importableObjectRepository.getUrlpostfix();
-        return this.http.get(url, new RequestOptions({ headers: super.getHeaders() }))
-            .map((res) => {
-                return this.jsonArrayToObject(res.json(), importableObjectRepository);
-            })
-            .catch(this.handleError);
+        return this.http.get(url, { headers: super.getHeaders() }).pipe(
+            map((res) => {
+                return this.jsonArrayToObject(res, importableObjectRepository);
+            }),
+            catchError( super.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: any, importableObjectRepository: any): ExternalObject[] {
@@ -66,31 +58,20 @@ export class ExternalObjectRepository extends SportRepository {
     createObject(importableObjectRepository: any, object: any, externalid: string, externalSystem: ExternalSystem): Observable<ExternalObject> {
         let json = { "importableobjectid": object.getId(), "externalid": externalid, "externalsystemid": externalSystem.getId() };
         let url = this.url + '/' + importableObjectRepository.getUrlpostfix();
-        return this.http
-            .post(url, json, new RequestOptions({ headers: super.getHeaders() }))
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res.json(), importableObjectRepository))
-            //...errors if any
-            .catch(this.handleError);
+        return this.http.post(url, json, { headers: super.getHeaders() }).pipe(
+            map((res) => this.jsonToObjectHelper(res, importableObjectRepository)),
+            catchError( super.handleError )
+        );
     }
 
-    removeObject(urlpostfix: string, object: ExternalObject): Observable<void> {
+    removeObject(urlpostfix: string, object: ExternalObject): Observable<any> {
         let url = this.url + '/' + urlpostfix + '/' + object.getId();
 
-        return this.http
-            .delete(url, new RequestOptions({ headers: super.getHeaders() }))
-            // ...and calling .json() on the response to return data
-            .map((res: Response) => res)
-            //...errors if any
-            .catch(this.handleError);
-    }
-
-    // this could also be a private method of the component class
-    handleError(res: Response): Observable<any> {
-        console.error(res);
-        // throw an application level error
-        return Observable.throw(res.statusText);
-    }
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: any) => res),
+            catchError( super.handleError )
+        );
+    }   
 
     getExternalObjects(externalobjects: ExternalObject[], importableObject: any): ExternalObject[] {
         if (externalobjects == undefined) {

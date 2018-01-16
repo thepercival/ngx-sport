@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { FieldRepository, IField } from '../field/repository';
 import { Game } from '../game';
@@ -39,12 +41,12 @@ export class GameRepository extends SportRepository {
             params: new HttpParams().set('pouleid', poule.getId().toString())
         };
 
-        return this.http
-            .put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), options)
-            .map((res: IGame) => {
+        return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), options).pipe(
+            map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: IGame[], poule: Poule): Game[] {

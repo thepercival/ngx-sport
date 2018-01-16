@@ -1,6 +1,8 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { SportRepository } from '../repository';
 import { Season } from '../season';
@@ -29,13 +31,14 @@ export class SeasonRepository extends SportRepository {
             });
         }
 
-        return this.http.get(this.url, { headers: super.getHeaders() })
-            .map((res) => {
+        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+            map((res) => {
                 const objects = this.jsonArrayToObject(res);
                 this.objects = objects;
                 return this.objects;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: any): Season[] {
@@ -49,10 +52,10 @@ export class SeasonRepository extends SportRepository {
 
     getObject(id: number): Observable<Season> {
         const url = this.url + '/' + id;
-        return this.http.get(url)
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res))
-            .catch((error: any) => Observable.throw(error.message || 'Server error'));
+        return this.http.get(url, { headers: super.getHeaders() }).pipe(
+            map((res) => this.jsonToObjectHelper(res)),
+            catchError( this.handleError )
+        );
     }
 
     jsonToObjectHelper(json: any): Season {
@@ -74,29 +77,26 @@ export class SeasonRepository extends SportRepository {
     }
 
     createObject(jsonObject: any): Observable<Season> {
-        return this.http
-            .post(this.url, jsonObject, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+            map((res) => this.jsonToObjectHelper(res)),
+            catchError( this.handleError )
+        );
     }
 
     editObject(object: Season): Observable<Season> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map(res => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() }).pipe(
+            map(res => this.jsonToObjectHelper(res)),
+            catchError( this.handleError )
+        );
     }
 
-    removeObject(object: Season): Observable<void> {
+    removeObject(object: Season): Observable<Season> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: HttpResponse<Season>) => res)
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: Season) => res),
+            catchError( this.handleError )
+        );
     }
 
     objectToJsonHelper(object: Season): any {

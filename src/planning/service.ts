@@ -1,7 +1,7 @@
 import { Game } from '../game';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
-
+import { catchError } from 'rxjs/operators/catchError';
 
 export class PlanningService {
     private startDateTime: Date;

@@ -3,7 +3,9 @@
  */
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
@@ -33,12 +35,12 @@ export class PoulePlaceRepository extends SportRepository {
             params: new HttpParams().set('pouleid', poule.getId().toString())
         };
 
-        return this.http
-            .put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), options)
-            .map((res: IPoulePlace) => {
+        return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), options).pipe(
+            map((res: IPoulePlace) => {
                 return this.jsonToObjectHelper(res, poulePlace.getPoule(), poulePlace);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: any, poule: Poule): PoulePlace[] {

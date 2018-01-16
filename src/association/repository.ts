@@ -1,10 +1,11 @@
 /**
  * Created by coen on 30-1-17.
  */
-// import 'rxjs/Rx';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Association } from '../association';
 import { SportRepository } from '../repository';
@@ -23,7 +24,7 @@ export class AssociationRepository extends SportRepository {
     getUrlpostfix(): string {
         return 'associations';
     }
-    // import { map, filter, reduce } from 'rxjs/operators';
+    
     getObjects(): Observable<Association[]> {
         if (this.objects !== undefined) {
             return Observable.create(observer => {
@@ -32,13 +33,14 @@ export class AssociationRepository extends SportRepository {
             });
         }
 
-        return this.http.get(this.url, { headers: super.getHeaders() })
-            .map((res) => {
+        return this.http.get(this.url, { headers: super.getHeaders() }).pipe( 
+            map((res) => {
                 const objects = this.jsonArrayToObject(res);
                 this.objects = objects;
                 return this.objects;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( super.handleError )
+        );  
     }
 
     jsonArrayToObject(jsonArray: any): Association[] {
@@ -52,18 +54,17 @@ export class AssociationRepository extends SportRepository {
 
     getObject(id: number): Observable<Association> {
         const url = this.url + '/' + id;
-        return this.http.get(url)
-            // ...and calling .json() on the response to return data
-            .map((res: IAssociation) => this.jsonToObjectHelper(res))
-            .catch((error: any) => Observable.throw(error.message || 'Server error'));
+        return this.http.get(url).pipe( 
+            map((res: IAssociation) => this.jsonToObjectHelper(res)),
+            catchError( super.handleError )
+        );
     }
 
     createObject(jsonObject: IAssociation): Observable<Association> {
-        return this.http
-            .post(this.url, jsonObject, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: IAssociation) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe( 
+            map((res: IAssociation) => this.jsonToObjectHelper(res)),
+            catchError( super.handleError )
+        );
     }
 
     jsonToObjectHelper(json: IAssociation): Association {
@@ -91,20 +92,17 @@ export class AssociationRepository extends SportRepository {
 
     editObject(object: Association): Observable<Association> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .put(url, JSON.stringify(object), { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: IAssociation) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe( 
+            map((res: IAssociation) => this.jsonToObjectHelper(res))
+        );
     }
 
-    removeObject(object: Association): Observable<void> {
+    removeObject(object: Association): Observable<IAssociation> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: HttpResponse<IAssociation>) => res)
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: IAssociation) => res),
+            catchError( super.handleError )
+        );
     }
 }
 

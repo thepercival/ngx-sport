@@ -1,12 +1,12 @@
 /**
  * Created by coen on 30-1-17.
  */
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Competition } from '../../../competition';
 import { ExternalSystemRepository } from '../repository';
@@ -16,10 +16,8 @@ import { ExternalSystemSoccerOdds } from '../soccerodds';
 @Injectable()
 export class ExternalSystemSoccerOddsRepository {
 
-    private headers = new Headers({ 'Content-Type': 'application/json' });
-
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private externalSystem: ExternalSystemSoccerOdds,
         private externalSystemRepository: ExternalSystemRepository
     ) {
@@ -29,8 +27,8 @@ export class ExternalSystemSoccerOddsRepository {
         return this.externalSystem.getApikey();
     }
 
-    getHeaders(): Headers {
-        let headers = new Headers(this.headers);
+    getHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         if (this.getToken() !== undefined) {
             headers = headers.append('X-Mashape-Key', this.getToken());
         }
@@ -39,9 +37,10 @@ export class ExternalSystemSoccerOddsRepository {
 
     getCompetitions(): Observable<Competition[]> {
         const url = this.externalSystem.getApiurl() + 'leagues';
-        return this.http.get(url, new RequestOptions({ headers: this.getHeaders() }))
-            .map((res) => this.jsonCompetitionsToArrayHelper(res.json()))
-            .catch(this.handleError);
+        return this.http.get(url, { headers: this.getHeaders() }).pipe(
+            map((res: Competition[]) => this.jsonCompetitionsToArrayHelper(res)),
+            catchError(super.handleError)
+        );
     }
 
     jsonCompetitionsToArrayHelper(jsonArray: any): Competition[] {
@@ -59,12 +58,5 @@ export class ExternalSystemSoccerOddsRepository {
         competition.setAbbreviation(competition.getName().substr(0, Competition.MAX_LENGTH_ABBREVIATION));
 
         return competition;
-    }
-
-    // this could also be a private method of the component class
-    handleError(res: Response): Observable<any> {
-        console.error(res);
-        // throw an application level error
-        return Observable.throw(res.statusText);
-    }
+    }    
 }

@@ -1,4 +1,3 @@
-// import 'rxjs/Rx';
 import { NgModule } from '@angular/core';
 
 import { Association } from './association';

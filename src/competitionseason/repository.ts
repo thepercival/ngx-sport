@@ -3,7 +3,9 @@
  */
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { AssociationRepository, IAssociation } from '../association/repository';
 import { CompetitionRepository, ICompetition } from '../competition/repository';
@@ -44,12 +46,13 @@ export class CompetitionseasonRepository extends SportRepository {
             });
         }
 
-        return this.http.get(this.url, { headers: super.getHeaders() })
-            .map((res: ICompetitionseason[]) => {
+        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+            map((res: ICompetitionseason[]) => {
                 this.objects = this.jsonArrayToObject(res);
                 return this.objects;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( super.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: ICompetitionseason[]): Competitionseason[] {
@@ -72,7 +75,7 @@ export class CompetitionseasonRepository extends SportRepository {
                     observer.next(competitionseason);
                     observer.complete();
                 },
-                /* error path */ e => { this.handleError(e); },
+                /* error path */ e => { /* @TODO replace with variant of forkjoin */ },
                 /* onComplete */() => { }
             );
         });
@@ -119,27 +122,27 @@ export class CompetitionseasonRepository extends SportRepository {
     }
 
     createObject(jsonObject: ICompetitionseason): Observable<Competitionseason> {
-        return this.http
-            .post(this.url, jsonObject, { headers: super.getHeaders() })
-            .map((res: ICompetitionseason) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+            map((res: ICompetitionseason) => this.jsonToObjectHelper(res)),
+            catchError( super.handleError )
+        );
     }
 
     editObject(object: Competitionseason): Observable<Competitionseason> {
         const url = this.url + '/' + object.getId();
 
-        return this.http
-            .put(url, JSON.stringify(object), { headers: super.getHeaders() })
-            .map((res: ICompetitionseason) => { console.log(res); return this.jsonToObjectHelper(res); })
-            .catch(this.handleError);
+        return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
+            map((res: ICompetitionseason) => { console.log(res); return this.jsonToObjectHelper(res); }),
+            catchError( super.handleError )
+        );
     }
 
-    removeObject(object: Competitionseason): Observable<void> {
+    removeObject(object: Competitionseason): Observable<Competitionseason> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            .map((res: HttpResponse<Competitionseason>) => res)
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: Competitionseason) => res),
+            catchError( super.handleError )
+        );
     }
 }
 

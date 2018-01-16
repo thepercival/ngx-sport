@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Competitionseason } from '../competitionseason';
 import { Field } from '../field';
@@ -31,13 +33,13 @@ export class FieldRepository extends SportRepository {
 
         console.log('field posted', jsonField);
 
-        return this.http
-            .post(this.url, jsonField, options)
-            .map((res: IField) => {
+        return this.http.post(this.url, jsonField, options).pipe(
+            map((res: IField) => {
                 const fieldRes = this.jsonToObjectHelper(res, competitionseason);
                 return fieldRes;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     editObject(field: Field, competitionseason: Competitionseason): Observable<Field> {
@@ -47,22 +49,22 @@ export class FieldRepository extends SportRepository {
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
 
-        return this.http
-            .put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), options)
-            .map((res: IField) => {
+        return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), options).pipe(
+            map((res: IField) => {
                 return this.jsonToObjectHelper(res, competitionseason, field);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     removeObject(field: Field): Observable<void> {
         const url = this.url + '/' + field.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            .map((res) => {
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res) => {
                 field.getCompetitionseason().removeField(field);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: IField[], competitionseason: Competitionseason): Field[] {

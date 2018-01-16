@@ -3,7 +3,9 @@
  */
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Competition } from '../competition';
 import { SportRepository } from '../repository';
@@ -33,13 +35,14 @@ export class CompetitionRepository extends SportRepository {
             });
         }
 
-        return this.http.get(this.url, { headers: super.getHeaders() })
-            .map((res: ICompetition[]) => {
+        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+            map((res: ICompetition[]) => {
                 const objects = this.jsonArrayToObject(res);
                 this.objects = objects;
                 return this.objects;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( super.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: ICompetition[]): Competition[] {
@@ -53,10 +56,10 @@ export class CompetitionRepository extends SportRepository {
 
     getObject(id: number): Observable<Competition> {
         const url = this.url + '/' + id;
-        return this.http.get(url)
-            // ...and calling .json() on the response to return data
-            .map((res: ICompetition) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.get(url).pipe(
+            map((res: ICompetition) => this.jsonToObjectHelper(res)),
+            catchError( super.handleError )
+        );
     }
 
     jsonToObjectHelper(json: ICompetition): Competition {
@@ -84,30 +87,27 @@ export class CompetitionRepository extends SportRepository {
     }
 
     createObject(jsonObject: any): Observable<Competition> {
-        return this.http
-            .post(this.url, jsonObject, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: ICompetition) => this.jsonToObjectHelper(res))
-            .catch(this.handleError);
+        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+            map((res: ICompetition) => this.jsonToObjectHelper(res)),
+            catchError( super.handleError )
+        );
     }
 
     editObject(object: Competition): Observable<Competition> {
         const url = this.url + '/' + object.getId();
 
-        return this.http
-            .put(url, JSON.stringify(object), { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: ICompetition) => { console.log(res); return this.jsonToObjectHelper(res); })
-            .catch(this.handleError);
+        return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
+            map((res: ICompetition) => { console.log(res); return this.jsonToObjectHelper(res); }),
+            catchError( super.handleError )
+        );
     }
 
-    removeObject(object: Competition): Observable<void> {
+    removeObject(object: Competition): Observable<Competition> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
-            .map((res: HttpResponse<Competition>) => res)
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: Competition) => res),
+            catchError( super.handleError )
+        );
     }
 }
 

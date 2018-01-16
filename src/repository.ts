@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
 
 import { SportConfig } from './config';
 
@@ -24,15 +25,14 @@ export class SportRepository {
         return headers;
     }
 
-    handleError(res: HttpErrorResponse): Observable<any> {
+    handleError(error: HttpErrorResponse): Observable<any> {
         let errortext = 'onbekende fout';
-        if (typeof res.error === 'string') {
-            errortext = res.error;
+        if (typeof error.error === 'string') {
+            errortext = error.error;
         }
-        if (res.status === 401) {
+        if (error.status === 401) {
             errortext = 'je bent niet ingelogd';
         }
-        console.error(res);
         return Observable.throw(errortext);
-    }
+      }
 }

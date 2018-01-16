@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Association } from '../association';
 import { SportRepository } from '../repository';
@@ -48,7 +50,7 @@ export class TeamRepository extends SportRepository {
     //             this.objects = objects;
     //             return this.objects;
     //         })
-    //         .catch(this.handleError);
+    //         .catch(super.handleError);
     // }
 
     createObject(jsonTeam: ITeam, association: Association): Observable<Team> {
@@ -58,13 +60,13 @@ export class TeamRepository extends SportRepository {
             params: new HttpParams().set('associationid', '' + association.getId())
         };
 
-        return this.http
-            .post(this.url, jsonTeam, options)
-            .map((res: ITeam) => {
+        return this.http.post(this.url, jsonTeam, options).pipe(
+            map((res: ITeam) => {
                 const teamRes = this.jsonToObjectHelper(res, association);
                 return teamRes;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( super.handleError )
+        );
     }
 
     editObject(team: Team, association: Association): Observable<Team> {
@@ -74,12 +76,12 @@ export class TeamRepository extends SportRepository {
             params: new HttpParams().set('associationid', '' + association.getId())
         };
 
-        return this.http
-            .put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options)
-            .map((res: ITeam) => {
+        return this.http.put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options).pipe(
+            map((res: ITeam) => {
                 return this.jsonToObjectHelper(res, association, team);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( super.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: Array<ITeam>, association: Association): Team[] {

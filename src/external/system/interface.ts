@@ -5,7 +5,7 @@
 import { Association } from './../../association';
 import { Competition } from './../../competition';
 import { Season } from './../../season';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 export interface ExternalSystemAssociation
 {

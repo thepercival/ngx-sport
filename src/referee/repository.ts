@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Competitionseason } from '../competitionseason';
 import { Referee } from '../referee';
@@ -30,13 +32,13 @@ export class RefereeRepository extends SportRepository {
 
         console.log('referee posted', jsonReferee);
 
-        return this.http
-            .post(this.url, jsonReferee, options)
-            .map((res: IReferee) => {
+        return this.http.post(this.url, jsonReferee, options).pipe(
+            map((res: IReferee) => {
                 const refereeRes = this.jsonToObjectHelper(res, competitionseason);
                 return refereeRes;
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     editObject(referee: Referee, competitionseason: Competitionseason): Observable<Referee> {
@@ -46,22 +48,22 @@ export class RefereeRepository extends SportRepository {
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
 
-        return this.http
-            .put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), options)
-            .map((res: IReferee) => {
+        return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), options).pipe(
+            map((res: IReferee) => {
                 return this.jsonToObjectHelper(res, competitionseason, referee);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
-    removeObject(referee: Referee): Observable<void> {
+    removeObject(referee: Referee): Observable<any> {
         const url = this.url + '/' + referee.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            .map((res) => {
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res: any) => {
                 referee.getCompetitionseason().removeReferee(referee);
-            })
-            .catch(this.handleError);
+            }),
+            catchError( this.handleError )
+        );
     }
 
     jsonArrayToObject(jsonArray: IReferee[], competitionseason: Competitionseason): Referee[] {

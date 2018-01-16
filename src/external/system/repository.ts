@@ -1,9 +1,8 @@
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { SportRepository } from '../../repository';
 import { ExternalSystem } from '../system';
@@ -18,12 +17,11 @@ import { ExternalSystemSoccerSports } from './soccersports';
 export class ExternalSystemRepository extends SportRepository {
 
     private url: string;
-    private http: Http;
     private objects: ExternalSystem[];
     private specificObjects: ExternalSystem[] = [];
 
-    constructor(http: Http) {
-        this.http = http; super();
+    constructor(private http: HttpClient) {
+        super();
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -39,13 +37,14 @@ export class ExternalSystemRepository extends SportRepository {
                 observer.complete();
             });
         }
-        return this.http.get(this.url, new RequestOptions({ headers: super.getHeaders() }))
-            .map((res) => {
-                const objects = this.jsonArrayToObject(res.json());
+        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+            map((res) => {
+                const objects = this.jsonArrayToObject(res);
                 this.objects = objects;
                 return this.objects;
-            })
-            .catch(this.handleError);
+            }),
+            catchError(this.handleError)
+        );
     }
 
     jsonArrayToObject(jsonArray: any): ExternalSystem[] {
@@ -59,10 +58,10 @@ export class ExternalSystemRepository extends SportRepository {
 
     getObject(id: number): Observable<ExternalSystem> {
         const url = this.url + '/' + id;
-        return this.http.get(url)
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res.json()))
-            .catch((error: any) => Observable.throw(error.message || 'Server error'));
+        return this.http.get(url).pipe(
+            map((res) => this.jsonToObjectHelper(res)),
+            catchError(this.handleError)
+        );
     }
 
     jsonToObjectHelper(json: any): ExternalSystem {
@@ -100,25 +99,18 @@ export class ExternalSystemRepository extends SportRepository {
     }
 
     createObject(jsonObject: any): Observable<ExternalSystem> {
-        return this.http
-            .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res.json()))
-            .catch(this.handleError);
+        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+            map((res) => this.jsonToObjectHelper(res)),
+            catchError(this.handleError)
+        );
     }
 
     editObject(object: ExternalSystem): Observable<ExternalSystem> {
         const url = this.url + '/' + object.getId();
-        // console.log(JSON.stringify( object ));
-        console.log(this.objectToJsonHelper(object));
-
-        // return Observable.throw( "wat gaat er fout?" );
-
-        return this.http
-            .put(url, JSON.stringify(this.objectToJsonHelper(object)), new RequestOptions({ headers: super.getHeaders() }))
-            // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res.json()))
-            .catch(this.handleError);
+        return this.http.put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() }).pipe(
+            map((res) => this.jsonToObjectHelper(res)),
+            catchError(this.handleError)
+        );
     }
 
     objectsToJsonArray(objects: any[]): any[] {
@@ -144,11 +136,10 @@ export class ExternalSystemRepository extends SportRepository {
 
     removeObject(object: ExternalSystem): Observable<void> {
         const url = this.url + '/' + object.getId();
-        return this.http
-            .delete(url, new RequestOptions({ headers: super.getHeaders() }))
-            // ...and calling .json() on the response to return data
-            .map((res: Response) => res)
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+            map((res) => res),
+            catchError(this.handleError)
+        );
     }
 
     // this could also be a private method of the component class

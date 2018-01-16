@@ -11,8 +11,9 @@ import { Competitionseason } from './../../competitionseason';
 import { Round } from '../../round';
 import { Team } from './../../team';
 import { ExternalSystemSoccerSportsRepository } from './soccersports/repository';
-import { Http } from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 import { ExternalSystemRepository } from './repository';
 
 export class ExternalSystemSoccerSports extends ExternalSystem implements ExternalSystemCompetitionInterface{
@@ -24,7 +25,7 @@ export class ExternalSystemSoccerSports extends ExternalSystem implements Extern
     // protected competitionseasons: Competitionseason[];
 
     // constructor
-    constructor( name: string, http: Http, externalSystemRepository: ExternalSystemRepository )
+    constructor( name: string, http: HttpClient, externalSystemRepository: ExternalSystemRepository )
     {
         super(name);
 
@@ -34,12 +35,12 @@ export class ExternalSystemSoccerSports extends ExternalSystem implements Extern
     getExportableClasses(): any[]
     {
         return [
-            { "name": Association.classname, "source": true },
-            { "name": Competition.classname, "source": true },
-            { "name": Season.classname, "source": true },
-            { "name": Competitionseason.classname, "source": true },
-            { "name": Team.classname, "source": true },
-            { "name": Round.classname, "source": true }
+            { "name": 'Association', "source": true },
+            { "name": 'Competition', "source": true },
+            { "name": 'Season', "source": true },
+            { "name": 'Competitionseason', "source": true },
+            { "name": 'Team', "source": true },
+            { "name": 'Round', "source": true }
         ];
     }
 

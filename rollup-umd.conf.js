@@ -6,10 +6,21 @@ export default {
     },
     name: 'ngx-sport',
     globals: {
-        '@angular/core': 'ng.core',
-        '@angular/common': 'ng.common',
         '@angular/common/http': 'ng.common.http',
-        'rxjs/Rx': 'Rx'
+        '@angular/core': 'ng.core',
+        'rxjs/Observable': 'rxjs.observable',
+        'rxjs/Observer': 'rxjs.observer',
+        'rxjs/operators/map': 'rxjs.map',
+        'rxjs/operators/catchError': 'rxjs.catchError',
+        'rxjs/add/observable/throw': 'rxjs.throw'
     },
-    external: ['@angular/common/http', '@angular/core', 'rxjs/Rx'] // <-- suppresses the warning
+    external: [
+        '@angular/common/http', 
+        '@angular/core', 
+        'rxjs/Observable',
+        'rxjs/Observer',
+        'rxjs/operators/map',
+        'rxjs/operators/catchError',
+        'rxjs/add/observable/throw'
+    ]
 };
