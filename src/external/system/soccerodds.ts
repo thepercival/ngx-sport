@@ -12,29 +12,26 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { ExternalSystemRepository } from './repository';
 
-export class ExternalSystemSoccerOdds extends ExternalSystem implements ExternalSystemCompetitionInterface{
+export class ExternalSystemSoccerOdds extends ExternalSystem implements ExternalSystemCompetitionInterface {
     protected website: string;
     protected repos: ExternalSystemSoccerOddsRepository;
     protected competitions: Competition[];
 
     // constructor
-    constructor( name: string, http: HttpClient, externalSystemRepository: ExternalSystemRepository )
-    {
+    constructor( name: string, http: HttpClient, externalSystemRepository: ExternalSystemRepository ) {
         super(name);
         this.repos = new ExternalSystemSoccerOddsRepository( http, this, externalSystemRepository );
     }
 
-    getExportableClasses(): any[]
-    {
+    getExportableClasses(): any[] {
         return [
-            { "name": 'Competition', "source": false },
-            { "name": 'Team', "source": false }
+            { name: 'Competition', 'source': false },
+            { name: 'Team', 'source': false }
         ];
     }
 
 
-    getCompetitions(): Observable<Competition[]>
-    {
-        return this.repos.getCompetitions()
+    getCompetitions(): Observable<Competition[]> {
+        return this.repos.getCompetitions();
     }
 }

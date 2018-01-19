@@ -109,7 +109,15 @@ export class QualifyRule {
     }
 
     isMultiple(): boolean {
-        return this.fromPoulePlaces.length > this.toPoulePlaces.length;
+        return this.getFromPoulePlaces().length > this.getToPoulePlaces().length;
+    }
+
+    getSingleFromEquivalent(toPoulePlace: PoulePlace): PoulePlace {
+        const index = this.getToPoulePlaces().indexOf(toPoulePlace);
+        if (index < 0) {
+            return undefined;
+        }
+        return this.getFromPoulePlaces()[index];
     }
 
     getWinnersOrLosers(): number {

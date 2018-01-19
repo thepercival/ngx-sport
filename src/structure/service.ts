@@ -145,35 +145,78 @@ export class StructureService {
         return false;
     }
 
-    private getNrOfRoundsToGo(round: Round, nrOfRoundsToGo = 0) {
-        const childRound = round.getChildRound(round.getWinnersOrLosers());
-        if (childRound === undefined) {
-            return nrOfRoundsToGo;
+    /**
+     *
+     * @param round
+     */
+    private getNrOfRoundsToGo(round: Round ) {
+        let nrOfRoundsToGoWinners = 0;
+        {
+            const childRoundWinners = round.getChildRound(Round.WINNERS);
+            if (childRoundWinners !== undefined) {
+                nrOfRoundsToGoWinners = this.getNrOfRoundsToGo(childRoundWinners) + 1;
+            }
         }
-        nrOfRoundsToGo++;
-        return this.getNrOfRoundsToGo(childRound, nrOfRoundsToGo);
+        let nrOfRoundsToGoLosers = 0;
+        {
+            const childRoundLosers = round.getChildRound(Round.LOSERS);
+            if (childRoundLosers !== undefined) {
+                nrOfRoundsToGoLosers = this.getNrOfRoundsToGo(childRoundLosers) + 1;
+            }
+        }
+        if ( nrOfRoundsToGoWinners > nrOfRoundsToGoLosers ) {
+            return nrOfRoundsToGoWinners;
+        }
+        return nrOfRoundsToGoLosers;
     }
 
+    /**
+     * Wanneer needsranking en als zijn parents needsRanking dan xste ronde
+     * Wanneer er 2 children zijn, met beide ander maxDepth dan aanduiden met xste ronde
+     * Alle andere ronden zijn finales
+     *
+     *
+     * @param round
+     */
     getRoundName(round: Round) {
-        if (this.roundAndParentsNeedsRanking(round)) {
-            return (round.getNumber()) + '<sup>' + (round.getNumber() === 1 ? 'st' : 'd') + 'e</sup> ronde';
+        if (this.roundAndParentsNeedsRanking(round) || ( round.getChildRounds().length > 1
+                && this.getNrOfRoundsToGo(round.getChildRound( Round.WINNERS) ) !==
+                this.getNrOfRoundsToGo(round.getChildRound( Round.LOSERS)) ) ) {
+            return this.getHtmlNumber( round.getNumber() ) + ' ronde';
         }
 
         const nrOfRoundsToGo = this.getNrOfRoundsToGo(round);
-        if (nrOfRoundsToGo === 5) {
-            return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>16</sub></span> finale';
-        } else if (nrOfRoundsToGo === 4) {
-            return '&frac18; finale';
-        } else if (nrOfRoundsToGo === 3) {
-            return '&frac14; finale';
-        } else if (nrOfRoundsToGo === 2) {
-            return '&frac12; finale';
+        if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5 ) {
+            return this.getHtmlFractalNumber( Math.pow( 2, nrOfRoundsToGo - 1 ) ) + ' finale';
         } else if (nrOfRoundsToGo === 1) {
+            if ( round.getPoulePlaces().length === 2 ) {
+                const rankedPlace = this.getRankedPlace(round);
+                return this.getHtmlNumber( rankedPlace ) + '/' + this.getHtmlNumber( rankedPlace + 1 ) + ' plaats';
+            }
             return 'finale';
         } else if (nrOfRoundsToGo === 0) {
             return this.getWinnersLosersDescription(round.getWinnersOrLosers());
         }
         return '?';
+    }
+
+    protected getHtmlFractalNumber( number ) {
+        if (number === 4 || number === 3 || number === 2) {
+            return '&frac1' + number + ';';
+        }
+        return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
+    }
+
+    protected getHtmlNumber( number ) {
+        return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
+    }
+
+    getWinnersLosersPosition(round: Round, winnersLosersPosition: number[] = [] ): number[] {
+        if ( round.getParentRound() === undefined ) {
+            return winnersLosersPosition.reverse();
+        }
+        winnersLosersPosition.push(round.getWinnersOrLosers());
+        return this.getWinnersLosersPosition(round.getParentRound(), winnersLosersPosition);
     }
 
     getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -196,20 +239,24 @@ export class StructureService {
         return pouleName;
     }
 
-    private getNrOfPreviousPoules(roundNumber: number, round: Round, poule): number {
+    private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {
         let nrOfPoules = poule.getNumber() - 1;
-        nrOfPoules += this.getNrOfPoulesParentRounds(roundNumber, round);
+        nrOfPoules += this.getNrOfPoulesParentRounds(round);
         nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, round);
         return nrOfPoules;
     }
 
-    private getNrOfPoulesParentRounds(roundNumber: number, round: Round): number {
-        if (round.getNumber() >= roundNumber) {
+    private getNrOfPoulesParentRounds(round: Round ): number {
+        return this.getNrOfPoulesParentRoundsHelper(round.getNumber() - 1, this.getFirstRound() );
+    }
+
+    private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round ): number {
+        if (round.getNumber() > maxRoundNumber) {
             return 0;
         }
         let nrOfPoules = round.getPoules().length;
         round.getChildRounds().forEach((childRound) => {
-            nrOfPoules += this.getNrOfPoulesParentRounds(roundNumber, childRound);
+            nrOfPoules += this.getNrOfPoulesParentRoundsHelper(maxRoundNumber, childRound );
         });
         return nrOfPoules;
     }
@@ -245,26 +292,39 @@ export class StructureService {
         return nrOfChildPoules;
     }
 
-    getPoulePlaceName(pouleplace: PoulePlace, teamName = false) {
+    getPoulePlaceName(pouleplace: PoulePlace, teamName = false, full: boolean = false) {
         if (teamName === true && pouleplace.getTeam() !== undefined) {
             return pouleplace.getTeam().getName();
         }
         const poule = pouleplace.getPoule();
         const round = poule.getRound();
 
-        // ///////////////////////
-        const pouleplaceName = this.getPouleName(poule, false);
+        const fromQualifyRule = pouleplace.getFromQualifyRule();
+        if ( fromQualifyRule === undefined ) { // first round
+            return this.getPoulePlaceNameSimple(pouleplace, teamName);
+        }
+
+        if ( fromQualifyRule.isMultiple() === false ) {
+            const fromPoulePlace = fromQualifyRule.getSingleFromEquivalent(pouleplace);
+            return this.getPoulePlaceNameSimple(fromPoulePlace, teamName);
+        }
+
+        if ( full === true ) {
+            return fromQualifyRule.getFromPoulePlaces().join('..');
+        }
+        return fromQualifyRule.getFromPoulePlaces().join('<br>');
+        // bv; A2;
+        // A2..D2 in tooltip; dan; A2, B2, C2; of; D2;
+
+
+    }
+
+    getPoulePlaceNameSimple(pouleplace: PoulePlace, teamName = false) {
+        if (teamName === true && pouleplace.getTeam() !== undefined) {
+            return pouleplace.getTeam().getName();
+        }
+        const pouleplaceName = this.getPouleName(pouleplace.getPoule(), false);
         return pouleplaceName + pouleplace.getNumber();
-        // ///////////////////////////////////
-        // let previousNrOfPoules = 0;
-        // this.rounds.some(function(roundIt) {
-        //     previousNrOfPoules += round !== roundIt ? roundIt.getPoules().length : 0;
-        //     return round === roundIt;
-        // });
-        // let pouleName = '';
-        // if ( withPrefix == true )
-        //     pouleName = round.getType() == Round.TYPE_KNOCKOUT ? 'wed.' : 'poule';
-        // return pouleName + ' ' + ( String.fromCharCode( 'A'.charCodeAt(0) + previousNrOfPoules + ( poule.getNumber() - 1 ) ) );
     }
 
     addRound(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number): Round {

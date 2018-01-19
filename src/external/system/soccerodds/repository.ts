@@ -60,5 +60,5 @@ export class ExternalSystemSoccerOddsRepository extends SportRepository {
         competition.setAbbreviation(competition.getName().substr(0, Competition.MAX_LENGTH_ABBREVIATION));
 
         return competition;
-    }    
+    }
 }
