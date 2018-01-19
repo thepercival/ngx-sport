@@ -94,6 +94,15 @@ export class StructureService {
         return this.getRounds(round.getChildRound(Round.LOSERS), rounds);
     }
 
+    getRoundsByNumber(round: Round, roundsByNumber: any = {}): {} {
+        if (roundsByNumber[round.getNumber()] === undefined) {
+            roundsByNumber[round.getNumber()] = [];
+        }
+        roundsByNumber[round.getNumber()].push(round);
+        round.getChildRounds().forEach((childRound) => this.getRoundsByNumber(childRound, roundsByNumber));
+        return roundsByNumber;
+    }
+
     getGameById(id: number, round: Round): Game {
         if (round === undefined) {
             return undefined;
@@ -145,11 +154,12 @@ export class StructureService {
         return false;
     }
 
-    /**
-     *
-     * @param round
-     */
-    private getNrOfRoundsToGo(round: Round ) {
+    getNrOfSiblingRounds(round: Round) {
+        const roundsByNumber: {} = this.getRoundsByNumber(this.getFirstRound());
+        return roundsByNumber[round.getNumber()].length - 1;
+    }
+
+    getNrOfRoundsToGo(round: Round) {
         let nrOfRoundsToGoWinners = 0;
         {
             const childRoundWinners = round.getChildRound(Round.WINNERS);
@@ -164,7 +174,7 @@ export class StructureService {
                 nrOfRoundsToGoLosers = this.getNrOfRoundsToGo(childRoundLosers) + 1;
             }
         }
-        if ( nrOfRoundsToGoWinners > nrOfRoundsToGoLosers ) {
+        if (nrOfRoundsToGoWinners > nrOfRoundsToGoLosers) {
             return nrOfRoundsToGoWinners;
         }
         return nrOfRoundsToGoLosers;
@@ -178,20 +188,20 @@ export class StructureService {
      *
      * @param round
      */
-    getRoundName(round: Round) {
-        if (this.roundAndParentsNeedsRanking(round) || ( round.getChildRounds().length > 1
-                && this.getNrOfRoundsToGo(round.getChildRound( Round.WINNERS) ) !==
-                this.getNrOfRoundsToGo(round.getChildRound( Round.LOSERS)) ) ) {
-            return this.getHtmlNumber( round.getNumber() ) + ' ronde';
+    getRoundName(round: Round, sameName: boolean = false) {
+        if (this.roundAndParentsNeedsRanking(round) || (round.getChildRounds().length > 1
+            && this.getNrOfRoundsToGo(round.getChildRound(Round.WINNERS)) !==
+            this.getNrOfRoundsToGo(round.getChildRound(Round.LOSERS)))) {
+            return this.getHtmlNumber(round.getNumber()) + ' ronde';
         }
 
         const nrOfRoundsToGo = this.getNrOfRoundsToGo(round);
-        if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5 ) {
-            return this.getHtmlFractalNumber( Math.pow( 2, nrOfRoundsToGo - 1 ) ) + ' finale';
+        if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
+            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo - 1)) + ' finale';
         } else if (nrOfRoundsToGo === 1) {
-            if ( round.getPoulePlaces().length === 2 ) {
+            if (round.getPoulePlaces().length === 2 && sameName === false) {
                 const rankedPlace = this.getRankedPlace(round);
-                return this.getHtmlNumber( rankedPlace ) + '/' + this.getHtmlNumber( rankedPlace + 1 ) + ' plaats';
+                return this.getHtmlNumber(rankedPlace) + '/' + this.getHtmlNumber(rankedPlace + 1) + ' plaats';
             }
             return 'finale';
         } else if (nrOfRoundsToGo === 0) {
@@ -200,19 +210,48 @@ export class StructureService {
         return '?';
     }
 
-    protected getHtmlFractalNumber( number ) {
+    roundsHaveSameName(roundsByNumber: Round[]) {
+        let roundNameAll;
+        return roundsByNumber.some((round) => {
+            const roundName = this.getRoundName(round, true);
+            if (roundNameAll === undefined) {
+                roundNameAll = roundName;
+                return true;
+            }
+            if (roundNameAll === roundName) {
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     *  als allemaal dezelfde naam dan geef die naam
+     * als verschillde namen geef dan xde ronde met tooltip van de namen
+     * 
+     * @param roundsByNumber
+     * 
+     */
+    getRoundsName(roundNumber, roundsByNumber: Round[]) {
+        if (this.roundsHaveSameName(roundsByNumber) === true) {
+            return this.getRoundName(roundsByNumber[0], true);
+        }
+        return this.getHtmlNumber(roundNumber) + ' ronde';
+    }
+
+    protected getHtmlFractalNumber(number) {
         if (number === 4 || number === 3 || number === 2) {
             return '&frac1' + number + ';';
         }
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
     }
 
-    protected getHtmlNumber( number ) {
+    protected getHtmlNumber(number) {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
     }
 
-    getWinnersLosersPosition(round: Round, winnersLosersPosition: number[] = [] ): number[] {
-        if ( round.getParentRound() === undefined ) {
+    getWinnersLosersPosition(round: Round, winnersLosersPosition: number[] = []): number[] {
+        if (round.getParentRound() === undefined) {
             return winnersLosersPosition.reverse();
         }
         winnersLosersPosition.push(round.getWinnersOrLosers());
@@ -246,17 +285,17 @@ export class StructureService {
         return nrOfPoules;
     }
 
-    private getNrOfPoulesParentRounds(round: Round ): number {
-        return this.getNrOfPoulesParentRoundsHelper(round.getNumber() - 1, this.getFirstRound() );
+    private getNrOfPoulesParentRounds(round: Round): number {
+        return this.getNrOfPoulesParentRoundsHelper(round.getNumber() - 1, this.getFirstRound());
     }
 
-    private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round ): number {
+    private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round): number {
         if (round.getNumber() > maxRoundNumber) {
             return 0;
         }
         let nrOfPoules = round.getPoules().length;
         round.getChildRounds().forEach((childRound) => {
-            nrOfPoules += this.getNrOfPoulesParentRoundsHelper(maxRoundNumber, childRound );
+            nrOfPoules += this.getNrOfPoulesParentRoundsHelper(maxRoundNumber, childRound);
         });
         return nrOfPoules;
     }
@@ -300,16 +339,16 @@ export class StructureService {
         const round = poule.getRound();
 
         const fromQualifyRule = pouleplace.getFromQualifyRule();
-        if ( fromQualifyRule === undefined ) { // first round
+        if (fromQualifyRule === undefined) { // first round
             return this.getPoulePlaceNameSimple(pouleplace, teamName);
         }
 
-        if ( fromQualifyRule.isMultiple() === false ) {
+        if (fromQualifyRule.isMultiple() === false) {
             const fromPoulePlace = fromQualifyRule.getSingleFromEquivalent(pouleplace);
             return this.getPoulePlaceNameSimple(fromPoulePlace, teamName);
         }
 
-        if ( full === true ) {
+        if (full === true) {
             return fromQualifyRule.getFromPoulePlaces().join('..');
         }
         return fromQualifyRule.getFromPoulePlaces().join('<br>');
