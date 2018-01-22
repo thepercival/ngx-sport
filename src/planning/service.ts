@@ -1,74 +1,92 @@
 import { Game } from '../game';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
+import { StructureService } from '../structure/service';
 import { catchError } from 'rxjs/operators/catchError';
 
 export class PlanningService {
-    private startDateTime: Date;
 
-    constructor(startDateTime?: Date) {
-        this.startDateTime = startDateTime;
+    private allRoundsByNumber: {};
+
+    constructor(private structureService: StructureService) {
+        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
     }
 
-    create(round: Round, startDateTime?: Date) {
+    getStartDateTime(): Date {
+        return this.structureService.getFirstRound().getCompetitionseason().getStartDateTime();
+    }
+
+    create(roundNumber: number, startDateTime?: Date) {
         if (startDateTime === undefined) {
-            startDateTime = this.calculateStartDateTime(round);
+            startDateTime = this.calculateStartDateTime(roundNumber);
         }
         try {
-            this.removeHelper(round);
-            this.createHelper(round);
-            const startNextRound = this.rescheduleHelper(round, startDateTime);
-
-            round.getChildRounds().forEach((childRound) => this.create(childRound, startNextRound));
+            this.removeHelper(roundNumber);
+            this.createHelper(roundNumber);
+            const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
+            if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
+                this.create(roundNumber + 1, startNextRound);
+            }
         } catch (e) {
             console.error(e.message);
         }
     }
 
-    reschedule(round: Round, startDateTime?: Date) {
-        if (startDateTime === undefined && this.canCalculateStartDateTime(round)) {
-            startDateTime = this.calculateStartDateTime(round);
+    reschedule(roundNumber: number, startDateTime?: Date) {
+        if (startDateTime === undefined && this.canCalculateStartDateTime(roundNumber)) {
+            startDateTime = this.calculateStartDateTime(roundNumber);
         }
         try {
-            const startNextRound = this.rescheduleHelper(round, startDateTime);
-            round.getChildRounds().forEach((childRound) => this.reschedule(childRound, startNextRound));
+            const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
+            if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
+                this.reschedule(roundNumber + 1, startNextRound);
+            }
         } catch (e) {
             console.error(e.message);
         }
     }
 
-
-    canCalculateStartDateTime(round: Round) {
-        if (round.getConfig().getEnableTime() === false) {
+    canCalculateStartDateTime(roundNumber: number) {
+        const aRound = this.allRoundsByNumber[roundNumber][0];
+        if (aRound.getConfig().getEnableTime() === false) {
             return false;
         }
-        if (round.getParentRound() !== undefined) {
-            return this.canCalculateStartDateTime(round.getParentRound());
+        if (this.allRoundsByNumber[roundNumber - 1] !== undefined) {
+            return this.canCalculateStartDateTime(roundNumber - 1);
         }
         return true;
     }
 
-    protected calculateStartDateTime(round: Round) {
-        if (round.getConfig().getEnableTime() === false) {
-            return undefined;
-        }
-        const parentRound = round.getParentRound();
-        if (parentRound === undefined) {
-            return this.startDateTime;
-        }
-        return this.calculateEndDateTime(parentRound);
+    isStarted(roundNumber: number) {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        return rounds.some(round => round.isStarted());
     }
 
-    protected calculateEndDateTime(round: Round) {
-        if (round.getConfig().getEnableTime() === false) {
+    protected calculateStartDateTime(roundNumber: number) {
+        const aRound = this.allRoundsByNumber[roundNumber][0];
+        if (aRound.getConfig().getEnableTime() === false) {
+            return undefined;
+        }
+        if (roundNumber === 1) {
+            return this.getStartDateTime();
+        }
+        return this.calculateEndDateTime(roundNumber - 1);
+    }
+
+    protected calculateEndDateTime(roundNumber: number) {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        const aRound = rounds[0];
+        if (aRound.getConfig().getEnableTime() === false) {
             return undefined;
         }
 
         let endDateTime;
-        round.getGames().forEach(function (game) {
-            if (endDateTime === undefined || game.getStartDateTime() > endDateTime) {
-                endDateTime = game.getStartDateTime();
-            }
+        rounds.forEach(round => {
+            round.getGames().forEach(game => {
+                if (endDateTime === undefined || game.getStartDateTime() > endDateTime) {
+                    endDateTime = game.getStartDateTime();
+                }
+            });
         });
 
         if (endDateTime === undefined) {
@@ -76,48 +94,47 @@ export class PlanningService {
         }
 
         const copiedEndDateTime = new Date(endDateTime.getTime());
-        const nrOfMinutes = round.getConfig().getMaximalNrOfMinutesPerGame(true);
+        const nrOfMinutes = aRound.getConfig().getMaximalNrOfMinutesPerGame(true);
         copiedEndDateTime.setMinutes(copiedEndDateTime.getMinutes() + nrOfMinutes);
         return copiedEndDateTime;
     }
 
 
-    protected createHelper(round: Round) {
-        const roundConfig = round.getConfig();
-
-        const poules = round.getPoules();
-        for (let i = 0; i < poules.length; i++) {
-            const poule = poules[i];
-            const schedGames = this.generateRRSchedule(poule.getPlaces().slice());
-            for (let headToHead = 1; headToHead <= roundConfig.getNrOfHeadtoheadMatches(); headToHead++) {
-                const headToHeadNumber = ((headToHead - 1) * schedGames.length);
-                for (let roundNumber = 0; roundNumber < schedGames.length; roundNumber++) {
-                    const schedRoundGames = schedGames[roundNumber];
-
-                    let subNumber = 1;
-                    schedRoundGames.forEach(function (schedGame) {
-                        if (schedGame[0] === undefined || schedGame[1] === undefined) {
-                            return;
-                        }
-                        const homePoulePlace = (headToHead % 2 === 0) ? schedGame[1] : schedGame[0];
-                        const awayPoulePlace = (headToHead % 2 === 0) ? schedGame[0] : schedGame[1];
-                        const gameTmp = new Game(poule, homePoulePlace, awayPoulePlace, headToHeadNumber + roundNumber + 1, subNumber++);
-                    });
+    protected createHelper(roundNumber: number) {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach((round) => {
+            const roundConfig = round.getConfig();
+            round.getPoules().forEach((poule) => {
+                const schedGames = this.generateRRSchedule(poule.getPlaces().slice());
+                for (let headToHead = 1; headToHead <= roundConfig.getNrOfHeadtoheadMatches(); headToHead++) {
+                    const headToHeadNumber = ((headToHead - 1) * schedGames.length);
+                    for (let gameRoundNumber = 0; gameRoundNumber < schedGames.length; gameRoundNumber++) {
+                        const schedRoundGames = schedGames[gameRoundNumber];
+                        let subNumber = 1;
+                        schedRoundGames.forEach(schedGame => {
+                            if (schedGame[0] === undefined || schedGame[1] === undefined) {
+                                return;
+                            }
+                            const homePoulePlace = (headToHead % 2 === 0) ? schedGame[1] : schedGame[0];
+                            const awayPoulePlace = (headToHead % 2 === 0) ? schedGame[0] : schedGame[1];
+                            const gameTmp =
+                                new Game(poule, homePoulePlace, awayPoulePlace, headToHeadNumber + gameRoundNumber + 1, subNumber++);
+                        });
+                    }
                 }
-            }
-        }
+            });
+        });
     }
 
-    protected rescheduleHelper(round: Round, pStartDateTime: Date): Date {
-        const roundConfig = round.getConfig();
+    protected rescheduleHelper(roundNumber: number, pStartDateTime: Date): Date {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        const aRoundConfig = rounds[0].getConfig();
 
         let dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
-        const fields = round.getCompetitionseason().getFields(); // order by number
-
-        const maxNrOfGamesSimultaneously = this.getMaxNrOfGamesSimultaneously(round);
+        const fields = this.structureService.getCompetitionseason().getFields(); // order by number
+        const maxNrOfGamesSimultaneously = this.getMaxNrOfGamesSimultaneously(roundNumber);
         const tooMuchFieldsAvailable = fields.length > maxNrOfGamesSimultaneously;
-
-        const referees = round.getCompetitionseason().getReferees();
+        const referees = this.structureService.getCompetitionseason().getReferees();
 
         let nrOfGamesSimultaneously = 0;
         let fieldNr = 0;
@@ -125,16 +142,13 @@ export class PlanningService {
         let refereeNr = 0;
         let currentReferee = referees[refereeNr];
         let nextRoundStartDateTime: Date;
-        const games = this.getGamesByNumber(round);
+        const games = this.getGamesByNumber(roundNumber);
         games.forEach(function (gamesPerRoundNumber) {
             gamesPerRoundNumber.forEach((game) => {
-
                 game.setField(currentField);
                 game.setStartDateTime(dateTime);
                 game.setReferee(currentReferee);
-
                 let addTime = false;
-
                 currentField = fields[++fieldNr];
                 if (currentField === undefined) {
                     fieldNr = 0;
@@ -147,14 +161,12 @@ export class PlanningService {
                     currentReferee = referees[refereeNr];
                     addTime = true;
                 }
-
                 if (++nrOfGamesSimultaneously === maxNrOfGamesSimultaneously) {
                     addTime = true;
                     nrOfGamesSimultaneously = 0;
                 }
-
-                if (roundConfig.getEnableTime() && dateTime && addTime) {
-                    const nrOfMinutes = roundConfig.getMaximalNrOfMinutesPerGame(true);
+                if (aRoundConfig.getEnableTime() && dateTime && addTime) {
+                    const nrOfMinutes = aRoundConfig.getMaximalNrOfMinutesPerGame(true);
                     dateTime = new Date(dateTime.getTime());
                     dateTime.setMinutes(dateTime.getMinutes() + nrOfMinutes);
                     if (nextRoundStartDateTime === undefined || dateTime > nextRoundStartDateTime) {
@@ -167,32 +179,41 @@ export class PlanningService {
         return nextRoundStartDateTime;
     }
 
-    protected getGamesByNumber(round: Round): Game[][] {
+    protected getGamesByNumber(roundNumber: number): Game[][] {
         const games = [];
-        round.getPoules().forEach(function (poule) {
-            let number = 1;
-            poule.getGames().forEach(function (game) {
-                if (games[number] === undefined) {
-                    games[number] = [];
-                }
-                games[number++].push(game);
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach(round => {
+            round.getPoules().forEach(poule => {
+                let number = 1;
+                poule.getGames().forEach(function (game) {
+                    if (games[number] === undefined) {
+                        games[number] = [];
+                    }
+                    games[number++].push(game);
+                });
             });
         });
         return games;
     }
 
-    protected getMaxNrOfGamesSimultaneously(round) {
+    protected getMaxNrOfGamesSimultaneously(roundNumber: number) { // misschien ook nog per gameroundnumber
         let nrOfGames = 0;
-        round.getPoules().forEach((poule) => {
-            const nrOfRestingPlaces = poule.getPlaces().length % 2;
-            nrOfGames += (poule.getPlaces().length - nrOfRestingPlaces) / 2;
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach(round => {
+            round.getPoules().forEach(poule => {
+                const nrOfRestingPlaces = poule.getPlaces().length % 2;
+                nrOfGames += (poule.getPlaces().length - nrOfRestingPlaces) / 2;
+            });
         });
         return nrOfGames;
     }
 
-    protected removeHelper(round: Round) {
-        round.getPoules().forEach(function (poule) {
-            poule.getGames().splice(0, poule.getGames().length);
+    protected removeHelper(roundNumber: number) {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach(round => {
+            round.getPoules().forEach(poule => {
+                poule.getGames().splice(0, poule.getGames().length);
+            });
         });
     }
 

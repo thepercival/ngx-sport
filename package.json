@@ -9,7 +9,6 @@
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
     "@angular/core": "^5.0.0",
-    "codelyzer": "^4.1.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.20"
   },
@@ -19,10 +18,11 @@
     "@semantic-release/git": "^2.0.2",
     "@semantic-release/npm": "^2.6.4",
     "rollup": "^0.51.8",
+    "codelyzer": "^4.0.1",
     "semantic-release": "^11.0.2",
     "travis-deploy-once": "^4.3.1",
     "tslint": "^5.9.1",
-    "typescript": "2.4.2",
+    "typescript": "~2.4.2",
     "uglify-js": "^3.0.7"
   },
   "directories": {},

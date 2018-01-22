@@ -184,6 +184,10 @@ export class StructureService {
         return nrOfRoundsToGoLosers;
     }
 
+    getRoundNumbers(): Array<number> {
+        return Array(this.getNrOfRoundsToGo(this.getFirstRound())).fill(0).map((e, i) => i + 1);
+    }
+
     /**
      * Wanneer needsranking en als zijn parents needsRanking dan xste ronde
      * Wanneer er 2 children zijn, met beide ander maxDepth dan aanduiden met xste ronde

@@ -74,15 +74,15 @@ export class Round {
         }
     }
 
-    isAncestorOf(aParentRound: Round) {
-        if (this.getParentRound() === undefined) {
-            return false;
-        }
-        if (this.getParentRound() === aParentRound) {
-            return true;
-        }
-        return this.getParentRound().isAncestorOf(aParentRound);
-    }
+    // isAncestorOf(aParentRound: Round) {
+    //     if (this.getParentRound() === undefined) {
+    //         return false;
+    //     }
+    //     if (this.getParentRound() === aParentRound) {
+    //         return true;
+    //     }
+    //     return this.getParentRound().isAncestorOf(aParentRound);
+    // }
 
     getNumber(): number {
         return this.number;
