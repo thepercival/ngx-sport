@@ -94,12 +94,12 @@ export class StructureService {
         return this.getRounds(round.getChildRound(Round.LOSERS), rounds);
     }
 
-    getRoundsByNumber(round: Round, roundsByNumber: any = {}): {} {
+    getAllRoundsByNumber(round: Round = this.getFirstRound(), roundsByNumber: any = {}): {} {
         if (roundsByNumber[round.getNumber()] === undefined) {
             roundsByNumber[round.getNumber()] = [];
         }
         roundsByNumber[round.getNumber()].push(round);
-        round.getChildRounds().forEach((childRound) => this.getRoundsByNumber(childRound, roundsByNumber));
+        round.getChildRounds().forEach((childRound) => this.getAllRoundsByNumber(childRound, roundsByNumber));
         return roundsByNumber;
     }
 
@@ -154,8 +154,13 @@ export class StructureService {
         return false;
     }
 
+    getSiblingRounds(roundNumber: number): Round[] {
+        const roundsByNumber: {} = this.getAllRoundsByNumber();
+        return roundsByNumber[roundNumber];
+    }
+
     getNrOfSiblingRounds(round: Round) {
-        const roundsByNumber: {} = this.getRoundsByNumber(this.getFirstRound());
+        const roundsByNumber: {} = this.getAllRoundsByNumber();
         return roundsByNumber[round.getNumber()].length - 1;
     }
 
@@ -228,9 +233,9 @@ export class StructureService {
     /**
      *  als allemaal dezelfde naam dan geef die naam
      * als verschillde namen geef dan xde ronde met tooltip van de namen
-     * 
+     *
      * @param roundsByNumber
-     * 
+     *
      */
     getRoundsName(roundNumber, roundsByNumber: Round[]) {
         if (this.roundsHaveSameName(roundsByNumber) === true) {
