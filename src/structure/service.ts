@@ -160,8 +160,7 @@ export class StructureService {
     }
 
     getNrOfSiblingRounds(round: Round) {
-        const roundsByNumber: {} = this.getAllRoundsByNumber();
-        return roundsByNumber[round.getNumber()].length - 1;
+        return this.getSiblingRounds(round.getNumber()).length - 1;
     }
 
     getNrOfRoundsToGo(round: Round) {
