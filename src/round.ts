@@ -236,18 +236,6 @@ export class Round {
         return games;
     }
 
-    getGamesByNumber(): Game[] {
-        return this.getGames().sort((g1, g2) => {
-            if (g1.getRoundNumber() === g2.getRoundNumber()) {
-                if (g1.getSubNumber() === g2.getSubNumber()) {
-                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
-                }
-                return g1.getSubNumber() - g2.getSubNumber();
-            }
-            return g1.getRoundNumber() - g2.getRoundNumber();
-        });
-    }
-
     getGamesWithState(state: number): Game[] {
         const games = [];
         this.getPoules().forEach(poule => {

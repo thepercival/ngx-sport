@@ -137,13 +137,14 @@ export class PlanningService {
         const referees = this.structureService.getCompetitionseason().getReferees();
 
         let nrOfGamesSimultaneously = 0;
-        let fieldNr = 0;
-        let currentField = fields[fieldNr];
         let refereeNr = 0;
         let currentReferee = referees[refereeNr];
         let nextRoundStartDateTime: Date;
         const games = this.getGamesByNumber(roundNumber);
         games.forEach(function (gamesPerRoundNumber) {
+            let fieldNr = 0;
+            let currentField = fields[fieldNr];
+            let nrOfRefereesUsed = 0;
             gamesPerRoundNumber.forEach((game) => {
                 game.setField(currentField);
                 game.setStartDateTime(dateTime);
@@ -155,11 +156,15 @@ export class PlanningService {
                     currentField = fields[fieldNr];
                     addTime = true;
                 }
+                nrOfRefereesUsed++;
                 currentReferee = referees[++refereeNr];
                 if (referees.length > 0 && currentReferee === undefined) {
                     refereeNr = 0;
                     currentReferee = referees[refereeNr];
-                    addTime = true;
+                    if (nrOfRefereesUsed > referees.length) {
+                        addTime = true;
+                        nrOfRefereesUsed = 0;
+                    }
                 }
                 if (++nrOfGamesSimultaneously === maxNrOfGamesSimultaneously) {
                     addTime = true;
@@ -179,7 +184,7 @@ export class PlanningService {
         return nextRoundStartDateTime;
     }
 
-    protected getGamesByNumber(roundNumber: number): Game[][] {
+    getGamesByNumber(roundNumber: number): Game[][] {
         const games = [];
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach(round => {
@@ -193,6 +198,13 @@ export class PlanningService {
                 });
             });
         });
+        games.forEach(gamesPerGameRoundNumber => gamesPerGameRoundNumber.sort((g1, g2) => {
+            if (g1.getSubNumber() === g2.getSubNumber()) {
+                return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+            }
+            return g1.getSubNumber() - g2.getSubNumber();
+        })
+        );
         return games;
     }
 
