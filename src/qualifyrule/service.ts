@@ -18,20 +18,26 @@ export class QualifyService {
     }
 
     createObjectsForParentRound() {
-        const poulePlacesPerNumberParentRound = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
+        console.log('createObjectsForParentRound()');
+        const parentRoundPoulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
         const orderedByPlace = true;
-        const poulePlacesOrderedByPlaceChildRound = this.childRound.getPoulePlaces(orderedByPlace);
+        const childRoundPoulePlacesOrderedByPlace = this.childRound.getPoulePlaces(orderedByPlace);
+        if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
+            childRoundPoulePlacesOrderedByPlace.reverse();
+        }
 
-        while (poulePlacesOrderedByPlaceChildRound.length > 0) {
-            if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
-                poulePlacesOrderedByPlaceChildRound.reverse();
-            }
+        let nrOfShifts = 0;
+        while (childRoundPoulePlacesOrderedByPlace.length > 0) {
             const qualifyRule = new QualifyRule(this.parentRound, this.childRound);
             // from places
             let poulePlaces;
             {
                 // if ( this.childRound.getWinnersOrLosers() === Round.WINNERS) {
-                poulePlaces = poulePlacesPerNumberParentRound.shift();
+                poulePlaces = parentRoundPoulePlacesPerNumber.shift();
+                for (let shiftTime = 0; shiftTime < nrOfShifts; shiftTime++) {
+                    poulePlaces.push(poulePlaces.shift());
+                }
+                nrOfShifts++;
                 // }
                 // else {
                 //   poulePlaces = poulePlacesPerNumberParentRound.pop();
@@ -43,12 +49,12 @@ export class QualifyService {
 
             // to places
             for (let nI = 0; nI < poulePlaces.length; nI++) {
-                if (poulePlacesOrderedByPlaceChildRound.length === 0) {
+                if (childRoundPoulePlacesOrderedByPlace.length === 0) {
                     break;
                 }
                 let toPoulePlace;
                 // if ( this.childRound.getWinnersOrLosers() === Round.WINNERS ) {
-                toPoulePlace = poulePlacesOrderedByPlaceChildRound.shift();
+                toPoulePlace = childRoundPoulePlacesOrderedByPlace.shift();
                 // }
                 // else {
                 // toPoulePlace = poulePlacesOrderedByPlaceChildRound.pop();
