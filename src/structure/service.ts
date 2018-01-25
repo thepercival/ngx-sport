@@ -339,7 +339,7 @@ export class StructureService {
         return nrOfChildPoules;
     }
 
-    getPoulePlaceName(pouleplace: PoulePlace, teamName = false, full: boolean = false) {
+    getPoulePlaceName(pouleplace: PoulePlace, teamName = false) {
         if (teamName === true && pouleplace.getTeam() !== undefined) {
             return pouleplace.getTeam().getName();
         }
@@ -348,22 +348,15 @@ export class StructureService {
 
         const fromQualifyRule = pouleplace.getFromQualifyRule();
         if (fromQualifyRule === undefined) { // first round
-            return this.getPoulePlaceNameSimple(pouleplace, teamName);
+            return this.getPoulePlaceNameSimple(pouleplace, false);
         }
 
         if (fromQualifyRule.isMultiple() === false) {
             const fromPoulePlace = fromQualifyRule.getSingleFromEquivalent(pouleplace);
-            return this.getPoulePlaceNameSimple(fromPoulePlace, teamName);
+            return this.getPoulePlaceNameSimple(fromPoulePlace, false);
         }
 
-        if (full === true) {
-            return fromQualifyRule.getFromPoulePlaces().join('..');
-        }
-        return fromQualifyRule.getFromPoulePlaces().join('<br>');
-        // bv; A2;
-        // A2..D2 in tooltip; dan; A2, B2, C2; of; D2;
-
-
+        return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
     }
 
     getPoulePlaceNameSimple(pouleplace: PoulePlace, teamName = false) {
