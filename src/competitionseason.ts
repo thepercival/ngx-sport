@@ -119,8 +119,8 @@ export class Competitionseason {
         return this.referees;
     }
 
-    getRefereeByNumber(number: number): Referee {
-        return this.referees.find(refereeIt => number === refereeIt.getNumber());
+    getRefereeById(id: number): Referee {
+        return this.referees.find(refereeIt => id === refereeIt.getId());
     }
 
     removeReferee(referee: Referee) {

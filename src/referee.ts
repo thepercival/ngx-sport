@@ -1,17 +1,21 @@
 import { Competitionseason } from './competitionseason';
 
 export class Referee {
+    static readonly MIN_LENGTH_INITIALS = 1;
+    static readonly MAX_LENGTH_INITIALS = 3;
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 15;
+    static readonly MAX_LENGTH_INFO = 200;
 
     protected id: number;
     protected competitionseason: Competitionseason;
-    protected number: number;
+    protected initials: string;
     protected name: string;
+    protected info: string;
 
-    constructor(competitionseason: Competitionseason, number: number) {
+    constructor(competitionseason: Competitionseason, initials: string) {
         this.setCompetitionseason(competitionseason);
-        this.setNumber(number);
+        this.setInitials(initials);
     }
 
     getId(): number {
@@ -31,12 +35,12 @@ export class Referee {
         this.competitionseason.getReferees().push(this);
     }
 
-    getNumber(): number {
-        return this.number;
+    getInitials(): string {
+        return this.initials;
     }
 
-    setNumber(number: number): void {
-        this.number = number;
+    setInitials(initials: string): void {
+        this.initials = initials;
     }
 
     getName(): string {
@@ -45,5 +49,13 @@ export class Referee {
 
     setName(name: string): void {
         this.name = name;
+    }
+
+    getInfo(): string {
+        return this.info;
+    }
+
+    setInfo(info: string): void {
+        this.info = info;
     }
 }

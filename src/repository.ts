@@ -27,12 +27,16 @@ export class SportRepository {
 
     handleError(error: HttpErrorResponse): Observable<any> {
         let errortext = 'onbekende fout';
+        console.log(error);
         if (typeof error.error === 'string') {
             errortext = error.error;
+        }
+        else if (error.statusText !== undefined) {
+            errortext = error.statusText;
         }
         if (error.status === 401) {
             errortext = 'je bent niet ingelogd';
         }
         return Observable.throw(errortext);
-      }
+    }
 }

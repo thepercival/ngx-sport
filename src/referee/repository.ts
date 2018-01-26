@@ -24,35 +24,24 @@ export class RefereeRepository extends SportRepository {
     }
 
     createObject(jsonReferee: IReferee, competitionseason: Competitionseason): Observable<Referee> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
-
-        console.log('referee posted', jsonReferee);
-
         return this.http.post(this.url, jsonReferee, options).pipe(
-            map((res: IReferee) => {
-                const refereeRes = this.jsonToObjectHelper(res, competitionseason);
-                return refereeRes;
-            }),
-            catchError( super.handleError )
+            map((res: IReferee) => this.jsonToObjectHelper(res, competitionseason)),
+            catchError(super.handleError)
         );
     }
 
     editObject(referee: Referee, competitionseason: Competitionseason): Observable<Referee> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
-
         return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), options).pipe(
-            map((res: IReferee) => {
-                return this.jsonToObjectHelper(res, competitionseason, referee);
-            }),
-            catchError( super.handleError )
+            map((res: IReferee) => this.jsonToObjectHelper(res, competitionseason, referee)),
+            catchError(super.handleError)
         );
     }
 
@@ -62,7 +51,7 @@ export class RefereeRepository extends SportRepository {
             map((res: any) => {
                 referee.getCompetitionseason().removeReferee(referee);
             }),
-            catchError( super.handleError )
+            catchError(super.handleError)
         );
     }
 
@@ -77,10 +66,11 @@ export class RefereeRepository extends SportRepository {
 
     jsonToObjectHelper(json: IReferee, competitionseason: Competitionseason, referee?: Referee): Referee {
         if (referee === undefined) {
-            referee = new Referee(competitionseason, json.number);
+            referee = new Referee(competitionseason, json.initials);
         }
         referee.setId(json.id);
         referee.setName(json.name);
+        referee.setInfo(json.info);
         // this.cache.push(referee);
         return referee;
     }
@@ -96,9 +86,10 @@ export class RefereeRepository extends SportRepository {
 
     objectToJsonHelper(object: Referee): IReferee {
         const json: IReferee = {
-            'id': object.getId(),
-            'number': object.getNumber(),
-            'name': object.getName()
+            id: object.getId(),
+            initials: object.getInitials(),
+            name: object.getName(),
+            info: object.getInfo()
         };
         return json;
     }
@@ -106,6 +97,7 @@ export class RefereeRepository extends SportRepository {
 
 export interface IReferee {
     id?: number;
-    number: number;
-    name: string;
+    initials: string;
+    name?: string;
+    info?: string;
 }

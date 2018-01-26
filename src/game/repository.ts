@@ -45,7 +45,7 @@ export class GameRepository extends SportRepository {
             map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
             }),
-            catchError( super.handleError )
+            catchError(super.handleError)
         );
     }
 
@@ -78,7 +78,7 @@ export class GameRepository extends SportRepository {
         game.setState(json.state);
         game.setField(poule.getCompetitionseason().getFieldByNumber(json.field.number));
         if (json.referee !== undefined) {
-            game.setReferee(poule.getCompetitionseason().getRefereeByNumber(json.referee.number));
+            game.setReferee(poule.getCompetitionseason().getRefereeById(json.referee.id));
         }
         if (json.startDateTime !== undefined) {
             game.setStartDateTime(new Date(json.startDateTime));
