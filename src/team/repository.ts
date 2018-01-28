@@ -65,7 +65,7 @@ export class TeamRepository extends SportRepository {
                 const teamRes = this.jsonToObjectHelper(res, association);
                 return teamRes;
             }),
-            catchError( super.handleError )
+            catchError(super.handleError)
         );
     }
 
@@ -80,7 +80,7 @@ export class TeamRepository extends SportRepository {
             map((res: ITeam) => {
                 return this.jsonToObjectHelper(res, association, team);
             }),
-            catchError( super.handleError )
+            catchError(super.handleError)
         );
     }
 
@@ -102,6 +102,7 @@ export class TeamRepository extends SportRepository {
         }
         team.setId(json.id);
         team.setAbbreviation(json.abbreviation);
+        team.setInfo(json.info);
         return team;
     }
 
@@ -110,6 +111,7 @@ export class TeamRepository extends SportRepository {
             id: object.getId(),
             name: object.getName(),
             abbreviation: object.getAbbreviation(),
+            info: object.getInfo(),
         };
         return json;
     }
@@ -119,4 +121,5 @@ export interface ITeam {
     id?: number;
     name: string;
     abbreviation?: string;
+    info?: string;
 }

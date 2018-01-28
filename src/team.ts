@@ -7,10 +7,12 @@ export class Team {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
+    static readonly MAX_LENGTH_INFO = 200;
 
     protected id: number;
     protected name: string;
     protected abbreviation: string;
+    protected info: string;
     protected association: Association;
 
     // constructor
@@ -41,6 +43,14 @@ export class Team {
 
     setAbbreviation(abbreviation: string): void {
         this.abbreviation = abbreviation;
+    }
+
+    getInfo(): string {
+        return this.info;
+    }
+
+    setInfo(info: string): void {
+        this.info = info;
     }
 
     getAssociation(): Association {
