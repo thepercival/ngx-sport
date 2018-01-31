@@ -2,6 +2,7 @@
  * Created by coen on 16-2-17.
  */
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -27,9 +28,10 @@ export class CompetitionseasonRepository extends SportRepository {
         private competitionRepository: CompetitionRepository,
         private seasonRepository: SeasonRepository,
         private fieldRepository: FieldRepository,
-        private refereeRepository: RefereeRepository
+        private refereeRepository: RefereeRepository,
+        router: Router
     ) {
-        super();
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -50,7 +52,7 @@ export class CompetitionseasonRepository extends SportRepository {
                 this.objects = this.jsonArrayToObject(res);
                 return this.objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -123,7 +125,7 @@ export class CompetitionseasonRepository extends SportRepository {
     createObject(jsonObject: ICompetitionseason): Observable<Competitionseason> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
             map((res: ICompetitionseason) => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -132,7 +134,7 @@ export class CompetitionseasonRepository extends SportRepository {
 
         return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
             map((res: ICompetitionseason) => { console.log(res); return this.jsonToObjectHelper(res); }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -140,7 +142,7 @@ export class CompetitionseasonRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res: Competitionseason) => res),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 }

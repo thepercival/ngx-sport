@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -25,8 +26,9 @@ export class GameRepository extends SportRepository {
         private pouleplaceRepos: PoulePlaceRepository,
         private fieldRepos: FieldRepository,
         private refereeRepos: RefereeRepository,
-        private gameScoreRepos: GameScoreRepository) {
-        super();
+        private gameScoreRepos: GameScoreRepository,
+        router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -45,7 +47,7 @@ export class GameRepository extends SportRepository {
             map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
             }),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 

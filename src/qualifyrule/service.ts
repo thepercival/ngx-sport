@@ -116,7 +116,6 @@ export class QualifyService {
             return [];
         }
         const ruleParts = this.getRulePartsToProcess(parentPoule);
-        console.log(ruleParts);
         let qualifiers: INewQualifier[] = [];
         ruleParts.forEach(rulePart => {
             qualifiers = qualifiers.concat(this.getQualifiers(rulePart));

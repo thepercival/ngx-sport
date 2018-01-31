@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -14,8 +15,8 @@ export class RefereeRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private http: HttpClient) {
-        super();
+        private http: HttpClient, router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -30,7 +31,7 @@ export class RefereeRepository extends SportRepository {
         };
         return this.http.post(this.url, jsonReferee, options).pipe(
             map((res: IReferee) => this.jsonToObjectHelper(res, competitionseason)),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -41,7 +42,7 @@ export class RefereeRepository extends SportRepository {
         };
         return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), options).pipe(
             map((res: IReferee) => this.jsonToObjectHelper(res, competitionseason, referee)),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -51,7 +52,7 @@ export class RefereeRepository extends SportRepository {
             map((res: any) => {
                 referee.getCompetitionseason().removeReferee(referee);
             }),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 

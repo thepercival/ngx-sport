@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -15,8 +16,8 @@ export class FieldRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private http: HttpClient) {
-        super();
+        private http: HttpClient, router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -38,7 +39,7 @@ export class FieldRepository extends SportRepository {
                 const fieldRes = this.jsonToObjectHelper(res, competitionseason);
                 return fieldRes;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -53,7 +54,7 @@ export class FieldRepository extends SportRepository {
             map((res: IField) => {
                 return this.jsonToObjectHelper(res, competitionseason, field);
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -63,7 +64,7 @@ export class FieldRepository extends SportRepository {
             map((res) => {
                 field.getCompetitionseason().removeField(field);
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 

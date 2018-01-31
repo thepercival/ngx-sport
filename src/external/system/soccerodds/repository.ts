@@ -2,7 +2,7 @@
  * Created by coen on 30-1-17.
  */
 import { SportRepository } from '../../../repository';
-
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -20,9 +20,10 @@ export class ExternalSystemSoccerOddsRepository extends SportRepository {
     constructor(
         private http: HttpClient,
         private externalSystem: ExternalSystemSoccerOdds,
-        private externalSystemRepository: ExternalSystemRepository
+        private externalSystemRepository: ExternalSystemRepository,
+        router: Router
     ) {
-        super();
+        super(router);
     }
 
     getToken(): string {
@@ -41,7 +42,7 @@ export class ExternalSystemSoccerOddsRepository extends SportRepository {
         const url = this.externalSystem.getApiurl() + 'leagues';
         return this.http.get(url, { headers: this.getHeaders() }).pipe(
             map((res) => this.jsonCompetitionsToArrayHelper(res)),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 

@@ -1,4 +1,5 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
@@ -9,7 +10,9 @@ import { SportConfig } from './config';
  */
 export class SportRepository {
 
-    constructor() {
+    protected router: Router;
+    constructor(router: Router) {
+        this.router = router;
     }
 
     getApiUrl(): string {
@@ -25,17 +28,20 @@ export class SportRepository {
         return headers;
     }
 
-    handleError(error: HttpErrorResponse): Observable<any> {
+    protected getRouter() {
+        return this.router;
+    }
+
+    protected handleError(error: HttpErrorResponse): Observable<any> {
         let errortext = 'onbekende fout';
         console.log(error);
         if (typeof error.error === 'string') {
             errortext = error.error;
-        }
-        else if (error.statusText !== undefined) {
+        } else if (error.statusText !== undefined) {
             errortext = error.statusText;
         }
         if (error.status === 401) {
-            errortext = 'je bent niet ingelogd';
+            this.getRouter().navigate(['/user/login'], { queryParams: { message: 'log opnieuw in' } });
         }
         return Observable.throw(errortext);
     }

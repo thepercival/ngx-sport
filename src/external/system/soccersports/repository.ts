@@ -3,6 +3,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -32,9 +33,10 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
     constructor(
         private http: HttpClient,
         private externalSystem: ExternalSystemSoccerSports,
-        private externalSystemRepository: ExternalSystemRepository
+        private externalSystemRepository: ExternalSystemRepository,
+        router: Router
     ) {
-        super();
+        super(router);
     }
 
     getToken(): string {
@@ -90,7 +92,7 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.data.leagues), this.getExpireDate('Association'));
                 return associations;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -153,7 +155,7 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.leagues), this.getExpireDate('Competition'));
                 return objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -201,7 +203,7 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.seasons), this.getExpireDate('Season'));
                 return objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -301,7 +303,7 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.seasons), this.getExpireDate('Competitionseason'));
                 return objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -350,7 +352,7 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
                 this.setCacheItem(cacheName, JSON.stringify(json.teams), this.getExpireDate('Team'));
                 return objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 

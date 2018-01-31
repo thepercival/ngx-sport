@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -19,8 +20,8 @@ export class TeamRepository extends SportRepository {
     private url: string;
     // private teams: Team[];
 
-    constructor(private http: HttpClient) {
-        super();
+    constructor(private http: HttpClient, router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -65,7 +66,7 @@ export class TeamRepository extends SportRepository {
                 const teamRes = this.jsonToObjectHelper(res, association);
                 return teamRes;
             }),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -80,7 +81,7 @@ export class TeamRepository extends SportRepository {
             map((res: ITeam) => {
                 return this.jsonToObjectHelper(res, association, team);
             }),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 

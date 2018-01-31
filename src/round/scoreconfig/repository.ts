@@ -1,6 +1,7 @@
 /**
  * Created by coen on 3-3-17.
  */
+import { SportConfig } from '../../config';
 import { Round } from '../../round';
 import { RoundScoreConfig } from '../scoreconfig';
 
@@ -44,11 +45,12 @@ export class RoundScoreConfigRepository {
     }
 
     createObjectFromParent(round: Round): RoundScoreConfig {
+        const sport = round.getCompetitionseason().getSport();
 
         let json: IRoundScoreConfig;
         if (round.getParentRound() !== undefined) {
             json = this.objectToJsonHelper(round.getParentRound().getScoreConfig());
-        } else if (round.getCompetitionseason().getSport() === 'darten') {
+        } else if (sport === SportConfig.Darts) {
             json = {
                 id: undefined,
                 name: 'punten',
@@ -68,12 +70,26 @@ export class RoundScoreConfigRepository {
                     }
                 }
             };
-        } else if (round.getCompetitionseason().getSport() === 'tafeltennis') {
+        } else if (sport === SportConfig.Tennis) {
+            json = {
+                id: undefined,
+                name: 'games',
+                direction: RoundScoreConfig.UPWARDS,
+                maximum: 6,
+                parent: {
+                    id: undefined,
+                    name: 'sets',
+                    direction: RoundScoreConfig.UPWARDS,
+                    maximum: 2,
+                    parent: undefined
+                }
+            };
+        } else if (sport === SportConfig.TableTennis || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
             json = {
                 id: undefined,
                 name: 'punten',
                 direction: RoundScoreConfig.UPWARDS,
-                maximum: 21,
+                maximum: sport === SportConfig.TableTennis ? 21 : (SportConfig.Volleyball ? 25 : 15),
                 parent: {
                     id: undefined,
                     name: 'sets',
@@ -82,7 +98,7 @@ export class RoundScoreConfigRepository {
                     parent: undefined
                 }
             };
-        } else if (round.getCompetitionseason().getSport() === 'voetbal') {
+        } else if (sport === SportConfig.Football || sport === SportConfig.Hockey) {
             json = {
                 id: undefined,
                 name: 'goals',

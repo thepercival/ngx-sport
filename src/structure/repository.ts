@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
@@ -22,8 +23,9 @@ export class StructureRepository extends SportRepository {
 
     constructor(
         private http: HttpClient,
-        private roundRepos: RoundRepository) {
-        super();
+        private roundRepos: RoundRepository,
+        router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -34,7 +36,6 @@ export class StructureRepository extends SportRepository {
     getObject(competitionseason: Competitionseason): Observable<Round> {
         const foundStructure = this.findObject(competitionseason);
         if (foundStructure !== undefined) {
-            console.log('getStructureFromCache', foundStructure);
             return Observable.create((observer: Observer<Round>) => {
                 observer.next(foundStructure);
                 observer.complete();
@@ -54,7 +55,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(round, competitionseason);
                 return round;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -74,7 +75,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(roundOut, competitionseason);
                 return roundOut;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -94,7 +95,7 @@ export class StructureRepository extends SportRepository {
                 this.updateCache(roundOut, competitionseason);
                 return roundOut;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -104,7 +105,7 @@ export class StructureRepository extends SportRepository {
             map((res: Response) => {
                 this.removeFromCache(round, round.getCompetitionseason());
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 

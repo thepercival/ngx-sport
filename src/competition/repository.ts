@@ -2,6 +2,7 @@
  * Created by coen on 10-2-17.
  */
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -18,8 +19,8 @@ export class CompetitionRepository extends SportRepository {
     private url: string;
     private objects: Competition[];
 
-    constructor(private http: HttpClient) {
-        super();
+    constructor(private http: HttpClient, router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -41,7 +42,7 @@ export class CompetitionRepository extends SportRepository {
                 this.objects = objects;
                 return this.objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -58,7 +59,7 @@ export class CompetitionRepository extends SportRepository {
         const url = this.url + '/' + id;
         return this.http.get(url).pipe(
             map((res: ICompetition) => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -89,7 +90,7 @@ export class CompetitionRepository extends SportRepository {
     createObject(jsonObject: any): Observable<Competition> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
             map((res: ICompetition) => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -98,7 +99,7 @@ export class CompetitionRepository extends SportRepository {
 
         return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
             map((res: ICompetition) => { console.log(res); return this.jsonToObjectHelper(res); }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -106,7 +107,7 @@ export class CompetitionRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res: Competition) => res),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 }

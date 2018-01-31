@@ -1,4 +1,5 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -14,8 +15,8 @@ export class SeasonRepository extends SportRepository {
     private url: string;
     private objects: Season[];
 
-    constructor(private http: HttpClient) {
-        super();
+    constructor(private http: HttpClient, router: Router) {
+        super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
 
@@ -37,7 +38,7 @@ export class SeasonRepository extends SportRepository {
                 this.objects = objects;
                 return this.objects;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -54,7 +55,7 @@ export class SeasonRepository extends SportRepository {
         const url = this.url + '/' + id;
         return this.http.get(url, { headers: super.getHeaders() }).pipe(
             map((res) => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -79,7 +80,7 @@ export class SeasonRepository extends SportRepository {
     createObject(jsonObject: any): Observable<Season> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
             map((res) => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -87,7 +88,7 @@ export class SeasonRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() }).pipe(
             map(res => this.jsonToObjectHelper(res)),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -95,7 +96,7 @@ export class SeasonRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res: Season) => res),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
