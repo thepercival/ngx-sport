@@ -80,7 +80,7 @@ export class ExternalSystemRepository extends SportRepository {
     }
 
     private getObjectByName(name: string): ExternalSystem {
-        const foundObjects = this.specificObjects.filter(objectFilter => objectFilter.getName() == name);
+        const foundObjects = this.specificObjects.filter(objectFilter => objectFilter.getName() === name);
         const foundObject = foundObjects.shift();
         if (foundObject) {
             return foundObject;
@@ -93,7 +93,7 @@ export class ExternalSystemRepository extends SportRepository {
         } else {
             externalSystem = new ExternalSystem(name);
         }
-        if (externalSystem != undefined) {
+        if (externalSystem !== undefined) {
             this.specificObjects.push(externalSystem);
         }
         return externalSystem;
