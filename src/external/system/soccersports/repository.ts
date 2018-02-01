@@ -1,25 +1,25 @@
 /**
  * Created by coen on 17-2-17.
  */
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
-import { SportRepository } from '../../../repository';
 import { Association } from '../../../association';
 import { Competition } from '../../../competition';
 import { Competitionseason } from '../../../competitionseason';
 import { Poule } from '../../../poule';
 import { PoulePlace } from '../../../pouleplace';
+import { SportRepository } from '../../../repository';
 import { Round } from '../../../round';
 import { Season } from '../../../season';
 import { Team } from '../../../team';
 import { ExternalSystemRepository } from '../repository';
 import { ExternalSystemSoccerSports } from '../soccersports';
+
 
 
 @Injectable()
@@ -326,7 +326,6 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
 
         const season: Season = this.jsonSeasonToObjectHelper(json);
         const association = this.getAsspociationByCompetitionId(competition.getId());
-        // console.log(association);
         const competitionseason = new Competitionseason(association, competition, season);
         // competitionseason.setId(association.getId().toString() + '_' + competition.getId().toString() + '_' + season.getId().toString());
 

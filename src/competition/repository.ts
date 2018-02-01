@@ -1,12 +1,12 @@
 /**
  * Created by coen on 10-2-17.
  */
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Competition } from '../competition';
 import { SportRepository } from '../repository';
@@ -98,7 +98,7 @@ export class CompetitionRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
 
         return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
-            map((res: ICompetition) => { console.log(res); return this.jsonToObjectHelper(res); }),
+            map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }

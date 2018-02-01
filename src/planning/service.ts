@@ -2,7 +2,6 @@ import { Game } from '../game';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 import { StructureService } from '../structure/service';
-import { catchError } from 'rxjs/operators/catchError';
 
 export class PlanningService {
 
@@ -10,6 +9,11 @@ export class PlanningService {
 
     constructor(private structureService: StructureService) {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
+        console.log('looping through rounds!! in constructor planningservice');
+    }
+
+    getRoundsByNumber(roundNumber: number): Round[] {
+        return this.allRoundsByNumber[roundNumber];
     }
 
     getStartDateTime(): Date {

@@ -23,7 +23,6 @@ export class Ranking {
         if (gameStates === undefined) {
             gameStates = Game.STATE_PLAYED;
         }
-        
         this.gameStates = gameStates;
         this.initFunctions();
     }

@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Competitionseason } from '../competitionseason';
 import { Field } from '../field';
@@ -26,14 +26,10 @@ export class FieldRepository extends SportRepository {
     }
 
     createObject(jsonField: IField, competitionseason: Competitionseason): Observable<Field> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
-
-        console.log('field posted', jsonField);
-
         return this.http.post(this.url, jsonField, options).pipe(
             map((res: IField) => {
                 const fieldRes = this.jsonToObjectHelper(res, competitionseason);
@@ -44,16 +40,12 @@ export class FieldRepository extends SportRepository {
     }
 
     editObject(field: Field, competitionseason: Competitionseason): Observable<Field> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
-
         return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), options).pipe(
-            map((res: IField) => {
-                return this.jsonToObjectHelper(res, competitionseason, field);
-            }),
+            map((res: IField) => this.jsonToObjectHelper(res, competitionseason, field)),
             catchError((err) => this.handleError(err))
         );
     }

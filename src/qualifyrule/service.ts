@@ -18,7 +18,6 @@ export class QualifyService {
     }
 
     createObjectsForParentRound() {
-        console.log('createObjectsForParentRound()');
         const parentRoundPoulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
         const orderedByPlace = true;
         const childRoundPoulePlacesOrderedByPlace = this.childRound.getPoulePlaces(orderedByPlace);
@@ -89,7 +88,6 @@ export class QualifyService {
         }
 
         const multiple = multiples.pop();
-        // console.log(multiple.getWinnersOrLosers(), multiple);
         const multipleFromPlaces = multiple.getFromPoulePlaces().slice();
         while (multiple.getFromPoulePlaces().length > 1) {
             multiple.removeFromPoulePlace(multipleFromPlaces.pop());

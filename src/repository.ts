@@ -1,7 +1,8 @@
+import 'rxjs/add/observable/throw';
+
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
 
 import { SportConfig } from './config';
 
@@ -34,7 +35,7 @@ export class SportRepository {
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
         let errortext = 'onbekende fout';
-        console.log(error);
+        console.error(error);
         if (typeof error.error === 'string') {
             errortext = error.error;
         } else if (error.statusText !== undefined) {

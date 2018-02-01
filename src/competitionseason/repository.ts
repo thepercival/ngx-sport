@@ -1,12 +1,12 @@
 /**
  * Created by coen on 16-2-17.
  */
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { AssociationRepository, IAssociation } from '../association/repository';
 import { CompetitionRepository, ICompetition } from '../competition/repository';
@@ -66,7 +66,6 @@ export class CompetitionseasonRepository extends SportRepository {
     }
 
     getObject(id: number): Observable<Competitionseason> {
-        // console.log('id',id);
         const observable = Observable.create(observer => {
             this.getObjects().subscribe(
                 /* happy path */ competitionseasons => {
@@ -133,7 +132,7 @@ export class CompetitionseasonRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
 
         return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
-            map((res: ICompetitionseason) => { console.log(res); return this.jsonToObjectHelper(res); }),
+            map((res: ICompetitionseason) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }
