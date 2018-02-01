@@ -173,7 +173,10 @@ export class QualifyService {
             selectedPoulePlaces.push(ranking[fromRankNr - 1]);
         });
 
-        let rankedPoulePlaces: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(selectedPoulePlaces, rulePart.qualifyRule.getFromRound().getGames());
+        const rankedPoulePlaces: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(
+            selectedPoulePlaces,
+            rulePart.qualifyRule.getFromRound().getGames()
+        );
         while (rankedPoulePlaces.length > toPoulePlaces.length) {
             rankedPoulePlaces.pop();
         }
@@ -181,7 +184,7 @@ export class QualifyService {
         toPoulePlaces.forEach((toPoulePlace) => {
             let rankedPoulePlace = this.getRankedPoulePlace(rankedPoulePlaces, toPoulePlace.getPoule());
             if (rankedPoulePlace === undefined && rankedPoulePlaces.length > 0) {
-                rankedPoulePlace = rankedPoulePlaces[0];;
+                rankedPoulePlace = rankedPoulePlaces[0];
             }
             if (rankedPoulePlace === undefined) {
                 return;
@@ -211,5 +214,5 @@ export interface INewQualifier {
 
 export interface IQualifyRulePart {
     qualifyRule: QualifyRule;
-    poule?: Poule
+    poule?: Poule;
 }
