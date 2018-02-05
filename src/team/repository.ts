@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Association } from '../association';
+import { Competitionseason } from '../competitionseason';
 import { SportRepository } from '../repository';
 import { Team } from '../team';
 
@@ -19,10 +20,12 @@ export class TeamRepository extends SportRepository {
 
     private url: string;
     // private teams: Team[];
+    private unusedTeams: UnusedTeams[];
 
     constructor(private http: HttpClient, router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
+        this.unusedTeams = [];
     }
 
     getUrlpostfix(): string {
@@ -55,32 +58,23 @@ export class TeamRepository extends SportRepository {
     // }
 
     createObject(jsonTeam: ITeam, association: Association): Observable<Team> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('associationid', '' + association.getId())
         };
-
         return this.http.post(this.url, jsonTeam, options).pipe(
-            map((res: ITeam) => {
-                const teamRes = this.jsonToObjectHelper(res, association);
-                return teamRes;
-            }),
+            map((res: ITeam) => this.jsonToObjectHelper(res, association)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(team: Team, association: Association): Observable<Team> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('associationid', '' + association.getId())
         };
-
         return this.http.put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options).pipe(
-            map((res: ITeam) => {
-                return this.jsonToObjectHelper(res, association, team);
-            }),
+            map((res: ITeam) => this.jsonToObjectHelper(res, association, team)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -88,8 +82,7 @@ export class TeamRepository extends SportRepository {
     jsonArrayToObject(jsonArray: Array<ITeam>, association: Association): Team[] {
         const teams: Team[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, association);
-            teams.push(object);
+            teams.push(this.jsonToObjectHelper(json, association));
         }
         return teams;
     }
@@ -116,6 +109,15 @@ export class TeamRepository extends SportRepository {
         };
         return json;
     }
+
+    getUnusedTeams(competitionSeason: Competitionseason): Team[] {
+        let unusedTeams = this.unusedTeams.find(unusedTeam => unusedTeam.competitionSeason === competitionSeason);
+        if (unusedTeams === undefined) {
+            unusedTeams = { competitionSeason: competitionSeason, teams: [] };
+            this.unusedTeams.push(unusedTeams);
+        }
+        return unusedTeams.teams;
+    }
 }
 
 export interface ITeam {
@@ -123,4 +125,9 @@ export interface ITeam {
     name: string;
     abbreviation?: string;
     info?: string;
+}
+
+export interface UnusedTeams {
+    competitionSeason: Competitionseason;
+    teams: Team[];
 }

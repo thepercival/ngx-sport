@@ -9,7 +9,7 @@ export class PlanningService {
 
     constructor(private structureService: StructureService) {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-        console.log('looping through rounds!! in constructor planningservice');
+        // console.log('looping through rounds!! in constructor planningservice');
     }
 
     getRoundsByNumber(roundNumber: number): Round[] {
