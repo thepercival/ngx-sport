@@ -49,6 +49,9 @@ export * from './src/structure/repository';
 export * from './src/structure/service';
 export * from './src/team';
 export * from './src/team/repository';
+
+export * from './src/external/system';
+export * from './src/external/system/repository';
 // export * from './src/ngx-sport.module';
 // export { registerLocaleData as ɵregisterLocaleData } from './src/i18n/locale_data';
 

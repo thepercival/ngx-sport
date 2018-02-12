@@ -71,7 +71,8 @@
     "postpublish": "cp -r package.json ../",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
-    "build:dev": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/"
+    "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
+    "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/"
   },
   "release": {
     "verifyConditions": [

@@ -31,10 +31,7 @@ export class FieldRepository extends SportRepository {
             params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
         };
         return this.http.post(this.url, jsonField, options).pipe(
-            map((res: IField) => {
-                const fieldRes = this.jsonToObjectHelper(res, competitionseason);
-                return fieldRes;
-            }),
+            map((res: IField) => this.jsonToObjectHelper(res, competitionseason)),
             catchError((err) => this.handleError(err))
         );
     }

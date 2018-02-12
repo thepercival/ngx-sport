@@ -38,6 +38,8 @@ import { StructureService } from './structure/service';
 import { Team } from './team';
 import { TeamRepository } from './team/repository';
 
+import { ExternalSystem } from './external/system';
+import { ExternalSystemRepository } from './external/system/repository';
 
 @NgModule({
     imports: [],
@@ -46,14 +48,16 @@ import { TeamRepository } from './team/repository';
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
+        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        ExternalSystem, ExternalSystemRepository
     ],
     exports: [
         Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
         AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository
+        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        ExternalSystem, ExternalSystemRepository
     ]
 })
 export class SportModule { }
