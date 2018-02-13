@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Competitionseason } from '../competitionseason';
 import { CompetitionseasonRepository } from '../competitionseason/repository';
-import { IPoule } from '../poule/repository';
-import { PouleRepository } from '../poule/repository';
+import { IPoule, PouleRepository } from '../poule/repository';
 import { QualifyRuleRepository } from '../qualifyrule/repository';
 import { QualifyService } from '../qualifyrule/service';
 import { Round } from '../round';
@@ -52,8 +51,7 @@ export class RoundRepository {
     objectsToJsonArray(objects: Round[]): IRound[] {
         const jsonArray: IRound[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
-            jsonArray.push(json);
+            jsonArray.push(this.objectToJsonHelper(object));
         }
         return jsonArray;
     }
