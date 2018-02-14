@@ -2,11 +2,11 @@
  * Created by coen on 3-3-17.
  */
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
@@ -31,12 +31,10 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     editObject(poulePlace: PoulePlace, poule: Poule): Observable<PoulePlace> {
-
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('pouleid', poule.getId().toString())
         };
-
         return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), options).pipe(
             map((res: IPoulePlace) => {
                 return this.jsonToObjectHelper(res, poulePlace.getPoule(), poulePlace);

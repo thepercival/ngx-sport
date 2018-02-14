@@ -97,7 +97,7 @@ export class CompetitionRepository extends SportRepository {
     editObject(object: Competition): Observable<Competition> {
         const url = this.url + '/' + object.getId();
 
-        return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
+        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
             map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );

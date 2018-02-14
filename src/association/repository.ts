@@ -1,12 +1,12 @@
 /**
  * Created by coen on 30-1-17.
  */
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Association } from '../association';
 import { SportRepository } from '../repository';
@@ -20,6 +20,7 @@ export class AssociationRepository extends SportRepository {
     constructor(private http: HttpClient, router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
+        this.objects = [];
     }
 
     getUrlpostfix(): string {
@@ -27,30 +28,14 @@ export class AssociationRepository extends SportRepository {
     }
 
     getObjects(): Observable<Association[]> {
-        if (this.objects !== undefined) {
-            return Observable.create(observer => {
-                observer.next(this.objects);
-                observer.complete();
-            });
-        }
-
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((res) => {
-                const objects = this.jsonArrayToObject(res);
-                this.objects = objects;
+            map((res: IAssociation[]) => {
+                this.objects = this.jsonArrayToObject(res);
+                console.log(this.objects);
                 return this.objects;
             }),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    jsonArrayToObject(jsonArray: any): Association[] {
-        const objects: Association[] = [];
-        for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json);
-            objects.push(object);
-        }
-        return objects;
     }
 
     getObject(id: number): Observable<Association> {
@@ -68,33 +53,10 @@ export class AssociationRepository extends SportRepository {
         );
     }
 
-    jsonToObjectHelper(json: IAssociation): Association {
-        if (this.objects !== undefined) {
-            const foundObjects = this.objects.filter(
-                objectIt => objectIt.getId() === json.id
-            );
-            if (foundObjects.length === 1) {
-                return foundObjects.shift();
-            }
-        }
-
-        const association = new Association(json.name);
-        association.setId(json.id);
-        return association;
-    }
-
-    objectToJsonHelper(object: Association): any {
-        const json = {
-            id: object.getId(),
-            name: object.getName()
-        };
-        return json;
-    }
-
     editObject(object: Association): Observable<Association> {
         const url = this.url + '/' + object.getId();
-        return this.http.put(url, JSON.stringify(object), { headers: super.getHeaders() }).pipe(
-            map((res: IAssociation) => this.jsonToObjectHelper(res))
+        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
+            map((res: IAssociation) => this.jsonToObjectHelper(res, object))
         );
     }
 
@@ -105,9 +67,46 @@ export class AssociationRepository extends SportRepository {
             catchError((err) => this.handleError(err))
         );
     }
+
+    jsonArrayToObject(jsonArray: IAssociation[]): Association[] {
+        const objects: Association[] = [];
+        for (const json of jsonArray) {
+            objects.push(this.jsonToObjectHelper(json));
+        }
+        return objects;
+    }
+
+    jsonToObjectHelper(json: IAssociation, association?: Association): Association {
+        if (association === undefined) {
+            association = this.objects.find(objectIt => objectIt.getId() === json.id);
+        }
+        if (association === undefined) {
+            association = new Association(json.name);
+            this.objects.push(association);
+        }
+        association.setId(json.id);
+        association.setDescription(json.description);
+
+        if (json.parent !== undefined) {
+            association.setParent(this.jsonToObjectHelper(json.parent, association ? association.getParent() : undefined));
+        }
+        return association;
+    }
+
+    objectToJsonHelper(object: Association): any {
+        const json: IAssociation = {
+            id: object.getId(),
+            name: object.getName(),
+            description: object.getDescription(),
+            parent: object.getParent() ? this.objectToJsonHelper(object.getParent()) : undefined
+        };
+        return json;
+    }
 }
 
 export interface IAssociation {
     id?: number;
     name: string;
+    description?: string;
+    parent?: IAssociation;
 }

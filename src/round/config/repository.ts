@@ -41,8 +41,7 @@ export class RoundConfigRepository {
     objectsToJsonArray(objects: RoundConfig[]): IRoundConfig[] {
         const jsonArray: IRoundConfig[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
-            jsonArray.push(json);
+            jsonArray.push(this.objectToJsonHelper(object));
         }
         return jsonArray;
     }

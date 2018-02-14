@@ -59,7 +59,7 @@ export class SeasonRepository extends SportRepository {
 
     editObject(object: Season): Observable<Season> {
         const url = this.url + '/' + object.getId();
-        return this.http.put(url, JSON.stringify(this.objectToJsonHelper(object)), { headers: super.getHeaders() }).pipe(
+        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
             map((res: ISeason) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );

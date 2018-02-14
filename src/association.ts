@@ -5,14 +5,23 @@ import { Team } from './team';
 
 
 export class Association {
+    static readonly MIN_LENGTH_NAME = 3;
+    static readonly MAX_LENGTH_NAME = 20;
+    static readonly MAX_LENGTH_DESCRIPTION = 50;
+
     protected id: number;
     protected name: string;
     protected description: string;
     protected parent: Association;
+    protected children: Association[];
     protected teams: Team[] = [];
 
-    constructor(name: string) {
+    constructor(name: string, parent?: Association) {
+        this.children = [];
         this.setName(name);
+        if (parent !== undefined) {
+            this.setParent(parent);
+        }
     }
 
     getId(): number {
@@ -44,7 +53,23 @@ export class Association {
     }
 
     setParent(parent: Association): void {
+        if (this.parent === parent) {
+            return;
+        }
+        if (this.parent !== undefined) {
+            const index = this.parent.getChildren().indexOf(this);
+            if (index > -1) {
+                this.parent.getChildren().splice(index, 1);
+            }
+        }
         this.parent = parent;
+        if (this.parent !== undefined) {
+            this.parent.getChildren().push(this);
+        }
+    }
+
+    getChildren(): Association[] {
+        return this.children;
     }
 
     getTeams(): Team[] {
