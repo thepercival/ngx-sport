@@ -17,7 +17,7 @@ import { SportRepository } from '../repository';
 export class CompetitionRepository extends SportRepository {
 
     private url: string;
-    private objects: Competition[];
+    // private objects: Competition[];
 
     constructor(private http: HttpClient, router: Router) {
         super(router);
@@ -29,30 +29,21 @@ export class CompetitionRepository extends SportRepository {
     }
 
     getObjects(): Observable<Competition[]> {
-        if (this.objects !== undefined) {
-            return Observable.create(observer => {
-                observer.next(this.objects);
-                observer.complete();
-            });
-        }
+        // if (this.objects !== undefined) {
+        //     return Observable.create(observer => {
+        //         observer.next(this.objects);
+        //         observer.complete();
+        //     });
+        // }
 
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
             map((res: ICompetition[]) => {
                 const objects = this.jsonArrayToObject(res);
-                this.objects = objects;
-                return this.objects;
+                // this.objects = objects;
+                return objects;
             }),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    jsonArrayToObject(jsonArray: ICompetition[]): Competition[] {
-        const objects: Competition[] = [];
-        for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json);
-            objects.push(object);
-        }
-        return objects;
     }
 
     getObject(id: number): Observable<Competition> {
@@ -61,30 +52,6 @@ export class CompetitionRepository extends SportRepository {
             map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    jsonToObjectHelper(json: ICompetition): Competition {
-        if (this.objects !== undefined) {
-            const foundObjects = this.objects.filter(
-                objectIt => objectIt.getId() === json.id
-            );
-            if (foundObjects.length === 1) {
-                return foundObjects.shift();
-            }
-        }
-
-        const competition = new Competition(json.name);
-        competition.setId(json.id);
-        competition.setAbbreviation(json.abbreviation);
-        return competition;
-    }
-
-    objectToJsonHelper(object: Competition): any {
-        return {
-            id: object.getId(),
-            name: object.getName(),
-            abbreviation: object.getAbbreviation()
-        };
     }
 
     createObject(jsonObject: any): Observable<Competition> {
@@ -98,7 +65,7 @@ export class CompetitionRepository extends SportRepository {
         const url = this.url + '/' + object.getId();
 
         return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
-            map((res: ICompetition) => this.jsonToObjectHelper(res)),
+            map((res: ICompetition) => this.jsonToObjectHelper(res, object)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -110,10 +77,35 @@ export class CompetitionRepository extends SportRepository {
             catchError((err) => this.handleError(err))
         );
     }
+
+    jsonArrayToObject(jsonArray: ICompetition[]): Competition[] {
+        const objects: Competition[] = [];
+        for (const json of jsonArray) {
+            objects.push(this.jsonToObjectHelper(json));
+        }
+        return objects;
+    }
+
+    jsonToObjectHelper(json: ICompetition, competition?: Competition): Competition {
+        if (competition === undefined) {
+            competition = new Competition(json.name);
+        }
+        competition.setId(json.id);
+        competition.setAbbreviation(json.abbreviation);
+        return competition;
+    }
+
+    objectToJsonHelper(object: Competition): any {
+        return {
+            id: object.getId(),
+            name: object.getName(),
+            abbreviation: object.getAbbreviation()
+        };
+    }
 }
 
 export interface ICompetition {
     id?: number;
     name: string;
-    abbreviation: string;
+    abbreviation?: string;
 }
