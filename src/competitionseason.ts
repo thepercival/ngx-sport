@@ -12,13 +12,10 @@ export class Competitionseason {
     static readonly STATE_CREATED = 1;
     static readonly STATE_PUBLISHED = 2;
 
-    static readonly MAX_LENGTH_SPORT = 30;
-
     protected id: number;
     protected association: Association;
     protected competition: Competition;
     protected season: Season;
-    protected sport: string;
     protected startDateTime: Date;
     protected state: number;
     protected referees: Referee[] = [];
@@ -78,14 +75,6 @@ export class Competitionseason {
 
     setState(state: number): void {
         this.state = state;
-    }
-
-    getSport(): string {
-        return this.sport;
-    }
-
-    setSport(sport: string): void {
-        this.sport = sport;
     }
 
     getStateDescription(): string {

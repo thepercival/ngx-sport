@@ -11,6 +11,8 @@ import { SportConfig } from './config';
  */
 export class SportRepository {
 
+    protected cacheTimeOutForGetObjects = 3; // minutes
+    protected cache = {};
     protected router: Router;
     constructor(router: Router) {
         this.router = router;

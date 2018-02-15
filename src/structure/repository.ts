@@ -18,7 +18,7 @@ import { IRound, RoundRepository } from '../round/repository';
 export class StructureRepository extends SportRepository {
 
     private url: string;
-    private cache: Round[] = [];
+    private selfCache: Round[] = [];
 
     constructor(
         private http: HttpClient,
@@ -102,20 +102,20 @@ export class StructureRepository extends SportRepository {
     }
 
     private findObject(competitionseason: Competitionseason) {
-        return this.cache.find(round => round.getCompetitionseason() === competitionseason);
+        return this.selfCache.find(round => round.getCompetitionseason() === competitionseason);
     }
 
     private updateCache(round: Round, competitionseason: Competitionseason) {
         this.removeFromCache(round, competitionseason);
-        this.cache.push(round);
+        this.selfCache.push(round);
     }
 
     private removeFromCache(structure: Round, competitionseason: Competitionseason) {
         const foundRound = this.findObject(competitionseason);
         if (foundRound !== undefined) {
-            const index = this.cache.indexOf(foundRound);
+            const index = this.selfCache.indexOf(foundRound);
             if (index > -1) {
-                this.cache.splice(index, 1);
+                this.selfCache.splice(index, 1);
             }
         }
     }

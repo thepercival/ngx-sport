@@ -92,7 +92,7 @@ export class RoundConfigRepository {
         roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
         roundConfig.setMinutesPerGame(0);
         roundConfig.setMinutesInBetween(0);
-        if (round.getCompetitionseason().getSport() === 'voetbal') {
+        if (round.getCompetitionseason().getCompetition().getSport() === 'voetbal') {
             roundConfig.setHasExtension(!round.needsRanking());
             roundConfig.setMinutesPerGameExt(5);
             roundConfig.setEnableTime(true);

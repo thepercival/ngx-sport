@@ -17,7 +17,6 @@ import { SportRepository } from '../repository';
 export class CompetitionRepository extends SportRepository {
 
     private url: string;
-    // private objects: Competition[];
 
     constructor(private http: HttpClient, router: Router) {
         super(router);
@@ -38,9 +37,7 @@ export class CompetitionRepository extends SportRepository {
 
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
             map((res: ICompetition[]) => {
-                const objects = this.jsonArrayToObject(res);
-                // this.objects = objects;
-                return objects;
+                return this.jsonArrayToObject(res);
             }),
             catchError((err) => this.handleError(err))
         );
@@ -54,8 +51,8 @@ export class CompetitionRepository extends SportRepository {
         );
     }
 
-    createObject(jsonObject: any): Observable<Competition> {
-        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+    createObject(json: ICompetition): Observable<Competition> {
+        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
             map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
@@ -63,17 +60,19 @@ export class CompetitionRepository extends SportRepository {
 
     editObject(object: Competition): Observable<Competition> {
         const url = this.url + '/' + object.getId();
-
         return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
             map((res: ICompetition) => this.jsonToObjectHelper(res, object)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(object: Competition): Observable<Competition> {
-        const url = this.url + '/' + object.getId();
+    removeObject(competition: Competition): Observable<Competition> {
+        const url = this.url + '/' + competition.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res: Competition) => res),
+            map((competitionRes: Competition) => {
+                this.cache[competition.getId()] = undefined;
+                return competitionRes;
+            }),
             catchError((err) => this.handleError(err))
         );
     }
@@ -87,19 +86,25 @@ export class CompetitionRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: ICompetition, competition?: Competition): Competition {
+        if (competition === undefined && json.id !== undefined) {
+            competition = this.cache[json.id];
+        }
         if (competition === undefined) {
             competition = new Competition(json.name);
+            competition.setId(json.id);
+            this.cache[competition.getId()] = competition;
         }
-        competition.setId(json.id);
         competition.setAbbreviation(json.abbreviation);
+        competition.setSport(json.sport);
         return competition;
     }
 
-    objectToJsonHelper(object: Competition): any {
+    objectToJsonHelper(competition: Competition): any {
         return {
-            id: object.getId(),
-            name: object.getName(),
-            abbreviation: object.getAbbreviation()
+            id: competition.getId(),
+            name: competition.getName(),
+            abbreviation: competition.getAbbreviation(),
+            sport: competition.getSport()
         };
     }
 }
@@ -108,4 +113,5 @@ export interface ICompetition {
     id?: number;
     name: string;
     abbreviation?: string;
+    sport: string;
 }

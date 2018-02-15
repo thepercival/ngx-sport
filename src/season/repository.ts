@@ -13,7 +13,6 @@ import { Season } from '../season';
 export class SeasonRepository extends SportRepository {
 
     private url: string;
-    // private objects: Season[];
 
     constructor(private http: HttpClient, router: Router) {
         super(router);
@@ -42,9 +41,7 @@ export class SeasonRepository extends SportRepository {
 
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
             map((res: ISeason[]) => {
-                const objects = this.jsonArrayToObject(res);
-                // this.objects = objects;
-                return objects;
+                return this.jsonArrayToObject(res);
             }),
             catchError((err) => this.handleError(err))
         );
@@ -65,10 +62,13 @@ export class SeasonRepository extends SportRepository {
         );
     }
 
-    removeObject(object: Season): Observable<Season> {
-        const url = this.url + '/' + object.getId();
+    removeObject(season: Season): Observable<Season> {
+        const url = this.url + '/' + season.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res: ISeason) => res),
+            map((seasonRes: ISeason) => {
+                this.cache[season.getId()] = undefined;
+                return seasonRes;
+            }),
             catchError((err) => this.handleError(err))
         );
     }
@@ -82,10 +82,14 @@ export class SeasonRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: ISeason, season?: Season): Season {
+        if (season === undefined && json.id !== undefined) {
+            season = this.cache[json.id];
+        }
         if (season === undefined) {
             season = new Season(json.name);
+            season.setId(json.id);
+            this.cache[season.getId()] = season;
         }
-        season.setId(json.id);
         season.setStartDateTime(new Date(json.startDateTime));
         season.setEndDateTime(new Date(json.endDateTime));
         return season;

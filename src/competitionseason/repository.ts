@@ -40,12 +40,12 @@ export class CompetitionseasonRepository extends SportRepository {
     }
 
     getObjects(): Observable<Competitionseason[]> {
-        if (this.objects !== undefined) {
-            return Observable.create(observer => {
-                observer.next(this.objects);
-                observer.complete();
-            });
-        }
+        // if (this.objects !== undefined) {
+        //     return Observable.create(observer => {
+        //         observer.next(this.objects);
+        //         observer.complete();
+        //     });
+        // }
 
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
             map((res: ICompetitionseason[]) => {
@@ -73,18 +73,18 @@ export class CompetitionseasonRepository extends SportRepository {
         return observable;
     }
 
-    createObject(jsonObject: ICompetitionseason): Observable<Competitionseason> {
-        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+    createObject(json: ICompetitionseason): Observable<Competitionseason> {
+        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
             map((res: ICompetitionseason) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(object: Competitionseason): Observable<Competitionseason> {
-        const url = this.url + '/' + object.getId();
+    editObject(competitionseason: Competitionseason): Observable<Competitionseason> {
+        const url = this.url + '/' + competitionseason.getId();
 
-        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
-            map((res: ICompetitionseason) => this.jsonToObjectHelper(res)),
+        return this.http.put(url, this.objectToJsonHelper(competitionseason), { headers: super.getHeaders() }).pipe(
+            map((res: ICompetitionseason) => this.jsonToObjectHelper(res, competitionseason)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -106,24 +106,23 @@ export class CompetitionseasonRepository extends SportRepository {
         return competitionseasons;
     }
 
-    jsonToObjectHelper(json: ICompetitionseason): Competitionseason {
-        if (this.objects !== undefined) {
-            const foundObjects = this.objects.filter(
-                objectIt => objectIt.getId() === json.id
-            );
-            if (foundObjects.length === 1) {
-                return foundObjects.shift();
-            }
+    jsonToObjectHelper(json: ICompetitionseason, competitionseason?: Competitionseason): Competitionseason {
+        // if (this.objects !== undefined) {
+        //     const foundObjects = this.objects.filter(
+        //         objectIt => objectIt.getId() === json.id
+        //     );
+        //     if (foundObjects.length === 1) {
+        //         return foundObjects.shift();
+        //     }
+        // }
+        if (competitionseason === undefined) {
+            const association = this.associationRepository.jsonToObjectHelper(json.association);
+            const competition = this.competitionRepository.jsonToObjectHelper(json.competition);
+            const season = this.seasonRepository.jsonToObjectHelper(json.season);
+            competitionseason = new Competitionseason(association, competition, season);
         }
-
-        const association = this.associationRepository.jsonToObjectHelper(json.association);
-        const competition = this.competitionRepository.jsonToObjectHelper(json.competition);
-        const season = this.seasonRepository.jsonToObjectHelper(json.season);
-
-        const competitionseason = new Competitionseason(association, competition, season);
         competitionseason.setId(json.id);
         competitionseason.setState(json.state);
-        competitionseason.setSport(json.sport);
         competitionseason.setStartDateTime(new Date(json.startDateTime));
         this.fieldRepository.jsonArrayToObject(json.fields, competitionseason);
         this.refereeRepository.jsonArrayToObject(json.referees, competitionseason);
@@ -138,7 +137,6 @@ export class CompetitionseasonRepository extends SportRepository {
             season: this.seasonRepository.objectToJsonHelper(object.getSeason()),
             fields: this.fieldRepository.objectsToJsonArray(object.getFields()),
             referees: this.refereeRepository.objectsToJsonArray(object.getReferees()),
-            sport: object.getSport(),
             startDateTime: object.getStartDateTime().toISOString(),
             state: object.getState()
         };
@@ -153,7 +151,6 @@ export interface ICompetitionseason {
     season: ISeason;
     fields: IField[];
     referees: IReferee[];
-    sport: string;
     startDateTime: string;
     state: number;
 }

@@ -15,12 +15,10 @@ import { SportRepository } from '../repository';
 export class AssociationRepository extends SportRepository {
 
     private url: string;
-    private objects: Association[];
 
     constructor(private http: HttpClient, router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
-        this.objects = [];
     }
 
     getUrlpostfix(): string {
@@ -30,9 +28,7 @@ export class AssociationRepository extends SportRepository {
     getObjects(): Observable<Association[]> {
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
             map((res: IAssociation[]) => {
-                this.objects = this.jsonArrayToObject(res);
-                console.log(this.objects);
-                return this.objects;
+                return this.jsonArrayToObject(res);
             }),
             catchError((err) => this.handleError(err))
         );
@@ -60,10 +56,13 @@ export class AssociationRepository extends SportRepository {
         );
     }
 
-    removeObject(object: Association): Observable<IAssociation> {
-        const url = this.url + '/' + object.getId();
+    removeObject(association: Association): Observable<IAssociation> {
+        const url = this.url + '/' + association.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res: IAssociation) => res),
+            map((associationRes: IAssociation) => {
+                this.cache[association.getId()] = undefined;
+                return associationRes;
+            }),
             catchError((err) => this.handleError(err))
         );
     }
@@ -77,14 +76,14 @@ export class AssociationRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IAssociation, association?: Association): Association {
-        if (association === undefined) {
-            association = this.objects.find(objectIt => objectIt.getId() === json.id);
+        if (association === undefined && json.id !== undefined) {
+            association = this.cache[json.id];
         }
         if (association === undefined) {
             association = new Association(json.name);
-            this.objects.push(association);
+            association.setId(json.id);
+            this.cache[association.getId()] = association;
         }
-        association.setId(json.id);
         association.setDescription(json.description);
 
         if (json.parent !== undefined) {

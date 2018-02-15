@@ -6,10 +6,12 @@ export class Competition {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
+    static readonly MAX_LENGTH_SPORT = 30;
 
     protected id: number;
     protected name: string;
     protected abbreviation: string;
+    protected sport: string;
 
     // constructor
     constructor(name: string) {
@@ -38,5 +40,13 @@ export class Competition {
 
     setAbbreviation(abbreviation: string): void {
         this.abbreviation = abbreviation;
+    }
+
+    getSport(): string {
+        return this.sport;
+    }
+
+    setSport(sport: string): void {
+        this.sport = sport;
     }
 }

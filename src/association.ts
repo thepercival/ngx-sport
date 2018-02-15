@@ -68,6 +68,14 @@ export class Association {
         }
     }
 
+    getAncestors(ancestors: Association[] = []) {
+        if (this.getParent() === undefined) {
+            return ancestors;
+        }
+        ancestors.push(this.getParent());
+        return this.getParent().getAncestors(ancestors);
+    }
+
     getChildren(): Association[] {
         return this.children;
     }

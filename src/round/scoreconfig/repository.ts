@@ -45,7 +45,7 @@ export class RoundScoreConfigRepository {
     }
 
     createObjectFromParent(round: Round): RoundScoreConfig {
-        const sport = round.getCompetitionseason().getSport();
+        const sport = round.getCompetitionseason().getCompetition().getSport();
 
         let json: IRoundScoreConfig;
         if (round.getParentRound() !== undefined) {
