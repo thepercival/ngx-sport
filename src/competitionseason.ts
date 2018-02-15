@@ -12,6 +12,8 @@ export class Competitionseason {
     static readonly STATE_CREATED = 1;
     static readonly STATE_PUBLISHED = 2;
 
+    static readonly MAX_LENGTH_SPORT = 30;
+
     protected id: number;
     protected association: Association;
     protected competition: Competition;
