@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { FieldRepository, IField } from '../field/repository';
 import { Game } from '../game';
@@ -78,7 +78,9 @@ export class GameRepository extends SportRepository {
 
         game.setId(json.id);
         game.setState(json.state);
-        game.setField(poule.getCompetitionseason().getFieldByNumber(json.field.number));
+        if (json.field !== undefined) {
+            game.setField(poule.getCompetitionseason().getFieldByNumber(json.field.number));
+        }
         if (json.referee !== undefined) {
             game.setReferee(poule.getCompetitionseason().getRefereeById(json.referee.id));
         }
@@ -105,7 +107,7 @@ export class GameRepository extends SportRepository {
             awayPoulePlace: this.pouleplaceRepos.objectToJsonHelper(object.getAwayPoulePlace()),
             roundNumber: object.getRoundNumber(),
             subNumber: object.getSubNumber(),
-            field: this.fieldRepos.objectToJsonHelper(object.getField()),
+            field: object.getField() ? this.fieldRepos.objectToJsonHelper(object.getField()) : undefined,
             state: object.getState(),
             referee: object.getReferee() ? this.refereeRepos.objectToJsonHelper(object.getReferee()) : undefined,
             startDateTime: object.getStartDateTime() ? object.getStartDateTime().toISOString() : undefined,
@@ -120,7 +122,7 @@ export interface IGame {
     awayPoulePlace: IPoulePlace;
     roundNumber: number;
     subNumber: number;
-    field: IField;
+    field?: IField;
     state: number;
     startDateTime?: string;
     referee?: IReferee;

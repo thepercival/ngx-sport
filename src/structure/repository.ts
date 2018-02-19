@@ -47,8 +47,11 @@ export class StructureRepository extends SportRepository {
         };
 
         return this.http.get<Array<IRound>>(this.url, options).pipe(
-            map((res) => {
-                const jsonRound = res.shift();
+            map((roundRes: IRound[]) => {
+                const jsonRound = roundRes.shift();
+                if (jsonRound === undefined) {
+                    return undefined;
+                }
                 const round = this.roundRepos.jsonToObjectHelper(jsonRound, competitionseason);
                 this.updateCache(round, competitionseason);
                 return round;

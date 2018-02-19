@@ -1,8 +1,9 @@
 /**
  * Created by coen on 10-2-17.
  */
+import { ImportableObject } from './external/object';
 
-export class Competition {
+export class Competition implements ImportableObject {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
@@ -48,5 +49,9 @@ export class Competition {
 
     setSport(sport: string): void {
         this.sport = sport;
+    }
+
+    doX(): void {
+
     }
 }

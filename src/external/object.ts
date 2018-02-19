@@ -2,42 +2,43 @@
  * Created by coen on 13-2-17.
  */
 
-import { ExternalSystem} from './system';
+export class ExternalObject {
+    static readonly MAX_LENGTH_EXTERNALID = 100;
 
-export class ExternalObject{
     protected id: number;
-    protected importableObject: any;
-    protected externalSystem: ExternalSystem;
-    protected externalid: string;
+    protected externalId: string;
 
-    // constructor
     constructor(
-        importableObject: any,
-        externalSystem: ExternalSystem,
-        externalid: string,
-    ){
-        this.importableObject = importableObject;
-        this.externalSystem = externalSystem;
-        this.externalid = externalid;
+        protected importableObjectId: number,
+        protected externalSystemId: number
+    ) {
     }
 
     getId(): number {
         return this.id;
-    };
+    }
 
-    setId( id: number): void {
+    setId(id: number): void {
         this.id = id;
-    };
+    }
 
-    getImportableObject(): any {
-        return this.importableObject;
-    };
+    getImportableObjectId(): number {
+        return this.importableObjectId;
+    }
 
-    getExternalSystem(): ExternalSystem {
-        return this.externalSystem;
-    };
+    getExternalSystemId(): number {
+        return this.externalSystemId;
+    }
 
-    getExternalid(): string {
-        return this.externalid;
-    };
+    getExternalId(): string {
+        return this.externalId;
+    }
+
+    setExternalId(externalId: string) {
+        this.externalId = externalId;
+    }
+}
+
+export interface ImportableObject {
+    getId(): number;
 }

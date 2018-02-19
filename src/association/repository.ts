@@ -92,7 +92,7 @@ export class AssociationRepository extends SportRepository {
         return association;
     }
 
-    objectToJsonHelper(object: Association): any {
+    objectToJsonHelper(object: Association): IAssociation {
         const json: IAssociation = {
             id: object.getId(),
             name: object.getName(),

@@ -13,7 +13,6 @@ import { Competition } from '../../../competition';
 import { Competitionseason } from '../../../competitionseason';
 import { Poule } from '../../../poule';
 import { PoulePlace } from '../../../pouleplace';
-import { SportRepository } from '../../../repository';
 import { Round } from '../../../round';
 import { Season } from '../../../season';
 import { Team } from '../../../team';
@@ -23,7 +22,7 @@ import { ExternalSystemSoccerSports } from '../soccersports';
 
 
 @Injectable()
-export class ExternalSystemSoccerSportsRepository extends SportRepository {
+export class ExternalsssSystemBetFairRepository {
 
     private headers = { 'Content-Type': 'application/json' };
     private asspociationsByCompetitionId: any = {};
@@ -37,6 +36,19 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
         router: Router
     ) {
         super(router);
+    }
+
+    getApiUrl(): string {
+        return SportConfig.apiurl;
+    }
+
+    getHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        const token = SportConfig.getToken();
+        if (token !== undefined) {
+            headers = headers.append('Authorization', 'Bearer ' + token);
+        }
+        return headers;
     }
 
     getToken(): string {
@@ -425,17 +437,15 @@ export class ExternalSystemSoccerSportsRepository extends SportRepository {
         this.asspociationsByCompetitionId[competitionId] = association;
     }
 
-
-    // this could also be a private method of the component class
-    handleError(error: any): Observable<any> {
-        let message;
-        if (error && error.message !== undefined) {
-            message = error.message;
-        } else if (error && error.statusText !== undefined) {
-            message = error.statusText;
+    protected handleError(error: HttpErrorResponse): Observable<any> {
+        let errortext = 'onbekende fout';
+        console.error(error);
+        if (typeof error.error === 'string') {
+            errortext = error.error;
+        } else if (error.statusText !== undefined) {
+            errortext = error.statusText;
         }
-        // throw an application level error
-        return Observable.throw(message);
+        return Observable.throw(errortext);
     }
 }
 

@@ -13,6 +13,7 @@ export class SportConfig {
     static readonly Hockey = 'hockey';
     static readonly Korfball = 'korfbal';
 
+    static useExternal = false; // environment.useExternal;
     static apiurl = 'http://localhost:2999/'; // environment.apiurl;
 
     static getToken(): string {
