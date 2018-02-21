@@ -193,12 +193,11 @@ export class PlanningService {
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach(round => {
             round.getPoules().forEach(poule => {
-                let number = 1;
                 poule.getGames().forEach(function (game) {
-                    if (games[number] === undefined) {
-                        games[number] = [];
+                    if (games[game.getRoundNumber()] === undefined) {
+                        games[game.getRoundNumber()] = [];
                     }
-                    games[number++].push(game);
+                    games[game.getRoundNumber()].push(game);
                 });
             });
         });

@@ -5,7 +5,7 @@ import { Team } from './team';
 
 
 export class Association {
-    static readonly MIN_LENGTH_NAME = 3;
+    static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 20;
     static readonly MAX_LENGTH_DESCRIPTION = 50;
 
