@@ -53,11 +53,15 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
+        if (poulePlace === undefined && json.id !== undefined) {
+            poulePlace = this.cache[json.id];
+        }
         if (poulePlace === undefined) {
             poulePlace = new PoulePlace(poule, json.number);
+            poulePlace.setId(json.id);
+            this.cache[poulePlace.getId()] = poulePlace;
         }
-        poulePlace.setId(json.id);
-        poule.setName(json.name);
+        // poule.setName(json.name);
         if (json.team) {
             poulePlace.setTeam(this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetitionseason().getAssociation()));
         }
