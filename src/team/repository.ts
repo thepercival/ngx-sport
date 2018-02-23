@@ -1,11 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators/map';
 
-import { AssociationRepository, IAssociation } from '../association/repository';
+import { Association } from '../association';
+import { AssociationRepository } from '../association/repository';
 import { Competitionseason } from '../competitionseason';
 import { SportRepository } from '../repository';
 import { Team } from '../team';
@@ -35,47 +36,48 @@ export class TeamRepository extends SportRepository {
         return 'teams';
     }
 
-    // getObject(id: number): Observable<Team> {
-    //     const url = this.url + '/' + id;
-    //     return this.http.get(url)
-    //         // ...and calling .json() on the response to return data
-    //         .map((res) => this.jsonToObjectHelper(res))
-    //         .catch((error: any) => Observable.throw(error.message || 'Server error'));
-    // }
-
-    getObjects(): Observable<Team[]> {
-        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+    getObjects(association: Association): Observable<Team[]> {
+        const options = {
+            headers: super.getHeaders(),
+            params: new HttpParams().set('associationid', association.getId().toString())
+        };
+        return this.http.get(this.url, options).pipe(
             map((res: ITeam[]) => {
-                return this.jsonArrayToObject(res);
+                return this.jsonArrayToObject(res, association);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    getObject(id: number): Observable<Team> {
-        const url = this.url + '/' + id;
-        return this.http.get(url).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res)),
+    getObject(id: number, association: Association): Observable<Team> {
+        const options = {
+            headers: super.getHeaders(),
+            params: new HttpParams().set('associationid', association.getId().toString())
+        };
+        return this.http.get(this.url + '/' + id, options).pipe(
+            map((res: ITeam) => this.jsonToObjectHelper(res, association)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(jsonTeam: ITeam): Observable<Team> {
+    createObject(jsonTeam: ITeam, association: Association): Observable<Team> {
         const options = {
-            headers: super.getHeaders()
+            headers: super.getHeaders(),
+            params: new HttpParams().set('associationid', association.getId().toString())
         };
         return this.http.post(this.url, jsonTeam, options).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res)),
+            map((res: ITeam) => this.jsonToObjectHelper(res, association)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(team: Team): Observable<Team> {
         const options = {
-            headers: super.getHeaders()
+            headers: super.getHeaders(),
+            params: new HttpParams().set('associationid', team.getAssociation().getId().toString())
         };
         return this.http.put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res, team)),
+            map((res: ITeam) => this.jsonToObjectHelper(res, team.getAssociation(), team)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -91,25 +93,23 @@ export class TeamRepository extends SportRepository {
         );
     }
 
-    jsonArrayToObject(jsonArray: Array<ITeam>): Team[] {
+    jsonArrayToObject(jsonArray: Array<ITeam>, association: Association): Team[] {
         const teams: Team[] = [];
         for (const json of jsonArray) {
-            teams.push(this.jsonToObjectHelper(json));
+            teams.push(this.jsonToObjectHelper(json, association));
         }
         return teams;
     }
 
-    jsonToObjectHelper(json: ITeam, team?: Team): Team {
+    jsonToObjectHelper(json: ITeam, association: Association, team?: Team): Team {
         if (team === undefined && json.id !== undefined) {
             team = this.cache[json.id];
         }
         if (team === undefined) {
-            const association = this.associationRepos.jsonToObjectHelper(json.association);
             team = new Team(association, json.name);
             team.setId(json.id);
             this.cache[team.getId()] = team;
         }
-
         team.setAbbreviation(json.abbreviation);
         team.setInfo(json.info);
         return team;
@@ -120,8 +120,7 @@ export class TeamRepository extends SportRepository {
             id: team.getId(),
             name: team.getName(),
             abbreviation: team.getAbbreviation(),
-            info: team.getInfo(),
-            association: this.associationRepos.objectToJsonHelper(team.getAssociation())
+            info: team.getInfo()
         };
         return json;
     }
@@ -141,7 +140,6 @@ export interface ITeam {
     name: string;
     abbreviation?: string;
     info?: string;
-    association: IAssociation;
 }
 
 export interface UnusedTeams {

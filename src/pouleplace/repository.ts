@@ -59,7 +59,7 @@ export class PoulePlaceRepository extends SportRepository {
         poulePlace.setId(json.id);
         poule.setName(json.name);
         if (json.team) {
-            poulePlace.setTeam(this.teamRepos.jsonToObjectHelper(json.team));
+            poulePlace.setTeam(this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetitionseason().getAssociation()));
         }
         return poulePlace;
     }

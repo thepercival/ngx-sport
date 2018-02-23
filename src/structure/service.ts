@@ -185,7 +185,9 @@ export class StructureService {
     }
 
     getRoundNumbers(): Array<number> {
-        return Array(this.getNrOfRoundsToGo(this.getFirstRound())).fill(0).map((e, i) => i + 1);
+        const nrOfRoundsToGo = this.getNrOfRoundsToGo(this.getFirstRound());
+        const nrOfRounds = nrOfRoundsToGo + 1;
+        return Array(nrOfRounds).fill(0).map((e, i) => i + 1);
     }
 
     /**
@@ -443,8 +445,7 @@ export class StructureService {
             placesToAddToNewPoule = nrOfPlacesNotEvenOld;
         }
 
-        const orderedByPlace = true;
-        const poulePlacesOrderedByPlace = round.getPoulePlaces(orderedByPlace);
+        const poulePlacesOrderedByPlace = round.getPoulePlaces(Round.ORDER_HORIZONTAL);
         while (placesToAddToNewPoule > 0) {
 
             poulePlacesOrderedByPlace.forEach(function (poulePlaceIt) {

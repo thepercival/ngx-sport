@@ -37,6 +37,7 @@ export class RoundRepository {
         const round = new Round(competitionseason, parentRound, json.winnersOrLosers);
         round.setId(json.id);
         round.setName(json.name);
+        round.setQualifyOrder(json.qualifyOrder);
         this.configRepos.jsonToObjectHelper(json.config, round);
         round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));
         this.pouleRepos.jsonArrayToObject(json.poules, round);
@@ -61,6 +62,7 @@ export class RoundRepository {
             id: object.getId(),
             number: object.getNumber(),
             winnersOrLosers: object.getWinnersOrLosers(),
+            qualifyOrder: object.getQualifyOrder(),
             name: object.getName(),
             config: this.configRepos.objectToJsonHelper(object.getConfig()),
             scoreConfig: this.scoreConfigRepos.objectToJsonHelper(object.getScoreConfig()),
@@ -74,6 +76,7 @@ export interface IRound {
     id?: number;
     number: number;
     winnersOrLosers: number;
+    qualifyOrder: number;
     name: string;
     config: IRoundConfig;
     scoreConfig: IRoundScoreConfig;

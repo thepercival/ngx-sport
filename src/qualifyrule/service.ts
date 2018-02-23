@@ -20,7 +20,7 @@ export class QualifyService {
     createObjectsForParentRound() {
         const parentRoundPoulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
         const orderedByPlace = true;
-        const childRoundPoulePlacesOrderedByPlace = this.childRound.getPoulePlaces(orderedByPlace);
+        const childRoundPoulePlacesOrderedByPlace = this.childRound.getPoulePlaces(this.childRound.getQualifyOrder());
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
             childRoundPoulePlacesOrderedByPlace.reverse();
         }
