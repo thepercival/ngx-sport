@@ -15,11 +15,14 @@ export class Game {
     static readonly STATE_CREATED = 1;
     static readonly STATE_INPLAY = 2;
     static readonly STATE_PLAYED = 4;
+    static readonly ORDER_BYNUMBER = 1;
+    static readonly ORDER_RESOURCEBATCH = 2;
 
     protected id: number;
     protected poule: Poule;
     protected roundNumber: number;
     protected subNumber: number;
+    protected resourceBatch: number;
     protected field: Field;
     protected referee: Referee;
     protected homePoulePlace: PoulePlace;
@@ -35,6 +38,7 @@ export class Game {
         awayPouleplace: PoulePlace,
         roundNumber: number,
         subNumber: number) {
+        if (homePouleplace === undefined) { console.log('home empty'); }
         this.setPoule(poule);
         this.setRoundNumber(roundNumber);
         this.setSubNumber(subNumber);
@@ -74,6 +78,14 @@ export class Game {
 
     setSubNumber(subNumber: number): void {
         this.subNumber = subNumber;
+    }
+
+    getResourceBatch(): number {
+        return this.resourceBatch;
+    }
+
+    setResourceBatch(resourceBatch: number): void {
+        this.resourceBatch = resourceBatch;
     }
 
     getField(): Field {
@@ -117,7 +129,7 @@ export class Game {
     }
 
     getPoulePlace(homeAway: boolean): PoulePlace {
-        return homeAway === Game.HOME ? this.getHomePoulePlace() : this.getAwayPoulePlace();
+        return homeAway === Game.HOME ? this.getHomePoulePlace() : (homeAway === Game.AWAY ? this.getAwayPoulePlace() : undefined);
     }
 
     getHomeAway(poulePlace: PoulePlace): boolean {
@@ -126,7 +138,7 @@ export class Game {
         } else if (poulePlace === this.getAwayPoulePlace()) {
             return Game.AWAY;
         }
-        return;
+        return undefined;
     }
 
     getState(): number {

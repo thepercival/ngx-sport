@@ -1,19 +1,32 @@
 /**
  * Created by coen on 3-3-17.
  */
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GameRepository, IGame } from '../game/repository';
 import { Poule } from '../poule';
 import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
+import { SportRepository } from '../repository';
 import { Round } from '../round';
 
-
 @Injectable()
-export class PouleRepository {
+export class PouleRepository extends SportRepository {
 
-    constructor(private pouleplaceRepos: PoulePlaceRepository, private gameRepos: GameRepository) {
+    private url: string;
 
+    constructor(
+        private http: HttpClient,
+        private pouleplaceRepos: PoulePlaceRepository,
+        private gameRepos: GameRepository,
+        router: Router) {
+        super(router);
+        this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
+    }
+
+    getUrlpostfix(): string {
+        return 'poules';
     }
 
     jsonArrayToObject(jsonArray: any, round: Round): Poule[] {
@@ -25,9 +38,15 @@ export class PouleRepository {
         return objects;
     }
 
-    jsonToObjectHelper(json: any, round: Round): Poule {
-        const poule = new Poule(round, json.number);
-        poule.setId(json.id);
+    jsonToObjectHelper(json: any, round: Round, poule?: Poule): Poule {
+        if (poule === undefined && json.id !== undefined) {
+            poule = this.cache[json.id];
+        }
+        if (poule === undefined) {
+            poule = new Poule(round, json.number);
+            poule.setId(json.id);
+            this.cache[poule.getId()] = poule;
+        }
         poule.setName(json.name);
         this.pouleplaceRepos.jsonArrayToObject(json.places, poule);
         if (json.games !== undefined) {

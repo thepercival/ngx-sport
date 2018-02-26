@@ -1,10 +1,13 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Competitionseason } from '../competitionseason';
 import { CompetitionseasonRepository } from '../competitionseason/repository';
 import { IPoule, PouleRepository } from '../poule/repository';
 import { QualifyRuleRepository } from '../qualifyrule/repository';
 import { QualifyService } from '../qualifyrule/service';
+import { SportRepository } from '../repository';
 import { Round } from '../round';
 import { IRoundConfig, RoundConfigRepository } from './config/repository';
 import { IRoundScoreConfig, RoundScoreConfigRepository } from './scoreconfig/repository';
@@ -14,14 +17,24 @@ import { IRoundScoreConfig, RoundScoreConfigRepository } from './scoreconfig/rep
  * Created by coen on 3-3-17.
  */
 @Injectable()
-export class RoundRepository {
+export class RoundRepository extends SportRepository {
+
+    private url: string;
 
     constructor(
+        private http: HttpClient,
         private configRepos: RoundConfigRepository,
         private scoreConfigRepos: RoundScoreConfigRepository,
         private pouleRepos: PouleRepository,
         private competitionseasonRepos: CompetitionseasonRepository,
-        private qualifyRuleRepos: QualifyRuleRepository) {
+        private qualifyRuleRepos: QualifyRuleRepository,
+        router: Router) {
+        super(router);
+        this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
+    }
+
+    getUrlpostfix(): string {
+        return 'rounds';
     }
 
     jsonArrayToObject(jsonArray: IRound[], competitionseason: Competitionseason, parentRound?: Round): Round[] {
@@ -33,10 +46,16 @@ export class RoundRepository {
         return objects;
     }
 
-    jsonToObjectHelper(json: IRound, competitionseason: Competitionseason, parentRound?: Round): Round {
-        const round = new Round(competitionseason, parentRound, json.winnersOrLosers);
-        round.setId(json.id);
-        round.setName(json.name);
+    jsonToObjectHelper(json: IRound, competitionseason: Competitionseason, parentRound?: Round, round?: Round): Round {
+        if (round === undefined && json.id !== undefined) {
+            round = this.cache[json.id];
+        }
+        if (round === undefined) {
+            round = new Round(competitionseason, parentRound, json.winnersOrLosers);
+            round.setId(json.id);
+            this.cache[round.getId()] = round;
+        }
+        // round.setName(json.name);
         round.setQualifyOrder(json.qualifyOrder);
         this.configRepos.jsonToObjectHelper(json.config, round);
         round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));

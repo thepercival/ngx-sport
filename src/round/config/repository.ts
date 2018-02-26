@@ -1,15 +1,14 @@
 /**
  * Created by coen on 3-3-17.
  */
+import { SportConfig } from '../../config';
 import { QualifyRule } from '../../qualifyrule';
 import { Round } from '../../round';
 import { RoundConfig } from '../config';
 
-
 export class RoundConfigRepository {
 
     constructor() {
-
     }
 
     jsonArrayToObject(jsonArray: IRoundConfig[], round: Round): RoundConfig[] {
@@ -92,7 +91,8 @@ export class RoundConfigRepository {
         roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
         roundConfig.setMinutesPerGame(0);
         roundConfig.setMinutesInBetween(0);
-        if (round.getCompetitionseason().getCompetition().getSport() === 'voetbal') {
+        const sport = round.getCompetitionseason().getCompetition().getSport();
+        if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
             roundConfig.setHasExtension(!round.needsRanking());
             roundConfig.setMinutesPerGameExt(5);
             roundConfig.setEnableTime(true);

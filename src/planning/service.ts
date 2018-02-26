@@ -1,6 +1,10 @@
+import { Field } from '../field';
 import { Game } from '../game';
+import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
+import { Referee } from '../referee';
 import { Round } from '../round';
+import { RoundConfig } from '../round/config';
 import { StructureService } from '../structure/service';
 
 export class PlanningService {
@@ -133,62 +137,172 @@ export class PlanningService {
     protected rescheduleHelper(roundNumber: number, pStartDateTime: Date): Date {
         const rounds = this.allRoundsByNumber[roundNumber];
         const aRoundConfig = rounds[0].getConfig();
+        const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
 
-        let dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
-        const fields = this.structureService.getCompetitionseason().getFields(); // order by number
-        const maxNrOfGamesSimultaneously = this.getMaxNrOfGamesSimultaneously(roundNumber);
-        const tooMuchFieldsAvailable = fields.length > maxNrOfGamesSimultaneously;
+        const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
+        let fields = this.structureService.getCompetitionseason().getFields();
         const referees = this.structureService.getCompetitionseason().getReferees();
+        if (referees.length > 0 && referees.length < fields.length) {
+            fields = fields.slice(0, referees.length);
+        }
+        const poulesFields: PoulesFields[] = this.getPoulesFields(poules.slice(0), fields.slice(0));
+        poulesFields.forEach(poulesFieldsIt => this.assignFieldsToGames(poulesFieldsIt));
+        const poulesReferees: PoulesReferees[] = this.getPoulesReferees(poules.slice(0), referees.slice(0));
+        poulesReferees.forEach(poulesRefereesIt => this.assignRefereesToGames(poulesRefereesIt));
 
-        let nrOfGamesSimultaneously = 0;
-        let refereeNr = 0;
-        let currentReferee = referees[refereeNr];
-        let nextRoundStartDateTime: Date;
-        const games = this.getGamesByNumber(roundNumber);
-        games.forEach(function (gamesPerRoundNumber) {
-            let fieldNr = 0;
-            let currentField = fields[fieldNr];
-            let nrOfRefereesUsed = 0;
-            gamesPerRoundNumber.forEach((game) => {
-                game.setField(currentField);
-                game.setStartDateTime(dateTime);
-                game.setReferee(currentReferee);
-                let addTime = false;
-                currentField = fields[++fieldNr];
-                if (currentField === undefined) {
-                    fieldNr = 0;
-                    currentField = fields[fieldNr];
-                    addTime = true;
-                }
-                nrOfRefereesUsed++;
-                currentReferee = referees[++refereeNr];
-                if (referees.length > 0 && currentReferee === undefined) {
-                    refereeNr = 0;
-                    currentReferee = referees[refereeNr];
-                    if (nrOfRefereesUsed > referees.length) {
-                        addTime = true;
-                        nrOfRefereesUsed = 0;
-                    }
-                }
-                if (++nrOfGamesSimultaneously === maxNrOfGamesSimultaneously) {
-                    addTime = true;
-                    nrOfGamesSimultaneously = 0;
-                }
-                if (aRoundConfig.getEnableTime() && dateTime && addTime) {
-                    const nrOfMinutes = aRoundConfig.getMaximalNrOfMinutesPerGame(true);
-                    dateTime = new Date(dateTime.getTime());
-                    dateTime.setMinutes(dateTime.getMinutes() + nrOfMinutes);
-                    if (nextRoundStartDateTime === undefined || dateTime > nextRoundStartDateTime) {
-                        nextRoundStartDateTime = dateTime;
-                        nrOfGamesSimultaneously = 0;
-                    }
-                }
-            });
-        }, this);
-        return nextRoundStartDateTime;
+        const amountPerResourceBatch = this.getAmountPerResourceBatch(fields, referees);
+        return this.assignResourceBatchToGames(aRoundConfig, dateTime, amountPerResourceBatch);
     }
 
-    getGamesByNumber(roundNumber: number): Game[][] {
+    protected getAmountPerResourceBatch(fields: Field[], referees: Referee[]): number {
+        if (referees.length === 0) {
+            return fields.length;
+        }
+        return referees.length > fields.length ? fields.length : referees.length;
+    }
+
+    protected getPoulesFields(poules: Poule[], fields: Field[]): PoulesFields[] {
+        const gcd = this.greatestCommonDevisor(poules.length, fields.length);
+        if (gcd === 0) {
+            return [];
+        }
+        if (gcd === 1) {
+            return [{ poules: poules, fields: fields }];
+        }
+        const poulesFields: PoulesFields[] = [];
+        const nrOfPoulesPerPart = poules.length / gcd;
+        const poulesPart: Poule[] = poules.splice(0, nrOfPoulesPerPart);
+        const nrOfFieldsPerPart = fields.length / gcd;
+        const fieldsPart: Field[] = fields.splice(0, nrOfFieldsPerPart);
+        poulesFields.push({ poules: poulesPart, fields: fieldsPart });
+        return poulesFields.concat(this.getPoulesFields(poules, fields));
+    }
+
+    protected getPoulesReferees(poules: Poule[], referees: Referee[]): PoulesReferees[] {
+        const gcd = this.greatestCommonDevisor(poules.length, referees.length);
+        if (gcd === 0) {
+            return [];
+        }
+        if (gcd === 1) {
+            return [{ poules: poules, referees: referees }];
+        }
+        const poulesReferees: PoulesReferees[] = [];
+        const nrOfPoulesPerPart = poules.length / gcd;
+        const poulesPart: Poule[] = poules.splice(0, nrOfPoulesPerPart);
+        const nrOfFieldsPerPart = referees.length / gcd;
+        const refereesPart: Referee[] = referees.splice(0, nrOfFieldsPerPart);
+        poulesReferees.push({ poules: poulesPart, referees: refereesPart });
+        return poulesReferees.concat(this.getPoulesReferees(poules, referees));
+    }
+
+    protected greatestCommonDevisor(a: number, b: number) {
+        if (b) {
+            return this.greatestCommonDevisor(b, a % b);
+        } else {
+            return Math.abs(a);
+        }
+    }
+
+    protected assignFieldsToGames(poulesFields: PoulesFields) {
+        const games = this.getPoulesGamesByNumber(poulesFields.poules, Game.ORDER_BYNUMBER);
+        games.forEach(gamesPerRoundNumber => {
+            let fieldNr = 0;
+            let currentField = poulesFields.fields[fieldNr];
+            gamesPerRoundNumber.forEach(game => {
+                game.setField(currentField);
+                currentField = poulesFields.fields[++fieldNr];
+                if (currentField === undefined) {
+                    fieldNr = 0;
+                    currentField = poulesFields.fields[fieldNr];
+                }
+            });
+        });
+    }
+
+    protected assignRefereesToGames(poulesReferees: PoulesReferees) {
+        const games = this.getPoulesGamesByNumber(poulesReferees.poules, Game.ORDER_BYNUMBER);
+        games.forEach(gamesPerRoundNumber => {
+            let refNr = 0;
+            let currentReferee = poulesReferees.referees[refNr];
+            gamesPerRoundNumber.forEach(game => {
+                game.setReferee(currentReferee);
+                currentReferee = poulesReferees.referees[++refNr];
+                if (currentReferee === undefined) {
+                    refNr = 0;
+                    currentReferee = poulesReferees.referees[refNr];
+                }
+            });
+        });
+    }
+
+    protected assignResourceBatchToGames(roundConfig: RoundConfig, dateTime: Date, amountPerResourceBatch: number): Date {
+        const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
+        const games = this.getGamesByNumber(roundConfig.getRound().getNumber(), Game.ORDER_BYNUMBER);
+
+        let resourceBatch = 1;
+        games.forEach(gamesPerRoundNumber => {
+            while (gamesPerRoundNumber.length > 0) {
+                const resourceBatchGames = this.getResourceBatch(gamesPerRoundNumber, amountPerResourceBatch);
+                resourceBatchGames.forEach(game => {
+                    game.setStartDateTime(dateTime);
+                    game.setResourceBatch(resourceBatch);
+                    const index = gamesPerRoundNumber.indexOf(game);
+                    if (index === -1) {
+                        return;
+                    }
+                    gamesPerRoundNumber.splice(index, 1);
+                });
+                resourceBatch++;
+                dateTime = new Date(dateTime.getTime());
+                dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
+            }
+        });
+        return dateTime;
+    }
+
+    protected getResourceBatch(gamesPerRoundNumber: Game[], amountPerResourceBatch: number): Game[] {
+        const poulePlacesUsed: any = {};
+        const fieldsUsed: any = {};
+        const refereesUsed: any = {};
+        const resourceBatch: Game[] = [];
+
+        gamesPerRoundNumber.forEach(game => {
+            if (amountPerResourceBatch === resourceBatch.length) {
+                return;
+            }
+            const homePoulePlace = game.getHomePoulePlace();
+            const awayPoulePlace = game.getAwayPoulePlace();
+            const field = game.getField();
+            const referee = game.getReferee();
+            if (
+                poulePlacesUsed[homePoulePlace.getId()] !== undefined
+                || poulePlacesUsed[awayPoulePlace.getId()] !== undefined
+                || fieldsUsed[field.getId()] !== undefined
+                || (referee !== undefined && refereesUsed[referee.getId()] !== undefined)
+            ) {
+                return;
+            }
+            poulePlacesUsed[homePoulePlace.getId()] = true;
+            poulePlacesUsed[awayPoulePlace.getId()] = true;
+            fieldsUsed[field.getId()] = true;
+            if (referee !== undefined) {
+                refereesUsed[referee.getId()] = true;
+            }
+            resourceBatch.push(game);
+        });
+        return resourceBatch;
+    }
+
+    protected getPoulesForRoundNumber(roundNumber: number): Poule[] {
+        let poules: Poule[] = [];
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach(round => {
+            poules = poules.concat(round.getPoules());
+        });
+        return poules;
+    }
+
+    getGamesByNumber(roundNumber: number, order: number): Game[][] {
         const games = [];
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach(round => {
@@ -201,11 +315,41 @@ export class PlanningService {
                 });
             });
         });
+        return this.orderGames(games, order);
+    }
+
+    protected getPoulesGamesByNumber(poules: Poule[], order: number): Game[][] {
+        const games = [];
+        poules.forEach(poule => {
+            poule.getGames().forEach(function (game) {
+                if (games[game.getRoundNumber()] === undefined) {
+                    games[game.getRoundNumber()] = [];
+                }
+                games[game.getRoundNumber()].push(game);
+            });
+        });
+        return this.orderGames(games, order);
+    }
+
+    orderGames(games: Game[][], order: number): Game[][] {
         games.forEach(gamesPerGameRoundNumber => gamesPerGameRoundNumber.sort((g1, g2) => {
-            if (g1.getSubNumber() === g2.getSubNumber()) {
-                return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+            if (order === Game.ORDER_BYNUMBER) {
+                if (g1.getSubNumber() === g2.getSubNumber()) {
+                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+                }
+                return g1.getSubNumber() - g2.getSubNumber();
             }
-            return g1.getSubNumber() - g2.getSubNumber();
+
+            if (g1.getRound().getConfig().getEnableTime()) {
+                if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {
+                    return g1.getStartDateTime().getTime() - g2.getStartDateTime().getTime();
+                }
+            } else {
+                if (g1.getResourceBatch() !== g2.getResourceBatch()) {
+                    return g1.getResourceBatch() - g2.getResourceBatch();
+                }
+            }
+            return g1.getField().getNumber() - g2.getField().getNumber();
         })
         );
         return games;
@@ -304,4 +448,14 @@ export class PlanningService {
         }
         return result;
     }
+}
+
+export interface PoulesFields {
+    poules: Poule[];
+    fields: Field[];
+}
+
+export interface PoulesReferees {
+    poules: Poule[];
+    referees: Referee[];
 }

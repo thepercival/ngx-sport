@@ -1,15 +1,13 @@
-/**
- * Created by coen on 3-3-17.
- */
 import { SportConfig } from '../../config';
 import { Round } from '../../round';
 import { RoundScoreConfig } from '../scoreconfig';
 
-
+/**
+ * Created by coen on 3-3-17.
+ */
 export class RoundScoreConfigRepository {
 
     constructor() {
-
     }
 
     jsonToObjectHelper(json: IRoundScoreConfig, round: Round): RoundScoreConfig {
@@ -60,7 +58,7 @@ export class RoundScoreConfigRepository {
                     id: undefined,
                     name: 'legs',
                     direction: RoundScoreConfig.UPWARDS,
-                    maximum: 2,
+                    maximum: 3,
                     parent: {
                         id: undefined,
                         name: 'sets',
@@ -75,12 +73,12 @@ export class RoundScoreConfigRepository {
                 id: undefined,
                 name: 'games',
                 direction: RoundScoreConfig.UPWARDS,
-                maximum: 6,
+                maximum: 7,
                 parent: {
                     id: undefined,
                     name: 'sets',
                     direction: RoundScoreConfig.UPWARDS,
-                    maximum: 2,
+                    maximum: 0,
                     parent: undefined
                 }
             };

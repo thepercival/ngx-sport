@@ -61,6 +61,9 @@ export class GameRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IGame, poule: Poule, game?: Game): Game {
+        if (game === undefined && json.id !== undefined) {
+            game = this.cache[json.id];
+        }
         if (game === undefined) {
             game = new Game(
                 poule,
@@ -68,24 +71,24 @@ export class GameRepository extends SportRepository {
                 poule.getPlaces().find(pouleplaceIt => json.awayPoulePlace.number === pouleplaceIt.getNumber()),
                 json.roundNumber, json.subNumber
             );
-        } else {
-            game.setReferee(undefined);
-            game.setStartDateTime(undefined);
-            while (game.getScores().length > 0) {
-                game.getScores().pop();
-            }
+            game.setId(json.id);
+            this.cache[game.getId()] = game;
         }
-
-        game.setId(json.id);
+        game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         if (json.field !== undefined) {
             game.setField(poule.getCompetitionseason().getFieldByNumber(json.field.number));
         }
+        game.setReferee(undefined);
         if (json.referee !== undefined) {
             game.setReferee(poule.getCompetitionseason().getRefereeById(json.referee.id));
         }
+        game.setStartDateTime(undefined);
         if (json.startDateTime !== undefined) {
             game.setStartDateTime(new Date(json.startDateTime));
+        }
+        while (game.getScores().length > 0) {
+            game.getScores().pop();
         }
         this.gameScoreRepos.jsonArrayToObject(json.scores, game);
         return game;
@@ -107,6 +110,7 @@ export class GameRepository extends SportRepository {
             awayPoulePlace: this.pouleplaceRepos.objectToJsonHelper(object.getAwayPoulePlace()),
             roundNumber: object.getRoundNumber(),
             subNumber: object.getSubNumber(),
+            resourceBatch: object.getResourceBatch(),
             field: object.getField() ? this.fieldRepos.objectToJsonHelper(object.getField()) : undefined,
             state: object.getState(),
             referee: object.getReferee() ? this.refereeRepos.objectToJsonHelper(object.getReferee()) : undefined,
@@ -122,6 +126,7 @@ export interface IGame {
     awayPoulePlace: IPoulePlace;
     roundNumber: number;
     subNumber: number;
+    resourceBatch: number;
     field?: IField;
     state: number;
     startDateTime?: string;
