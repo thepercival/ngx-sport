@@ -6,6 +6,7 @@ import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundConfig } from '../round/config';
 import { StructureService } from '../structure/service';
+import { PlanningResourceService } from './resource/service';
 
 export class PlanningService {
 
@@ -155,10 +156,18 @@ export class PlanningService {
     }
 
     protected getAmountPerResourceBatch(fields: Field[], referees: Referee[]): number {
+        let amountPerResourceBatch;
         if (referees.length === 0) {
-            return fields.length;
+            amountPerResourceBatch = fields.length;
+        } else if (fields.length === 0) {
+            amountPerResourceBatch = referees.length;
+        } else {
+            amountPerResourceBatch = referees.length > fields.length ? fields.length : referees.length;
         }
-        return referees.length > fields.length ? fields.length : referees.length;
+        if (amountPerResourceBatch === 0) {
+            return 1;
+        }
+        return amountPerResourceBatch;
     }
 
     protected getPoulesFields(poules: Poule[], fields: Field[]): PoulesFields[] {
@@ -261,10 +270,9 @@ export class PlanningService {
     }
 
     protected getResourceBatch(gamesPerRoundNumber: Game[], amountPerResourceBatch: number): Game[] {
-        const poulePlacesUsed: any = {};
-        const fieldsUsed: any = {};
-        const refereesUsed: any = {};
+
         const resourceBatch: Game[] = [];
+        const resourceService = new PlanningResourceService();
 
         gamesPerRoundNumber.forEach(game => {
             if (amountPerResourceBatch === resourceBatch.length) {
@@ -274,20 +282,10 @@ export class PlanningService {
             const awayPoulePlace = game.getAwayPoulePlace();
             const field = game.getField();
             const referee = game.getReferee();
-            if (
-                poulePlacesUsed[homePoulePlace.getId()] !== undefined
-                || poulePlacesUsed[awayPoulePlace.getId()] !== undefined
-                || fieldsUsed[field.getId()] !== undefined
-                || (referee !== undefined && refereesUsed[referee.getId()] !== undefined)
-            ) {
+            if (resourceService.inUse(game)) {
                 return;
             }
-            poulePlacesUsed[homePoulePlace.getId()] = true;
-            poulePlacesUsed[awayPoulePlace.getId()] = true;
-            fieldsUsed[field.getId()] = true;
-            if (referee !== undefined) {
-                refereesUsed[referee.getId()] = true;
-            }
+            resourceService.add(game);
             resourceBatch.push(game);
         });
         return resourceBatch;
@@ -459,3 +457,4 @@ export interface PoulesReferees {
     poules: Poule[];
     referees: Referee[];
 }
+
