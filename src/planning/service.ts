@@ -108,7 +108,6 @@ export class PlanningService {
         return copiedEndDateTime;
     }
 
-
     protected createHelper(roundNumber: number) {
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach((round) => {
