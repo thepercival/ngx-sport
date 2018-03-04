@@ -151,7 +151,7 @@ export class PlanningService {
         poulesReferees.forEach(poulesRefereesIt => this.assignRefereesToGames(poulesRefereesIt));
 
         const amountPerResourceBatch = this.getAmountPerResourceBatch(fields, referees);
-        return this.assignResourceBatchToGames(aRoundConfig, dateTime, amountPerResourceBatch);
+        return this.assignResourceBatchToGames(aRoundConfig, amountPerResourceBatch, dateTime);
     }
 
     protected getAmountPerResourceBatch(fields: Field[], referees: Referee[]): number {
@@ -243,7 +243,7 @@ export class PlanningService {
         });
     }
 
-    protected assignResourceBatchToGames(roundConfig: RoundConfig, dateTime: Date, amountPerResourceBatch: number): Date {
+    protected assignResourceBatchToGames(roundConfig: RoundConfig, amountPerResourceBatch: number, dateTime?: Date): Date {
         const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
         const games = this.getGamesByNumber(roundConfig.getRound().getNumber(), Game.ORDER_BYNUMBER);
 
@@ -261,8 +261,10 @@ export class PlanningService {
                     gamesPerRoundNumber.splice(index, 1);
                 });
                 resourceBatch++;
-                dateTime = new Date(dateTime.getTime());
-                dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
+                if (dateTime !== undefined) {
+                    dateTime = new Date(dateTime.getTime());
+                    dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
+                }
             }
         });
         return dateTime;

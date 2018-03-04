@@ -1,4 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+/**
+ * Created by coen on 16-2-17.
+ */
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -8,16 +11,11 @@ import { map } from 'rxjs/operators/map';
 import { AssociationRepository } from '../association/repository';
 import { Competition } from '../competition';
 import { FieldRepository, IField } from '../field/repository';
-import { League } from '../league';
-import { LeagueRepository } from '../league/repository';
+import { ILeague, LeagueRepository } from '../league/repository';
 import { IReferee, RefereeRepository } from '../referee/repository';
 import { SportRepository } from '../repository';
-import { Season } from '../season';
-import { SeasonRepository } from '../season/repository';
+import { ISeason, SeasonRepository } from '../season/repository';
 
-/**
- * Created by coen on 16-2-17.
- */
 @Injectable()
 export class CompetitionRepository extends SportRepository {
 
@@ -40,38 +38,38 @@ export class CompetitionRepository extends SportRepository {
         return 'competitions';
     }
 
-    getObjects(league: League, season: Season): Observable<Competition[]> {
-        const options = this.getOptions(league, season);
+    getObjects(): Observable<Competition[]> {
+        const options = this.getOptions();
         return this.http.get(this.url, options).pipe(
             map((res: ICompetition[]) => {
-                this.objects = this.jsonArrayToObject(res, league, season);
+                this.objects = this.jsonArrayToObject(res);
                 return this.objects;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    getObject(id: number, league: League, season: Season): Observable<Competition> {
-        const options = this.getOptions(league, season);
+    getObject(id: number): Observable<Competition> {
+        const options = this.getOptions();
         return this.http.get(this.url + '/' + id, options).pipe(
-            map((res: ICompetition) => this.jsonToObjectHelper(res, league, season)),
+            map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(json: ICompetition, league: League, season: Season): Observable<Competition> {
-        const options = this.getOptions(league, season);
+    createObject(json: ICompetition): Observable<Competition> {
+        const options = this.getOptions();
         return this.http.post(this.url, json, options).pipe(
-            map((res: ICompetition) => this.jsonToObjectHelper(res, league, season)),
+            map((res: ICompetition) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(competition: Competition): Observable<Competition> {
         const url = this.url + '/' + competition.getId();
-        const options = this.getOptions(competition.getLeague(), competition.getSeason());
+        const options = this.getOptions();
         return this.http.put(url, this.objectToJsonHelper(competition), options).pipe(
-            map((res: ICompetition) => this.jsonToObjectHelper(res, competition.getLeague(), competition.getSeason())),
+            map((res: ICompetition) => this.jsonToObjectHelper(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -84,26 +82,25 @@ export class CompetitionRepository extends SportRepository {
         );
     }
 
-    protected getOptions(league: League, season: Season): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(): { headers: HttpHeaders } {
         return {
-            headers: super.getHeaders(),
-            params: new HttpParams()
-                .set('leagueid', league.getId().toString())
-                .set('seasonid', season.getId().toString())
+            headers: super.getHeaders()
         };
     }
 
-    jsonArrayToObject(jsonArray: ICompetition[], league: League, season: Season): Competition[] {
+    jsonArrayToObject(jsonArray: ICompetition[]): Competition[] {
         const competitions: Competition[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, league, season);
+            const object = this.jsonToObjectHelper(json);
             competitions.push(object);
         }
         return competitions;
     }
 
-    jsonToObjectHelper(json: ICompetition, league: League, season: Season, competition?: Competition): Competition {
+    jsonToObjectHelper(json: ICompetition, competition?: Competition): Competition {
         if (competition === undefined) {
+            const league = this.leagueRepository.jsonToObjectHelper(json.league);
+            const season = this.seasonRepository.jsonToObjectHelper(json.season);
             competition = new Competition(league, season);
         }
         competition.setId(json.id);
@@ -117,6 +114,8 @@ export class CompetitionRepository extends SportRepository {
     objectToJsonHelper(object: Competition): ICompetition {
         const json: ICompetition = {
             id: object.getId(),
+            league: this.leagueRepository.objectToJsonHelper(object.getLeague()),
+            season: this.seasonRepository.objectToJsonHelper(object.getSeason()),
             fields: this.fieldRepository.objectsToJsonArray(object.getFields()),
             referees: this.refereeRepository.objectsToJsonArray(object.getReferees()),
             startDateTime: object.getStartDateTime().toISOString(),
@@ -128,6 +127,8 @@ export class CompetitionRepository extends SportRepository {
 
 export interface ICompetition {
     id?: number;
+    league: ILeague;
+    season: ISeason;
     fields: IField[];
     referees: IReferee[];
     startDateTime: string;

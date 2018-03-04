@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators/map';
 
-import { Association } from './../../association';
 import { League } from './../../league';
 import { ExternalSystem } from './../system';
 import { ExternalSystemLeagueInterface } from './interface';
@@ -79,8 +78,7 @@ export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
         // cup: false,
         // federation: "UEFA"
 
-        const association = new Association('dummy');
-        const league = new League(association, json.name);
+        const league = new League(json.name);
         league.setId(json.league_slug);
         league.setAbbreviation(league.getName().substr(0, League.MAX_LENGTH_ABBREVIATION));
         // this.setAsspociationByLeagueId(league.getId(), this.jsonAssociationToObjectHelper(json));

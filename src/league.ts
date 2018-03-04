@@ -17,8 +17,7 @@ export class League implements ImportableObject {
     protected association: Association;
 
     // constructor
-    constructor(association: Association, name: string) {
-        this.setAssociation(association);
+    constructor(name: string) {
         this.setName(name);
     }
 
@@ -58,7 +57,7 @@ export class League implements ImportableObject {
         return this.association;
     }
 
-    protected setAssociation(association: Association): void {
+    setAssociation(association: Association): void {
         // if (association.getTeamByName(this.getName()) !== undefined) {
         //     throw new Error('de teamnaam bestaat al binnen de bond');
         // }
