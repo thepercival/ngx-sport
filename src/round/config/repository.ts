@@ -91,7 +91,7 @@ export class RoundConfigRepository {
         roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
         roundConfig.setMinutesPerGame(0);
         roundConfig.setMinutesInBetween(0);
-        const sport = round.getCompetitionseason().getCompetition().getSport();
+        const sport = round.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
             roundConfig.setHasExtension(!round.needsRanking());
             roundConfig.setMinutesPerGameExt(5);

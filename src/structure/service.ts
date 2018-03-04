@@ -1,5 +1,5 @@
-import { Competitionseason } from '../competitionseason';
 import { Game } from '../game';
+import { Competition } from '../competition';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { QualifyService } from '../qualifyrule/service';
@@ -59,7 +59,7 @@ export class StructureService {
     private firstRound: Round;
 
     constructor(
-        private competitionseason: Competitionseason,
+        private competition: Competition,
         rangeNrOfCompetitors,
         firstRound: Round,
         nrOfPlaces: number = 0
@@ -73,8 +73,8 @@ export class StructureService {
         }
     }
 
-    getCompetitionseason(): Competitionseason {
-        return this.competitionseason;
+    getCompetition(): Competition {
+        return this.competition;
     }
 
     getFirstRound(): Round {
@@ -377,7 +377,7 @@ export class StructureService {
     }
 
     private addRoundHelper(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number, opposing: number): Round {
-        const round = new Round(this.competitionseason, parentRound, winnersOrLosers);
+        const round = new Round(this.competition, parentRound, winnersOrLosers);
         if (nrOfPlaces <= 0) {
             return;
         }

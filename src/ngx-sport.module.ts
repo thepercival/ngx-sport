@@ -4,8 +4,6 @@ import { Association } from './association';
 import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
 import { CompetitionRepository } from './competition/repository';
-import { Competitionseason } from './competitionseason';
-import { CompetitionseasonRepository } from './competitionseason/repository';
 import { SportConfig } from './config';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
@@ -18,6 +16,8 @@ import { Game } from './game';
 import { GameRepository } from './game/repository';
 import { GameScore } from './game/score';
 import { GameScoreRepository } from './game/score/repository';
+import { League } from './league';
+import { LeagueRepository } from './league/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { PouleRepository } from './poule/repository';
@@ -46,18 +46,18 @@ import { TeamRepository } from './team/repository';
 @NgModule({
     imports: [],
     declarations: [
-        Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
+        Association, League, Competition, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
-        AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
+        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
     ],
     exports: [
-        Association, Competition, Competitionseason, SportConfig, Field, Game, GameScore,
+        Association, League, Competition, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
-        AssociationRepository, CompetitionRepository, CompetitionseasonRepository, FieldRepository, GameRepository, GameScoreRepository,
+        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
         ExternalObject, ExternalObjectRepository,

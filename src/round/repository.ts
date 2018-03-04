@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Competitionseason } from '../competitionseason';
-import { CompetitionseasonRepository } from '../competitionseason/repository';
+import { Competition } from '../competition';
+import { CompetitionRepository } from '../competition/repository';
 import { IPoule, PouleRepository } from '../poule/repository';
 import { QualifyRuleRepository } from '../qualifyrule/repository';
 import { QualifyService } from '../qualifyrule/service';
@@ -26,7 +26,7 @@ export class RoundRepository extends SportRepository {
         private configRepos: RoundConfigRepository,
         private scoreConfigRepos: RoundScoreConfigRepository,
         private pouleRepos: PouleRepository,
-        private competitionseasonRepos: CompetitionseasonRepository,
+        private competitionRepos: CompetitionRepository,
         private qualifyRuleRepos: QualifyRuleRepository,
         router: Router) {
         super(router);
@@ -37,21 +37,21 @@ export class RoundRepository extends SportRepository {
         return 'rounds';
     }
 
-    jsonArrayToObject(jsonArray: IRound[], competitionseason: Competitionseason, parentRound?: Round): Round[] {
+    jsonArrayToObject(jsonArray: IRound[], competition: Competition, parentRound?: Round): Round[] {
         const objects: Round[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, competitionseason, parentRound);
+            const object = this.jsonToObjectHelper(json, competition, parentRound);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IRound, competitionseason: Competitionseason, parentRound?: Round, round?: Round): Round {
+    jsonToObjectHelper(json: IRound, competition: Competition, parentRound?: Round, round?: Round): Round {
         if (round === undefined && json.id !== undefined) {
             round = this.cache[json.id];
         }
         if (round === undefined) {
-            round = new Round(competitionseason, parentRound, json.winnersOrLosers);
+            round = new Round(competition, parentRound, json.winnersOrLosers);
             round.setId(json.id);
             this.cache[round.getId()] = round;
         }
@@ -60,7 +60,7 @@ export class RoundRepository extends SportRepository {
         this.configRepos.jsonToObjectHelper(json.config, round);
         round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));
         this.pouleRepos.jsonArrayToObject(json.poules, round);
-        this.jsonArrayToObject(json.childRounds, competitionseason, round);
+        this.jsonArrayToObject(json.childRounds, competition, round);
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round);
             qualifyService.createObjectsForParentRound();

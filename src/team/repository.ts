@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators/map';
 
 import { Association } from '../association';
 import { AssociationRepository } from '../association/repository';
-import { Competitionseason } from '../competitionseason';
+import { Competition } from '../competition';
 import { SportRepository } from '../repository';
 import { Team } from '../team';
 
@@ -37,10 +37,7 @@ export class TeamRepository extends SportRepository {
     }
 
     getObjects(association: Association): Observable<Team[]> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('associationid', association.getId().toString())
-        };
+        const options = this.getOptions(association);
         return this.http.get(this.url, options).pipe(
             map((res: ITeam[]) => {
                 return this.jsonArrayToObject(res, association);
@@ -50,10 +47,7 @@ export class TeamRepository extends SportRepository {
     }
 
     getObject(id: number, association: Association): Observable<Team> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('associationid', association.getId().toString())
-        };
+        const options = this.getOptions(association);
         return this.http.get(this.url + '/' + id, options).pipe(
             map((res: ITeam) => this.jsonToObjectHelper(res, association)),
             catchError((err) => this.handleError(err))
@@ -61,10 +55,7 @@ export class TeamRepository extends SportRepository {
     }
 
     createObject(jsonTeam: ITeam, association: Association): Observable<Team> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('associationid', association.getId().toString())
-        };
+        const options = this.getOptions(association);
         return this.http.post(this.url, jsonTeam, options).pipe(
             map((res: ITeam) => this.jsonToObjectHelper(res, association)),
             catchError((err) => this.handleError(err))
@@ -72,10 +63,7 @@ export class TeamRepository extends SportRepository {
     }
 
     editObject(team: Team): Observable<Team> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('associationid', team.getAssociation().getId().toString())
-        };
+        const options = this.getOptions(team.getAssociation());
         return this.http.put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options).pipe(
             map((res: ITeam) => this.jsonToObjectHelper(res, team.getAssociation(), team)),
             catchError((err) => this.handleError(err))
@@ -91,6 +79,13 @@ export class TeamRepository extends SportRepository {
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(association: Association): { headers: HttpHeaders; params: HttpParams } {
+        return {
+            headers: super.getHeaders(),
+            params: new HttpParams().set('associationid', association.getId().toString())
+        };
     }
 
     jsonArrayToObject(jsonArray: Array<ITeam>, association: Association): Team[] {
@@ -125,10 +120,10 @@ export class TeamRepository extends SportRepository {
         return json;
     }
 
-    getUnusedTeams(competitionSeason: Competitionseason): Team[] {
-        let unusedTeams = this.unusedTeams.find(unusedTeam => unusedTeam.competitionSeason === competitionSeason);
+    getUnusedTeams(competition: Competition): Team[] {
+        let unusedTeams = this.unusedTeams.find(unusedTeam => unusedTeam.competition === competition);
         if (unusedTeams === undefined) {
-            unusedTeams = { competitionSeason: competitionSeason, teams: [] };
+            unusedTeams = { competition: competition, teams: [] };
             this.unusedTeams.push(unusedTeams);
         }
         return unusedTeams.teams;
@@ -143,6 +138,6 @@ export interface ITeam {
 }
 
 export interface UnusedTeams {
-    competitionSeason: Competitionseason;
+    competition: Competition;
     teams: Team[];
 }

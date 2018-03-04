@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators/map';
 
-import { Competitionseason } from '../competitionseason';
+import { Competition } from '../competition';
 import { SportRepository } from '../repository';
 import { Round } from '../round';
 import { IRound, RoundRepository } from '../round/repository';
@@ -32,8 +32,8 @@ export class StructureRepository extends SportRepository {
         return 'structures';
     }
 
-    getObject(competitionseason: Competitionseason): Observable<Round> {
-        // const foundStructure = this.findObject(competitionseason);
+    getObject(competition: Competition): Observable<Round> {
+        // const foundStructure = this.findObject(competition);
         // if (foundStructure !== undefined) {
         //     return Observable.create((observer: Observer<Round>) => {
         //         observer.next(foundStructure);
@@ -43,7 +43,7 @@ export class StructureRepository extends SportRepository {
 
         const options = {
             headers: super.getHeaders(),
-            params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
+            params: new HttpParams().set('competitionid', competition.getId().toString())
         };
 
         return this.http.get<Array<IRound>>(this.url, options).pipe(
@@ -52,42 +52,42 @@ export class StructureRepository extends SportRepository {
                 if (jsonRound === undefined) {
                     return undefined;
                 }
-                const round = this.roundRepos.jsonToObjectHelper(jsonRound, competitionseason);
-                this.updateCache(round, competitionseason);
+                const round = this.roundRepos.jsonToObjectHelper(jsonRound, competition);
+                this.updateCache(round, competition);
                 return round;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(round: Round, competitionseason: Competitionseason): Observable<Round> {
+    createObject(round: Round, competition: Competition): Observable<Round> {
 
         const options = {
             headers: super.getHeaders(),
-            params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
+            params: new HttpParams().set('competitionid', competition.getId().toString())
         };
 
         return this.http.post(this.url, this.roundRepos.objectToJsonHelper(round), options).pipe(
             map((res: IRound) => {
-                const roundOut = this.roundRepos.jsonToObjectHelper(res, competitionseason);
-                this.updateCache(roundOut, competitionseason);
+                const roundOut = this.roundRepos.jsonToObjectHelper(res, competition);
+                this.updateCache(roundOut, competition);
                 return roundOut;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(round: Round, competitionseason: Competitionseason): Observable<Round> {
+    editObject(round: Round, competition: Competition): Observable<Round> {
 
         const options = {
             headers: super.getHeaders(),
-            params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
+            params: new HttpParams().set('competitionid', competition.getId().toString())
         };
 
         return this.http.put(this.url + '/' + round.getId(), this.roundRepos.objectToJsonHelper(round), options).pipe(
             map((res: IRound) => {
-                const roundOut = this.roundRepos.jsonToObjectHelper(res, competitionseason);
-                this.updateCache(roundOut, competitionseason);
+                const roundOut = this.roundRepos.jsonToObjectHelper(res, competition);
+                this.updateCache(roundOut, competition);
                 return roundOut;
             }),
             catchError((err) => this.handleError(err))
@@ -98,23 +98,23 @@ export class StructureRepository extends SportRepository {
         const url = this.url + '/' + round.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res: Response) => {
-                this.removeFromCache(round, round.getCompetitionseason());
+                this.removeFromCache(round, round.getCompetition());
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    private findObject(competitionseason: Competitionseason) {
-        return this.selfCache.find(round => round.getCompetitionseason() === competitionseason);
+    private findObject(competition: Competition) {
+        return this.selfCache.find(round => round.getCompetition() === competition);
     }
 
-    private updateCache(round: Round, competitionseason: Competitionseason) {
-        this.removeFromCache(round, competitionseason);
+    private updateCache(round: Round, competition: Competition) {
+        this.removeFromCache(round, competition);
         this.selfCache.push(round);
     }
 
-    private removeFromCache(structure: Round, competitionseason: Competitionseason) {
-        const foundRound = this.findObject(competitionseason);
+    private removeFromCache(structure: Round, competition: Competition) {
+        const foundRound = this.findObject(competition);
         if (foundRound !== undefined) {
             const index = this.selfCache.indexOf(foundRound);
             if (index > -1) {

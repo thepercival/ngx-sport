@@ -77,11 +77,11 @@ export class GameRepository extends SportRepository {
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         if (json.field !== undefined) {
-            game.setField(poule.getCompetitionseason().getFieldByNumber(json.field.number));
+            game.setField(poule.getCompetition().getFieldByNumber(json.field.number));
         }
         game.setReferee(undefined);
         if (json.referee !== undefined) {
-            game.setReferee(poule.getCompetitionseason().getRefereeById(json.referee.id));
+            game.setReferee(poule.getCompetition().getRefereeById(json.referee.id));
         }
         game.setStartDateTime(undefined);
         if (json.startDateTime !== undefined) {

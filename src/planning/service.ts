@@ -22,7 +22,7 @@ export class PlanningService {
     }
 
     getStartDateTime(): Date {
-        return this.structureService.getFirstRound().getCompetitionseason().getStartDateTime();
+        return this.structureService.getFirstRound().getCompetition().getStartDateTime();
     }
 
     create(roundNumber: number, startDateTime?: Date) {
@@ -140,8 +140,8 @@ export class PlanningService {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
 
         const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
-        let fields = this.structureService.getCompetitionseason().getFields();
-        const referees = this.structureService.getCompetitionseason().getReferees();
+        let fields = this.structureService.getCompetition().getFields();
+        const referees = this.structureService.getCompetition().getReferees();
         if (referees.length > 0 && referees.length < fields.length) {
             fields = fields.slice(0, referees.length);
         }

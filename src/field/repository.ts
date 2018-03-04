@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators/map';
 
-import { Competitionseason } from '../competitionseason';
+import { Competition } from '../competition';
 import { Field } from '../field';
 import { SportRepository } from '../repository';
 
@@ -25,24 +25,24 @@ export class FieldRepository extends SportRepository {
         return 'fields';
     }
 
-    createObject(jsonField: IField, competitionseason: Competitionseason): Observable<Field> {
+    createObject(jsonField: IField, competition: Competition): Observable<Field> {
         const options = {
             headers: super.getHeaders(),
-            params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
+            params: new HttpParams().set('competitionid', competition.getId().toString())
         };
         return this.http.post(this.url, jsonField, options).pipe(
-            map((res: IField) => this.jsonToObjectHelper(res, competitionseason)),
+            map((res: IField) => this.jsonToObjectHelper(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(field: Field, competitionseason: Competitionseason): Observable<Field> {
+    editObject(field: Field, competition: Competition): Observable<Field> {
         const options = {
             headers: super.getHeaders(),
-            params: new HttpParams().set('competitionseasonid', competitionseason.getId().toString())
+            params: new HttpParams().set('competitionid', competition.getId().toString())
         };
         return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), options).pipe(
-            map((res: IField) => this.jsonToObjectHelper(res, competitionseason, field)),
+            map((res: IField) => this.jsonToObjectHelper(res, competition, field)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -51,24 +51,24 @@ export class FieldRepository extends SportRepository {
         const url = this.url + '/' + field.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res) => {
-                field.getCompetitionseason().removeField(field);
+                field.getCompetition().removeField(field);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    jsonArrayToObject(jsonArray: IField[], competitionseason: Competitionseason): Field[] {
+    jsonArrayToObject(jsonArray: IField[], competition: Competition): Field[] {
         const objects: Field[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, competitionseason);
+            const object = this.jsonToObjectHelper(json, competition);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IField, competitionseason: Competitionseason, field?: Field): Field {
+    jsonToObjectHelper(json: IField, competition: Competition, field?: Field): Field {
         if (field === undefined) {
-            field = new Field(competitionseason, json.number);
+            field = new Field(competition, json.number);
         }
         field.setId(json.id);
         field.setName(json.name);

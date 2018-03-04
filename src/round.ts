@@ -1,7 +1,4 @@
-/**
- * Created by coen on 27-2-17.
- */
-import { Competitionseason } from './competitionseason';
+import { Competition } from './competition';
 import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
@@ -10,6 +7,9 @@ import { RoundConfig } from './round/config';
 import { RoundScoreConfig } from './round/scoreconfig';
 import { Team } from './team';
 
+/**
+ * Created by coen on 27-2-17.
+ */
 
 export class Round {
     static readonly TYPE_POULE = 1;
@@ -22,7 +22,7 @@ export class Round {
     static readonly ORDER_VERTICAL = 2;
 
     protected id: number;
-    protected competitionseason: Competitionseason;
+    protected competition: Competition;
     protected parentRound: Round;
     protected childRounds: Round[] = [];
     protected winnersOrLosers: number;
@@ -35,8 +35,8 @@ export class Round {
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
 
-    constructor(competitionseason: Competitionseason, parentRound: Round, winnersOrLosers: number) {
-        this.setCompetitionseason(competitionseason);
+    constructor(competition: Competition, parentRound: Round, winnersOrLosers: number) {
+        this.setCompetition(competition);
         this.winnersOrLosers = winnersOrLosers;
         this.setParentRound(parentRound);
         this.qualifyOrder = Round.ORDER_HORIZONTAL;
@@ -54,12 +54,12 @@ export class Round {
         this.id = id;
     }
 
-    getCompetitionseason(): Competitionseason {
-        return this.competitionseason;
+    getCompetition(): Competition {
+        return this.competition;
     }
 
-    protected setCompetitionseason(competitionseason: Competitionseason): void {
-        this.competitionseason = competitionseason;
+    protected setCompetition(competition: Competition): void {
+        this.competition = competition;
     }
 
     getParentRound(): Round {

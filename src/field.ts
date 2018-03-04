@@ -1,18 +1,18 @@
+import { Competition } from './competition';
 
-import { Competitionseason } from './competitionseason';
 
 export class Field {
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 2;
 
     protected id: number;
-    protected competitionseason: Competitionseason;
+    protected competition: Competition;
     protected number: number;
     protected name: string;
 
     // constructor
-    constructor(competitionseason: Competitionseason, number: number) {
-        this.setCompetitionseason(competitionseason);
+    constructor(competition: Competition, number: number) {
+        this.setCompetition(competition);
         this.setNumber(number);
     }
 
@@ -24,13 +24,13 @@ export class Field {
         this.id = id;
     }
 
-    getCompetitionseason(): Competitionseason {
-        return this.competitionseason;
+    getCompetition(): Competition {
+        return this.competition;
     }
 
-    protected setCompetitionseason(competitionseason: Competitionseason): void {
-        this.competitionseason = competitionseason;
-        this.competitionseason.getFields().push(this);
+    protected setCompetition(competition: Competition): void {
+        this.competition = competition;
+        this.competition.getFields().push(this);
     }
 
     getNumber(): number {

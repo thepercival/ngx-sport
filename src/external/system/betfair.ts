@@ -7,11 +7,12 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 import { map } from 'rxjs/operators/map';
 
-import { Competition } from './../../competition';
+import { Association } from './../../association';
+import { League } from './../../league';
 import { ExternalSystem } from './../system';
-import { ExternalSystemCompetitionInterface } from './interface';
+import { ExternalSystemLeagueInterface } from './interface';
 
-export class ExternalSystemBetFair implements ExternalSystemCompetitionInterface {
+export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
 
     constructor(
         private http: HttpClient,
@@ -38,12 +39,12 @@ export class ExternalSystemBetFair implements ExternalSystemCompetitionInterface
         return headers;
     }
 
-    getCompetitions(): Observable<Competition[]> {
-        // const cacheName = 'Competition';
+    getLeagues(): Observable<League[]> {
+        // const cacheName = 'League';
         // const jsonObjects = this.getCacheItem(cacheName);
         // if (jsonObjects !== undefined) {
         //     return Observable.create(observer => {
-        //         observer.next(this.jsonCompetitionsToArrayHelper(jsonObjects));
+        //         observer.next(this.jsonLeaguesToArrayHelper(jsonObjects));
         //         observer.complete();
         //     });
         // }
@@ -52,24 +53,24 @@ export class ExternalSystemBetFair implements ExternalSystemCompetitionInterface
         return this.http.get(url, { headers: this.getHeaders() }).pipe(
             map((res: any) => {
                 const json = res.data;
-                const objects = this.jsonCompetitionsToArrayHelper(json.leagues);
-                // this.setCacheItem(cacheName, JSON.stringify(json.leagues), this.getExpireDate('Competition'));
+                const objects = this.jsonLeaguesToArrayHelper(json.leagues);
+                // this.setCacheItem(cacheName, JSON.stringify(json.leagues), this.getExpireDate('League'));
                 return objects;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    jsonCompetitionsToArrayHelper(jsonArray: any): Competition[] {
-        const competitions: Competition[] = [];
+    jsonLeaguesToArrayHelper(jsonArray: any): League[] {
+        const leagues: League[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonCompetitionToObjectHelper(json);
-            competitions.push(object);
+            const object = this.jsonLeagueToObjectHelper(json);
+            leagues.push(object);
         }
-        return competitions;
+        return leagues;
     }
 
-    jsonCompetitionToObjectHelper(json: any): Competition {
+    jsonLeagueToObjectHelper(json: any): League {
         // identifier: "8e7fa444c4b60383727fb61fcc6aa387",
         // league_slug: "bundesliga",
         // name: "Bundesliga",
@@ -78,12 +79,13 @@ export class ExternalSystemBetFair implements ExternalSystemCompetitionInterface
         // cup: false,
         // federation: "UEFA"
 
-        const competition = new Competition(json.name);
-        competition.setId(json.league_slug);
-        competition.setAbbreviation(competition.getName().substr(0, Competition.MAX_LENGTH_ABBREVIATION));
-        // this.setAsspociationByCompetitionId(competition.getId(), this.jsonAssociationToObjectHelper(json));
+        const association = new Association('dummy');
+        const league = new League(association, json.name);
+        league.setId(json.league_slug);
+        league.setAbbreviation(league.getName().substr(0, League.MAX_LENGTH_ABBREVIATION));
+        // this.setAsspociationByLeagueId(league.getId(), this.jsonAssociationToObjectHelper(json));
 
-        return competition;
+        return league;
     }
 
     protected handleError(error: HttpErrorResponse): Observable<any> {

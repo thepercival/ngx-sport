@@ -4,7 +4,7 @@
 import { Observable } from 'rxjs/Observable';
 
 import { Association } from './../../association';
-import { Competition } from './../../competition';
+import { League } from './../../league';
 import { Season } from './../../season';
 
 
@@ -12,8 +12,8 @@ export interface ExternalSystemAssociation {
     getAssociations(): Association[];
 }
 
-export interface ExternalSystemCompetitionInterface {
-    getCompetitions(appCompetitions: Competition[]): Observable<Competition[]>;
+export interface ExternalSystemLeagueInterface {
+    getLeagues(appLeagues: League[]): Observable<League[]>;
 }
 
 export interface ExternalSystemSeasonInterface {

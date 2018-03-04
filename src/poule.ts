@@ -1,12 +1,12 @@
-/**
- * Created by coen on 27-2-17.
- */
-import { Competitionseason } from './competitionseason';
+import { Competition } from './competition';
 import { Game } from './game';
 import { PoulePlace } from './pouleplace';
 import { Round } from './round';
 import { Team } from './team';
 
+/**
+ * Created by coen on 27-2-17.
+ */
 
 export class Poule {
     protected id: number;
@@ -48,8 +48,8 @@ export class Poule {
         this.round.getPoules().push(this);
     }
 
-    getCompetitionseason(): Competitionseason {
-        return this.getRound().getCompetitionseason();
+    getCompetition(): Competition {
+        return this.getRound().getCompetition();
     }
 
     getNumber(): number {
