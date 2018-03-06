@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { IPoulePlace } from '../pouleplace/repository';
-import { PoulePlaceRepository } from '../pouleplace/repository';
+import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
 import { QualifyRule } from '../qualifyrule';
 import { Round } from '../round';
 
@@ -12,7 +11,6 @@ import { Round } from '../round';
 export class QualifyRuleRepository {
 
     constructor(private poulePlaceRepos: PoulePlaceRepository) {
-
     }
 
     jsonArrayToObject(jsonArray: any, round: Round, fromRound?: Round): QualifyRule[] {
