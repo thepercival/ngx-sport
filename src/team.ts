@@ -8,11 +8,13 @@ export class Team {
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_INFO = 200;
+    static readonly MAX_LENGTH_IMAGEURL = 150;
 
     protected id: number;
     protected name: string;
     protected abbreviation: string;
     protected info: string;
+    protected imageUrl: string;
     protected association: Association;
 
     // constructor
@@ -51,6 +53,14 @@ export class Team {
 
     setInfo(info: string): void {
         this.info = info;
+    }
+
+    getImageUrl(): string {
+        return this.imageUrl;
+    }
+
+    setImageUrl(imageUrl: string): void {
+        this.imageUrl = imageUrl;
     }
 
     getAssociation(): Association {

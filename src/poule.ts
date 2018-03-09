@@ -109,6 +109,14 @@ export class Poule {
         return poules[this.getNumber()];
     }
 
+    getNrOfGamesPerRound() {
+        const nrOfPlaces = this.getPlaces().length;
+        if ((nrOfPlaces % 2) !== 0) {
+            return ((nrOfPlaces - 1) / 2);
+        }
+        return (nrOfPlaces / 2);
+    }
+
     addPlace(place: PoulePlace) {
         if (place.getNumber() <= this.getPlaces().length) {
             throw new Error('pouleplek kan niet toegevoegd worden, omdat het nummer van de plek kleiner is dan het aantal huidige plekken');

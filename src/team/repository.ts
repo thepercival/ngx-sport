@@ -107,6 +107,7 @@ export class TeamRepository extends SportRepository {
         }
         team.setAbbreviation(json.abbreviation);
         team.setInfo(json.info);
+        team.setImageUrl(json.imageUrl);
         return team;
     }
 
@@ -115,7 +116,8 @@ export class TeamRepository extends SportRepository {
             id: team.getId(),
             name: team.getName(),
             abbreviation: team.getAbbreviation(),
-            info: team.getInfo()
+            info: team.getInfo(),
+            imageUrl: team.getImageUrl()
         };
         return json;
     }
@@ -135,6 +137,7 @@ export interface ITeam {
     name: string;
     abbreviation?: string;
     info?: string;
+    imageUrl?: string;
 }
 
 export interface UnusedTeams {

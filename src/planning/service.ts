@@ -150,11 +150,11 @@ export class PlanningService {
         const poulesReferees: PoulesReferees[] = this.getPoulesReferees(poules.slice(0), referees.slice(0));
         poulesReferees.forEach(poulesRefereesIt => this.assignRefereesToGames(poulesRefereesIt));
 
-        const amountPerResourceBatch = this.getAmountPerResourceBatch(fields, referees);
+        const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
         return this.assignResourceBatchToGames(aRoundConfig, amountPerResourceBatch, dateTime);
     }
 
-    protected getAmountPerResourceBatch(fields: Field[], referees: Referee[]): number {
+    protected getAmountPerResourceBatch(roundNumber: number, fields: Field[], referees: Referee[]): number {
         let amountPerResourceBatch;
         if (referees.length === 0) {
             amountPerResourceBatch = fields.length;
@@ -164,7 +164,10 @@ export class PlanningService {
             amountPerResourceBatch = referees.length > fields.length ? fields.length : referees.length;
         }
         if (amountPerResourceBatch === 0) {
-            return 1;
+            const poules = this.getPoulesForRoundNumber(roundNumber);
+            poules.forEach(poule => {
+                amountPerResourceBatch += poule.getNrOfGamesPerRound();
+            });
         }
         return amountPerResourceBatch;
     }
@@ -279,10 +282,6 @@ export class PlanningService {
             if (amountPerResourceBatch === resourceBatch.length) {
                 return;
             }
-            const homePoulePlace = game.getHomePoulePlace();
-            const awayPoulePlace = game.getAwayPoulePlace();
-            const field = game.getField();
-            const referee = game.getReferee();
             if (resourceService.inUse(game)) {
                 return;
             }
