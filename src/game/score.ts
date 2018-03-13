@@ -8,7 +8,7 @@ export class GameScore {
     protected number: number;
     protected home: number;
     protected away: number;
-    protected extraTime: boolean;
+    protected moment: number;
 
     // constructor
     constructor(
@@ -70,11 +70,11 @@ export class GameScore {
         return homeAway === Game.HOME ? this.getHome() : this.getAway();
     }
 
-    getExtraTime(): boolean {
-        return this.extraTime;
+    getMoment(): number {
+        return this.moment;
     }
 
-    setExtraTime(extraTime: boolean): void {
-        this.extraTime = extraTime;
+    setMoment(moment: number): void {
+        this.moment = moment;
     }
 }

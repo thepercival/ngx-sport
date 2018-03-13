@@ -186,13 +186,13 @@ export class Ranking {
             }
             const finalScore = game.getFinalScore();
             if (finalScore.get(homeAway) > finalScore.get(!homeAway)) {
-                if (finalScore.getExtraTime()) {
+                if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
                     points += game.getRound().getConfig().getWinPointsExt();
                 } else {
                     points += game.getRound().getConfig().getWinPoints();
                 }
             } else if (finalScore.get(homeAway) === finalScore.get(!homeAway)) {
-                if (finalScore.getExtraTime()) {
+                if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
                     points += game.getRound().getConfig().getDrawPointsExt();
                 } else {
                     points += game.getRound().getConfig().getDrawPoints();

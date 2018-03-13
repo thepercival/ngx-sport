@@ -17,6 +17,10 @@ export class Game {
     static readonly STATE_PLAYED = 4;
     static readonly ORDER_BYNUMBER = 1;
     static readonly ORDER_RESOURCEBATCH = 2;
+    static readonly MOMENT_HALFTIME = 1;
+    static readonly MOMENT_FULLTIME = 2;
+    static readonly MOMENT_EXTRATIME = 4;
+    static readonly MOMENT_PENALTIES = 8;
 
     protected id: number;
     protected poule: Poule;
