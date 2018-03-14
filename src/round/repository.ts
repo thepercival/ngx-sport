@@ -58,7 +58,9 @@ export class RoundRepository extends SportRepository {
         // round.setName(json.name);
         round.setQualifyOrder(json.qualifyOrder);
         this.configRepos.jsonToObjectHelper(json.config, round);
-        round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));
+        if (json.scoreConfig !== undefined) {
+            round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));
+        }
         this.pouleRepos.jsonArrayToObject(json.poules, round);
         this.jsonArrayToObject(json.childRounds, competition, round);
         if (parentRound !== undefined) {
