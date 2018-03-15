@@ -12,7 +12,6 @@ import { Round } from '../round';
 import { IRoundConfig, RoundConfigRepository } from './config/repository';
 import { IRoundScoreConfig, RoundScoreConfigRepository } from './scoreconfig/repository';
 
-
 /**
  * Created by coen on 3-3-17.
  */
