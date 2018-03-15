@@ -36,8 +36,8 @@ export class TeamRepository extends SportRepository {
         return 'teams';
     }
 
-    getObjects(association: Association): Observable<Team[]> {
-        const options = this.getOptions(association);
+    getObjects(association: Association, name?: string): Observable<Team[]> {
+        const options = this.getOptions(association, name);
         return this.http.get(this.url, options).pipe(
             map((res: ITeam[]) => {
                 return this.jsonArrayToObject(res, association);
@@ -81,10 +81,16 @@ export class TeamRepository extends SportRepository {
         );
     }
 
-    protected getOptions(association: Association): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(association: Association, name?: string): { headers: HttpHeaders; params: HttpParams } {
+
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('associationid', association.getId().toString());
+        if (name !== undefined) {
+            httpParams = httpParams.set('name', name);
+        }
         return {
             headers: super.getHeaders(),
-            params: new HttpParams().set('associationid', association.getId().toString())
+            params: httpParams
         };
     }
 
