@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { StructureNameService } from '../tmp/esm2015/src/structure/nameservice';
 import { Association } from './association';
 import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
@@ -18,6 +19,7 @@ import { GameScore } from './game/score';
 import { GameScoreRepository } from './game/score/repository';
 import { League } from './league';
 import { LeagueRepository } from './league/repository';
+import { PlanningRepository } from './planning/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { PouleRepository } from './poule/repository';
@@ -51,6 +53,7 @@ import { TeamRepository } from './team/repository';
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
     ],
@@ -60,6 +63,7 @@ import { TeamRepository } from './team/repository';
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
     ]

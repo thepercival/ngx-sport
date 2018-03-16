@@ -26,6 +26,7 @@ export * from './src/game/repository';
 export * from './src/game/score';
 export * from './src/game/score/repository';
 export * from './src/planning/service';
+export * from './src/planning/repository';
 export * from './src/poule';
 export * from './src/poule/repository';
 export * from './src/pouleplace';
@@ -47,6 +48,7 @@ export * from './src/season';
 export * from './src/season/repository';
 export * from './src/structure/repository';
 export * from './src/structure/service';
+export * from './src/structure/nameservice';
 export * from './src/team';
 export * from './src/team/repository';
 

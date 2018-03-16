@@ -42,6 +42,10 @@ export class Round {
         this.qualifyOrder = Round.ORDER_HORIZONTAL;
     }
 
+    static getWinnersLosersDescription(winnersOrLosers: number): string {
+        return winnersOrLosers === Round.WINNERS ? 'winnaar' : (winnersOrLosers === Round.LOSERS ? 'verliezer' : '');
+    }
+
     static getOpposing(winnersOrLosers: number) {
         return winnersOrLosers === Round.WINNERS ? Round.LOSERS : Round.WINNERS;
     }
@@ -339,6 +343,27 @@ export class Round {
     getNrOfPlacesChildRound(winnersOrLosers: number): number {
         const childRound = this.getChildRound(winnersOrLosers);
         return childRound !== undefined ? childRound.getPoulePlaces().length : 0;
+    }
+
+    getNrOfRoundsToGo() {
+        let nrOfRoundsToGoWinners = 0;
+        {
+            const childRoundWinners = this.getChildRound(Round.WINNERS);
+            if (childRoundWinners !== undefined) {
+                nrOfRoundsToGoWinners = childRoundWinners.getNrOfRoundsToGo() + 1;
+            }
+        }
+        let nrOfRoundsToGoLosers = 0;
+        {
+            const childRoundLosers = this.getChildRound(Round.LOSERS);
+            if (childRoundLosers !== undefined) {
+                nrOfRoundsToGoLosers = childRoundLosers.getNrOfRoundsToGo() + 1;
+            }
+        }
+        if (nrOfRoundsToGoWinners > nrOfRoundsToGoLosers) {
+            return nrOfRoundsToGoWinners;
+        }
+        return nrOfRoundsToGoLosers;
     }
 
     getOpposing() {

@@ -36,13 +36,22 @@ export class GameRepository extends SportRepository {
         return 'games';
     }
 
-    editObject(game: Game, poule: Poule): Observable<Game> {
-
+    createObject(game: Game, poule: Poule): Observable<Game> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('pouleid', poule.getId().toString())
         };
+        return this.http.post(this.url, this.objectToJsonHelper(game), options).pipe(
+            map((gameRes: IGame) => game.setId(gameRes.id)),
+            catchError((err) => this.handleError(err))
+        );
+    }
 
+    editObject(game: Game, poule: Poule): Observable<Game> {
+        const options = {
+            headers: super.getHeaders(),
+            params: new HttpParams().set('pouleid', poule.getId().toString())
+        };
         return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), options).pipe(
             map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
@@ -76,17 +85,11 @@ export class GameRepository extends SportRepository {
         }
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
-        if (json.field !== undefined) {
-            game.setField(poule.getCompetition().getFieldByNumber(json.field.number));
-        }
+        game.setField(json.field !== undefined ? poule.getCompetition().getFieldByNumber(json.field.number) : undefined);
         game.setReferee(undefined);
-        if (json.referee !== undefined) {
-            game.setReferee(poule.getCompetition().getRefereeById(json.referee.id));
-        }
+        game.setReferee(json.referee !== undefined ? poule.getCompetition().getRefereeById(json.referee.id) : undefined);
         game.setStartDateTime(undefined);
-        if (json.startDateTime !== undefined) {
-            game.setStartDateTime(new Date(json.startDateTime));
-        }
+        game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         while (game.getScores().length > 0) {
             game.getScores().pop();
         }
