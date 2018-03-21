@@ -88,5 +88,9 @@ export class RoundScoreConfig {
     setChild(child: RoundScoreConfig) {
         this.child = child;
     }
+
+    isInput() {
+        return (this.getMaximum() !== 0 && (this.getParent() === undefined || this.getParent().getMaximum() === 0));
+    }
 }
 

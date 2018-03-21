@@ -1,4 +1,3 @@
-import { SportConfig } from '../../config';
 import { Round } from '../../round';
 import { RoundScoreConfig } from '../scoreconfig';
 
@@ -9,6 +8,8 @@ export class RoundScoreConfigRepository {
 
     constructor() {
     }
+
+    // make editObject, with roundnumber instead of roundid
 
     jsonToObjectHelper(json: IRoundScoreConfig, round: Round): RoundScoreConfig {
         let parent;
@@ -40,80 +41,6 @@ export class RoundScoreConfigRepository {
             maximum: object.getMaximum(),
             parent: object.getParent() !== undefined ? this.objectToJsonHelper(object.getParent()) : undefined
         };
-    }
-
-    createObjectFromParent(round: Round): RoundScoreConfig {
-        const sport = round.getCompetition().getLeague().getSport();
-
-        let json: IRoundScoreConfig;
-        if (round.getParentRound() !== undefined) {
-            json = this.objectToJsonHelper(round.getParentRound().getScoreConfig());
-        } else if (sport === SportConfig.Darts) {
-            json = {
-                id: undefined,
-                name: 'punten',
-                direction: RoundScoreConfig.DOWNWARDS,
-                maximum: 501,
-                parent: {
-                    id: undefined,
-                    name: 'legs',
-                    direction: RoundScoreConfig.UPWARDS,
-                    maximum: 3,
-                    parent: {
-                        id: undefined,
-                        name: 'sets',
-                        direction: RoundScoreConfig.UPWARDS,
-                        maximum: 0,
-                        parent: undefined
-                    }
-                }
-            };
-        } else if (sport === SportConfig.Tennis) {
-            json = {
-                id: undefined,
-                name: 'games',
-                direction: RoundScoreConfig.UPWARDS,
-                maximum: 7,
-                parent: {
-                    id: undefined,
-                    name: 'sets',
-                    direction: RoundScoreConfig.UPWARDS,
-                    maximum: 0,
-                    parent: undefined
-                }
-            };
-        } else if (sport === SportConfig.TableTennis || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
-            json = {
-                id: undefined,
-                name: 'punten',
-                direction: RoundScoreConfig.UPWARDS,
-                maximum: sport === SportConfig.TableTennis ? 21 : (SportConfig.Volleyball ? 25 : 15),
-                parent: {
-                    id: undefined,
-                    name: 'sets',
-                    direction: RoundScoreConfig.UPWARDS,
-                    maximum: 0,
-                    parent: undefined
-                }
-            };
-        } else if (sport === SportConfig.Football || sport === SportConfig.Hockey) {
-            json = {
-                id: undefined,
-                name: 'goals',
-                direction: RoundScoreConfig.UPWARDS,
-                maximum: 0,
-                parent: undefined
-            };
-        } else {
-            json = {
-                id: undefined,
-                name: 'punten',
-                direction: RoundScoreConfig.UPWARDS,
-                maximum: 0,
-                parent: undefined
-            };
-        }
-        return this.jsonToObjectHelper(json, round);
     }
 }
 

@@ -148,27 +148,16 @@ export class Round {
         this.scoreConfig = scoreConfig;
     }
 
-    getInputScoreConfig() {
-        let scoreConfig = this.getScoreConfigs().pop();
-        while (scoreConfig.getChild()) {
-            if (scoreConfig.getMaximum() !== 0) {
-                break;
-            }
-            scoreConfig = scoreConfig.getChild();
-        }
-        return scoreConfig;
-    }
+    // getScoreConfigs(): RoundScoreConfig[] {
+    //     const scoreConfigs: RoundScoreConfig[] = [];
 
-    getScoreConfigs(): RoundScoreConfig[] {
-        const scoreConfigs: RoundScoreConfig[] = [];
-
-        let scoreConfig = this.getScoreConfig();
-        while (scoreConfig !== undefined) {
-            scoreConfigs.push(scoreConfig);
-            scoreConfig = scoreConfig.getParent();
-        }
-        return scoreConfigs;
-    }
+    //     let scoreConfig = this.getScoreConfig();
+    //     while (scoreConfig !== undefined) {
+    //         scoreConfigs.push(scoreConfig);
+    //         scoreConfig = scoreConfig.getParent();
+    //     }
+    //     return scoreConfigs;
+    // }
 
     getPoules(): Poule[] {
         return this.poules;

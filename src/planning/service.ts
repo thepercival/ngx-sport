@@ -30,7 +30,7 @@ export class PlanningService {
             startDateTime = this.calculateStartDateTime(roundNumber);
         }
         try {
-            this.removeHelper(roundNumber);
+            this.removeNumber(roundNumber);
             this.createHelper(roundNumber);
             const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
             if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
@@ -300,6 +300,14 @@ export class PlanningService {
         return poules;
     }
 
+    hasGames(roundNumber: number): boolean {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        if (rounds === undefined) {
+            return false;
+        }
+        return rounds.some(round => round.getGames().length > 0);
+    }
+
     getGamesByNumber(roundNumber: number, order: number): Game[][] {
         const games = [];
         const rounds = this.allRoundsByNumber[roundNumber];
@@ -365,12 +373,18 @@ export class PlanningService {
         return nrOfGames;
     }
 
-    protected removeHelper(roundNumber: number) {
+    protected removeNumber(roundNumber: number) {
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach(round => {
             round.getPoules().forEach(poule => {
                 poule.getGames().splice(0, poule.getGames().length);
             });
+        });
+    }
+
+    remove(round: Round) {
+        round.getPoules().forEach(poule => {
+            poule.getGames().splice(0, poule.getGames().length);
         });
     }
 

@@ -1,14 +1,55 @@
-/**
- * Created by coen on 3-3-17.
- */
-import { SportConfig } from '../../config';
-import { QualifyRule } from '../../qualifyrule';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
+
+import { Competition } from '../../competition';
+import { SportRepository } from '../../repository';
 import { Round } from '../../round';
 import { RoundConfig } from '../config';
 
-export class RoundConfigRepository {
+/**
+ * Created by coen on 3-3-17.
+ */
+@Injectable()
+export class RoundConfigRepository extends SportRepository {
 
-    constructor() {
+    private url: string;
+    private selfCache: Round[] = [];
+
+    constructor(
+        private http: HttpClient,
+        router: Router) {
+        super(router);
+        this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
+    }
+
+    getUrlpostfix(): string {
+        return 'roundconfigs';
+    }
+
+    editObject(competition: Competition, roundNumber: number, roundConfig: IRoundConfig): Observable<boolean> {
+        const options = this.getOptions(competition, roundNumber);
+        return this.http.post(this.url, roundConfig, options).pipe(
+            map((res: boolean) => res),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    protected getOptions(competition: Competition, roundNumber: number): { headers: HttpHeaders; params: HttpParams } {
+
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('competitionid', competition.getId().toString());
+        httpParams = httpParams.set('roundnumber', roundNumber.toString());
+        if (name !== undefined) {
+            httpParams = httpParams.set('name', name);
+        }
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     jsonArrayToObject(jsonArray: IRoundConfig[], round: Round): RoundConfig[] {
@@ -60,46 +101,6 @@ export class RoundConfigRepository {
             minutesPerGame: object.getMinutesPerGame(),
             minutesInBetween: object.getMinutesInBetween()
         };
-    }
-
-    createObjectFromParent(round: Round): RoundConfig {
-        const roundConfig = new RoundConfig(round);
-        if (round.getParentRound() !== undefined) {
-            const parentConfig = round.getParentRound().getConfig();
-            roundConfig.setQualifyRule(parentConfig.getQualifyRule());
-            roundConfig.setNrOfHeadtoheadMatches(parentConfig.getNrOfHeadtoheadMatches());
-            roundConfig.setWinPoints(parentConfig.getWinPoints());
-            roundConfig.setDrawPoints(parentConfig.getDrawPoints());
-            roundConfig.setHasExtension(parentConfig.getHasExtension());
-            roundConfig.setWinPointsExt(parentConfig.getWinPointsExt());
-            roundConfig.setDrawPointsExt(parentConfig.getDrawPointsExt());
-            roundConfig.setMinutesPerGameExt(parentConfig.getMinutesPerGameExt());
-            roundConfig.setEnableTime(parentConfig.getEnableTime());
-            roundConfig.setMinutesPerGame(parentConfig.getMinutesPerGame());
-            roundConfig.setMinutesInBetween(parentConfig.getMinutesInBetween());
-            return roundConfig;
-        }
-
-        roundConfig.setQualifyRule(QualifyRule.SOCCERWORLDCUP);
-        roundConfig.setNrOfHeadtoheadMatches(RoundConfig.DEFAULTNROFHEADTOHEADMATCHES);
-        roundConfig.setWinPoints(RoundConfig.DEFAULTWINPOINTS);
-        roundConfig.setDrawPoints(RoundConfig.DEFAULTDRAWPOINTS);
-        roundConfig.setHasExtension(RoundConfig.DEFAULTHASEXTENSION);
-        roundConfig.setWinPointsExt(roundConfig.getWinPoints() - 1);
-        roundConfig.setDrawPointsExt(roundConfig.getDrawPoints());
-        roundConfig.setMinutesPerGameExt(0);
-        roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
-        roundConfig.setMinutesPerGame(0);
-        roundConfig.setMinutesInBetween(0);
-        const sport = round.getCompetition().getLeague().getSport();
-        if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
-            roundConfig.setHasExtension(!round.needsRanking());
-            roundConfig.setMinutesPerGameExt(5);
-            roundConfig.setEnableTime(true);
-            roundConfig.setMinutesPerGame(20);
-            roundConfig.setMinutesInBetween(5);
-        }
-        return roundConfig;
     }
 }
 

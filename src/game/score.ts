@@ -39,7 +39,11 @@ export class GameScore {
     }
 
     getScoreConfig(): RoundScoreConfig {
-        return this.game.getRound().getInputScoreConfig();
+        let roundScoreConfig = this.game.getRound().getScoreConfig();
+        while (roundScoreConfig.isInput() === false && roundScoreConfig.getParent() !== undefined) {
+            roundScoreConfig = roundScoreConfig.getParent();
+        }
+        return roundScoreConfig;
     }
 
     getNumber(): number {

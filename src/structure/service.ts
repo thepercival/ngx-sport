@@ -4,8 +4,7 @@ import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { QualifyService } from '../qualifyrule/service';
 import { Round } from '../round';
-import { RoundConfigRepository } from '../round/config/repository';
-import { RoundScoreConfigRepository } from '../round/scoreconfig/repository';
+import { RoundConfigService } from '../round/config/service';
 import { StructureNameService } from './nameservice';
 
 /**
@@ -55,8 +54,7 @@ export class StructureService {
     ];
 
     private rangeNrOfCompetitors;
-    private configRepos: RoundConfigRepository;
-    private scoreConfigRepos: RoundScoreConfigRepository;
+    private configService: RoundConfigService;
     private firstRound: Round;
     private nameService: StructureNameService;
 
@@ -67,8 +65,7 @@ export class StructureService {
         nrOfPlaces: number = 0
     ) {
         this.rangeNrOfCompetitors = rangeNrOfCompetitors;
-        this.configRepos = new RoundConfigRepository();
-        this.scoreConfigRepos = new RoundScoreConfigRepository();
+        this.configService = new RoundConfigService();
         this.firstRound = firstRound;
         if (firstRound === undefined) {
             this.firstRound = this.addRound(undefined, 0, nrOfPlaces);
@@ -204,8 +201,8 @@ export class StructureService {
             nrOfPlaces -= nrOfPlacesPerPoule;
         }
 
-        this.configRepos.createObjectFromParent(round);
-        round.setScoreConfig(this.scoreConfigRepos.createObjectFromParent(round));
+        this.configService.createConfigFromRound(round);
+        round.setScoreConfig(this.configService.createScoreConfigFromRound(round));
 
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round);

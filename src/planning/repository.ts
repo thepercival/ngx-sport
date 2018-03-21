@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Game } from '../game';
-import { GameRepository } from '../game/repository';
+import { GameRepository, IGame } from '../game/repository';
+import { Poule } from '../poule';
 import { SportRepository } from '../repository';
 import { Round } from '../round';
 
@@ -28,40 +31,52 @@ export class PlanningRepository extends SportRepository {
     }
 
     getUrlpostfix(): string {
-        return 'games';
+        return 'planning';
     }
 
-    createObject(round: Round): Observable<Game[]> {
-
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('roundid', round.getCompetition().getId().toString())
-        };
-
-        const reposCreates: Observable<Game>[] = [];
-
-        round.getPoules().forEach(pouleIt => {
-            pouleIt.getGames().forEach(game => {
-                reposCreates.push(this.gameRepos.createObject(game, game.getPoule()));
-            });
+    createObject(rounds: Round[]): Observable<Game[][]> {
+        const reposCreates: Observable<Game[]>[] = [];
+        const poules = this.getPoules(rounds);
+        poules.forEach(poule => {
+            const options = {
+                headers: super.getHeaders(),
+                params: new HttpParams().set('pouleid', poule.getId().toString())
+            };
+            const removedGames = poule.getGames().splice(0, poule.getGames().length);
+            reposCreates.push(
+                this.http.post(this.url, this.gameRepos.objectsToJsonArray(removedGames), options).pipe(
+                    map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
+                    catchError((err) => this.handleError(err))
+                )
+            );
         });
-
         return forkJoin(reposCreates);
     }
 
-    // editObject(round: Round, competition: Competition): Observable<Round> {
+    private getPoules(rounds: Round[]): Poule[] {
+        let poules: Poule[] = [];
+        rounds.forEach(round => {
+            poules = poules.concat(round.getPoules());
+            poules = poules.concat(this.getPoules(round.getChildRounds()));
+        });
+        return poules.filter(poule => poule.getGames().length > 0);
+    }
 
-    //     const options = {
-    //         headers: super.getHeaders(),
-    //         params: new HttpParams().set('competitionid', competition.getId().toString())
-    //     };
-
-    //     return this.http.put(this.url + '/' + round.getId(), this.roundRepos.objectToJsonHelper(round), options).pipe(
-    //         map((res: IRound) => {
-    //             const roundOut = this.roundRepos.jsonToObjectHelper(res, competition);
-    //             return roundOut;
-    //         }),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
+    editObject(rounds: Round[]): Observable<Game[][]> {
+        const reposUpdates: Observable<Game[]>[] = [];
+        const poules = this.getPoules(rounds);
+        poules.forEach(poule => {
+            const options = {
+                headers: super.getHeaders(),
+                params: new HttpParams().set('pouleid', poule.getId().toString())
+            };
+            reposUpdates.push(
+                this.http.put(this.url, this.gameRepos.objectsToJsonArray(poule.getGames()), options).pipe(
+                    map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
+                    catchError((err) => this.handleError(err))
+                )
+            );
+        });
+        return forkJoin(reposUpdates);
+    }
 }

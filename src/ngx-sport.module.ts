@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { StructureNameService } from '../tmp/esm2015/src/structure/nameservice';
 import { Association } from './association';
 import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
@@ -40,6 +39,7 @@ import { RoundScoreConfig } from './round/scoreconfig';
 import { RoundScoreConfigRepository } from './round/scoreconfig/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
+import { StructureNameService } from './structure/nameservice';
 import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
 import { Team } from './team';
