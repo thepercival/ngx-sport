@@ -46,7 +46,7 @@ export class PoulePlaceRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IPoulePlace[], poule: Poule): PoulePlace[] {
         const objects: PoulePlace[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, poule, poule.getPlace(json.number));
+            const object = this.jsonToObjectHelper(json, poule/*, poule.getPlace(json.number)*/);
             objects.push(object);
         }
         return objects;
@@ -56,10 +56,10 @@ export class PoulePlaceRepository extends SportRepository {
         // if (poulePlace === undefined && json.id !== undefined) {
         //     poulePlace = this.cache[json.id];
         // }
-        // if (poulePlace === undefined) {
-        poulePlace = new PoulePlace(poule, json.number);
-        // this.cache[json.id] = poulePlace;
-        // }
+        if (poulePlace === undefined) {
+            poulePlace = new PoulePlace(poule, json.number);
+            // this.cache[json.id] = poulePlace;
+        }
         poulePlace.setId(json.id);
         // poule.setName(json.name);
         let team;

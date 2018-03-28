@@ -96,12 +96,12 @@ export class LeagueRepository extends SportRepository {
         return league;
     }
 
-    objectToJsonHelper(league: League): any {
+    objectToJsonHelper(league: League): ILeague {
         return {
             id: league.getId(),
             name: league.getName(),
             abbreviation: league.getAbbreviation(),
-            association: league.getAssociation(),
+            association: this.associationRepos.objectToJsonHelper(league.getAssociation()),
             sport: league.getSport()
         };
     }
