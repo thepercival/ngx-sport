@@ -9,6 +9,7 @@ import { Competition } from '../../competition';
 import { SportRepository } from '../../repository';
 import { Round } from '../../round';
 import { RoundConfig } from '../config';
+import { IRoundConfigScore, RoundConfigScoreRepository } from './score/repository';
 
 /**
  * Created by coen on 3-3-17.
@@ -20,6 +21,7 @@ export class RoundConfigRepository extends SportRepository {
     private selfCache: Round[] = [];
 
     constructor(
+        private scoreRepository: RoundConfigScoreRepository,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -75,6 +77,7 @@ export class RoundConfigRepository extends SportRepository {
         roundConfig.setEnableTime(json.enableTime);
         roundConfig.setMinutesPerGame(json.minutesPerGame);
         roundConfig.setMinutesInBetween(json.minutesInBetween);
+        roundConfig.setScore(this.scoreRepository.jsonToObjectHelper(json.score, roundConfig));
         return roundConfig;
     }
 
@@ -99,7 +102,8 @@ export class RoundConfigRepository extends SportRepository {
             minutesPerGameExt: object.getMinutesPerGameExt(),
             enableTime: object.getEnableTime(),
             minutesPerGame: object.getMinutesPerGame(),
-            minutesInBetween: object.getMinutesInBetween()
+            minutesInBetween: object.getMinutesInBetween(),
+            score: this.scoreRepository.objectToJsonHelper(object.getScore())
         };
     }
 }
@@ -117,4 +121,5 @@ export interface IRoundConfig {
     enableTime: boolean;
     minutesPerGame: number;
     minutesInBetween: number;
+    score: IRoundConfigScore;
 }

@@ -2,7 +2,7 @@ import { SportConfig } from '../../config';
 import { QualifyRule } from '../../qualifyrule';
 import { Round } from '../../round';
 import { RoundConfig } from '../config';
-import { RoundScoreConfig } from '../scoreconfig';
+import { RoundConfigScore } from './score';
 
 /**
  * Created by coen on 3-3-17.
@@ -24,6 +24,7 @@ export class RoundConfigService {
             roundConfig.setEnableTime(parentConfig.getEnableTime());
             roundConfig.setMinutesPerGame(parentConfig.getMinutesPerGame());
             roundConfig.setMinutesInBetween(parentConfig.getMinutesInBetween());
+            roundConfig.setScore(this.createScoreConfigFromRound(parentConfig));
             return roundConfig;
         }
 
@@ -46,96 +47,66 @@ export class RoundConfigService {
             roundConfig.setMinutesPerGame(20);
             roundConfig.setMinutesInBetween(5);
         }
+        roundConfig.setScore(this.createScoreConfigFromRound(roundConfig));
         return roundConfig;
     }
 
-    createScoreConfigFromRound(round: Round): RoundScoreConfig {
+    protected createScoreConfigFromRound(config: RoundConfig): RoundConfigScore {
+        const round = config.getRound();
         const sport = round.getCompetition().getLeague().getSport();
 
         if (round.getParentRound() !== undefined) {
-            return this.copyScoreConfigFromParent(round, round.getParentRound().getScoreConfig());
+            return this.copyScoreConfigFromParent(config, round.getParentRound().getConfig().getScore());
         } else if (sport === SportConfig.Darts) {
             return this.createScoreConfigFromRoundHelper(
-                round,
-                'punten',
-                RoundScoreConfig.DOWNWARDS,
-                7,
-                this.createScoreConfigFromRoundHelper(
-                    round,
-                    'legs',
-                    RoundScoreConfig.UPWARDS,
-                    3,
-                    this.createScoreConfigFromRoundHelper(
-                        round,
-                        'sets',
-                        RoundScoreConfig.UPWARDS,
-                        0,
-                        undefined
+                config, 'punten', RoundConfigScore.DOWNWARDS, 501, this.createScoreConfigFromRoundHelper(
+                    config, 'legs', RoundConfigScore.UPWARDS, 3, this.createScoreConfigFromRoundHelper(
+                        config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                     )
                 )
             );
         } else if (sport === SportConfig.Tennis) {
             return this.createScoreConfigFromRoundHelper(
-                round,
-                'games',
-                RoundScoreConfig.UPWARDS,
-                7,
-                this.createScoreConfigFromRoundHelper(
-                    round,
-                    'sets',
-                    RoundScoreConfig.UPWARDS,
-                    0,
-                    undefined
+                config, 'games', RoundConfigScore.UPWARDS, 7, this.createScoreConfigFromRoundHelper(
+                    config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                 )
             );
         } else if (sport === SportConfig.TableTennis || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
             return this.createScoreConfigFromRoundHelper(
-                round,
-                'punten',
-                RoundScoreConfig.UPWARDS,
+                config, 'punten', RoundConfigScore.UPWARDS,
                 sport === SportConfig.TableTennis ? 21 : (SportConfig.Volleyball ? 25 : 15),
                 this.createScoreConfigFromRoundHelper(
-                    round,
-                    'sets',
-                    RoundScoreConfig.UPWARDS,
-                    0,
-                    undefined
+                    config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                 )
             );
         }
-        const config = this.createScoreConfigFromRoundHelper(
-            round,
-            'punten',
-            RoundScoreConfig.UPWARDS,
-            0,
-            undefined
+        const configScore = this.createScoreConfigFromRoundHelper(
+            config, 'punten', RoundConfigScore.UPWARDS, 0, undefined
         );
         if (sport === SportConfig.Football || sport === SportConfig.Hockey) {
-            config.setName('goals');
+            configScore.setName('goals');
         }
-        return config;
+        return configScore;
     }
 
     protected createScoreConfigFromRoundHelper(
-        round: Round,
+        config: RoundConfig,
         name: string,
         direction: number,
         maximum: number,
-        parent: RoundScoreConfig
-    ): RoundScoreConfig {
-        const roundScoreConfig = new RoundScoreConfig(round, parent);
+        parent: RoundConfigScore
+    ): RoundConfigScore {
+        const roundScoreConfig = new RoundConfigScore(config, parent);
         roundScoreConfig.setName(name);
         roundScoreConfig.setDirection(direction);
         roundScoreConfig.setMaximum(maximum);
         return roundScoreConfig;
     }
 
-    protected copyScoreConfigFromParent(round: Round, scoreConfig: RoundScoreConfig) {
-        let parent = null;
-        if (scoreConfig.getParent()) {
-            parent = this.copyScoreConfigFromParent(round, scoreConfig.getParent());
-        }
+    protected copyScoreConfigFromParent(config: RoundConfig, scoreConfig: RoundConfigScore) {
+        const round = config.getRound();
+        const parent = scoreConfig.getParent() ? this.copyScoreConfigFromParent(config, scoreConfig.getParent()) : undefined;
         return this.createScoreConfigFromRoundHelper(
-            round, scoreConfig.getName(), scoreConfig.getDirection(), scoreConfig.getMaximum(), parent);
+            config, scoreConfig.getName(), scoreConfig.getDirection(), scoreConfig.getMaximum(), parent);
     }
 }

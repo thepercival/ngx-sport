@@ -1,6 +1,3 @@
-/**
- * Created by coen on 3-3-17.
- */
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -13,6 +10,9 @@ import { PoulePlace } from '../pouleplace';
 import { SportRepository } from '../repository';
 import { ITeam, TeamRepository } from '../team/repository';
 
+/**
+ * Created by coen on 3-3-17.
+ */
 @Injectable()
 export class PoulePlaceRepository extends SportRepository {
 
@@ -43,28 +43,30 @@ export class PoulePlaceRepository extends SportRepository {
         );
     }
 
-    jsonArrayToObject(jsonArray: any, poule: Poule): PoulePlace[] {
+    jsonArrayToObject(jsonArray: IPoulePlace[], poule: Poule): PoulePlace[] {
         const objects: PoulePlace[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, poule);
+            const object = this.jsonToObjectHelper(json, poule, poule.getPlace(json.number));
             objects.push(object);
         }
         return objects;
     }
 
     jsonToObjectHelper(json: IPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
-        if (poulePlace === undefined && json.id !== undefined) {
-            poulePlace = this.cache[json.id];
-        }
-        if (poulePlace === undefined) {
-            poulePlace = new PoulePlace(poule, json.number);
-            poulePlace.setId(json.id);
-            this.cache[poulePlace.getId()] = poulePlace;
-        }
+        // if (poulePlace === undefined && json.id !== undefined) {
+        //     poulePlace = this.cache[json.id];
+        // }
+        // if (poulePlace === undefined) {
+        poulePlace = new PoulePlace(poule, json.number);
+        // this.cache[json.id] = poulePlace;
+        // }
+        poulePlace.setId(json.id);
         // poule.setName(json.name);
+        let team;
         if (json.team) {
-            poulePlace.setTeam(this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetition().getLeague().getAssociation()));
+            team = this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetition().getLeague().getAssociation());
         }
+        poulePlace.setTeam(team);
         return poulePlace;
     }
 

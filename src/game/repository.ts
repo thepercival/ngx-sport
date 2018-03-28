@@ -70,19 +70,19 @@ export class GameRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IGame, poule: Poule, game?: Game): Game {
-        if (game === undefined && json.id !== undefined) {
-            game = this.cache[json.id];
-        }
-        if (game === undefined) {
-            game = new Game(
-                poule,
-                poule.getPlaces().find(pouleplaceIt => json.homePoulePlace.number === pouleplaceIt.getNumber()),
-                poule.getPlaces().find(pouleplaceIt => json.awayPoulePlace.number === pouleplaceIt.getNumber()),
-                json.roundNumber, json.subNumber
-            );
-            game.setId(json.id);
-            this.cache[game.getId()] = game;
-        }
+        // if (game === undefined && json.id !== undefined) {
+        //     game = this.cache[json.id];
+        // }
+        // if (game === undefined) {
+        game = new Game(
+            poule,
+            poule.getPlaces().find(pouleplaceIt => json.homePoulePlace.number === pouleplaceIt.getNumber()),
+            poule.getPlaces().find(pouleplaceIt => json.awayPoulePlace.number === pouleplaceIt.getNumber()),
+            json.roundNumber, json.subNumber
+        );
+        game.setId(json.id);
+        this.cache[game.getId()] = game;
+        // }
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         game.setField(json.field !== undefined ? poule.getCompetition().getFieldByNumber(json.field.number) : undefined);

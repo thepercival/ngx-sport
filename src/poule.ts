@@ -72,6 +72,10 @@ export class Poule {
         return this.places;
     }
 
+    getPlace(number: number): PoulePlace {
+        return this.getPlaces().find(place => place.getNumber() === number);
+    }
+
     getTeams(): Team[] {
         const teams: Team[] = [];
         for (const pouleplace of this.getPlaces()) {
@@ -92,7 +96,7 @@ export class Poule {
     }
 
     getState(): number {
-        if (this.getGames().every(game => game.getState() === Game.STATE_PLAYED)) {
+        if (this.getGames().length > 0 && this.getGames().every(game => game.getState() === Game.STATE_PLAYED)) {
             return Game.STATE_PLAYED;
         } else if (this.getGames().some(game => game.getState() !== Game.STATE_CREATED)) {
             return Game.STATE_INPLAY;

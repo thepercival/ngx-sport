@@ -202,7 +202,6 @@ export class StructureService {
         }
 
         this.configService.createConfigFromRound(round);
-        round.setScoreConfig(this.configService.createScoreConfigFromRound(round));
 
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round);

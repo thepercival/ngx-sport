@@ -1,5 +1,5 @@
 import { Game } from '../game';
-import { RoundScoreConfig } from '../round/scoreconfig';
+import { RoundConfigScore } from '../round/config/score';
 
 export class GameScore {
 
@@ -38,8 +38,8 @@ export class GameScore {
         this.game = game;
     }
 
-    getScoreConfig(): RoundScoreConfig {
-        let roundScoreConfig = this.game.getRound().getScoreConfig();
+    getScoreConfig(): RoundConfigScore {
+        let roundScoreConfig = this.game.getRound().getConfig().getScore();
         while (roundScoreConfig.isInput() === false && roundScoreConfig.getParent() !== undefined) {
             roundScoreConfig = roundScoreConfig.getParent();
         }

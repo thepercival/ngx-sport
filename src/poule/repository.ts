@@ -29,24 +29,23 @@ export class PouleRepository extends SportRepository {
         return 'poules';
     }
 
-    jsonArrayToObject(jsonArray: any, round: Round): Poule[] {
-        const objects: Poule[] = [];
+    jsonArrayToObject(jsonArray: IPoule[], round: Round): Poule[] {
+        const poules: Poule[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, round);
-            objects.push(object);
+            poules.push(this.jsonToObjectHelper(json, round, round.getPoule(json.number)));
         }
-        return objects;
+        return poules;
     }
 
-    jsonToObjectHelper(json: any, round: Round, poule?: Poule): Poule {
-        if (poule === undefined && json.id !== undefined) {
-            poule = this.cache[json.id];
-        }
-        if (poule === undefined) {
-            poule = new Poule(round, json.number);
-            poule.setId(json.id);
-            this.cache[poule.getId()] = poule;
-        }
+    jsonToObjectHelper(json: IPoule, round: Round, poule?: Poule): Poule {
+        // if (poule === undefined && json.id !== undefined) {
+        //     poule = this.cache[json.id];
+        // }
+        // if (poule === undefined) {
+        poule = new Poule(round, json.number);
+        // this.cache[poule.getId()] = poule;
+        // }
+        poule.setId(json.id);
         poule.setName(json.name);
         this.pouleplaceRepos.jsonArrayToObject(json.places, poule);
         if (json.games !== undefined) {
@@ -55,7 +54,7 @@ export class PouleRepository extends SportRepository {
         return poule;
     }
 
-    objectsToJsonArray(objects: any[]): IPoule[] {
+    objectsToJsonArray(objects: Poule[]): IPoule[] {
         const jsonArray: IPoule[] = [];
         for (const object of objects) {
             jsonArray.push(this.objectToJsonHelper(object));

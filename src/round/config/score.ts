@@ -1,25 +1,25 @@
-import { Round } from '../round';
+import { RoundConfig } from '../config';
 
-export class RoundScoreConfig {
+export class RoundConfigScore {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected round: Round;
-    protected parent: RoundScoreConfig;
+    protected config: RoundConfig;
+    protected parent: RoundConfigScore;
     protected name: string;
     protected direction: number;
     protected maximum: number;
-    protected child: RoundScoreConfig;
+    protected child: RoundConfigScore;
 
     // constructor
-    constructor(round: Round, parent: RoundScoreConfig) {
-        this.setRound(round);
+    constructor(config: RoundConfig, parent: RoundConfigScore) {
+        this.setConfig(config);
         this.setParent(parent);
     }
 
     static getDirectionDescription(direction: number) {
-        return direction === RoundScoreConfig.UPWARDS ? 'naar' : 'vanaf';
+        return direction === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     getId(): number {
@@ -54,19 +54,19 @@ export class RoundScoreConfig {
         this.maximum = maximum;
     }
 
-    getRound(): Round {
-        return this.round;
+    getConfig(): RoundConfig {
+        return this.config;
     }
 
-    private setRound(round: Round) {
-        this.round = round;
+    private setConfig(config: RoundConfig) {
+        this.config = config;
     }
 
-    getParent(): RoundScoreConfig {
+    getParent(): RoundConfigScore {
         return this.parent;
     }
 
-    private setParent(parent: RoundScoreConfig) {
+    private setParent(parent: RoundConfigScore) {
         this.parent = parent;
         if (this.parent !== undefined) {
             this.parent.setChild(this);
@@ -81,16 +81,21 @@ export class RoundScoreConfig {
         return this;
     }
 
-    getChild(): RoundScoreConfig {
+    getChild(): RoundConfigScore {
         return this.child;
     }
 
-    setChild(child: RoundScoreConfig) {
+    setChild(child: RoundConfigScore) {
         this.child = child;
     }
 
     isInput() {
-        return (this.getMaximum() !== 0 && (this.getParent() === undefined || this.getParent().getMaximum() === 0));
+        if (this.getParent() === undefined || this.getParent().getMaximum() === 0) {
+            if (this.getMaximum() !== 0 || this.getChild() === undefined) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -18,7 +18,7 @@ import { IRound, RoundRepository } from '../round/repository';
 export class StructureRepository extends SportRepository {
 
     private url: string;
-    private selfCache: Round[] = [];
+    // private selfCache: Round[] = [];
 
     constructor(
         private http: HttpClient,
@@ -53,43 +53,35 @@ export class StructureRepository extends SportRepository {
                     return undefined;
                 }
                 const round = this.roundRepos.jsonToObjectHelper(jsonRound, competition);
-                this.updateCache(round, competition);
+                // this.updateCache(round, competition);
                 return round;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(round: Round, competition: Competition): Observable<Round> {
-
+    createObject(jsonRound: IRound, competition: Competition, parentRound?: Round): Observable<Round> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-
-        return this.http.post(this.url, this.roundRepos.objectToJsonHelper(round), options).pipe(
-            map((res: IRound) => {
-                const roundOut = this.roundRepos.jsonToObjectHelper(res, competition);
-                this.updateCache(roundOut, competition);
-                return roundOut;
+        return this.http.post(this.url, jsonRound, options).pipe(
+            map((roundRes: IRound) => {
+                const round = this.roundRepos.jsonToObjectHelper(roundRes, competition, parentRound);
+                // this.updateCache(round, competition);
+                return round;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(round: Round, competition: Competition): Observable<Round> {
-
+    editObject(round: Round, competition: Competition, parentRound?: Round): Observable<Round> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-
         return this.http.put(this.url + '/' + round.getId(), this.roundRepos.objectToJsonHelper(round), options).pipe(
-            map((res: IRound) => {
-                const roundOut = this.roundRepos.jsonToObjectHelper(res, competition);
-                this.updateCache(roundOut, competition);
-                return roundOut;
-            }),
+            map((res: IRound) => this.roundRepos.jsonToObjectHelper(res, competition, parentRound, round)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -98,28 +90,28 @@ export class StructureRepository extends SportRepository {
         const url = this.url + '/' + round.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res: Response) => {
-                this.removeFromCache(round, round.getCompetition());
+                // this.removeFromCache(round, round.getCompetition());
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    private findObject(competition: Competition) {
-        return this.selfCache.find(round => round.getCompetition() === competition);
-    }
+    // private findObject(competition: Competition) {
+    //     return this.selfCache.find(round => round.getCompetition() === competition);
+    // }
 
-    private updateCache(round: Round, competition: Competition) {
-        this.removeFromCache(round, competition);
-        this.selfCache.push(round);
-    }
+    // private updateCache(round: Round, competition: Competition) {
+    //     this.removeFromCache(round, competition);
+    //     this.selfCache.push(round);
+    // }
 
-    private removeFromCache(structure: Round, competition: Competition) {
-        const foundRound = this.findObject(competition);
-        if (foundRound !== undefined) {
-            const index = this.selfCache.indexOf(foundRound);
-            if (index > -1) {
-                this.selfCache.splice(index, 1);
-            }
-        }
-    }
+    // private removeFromCache(structure: Round, competition: Competition) {
+    //     const foundRound = this.findObject(competition);
+    //     if (foundRound !== undefined) {
+    //         const index = this.selfCache.indexOf(foundRound);
+    //         if (index > -1) {
+    //             this.selfCache.splice(index, 1);
+    //         }
+    //     }
+    // }
 }

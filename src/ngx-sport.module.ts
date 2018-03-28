@@ -34,9 +34,9 @@ import { SportRepository } from './repository';
 import { Round } from './round';
 import { RoundConfig } from './round/config';
 import { RoundConfigRepository } from './round/config/repository';
+import { RoundConfigScore } from './round/config/score';
+import { RoundConfigScoreRepository } from './round/config/score/repository';
 import { RoundRepository } from './round/repository';
-import { RoundScoreConfig } from './round/scoreconfig';
-import { RoundScoreConfigRepository } from './round/scoreconfig/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
 import { StructureNameService } from './structure/nameservice';
@@ -49,20 +49,20 @@ import { TeamRepository } from './team/repository';
     imports: [],
     declarations: [
         Association, League, Competition, SportConfig, Field, Game, GameScore,
-        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
+        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        RoundConfigRepository, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
         PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
     ],
     exports: [
         Association, League, Competition, SportConfig, Field, Game, GameScore,
-        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundScoreConfig, Season, Team,
+        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundScoreConfigRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        RoundConfigRepository, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
         PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair

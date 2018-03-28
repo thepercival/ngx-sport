@@ -10,7 +10,6 @@ import { QualifyService } from '../qualifyrule/service';
 import { SportRepository } from '../repository';
 import { Round } from '../round';
 import { IRoundConfig, RoundConfigRepository } from './config/repository';
-import { IRoundScoreConfig, RoundScoreConfigRepository } from './scoreconfig/repository';
 
 /**
  * Created by coen on 3-3-17.
@@ -23,7 +22,6 @@ export class RoundRepository extends SportRepository {
     constructor(
         private http: HttpClient,
         private configRepos: RoundConfigRepository,
-        private scoreConfigRepos: RoundScoreConfigRepository,
         private pouleRepos: PouleRepository,
         private competitionRepos: CompetitionRepository,
         private qualifyRuleRepos: QualifyRuleRepository,
@@ -46,22 +44,21 @@ export class RoundRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IRound, competition: Competition, parentRound?: Round, round?: Round): Round {
-        if (round === undefined && json.id !== undefined) {
-            round = this.cache[json.id];
-        }
-        if (round === undefined) {
-            round = new Round(competition, parentRound, json.winnersOrLosers);
-            round.setId(json.id);
-            this.cache[round.getId()] = round;
-        }
+        // if (round === undefined && json.id !== undefined) {
+        //     round = this.cache[json.id];
+        // }
+        // if (round === undefined) {
+        round = new Round(competition, parentRound, json.winnersOrLosers);
+        // this.cache[round.getId()] = round;
+        // }
+        round.setId(json.id);
         // round.setName(json.name);
         round.setQualifyOrder(json.qualifyOrder);
         this.configRepos.jsonToObjectHelper(json.config, round);
-        if (json.scoreConfig !== undefined) {
-            round.setScoreConfig(this.scoreConfigRepos.jsonToObjectHelper(json.scoreConfig, round));
-        }
         this.pouleRepos.jsonArrayToObject(json.poules, round);
-        this.jsonArrayToObject(json.childRounds, competition, round);
+        json.childRounds.forEach((jsonChildRound) => {
+            this.jsonToObjectHelper(jsonChildRound, competition, round, round.getChildRound(jsonChildRound.winnersOrLosers));
+        });
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round);
             qualifyService.createObjectsForParentRound();
@@ -85,7 +82,6 @@ export class RoundRepository extends SportRepository {
             qualifyOrder: object.getQualifyOrder(),
             name: object.getName(),
             config: this.configRepos.objectToJsonHelper(object.getConfig()),
-            scoreConfig: this.scoreConfigRepos.objectToJsonHelper(object.getScoreConfig()),
             poules: this.pouleRepos.objectsToJsonArray(object.getPoules()),
             childRounds: this.objectsToJsonArray(object.getChildRounds())
         };
@@ -99,7 +95,6 @@ export interface IRound {
     qualifyOrder: number;
     name: string;
     config: IRoundConfig;
-    scoreConfig: IRoundScoreConfig;
     poules: IPoule[];
     childRounds: IRound[];
 }

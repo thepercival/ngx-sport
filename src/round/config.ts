@@ -1,4 +1,5 @@
 import { Round } from '../round';
+import { RoundConfigScore } from './config/score';
 
 export class RoundConfig {
     static readonly DEFAULTNROFHEADTOHEADMATCHES = 1;
@@ -20,6 +21,7 @@ export class RoundConfig {
     protected enableTime: boolean;
     protected minutesPerGame: number;
     protected minutesInBetween: number;
+    protected score: RoundConfigScore;
 
     // constructor
     constructor(round: Round) {
@@ -131,6 +133,14 @@ export class RoundConfig {
 
     setMinutesInBetween(minutesInBetween: number) {
         this.minutesInBetween = minutesInBetween;
+    }
+
+    getScore(): RoundConfigScore {
+        return this.score;
+    }
+
+    setScore(score: RoundConfigScore) {
+        this.score = score;
     }
 
     getMaximalNrOfMinutesPerGame(withMinutesInBetween: boolean = false): number {

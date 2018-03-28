@@ -4,7 +4,6 @@ import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { QualifyRule } from './qualifyrule';
 import { RoundConfig } from './round/config';
-import { RoundScoreConfig } from './round/scoreconfig';
 import { Team } from './team';
 
 /**
@@ -30,7 +29,6 @@ export class Round {
     protected number: number;
     protected name: string;
     protected config: RoundConfig;
-    protected scoreConfig: RoundScoreConfig;
     protected poules: Poule[] = [];
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
@@ -42,8 +40,9 @@ export class Round {
         this.qualifyOrder = Round.ORDER_HORIZONTAL;
     }
 
-    static getWinnersLosersDescription(winnersOrLosers: number): string {
-        return winnersOrLosers === Round.WINNERS ? 'winnaar' : (winnersOrLosers === Round.LOSERS ? 'verliezer' : '');
+    static getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
+        const description = winnersOrLosers === Round.WINNERS ? 'winnaar' : (winnersOrLosers === Round.LOSERS ? 'verliezer' : '');
+        return ((multiple && (description !== '')) ? description + 's' : description);
     }
 
     static getOpposing(winnersOrLosers: number) {
@@ -140,27 +139,12 @@ export class Round {
         this.config = config;
     }
 
-    getScoreConfig(): RoundScoreConfig {
-        return this.scoreConfig;
-    }
-
-    setScoreConfig(scoreConfig: RoundScoreConfig) {
-        this.scoreConfig = scoreConfig;
-    }
-
-    // getScoreConfigs(): RoundScoreConfig[] {
-    //     const scoreConfigs: RoundScoreConfig[] = [];
-
-    //     let scoreConfig = this.getScoreConfig();
-    //     while (scoreConfig !== undefined) {
-    //         scoreConfigs.push(scoreConfig);
-    //         scoreConfig = scoreConfig.getParent();
-    //     }
-    //     return scoreConfigs;
-    // }
-
     getPoules(): Poule[] {
         return this.poules;
+    }
+
+    getPoule(number: number): Poule {
+        return this.getPoules().find(poule => poule.getNumber() === number);
     }
 
     getPoulePlaces(order: number = 0): PoulePlace[] {
