@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -26,35 +26,36 @@ export class FieldRepository extends SportRepository {
     }
 
     createObject(jsonField: IField, competition: Competition): Observable<Field> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('competitionid', competition.getId().toString())
-        };
-        return this.http.post(this.url, jsonField, options).pipe(
+        return this.http.post(this.url, jsonField, this.getOptions(competition)).pipe(
             map((res: IField) => this.jsonToObjectHelper(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(field: Field, competition: Competition): Observable<Field> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('competitionid', competition.getId().toString())
-        };
-        return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), options).pipe(
+        return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), this.getOptions(competition)).pipe(
             map((res: IField) => this.jsonToObjectHelper(res, competition, field)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(field: Field): Observable<void> {
+    removeObject(field: Field, competition: Competition): Observable<void> {
         const url = this.url + '/' + field.getId();
-        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+        return this.http.delete(url, this.getOptions(competition)).pipe(
             map((res) => {
                 field.getCompetition().removeField(field);
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(competition: Competition): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('competitionid', competition.getId().toString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     jsonArrayToObject(jsonArray: IField[], competition: Competition): Field[] {

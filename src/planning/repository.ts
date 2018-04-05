@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -38,13 +38,9 @@ export class PlanningRepository extends SportRepository {
         const reposCreates: Observable<Game[]>[] = [];
         const poules = this.getPoules(rounds);
         poules.forEach(poule => {
-            const options = {
-                headers: super.getHeaders(),
-                params: new HttpParams().set('pouleid', poule.getId().toString())
-            };
             const removedGames = poule.getGames().splice(0, poule.getGames().length);
             reposCreates.push(
-                this.http.post(this.url, this.gameRepos.objectsToJsonArray(removedGames), options).pipe(
+                this.http.post(this.url, this.gameRepos.objectsToJsonArray(removedGames), this.getOptions(poule)).pipe(
                     map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
                     catchError((err) => this.handleError(err))
                 )
@@ -66,17 +62,23 @@ export class PlanningRepository extends SportRepository {
         const reposUpdates: Observable<Game[]>[] = [];
         const poules = this.getPoules(rounds);
         poules.forEach(poule => {
-            const options = {
-                headers: super.getHeaders(),
-                params: new HttpParams().set('pouleid', poule.getId().toString())
-            };
             reposUpdates.push(
-                this.http.put(this.url, this.gameRepos.objectsToJsonArray(poule.getGames()), options).pipe(
+                this.http.put(this.url, this.gameRepos.objectsToJsonArray(poule.getGames()), this.getOptions(poule)).pipe(
                     map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
                     catchError((err) => this.handleError(err))
                 )
             );
         });
         return forkJoin(reposUpdates);
+    }
+
+    protected getOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('pouleid', poule.getId().toString());
+        httpParams = httpParams.set('competitionid', poule.getRound().getCompetition().getId().toString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 }

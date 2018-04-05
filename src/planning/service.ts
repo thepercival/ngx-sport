@@ -355,9 +355,9 @@ export class PlanningService {
                     return g1.getResourceBatch() - g2.getResourceBatch();
                 }
             }
-            return g1.getField().getNumber() - g2.getField().getNumber();
-        })
-        );
+            return (g1.getField() ? g1.getField().getNumber() : 0)
+                - (g2.getField() ? g2.getField().getNumber() : 0);
+        }));
         return games;
     }
 

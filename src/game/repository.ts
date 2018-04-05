@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -37,27 +37,29 @@ export class GameRepository extends SportRepository {
     }
 
     createObject(game: Game, poule: Poule): Observable<Game> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('pouleid', poule.getId().toString())
-        };
-        return this.http.post(this.url, this.objectToJsonHelper(game), options).pipe(
+        return this.http.post(this.url, this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
             map((gameRes: IGame) => game.setId(gameRes.id)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(game: Game, poule: Poule): Observable<Game> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('pouleid', poule.getId().toString())
-        };
-        return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), options).pipe(
+        return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
             map((res: IGame) => {
                 return this.jsonToObjectHelper(res, game.getPoule(), game);
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('pouleid', poule.getId().toString());
+        httpParams = httpParams.set('competitionid', poule.getRound().getCompetition().getId().toString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     jsonArrayToObject(jsonArray: IGame[], poule: Poule): Game[] {
@@ -81,7 +83,7 @@ export class GameRepository extends SportRepository {
             json.roundNumber, json.subNumber
         );
         game.setId(json.id);
-        this.cache[game.getId()] = game;
+        // this.cache[game.getId()] = game;
         // }
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);

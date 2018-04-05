@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -31,16 +31,22 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     editObject(poulePlace: PoulePlace, poule: Poule): Observable<PoulePlace> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('pouleid', poule.getId().toString())
-        };
-        return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), options).pipe(
+        return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), this.getOptions(poule)).pipe(
             map((res: IPoulePlace) => {
                 return this.jsonToObjectHelper(res, poulePlace.getPoule(), poulePlace);
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('pouleid', poule.getId().toString());
+        httpParams = httpParams.set('competitionid', poule.getRound().getCompetition().getId().toString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     jsonArrayToObject(jsonArray: IPoulePlace[], poule: Poule): PoulePlace[] {

@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Competition } from '../competition';
 import { Referee } from '../referee';
@@ -25,35 +25,36 @@ export class RefereeRepository extends SportRepository {
     }
 
     createObject(jsonReferee: IReferee, competition: Competition): Observable<Referee> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('competitionid', competition.getId().toString())
-        };
-        return this.http.post(this.url, jsonReferee, options).pipe(
+        return this.http.post(this.url, jsonReferee, this.getOptions(competition)).pipe(
             map((res: IReferee) => this.jsonToObjectHelper(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(referee: Referee, competition: Competition): Observable<Referee> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('competitionid', competition.getId().toString())
-        };
-        return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), options).pipe(
+        return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), this.getOptions(competition)).pipe(
             map((res: IReferee) => this.jsonToObjectHelper(res, competition, referee)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(referee: Referee): Observable<any> {
+    removeObject(referee: Referee, competition: Competition): Observable<any> {
         const url = this.url + '/' + referee.getId();
-        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+        return this.http.delete(url, this.getOptions(competition)).pipe(
             map((res: any) => {
                 referee.getCompetition().removeReferee(referee);
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(competition: Competition): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('competitionid', competition.getId().toString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     jsonArrayToObject(jsonArray: IReferee[], competition: Competition): Referee[] {
