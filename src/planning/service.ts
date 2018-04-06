@@ -1,3 +1,6 @@
+/**
+ * Created by coen on 10-10-17.
+ */
 import { Field } from '../field';
 import { Game } from '../game';
 import { Poule } from '../poule';
