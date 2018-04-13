@@ -19,6 +19,7 @@ export class Round {
 
     static readonly ORDER_HORIZONTAL = 1;
     static readonly ORDER_VERTICAL = 2;
+    static readonly ORDER_CUSTOM = 3;
 
     protected id: number;
     protected competition: Competition;
@@ -155,7 +156,7 @@ export class Round {
             }
         }
 
-        if (order === Round.ORDER_HORIZONTAL) {
+        if (order === Round.ORDER_HORIZONTAL || order > 2) {
             return poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
                     return 1;
