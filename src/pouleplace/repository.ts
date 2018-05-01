@@ -73,6 +73,7 @@ export class PoulePlaceRepository extends SportRepository {
             team = this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetition().getLeague().getAssociation());
         }
         poulePlace.setTeam(team);
+        poulePlace.setPenaltyPoints(json.penaltyPoints);
         return poulePlace;
     }
 
@@ -89,7 +90,8 @@ export class PoulePlaceRepository extends SportRepository {
             id: object.getId(),
             number: object.getNumber(),
             name: object.getName(),
-            team: object.getTeam() ? this.teamRepos.objectToJsonHelper(object.getTeam()) : undefined
+            team: object.getTeam() ? this.teamRepos.objectToJsonHelper(object.getTeam()) : undefined,
+            penaltyPoints: object.getPenaltyPoints()
         };
     }
 }
@@ -99,4 +101,5 @@ export interface IPoulePlace {
     number: number;
     name: string;
     team?: ITeam;
+    penaltyPoints: number;
 }

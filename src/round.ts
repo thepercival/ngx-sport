@@ -2,7 +2,7 @@ import { Competition } from './competition';
 import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
-import { QualifyRule } from './qualifyrule';
+import { QualifyRule } from './qualify/rule';
 import { RoundConfig } from './round/config';
 import { Team } from './team';
 

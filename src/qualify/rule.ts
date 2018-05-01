@@ -1,15 +1,15 @@
 /**
  * Created by coen on 15-10-17.
  */
-import { PoulePlace } from './pouleplace';
-import { Round } from './round';
+import { PoulePlace } from '../pouleplace';
+import { Round } from '../round';
 
 
 export class QualifyRule {
     static readonly SOCCERWORLDCUP = 1;
     static readonly SOCCEREUROPEANCUP = 2;
 
-    protected id: number;
+    // protected id: number;
     protected fromRound: Round;
     protected toRound: Round;
     protected configNr: number;
@@ -22,13 +22,13 @@ export class QualifyRule {
         this.setToRound(toRound);
     }
 
-    getId(): number {
-        return this.id;
-    }
+    // getId(): number {
+    //     return this.id;
+    // }
 
-    setId(id: number): void {
-        this.id = id;
-    }
+    // setId(id: number): void {
+    //     this.id = id;
+    // }
 
     getFromRound(): Round {
         return this.fromRound;

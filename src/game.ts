@@ -4,6 +4,7 @@ import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { Referee } from './referee';
 import { Round } from './round';
+import { RoundConfigScore } from './round/config/score';
 
 /**
  * Created by coen on 20-3-17.
@@ -42,7 +43,6 @@ export class Game {
         awayPouleplace: PoulePlace,
         roundNumber: number,
         subNumber: number) {
-        if (homePouleplace === undefined) { console.log('home empty'); }
         this.setPoule(poule);
         this.setRoundNumber(roundNumber);
         this.setSubNumber(subNumber);
@@ -163,5 +163,13 @@ export class Game {
 
     getFinalScore(): GameScore {
         return this.getScores()[0];
+    }
+
+    getScoreConfig(): RoundConfigScore {
+        let roundConfigScore = this.getRound().getConfig().getScore();
+        while (roundConfigScore.isInput() === false && roundConfigScore.getParent() !== undefined) {
+            roundConfigScore = roundConfigScore.getParent();
+        }
+        return roundConfigScore;
     }
 }

@@ -1,10 +1,10 @@
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { QualifyRule } from '../qualifyrule';
 import { Ranking } from '../ranking';
 import { Round } from '../round';
 import { Team } from '../team';
+import { QualifyRule } from './rule';
 
 /**
  * Created by coen on 18-10-17.
@@ -133,16 +133,18 @@ export class QualifyService {
 
     protected getRulePartsToProcess(parentPoule: Poule): IQualifyRulePart[] {
         const ruleParts: IQualifyRulePart[] = [];
+        const winnersOrLosers = this.childRound.getWinnersOrLosers();
         if (parentPoule.getRound().getState() === Game.STATE_PLAYED) {
-            parentPoule.getRound().getToQualifyRules().forEach(rule => ruleParts.push({ qualifyRule: rule }));
+            parentPoule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => ruleParts.push({ qualifyRule: rule }));
             return ruleParts;
         }
 
         if (parentPoule.getState() === Game.STATE_PLAYED) {
             parentPoule.getPlaces().forEach(poulePlace => {
-                poulePlace.getToQualifyRules().filter(qualifyRule => !qualifyRule.isMultiple()).forEach(rule => {
-                    ruleParts.push({ qualifyRule: rule, poule: parentPoule });
-                });
+                const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
+                if (!qualifyRule.isMultiple()) {
+                    ruleParts.push({ qualifyRule: qualifyRule, poule: parentPoule });
+                }
             });
         }
         return ruleParts;

@@ -187,15 +187,15 @@ export class Ranking {
             const finalScore = game.getFinalScore();
             if (finalScore.get(homeAway) > finalScore.get(!homeAway)) {
                 if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
-                    points += game.getRound().getConfig().getWinPointsExt();
+                    points += config.getWinPointsExt();
                 } else {
-                    points += game.getRound().getConfig().getWinPoints();
+                    points += config.getWinPoints();
                 }
             } else if (finalScore.get(homeAway) === finalScore.get(!homeAway)) {
                 if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
-                    points += game.getRound().getConfig().getDrawPointsExt();
+                    points += config.getDrawPointsExt();
                 } else {
-                    points += game.getRound().getConfig().getDrawPoints();
+                    points += config.getDrawPoints();
                 }
             }
         });
@@ -229,16 +229,13 @@ export class Ranking {
         return nrOfGoals;
     }
 
-    // if(game.getPoulePlace(homeAway) === poulePlace) {
-
     getNrOfGamesWithState(poulePlace: PoulePlace, games: Game[]): number {
         let nrOfGames = 0;
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const homeAway = game.getHomeAway(poulePlace);
-            if (homeAway === undefined) {
+            if (game.getHomeAway(poulePlace) === undefined) {
                 return;
             }
             nrOfGames++;

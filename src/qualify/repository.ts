@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
-import { QualifyRule } from '../qualifyrule';
 import { Round } from '../round';
+import { QualifyRule } from './rule';
 
 /**
  * Created by coen on 3-3-17.

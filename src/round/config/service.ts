@@ -1,5 +1,5 @@
 import { SportConfig } from '../../config';
-import { QualifyRule } from '../../qualifyrule';
+import { QualifyRule } from '../../qualify/rule';
 import { Round } from '../../round';
 import { RoundConfig } from '../config';
 import { RoundConfigScore } from './score';

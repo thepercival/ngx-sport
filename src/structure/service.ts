@@ -2,7 +2,7 @@ import { Competition } from '../competition';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { QualifyService } from '../qualifyrule/service';
+import { QualifyService } from '../qualify/service';
 import { Round } from '../round';
 import { RoundConfigService } from '../round/config/service';
 import { StructureNameService } from './nameservice';
