@@ -27,7 +27,7 @@ export class StructureNameService {
         const nrOfRoundsToGo = round.getNrOfRoundsToGo();
         if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo - 1)) + ' finale';
-        } else if (nrOfRoundsToGo === 1) {
+        } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getPoulePlaces().length > 1)) {
             if (round.getPoulePlaces().length === 2 && sameName === false) {
                 const rankedPlace = this.getRankedPlace(round);
                 return this.getHtmlNumber(rankedPlace) + '/' + this.getHtmlNumber(rankedPlace + 1) + ' plaats';

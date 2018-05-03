@@ -156,7 +156,7 @@ export class Round {
             }
         }
 
-        if (order === Round.ORDER_HORIZONTAL || order > 2) {
+        if (order === Round.ORDER_HORIZONTAL || order === 4) {
             return poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
                     return 1;
@@ -173,7 +173,7 @@ export class Round {
                 return 0;
             });
         }
-        if (order === Round.ORDER_VERTICAL) {
+        if (order === Round.ORDER_VERTICAL || order === 5) {
             return poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
                     return 1;

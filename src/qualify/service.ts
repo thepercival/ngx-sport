@@ -41,6 +41,9 @@ export class QualifyService {
                 });
                 nrOfPoulePlaces = shuffledPoulePlaces.length;
             }
+            if (nrOfPoulePlaces === 0) {
+                break;
+            }
             // to places
             for (let nI = 0; nI < nrOfPoulePlaces; nI++) {
                 if (childRoundPoulePlaces.length === 0) {
@@ -60,7 +63,7 @@ export class QualifyService {
                 poulePlaces.push(poulePlaces.shift());
             }
             shuffledPoulePlaces = poulePlaces;
-        } else if (qualifyOrder === 4) { // shuffle per two on oneven placenumbers
+        } else if (qualifyOrder === 4) { // shuffle per two on oneven placenumbers, horizontal-children
             if (poulePlaces[0].getNumber() % 2 === 0) {
                 while (poulePlaces.length > 0) {
                     shuffledPoulePlaces = shuffledPoulePlaces.concat(poulePlaces.splice(0, 2).reverse());
@@ -68,7 +71,16 @@ export class QualifyService {
             } else {
                 shuffledPoulePlaces = poulePlaces;
             }
-
+        } else if (qualifyOrder === 5) { // reverse second and third item, vertical-children
+            if (poulePlaces.length % 4 === 0) {
+                while (poulePlaces.length > 0) {
+                    const poulePlacesTmp = poulePlaces.splice(0, 4);
+                    poulePlacesTmp.splice(1, 0, poulePlacesTmp.splice(2, 1)[0]);
+                    shuffledPoulePlaces = shuffledPoulePlaces.concat(poulePlacesTmp);
+                }
+            } else {
+                shuffledPoulePlaces = poulePlaces;
+            }
         }
         return shuffledPoulePlaces;
     }
