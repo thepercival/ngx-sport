@@ -107,6 +107,7 @@ export class QualifyRule {
             poulePlace.setFromQualifyRule(undefined);
         }
     }
+    // quick fix
 
     isMultiple(): boolean {
         return this.getFromPoulePlaces().length > this.getToPoulePlaces().length;
