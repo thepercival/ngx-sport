@@ -131,11 +131,7 @@ export class QualifyService {
         // als winners dan
     }
 
-    getNewQualifiers(parentPoule: Poule): INewQualifier[] {
-        if (parentPoule.getRound() !== this.parentRound) {
-            return [];
-        }
-        const ruleParts = this.getRulePartsToProcess(parentPoule);
+    getNewQualifiers(ruleParts: IQualifyRulePart[]): INewQualifier[] {
         let qualifiers: INewQualifier[] = [];
         ruleParts.forEach(rulePart => {
             qualifiers = qualifiers.concat(this.getQualifiers(rulePart));
@@ -143,19 +139,34 @@ export class QualifyService {
         return qualifiers;
     }
 
-    protected getRulePartsToProcess(parentPoule: Poule): IQualifyRulePart[] {
+    // transities:
+    // state changed
+    // 1 van hele ronde gespeeld naar niet hele ronde gespeeld
+    // 2 van niet hele ronde gespeeld naar hele ronde gespeeld
+    // 3 hele ronde gespeeld
+    //      update all
+    // 4 van niet hele poule gespeeld naar hele poule gespeeld
+    // 5 van hele poule gespeeld naar niet hele poule gespeeld
+    // 6 hele poule gespeeld
+    //      update from poule
+    getRulePartsToProcess(poule: Poule, oldPouleState: number, oldRoundState: number): IQualifyRulePart[] {
         const ruleParts: IQualifyRulePart[] = [];
-        const winnersOrLosers = this.childRound.getWinnersOrLosers();
-        if (parentPoule.getRound().getState() === Game.STATE_PLAYED) {
-            parentPoule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => ruleParts.push({ qualifyRule: rule }));
-            return ruleParts;
-        }
 
-        if (parentPoule.getState() === Game.STATE_PLAYED) {
-            parentPoule.getPlaces().forEach(poulePlace => {
+        const newPouleState = poule.getState();
+        const newRoundState = poule.getRound().getState();
+        if ((oldRoundState !== Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)
+            || (oldRoundState === Game.STATE_PLAYED && newRoundState !== Game.STATE_PLAYED)
+            || (oldRoundState === Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)) {
+            const winnersOrLosers = this.childRound.getWinnersOrLosers();
+            poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => ruleParts.push({ qualifyRule: rule }));
+        } else if ((oldPouleState !== Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)
+            || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
+            || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
+            const winnersOrLosers = this.childRound.getWinnersOrLosers();
+            poule.getPlaces().forEach(poulePlace => {
                 const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
-                if (!qualifyRule.isMultiple()) {
-                    ruleParts.push({ qualifyRule: qualifyRule, poule: parentPoule });
+                if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
+                    ruleParts.push({ qualifyRule: qualifyRule, poule: poule });
                 }
             });
         }
@@ -178,17 +189,27 @@ export class QualifyService {
             }
             poules.forEach((poule) => {
                 const toPoulePlace = toPoulePlaces[poule.getNumber() - 1];
-                const fromPoulePlace = fromPoulePlaces[poule.getNumber() - 1];
-                const fromRankNr = fromPoulePlace.getNumber();
-                const fromPoule = fromPoulePlace.getPoule();
-                const ranking: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(fromPoule.getPlaces(), fromPoule.getGames());
-                const qualifiedTeam = ranking[fromRankNr - 1].getTeam();
+                let qualifiedTeam;
+                if (poule.getState() === Game.STATE_PLAYED) {
+                    const fromPoulePlace = fromPoulePlaces[poule.getNumber() - 1];
+                    const fromRankNr = fromPoulePlace.getNumber();
+                    const fromPoule = fromPoulePlace.getPoule();
+                    const ranking: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(fromPoule.getPlaces(), fromPoule.getGames());
+                    qualifiedTeam = ranking[fromRankNr - 1].getTeam();
+                }
                 newQualifiers.push({ poulePlace: toPoulePlace, team: qualifiedTeam });
             });
             return newQualifiers;
         }
 
         // multiple
+        if (rulePart.qualifyRule.getFromRound().getState() !== Game.STATE_PLAYED) {
+            toPoulePlaces.forEach((toPoulePlace) => {
+                newQualifiers.push({ poulePlace: toPoulePlace, team: undefined });
+            });
+            return newQualifiers;
+        }
+
         const selectedPoulePlaces: PoulePlace[] = [];
         fromPoulePlaces.forEach(fromPoulePlace => {
             const fromPoule = fromPoulePlace.getPoule();
