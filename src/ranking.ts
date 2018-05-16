@@ -1,5 +1,6 @@
 import { Game } from './game';
 import { PoulePlace } from './pouleplace';
+import { Round } from './round';
 
 /* tslint:disable:no-bitwise */
 
@@ -44,30 +45,55 @@ export class Ranking {
         }
     }
 
-    getPoulePlacesByRank(p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[][] {
-        const ranking: PoulePlace[][] = [];
+    getItems(p_poulePlaces: PoulePlace[], games: Game[]): RankingItem[] {
+        const items: RankingItem[] = [];
         const poulePlaces = p_poulePlaces.slice(0);
         let nrOfIterations = 0;
         while (poulePlaces.length > 0) {
             const bestPoulePlaces = this.getBestPoulePlaces(poulePlaces, games, false);
-            ranking.push(bestPoulePlaces);
             bestPoulePlaces.forEach(bestPoulePlace => {
+                items.push(new RankingItem(++nrOfIterations, bestPoulePlace));
                 const index = poulePlaces.indexOf(bestPoulePlace);
                 if (index > -1) {
                     poulePlaces.splice(index, 1);
                 }
             });
-            if (++nrOfIterations > this.maxPoulePlaces) {
+            if (nrOfIterations > this.maxPoulePlaces) {
                 break;
             }
         }
-        return ranking;
+        return items;
     }
 
-    getPoulePlacesByRankSingle(p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] {
-        let ranking: PoulePlace[] = [];
-        this.getPoulePlacesByRank(p_poulePlaces, games).forEach(poulePlaces => ranking = ranking.concat(poulePlaces));
-        return ranking;
+    // getPoulePlacesByRankSingle(p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] {
+    //     let ranking: PoulePlace[] = [];
+    //     this.getPoulePlacesByRank(p_poulePlaces, games).forEach(poulePlaces => ranking = ranking.concat(poulePlaces));
+    //     return ranking;
+    // }
+
+    getItemsForRound(round: Round, fromPoulePlaces: PoulePlace[]): RankingItem[] {
+        const selectedPoulePlaces: PoulePlace[] = this.getSingleRankedPoulePlaces(fromPoulePlaces);
+        return this.getItems(selectedPoulePlaces, round.getGames());
+    }
+
+    // getPoulePlacesByRankSingleForRound(round: Round, fromPoulePlaces: PoulePlace[]): RankingItem[] {
+    //     const selectedPoulePlaces: PoulePlace[] = this.getRankedPoulePlaces(fromPoulePlaces);
+    //     return this.getPoulePlacesByRankSingle(selectedPoulePlaces, round.getGames());
+    // }
+
+    private getSingleRankedPoulePlaces(fromPoulePlaces: PoulePlace[]): PoulePlace[] {
+        const selectedPoulePlaces: PoulePlace[] = [];
+        fromPoulePlaces.forEach(fromPoulePlace => {
+            const fromPoule = fromPoulePlace.getPoule();
+            const fromRankNr = fromPoulePlace.getNumber();
+            const pouleItems: RankingItem[] = this.getItems(fromPoule.getPlaces(), fromPoule.getGames());
+            selectedPoulePlaces.push(this.getItem(pouleItems, fromRankNr).getPoulePlace());
+        });
+        return selectedPoulePlaces;
+    }
+
+    getItem(rankingItems: RankingItem[], rank: number) {
+        return rankingItems.find(rankingItemIt => rankingItemIt.getRank() === rank);
     }
 
     private getBestPoulePlaces(p_poulePlaces: PoulePlace[], games: Game[], skip: boolean): PoulePlace[] {
@@ -241,5 +267,26 @@ export class Ranking {
             nrOfGames++;
         });
         return nrOfGames;
+    }
+}
+
+export class RankingItem {
+    private rank: number;
+    private poulePlace: PoulePlace;
+
+    constructor(
+        rank: number,
+        poulePlace: PoulePlace
+    ) {
+        this.rank = rank;
+        this.poulePlace = poulePlace;
+    }
+
+    getRank(): number {
+        return this.rank;
+    }
+
+    getPoulePlace(): PoulePlace {
+        return this.poulePlace;
     }
 }

@@ -41,6 +41,7 @@ export * from './src/repository';
 export * from './src/round';
 export * from './src/round/config';
 export * from './src/round/config/repository';
+export * from './src/round/config/service';
 export * from './src/round/repository';
 export * from './src/round/config/score';
 export * from './src/round/config/score/repository';

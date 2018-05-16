@@ -36,6 +36,7 @@ import { RoundConfig } from './round/config';
 import { RoundConfigRepository } from './round/config/repository';
 import { RoundConfigScore } from './round/config/score';
 import { RoundConfigScoreRepository } from './round/config/score/repository';
+import { RoundConfigService } from './round/config/service';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
@@ -52,7 +53,8 @@ import { TeamRepository } from './team/repository';
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        RoundConfigRepository, RoundConfigService, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService,
+        TeamRepository,
         PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
@@ -62,7 +64,8 @@ import { TeamRepository } from './team/repository';
         Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundConfigRepository, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService, TeamRepository,
+        RoundConfigRepository, RoundConfigService, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService,
+        TeamRepository,
         PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair

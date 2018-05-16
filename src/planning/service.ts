@@ -276,6 +276,37 @@ export class PlanningService {
         return dateTime;
     }
 
+    // orderGames should be single array, because fields, ref and pouleplaces assignment should go over gameroundnumber and gamesubnumber
+    // protected assignResourceBatchToGames(roundConfig: RoundConfig, amountPerResourceBatch: number, dateTime?: Date): Date {
+    //     const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
+    //     const games = this.getGamesByNumber(roundConfig.getRound().getNumber(), Game.ORDER_BYNUMBER);
+
+    //     let resourceBatch = 1;
+    //     let unprocessedGamesFromPreviousRoundNumber: Game[] = [];
+    //     games.forEach(gamesPerRoundNumber => {
+    //         const gamesToProcess = unprocessedGamesFromPreviousRoundNumber.concat(gamesPerRoundNumber);
+    //         while (gamesToProcess.length >= amountPerResourceBatch) {
+    //             const resourceBatchGames = this.getResourceBatch(gamesToProcess, amountPerResourceBatch);
+    //             resourceBatchGames.forEach(game => {
+    //                 game.setStartDateTime(dateTime);
+    //                 game.setResourceBatch(resourceBatch);
+    //                 const index = gamesToProcess.indexOf(game);
+    //                 if (index === -1) {
+    //                     return;
+    //                 }
+    //                 gamesToProcess.splice(index, 1);
+    //             });
+    //             resourceBatch++;
+    //             if (dateTime !== undefined) {
+    //                 dateTime = new Date(dateTime.getTime());
+    //                 dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
+    //             }
+    //         }
+    //         unprocessedGamesFromPreviousRoundNumber = gamesToProcess;
+    //     });
+    //     return dateTime;
+    // }
+
     protected getResourceBatch(gamesPerRoundNumber: Game[], amountPerResourceBatch: number): Game[] {
 
         const resourceBatch: Game[] = [];

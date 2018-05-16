@@ -37,8 +37,11 @@ export class SportRepository {
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
         let errortext = 'onbekende fout';
-        console.error(error);
-        if (typeof error.error === 'string') {
+        if (!navigator.onLine) {
+            errortext = 'er kan geen internet verbinding gemaakt worden';
+        } else if (error.status === 0) {
+            errortext = 'er kan verbinding met de data-service gemaakt worden';
+        } else if (typeof error.error === 'string') {
             errortext = error.error;
         } else if (error.statusText !== undefined) {
             errortext = error.statusText;
@@ -46,6 +49,7 @@ export class SportRepository {
         if (error.status === 401) {
             this.getRouter().navigate(['/user/login'], { queryParams: { message: 'log opnieuw in' } });
         }
+
         return Observable.throw(errortext);
     }
 }

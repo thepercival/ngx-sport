@@ -1,7 +1,7 @@
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { Ranking } from '../ranking';
+import { Ranking, RankingItem } from '../ranking';
 import { Round } from '../round';
 import { Team } from '../team';
 import { QualifyRule } from './rule';
@@ -177,13 +177,14 @@ export class QualifyService {
         // bij meerdere fromPoulePlace moet ik bepalen wie de beste is
         const newQualifiers: INewQualifier[] = [];
         const rankingService = new Ranking(Ranking.RULESSET_WC);
+        const fromRound = rulePart.qualifyRule.getFromRound();
         const fromPoulePlaces = rulePart.qualifyRule.getFromPoulePlaces();
         const toPoulePlaces = rulePart.qualifyRule.getToPoulePlaces();
 
         if (!rulePart.qualifyRule.isMultiple()) {
             const poules: Poule[] = [];
             if (rulePart.poule === undefined) {
-                rulePart.qualifyRule.getFromRound().getPoules().forEach(poule => poules.push(poule));
+                fromRound.getPoules().forEach(poule => poules.push(poule));
             } else {
                 poules.push(rulePart.poule);
             }
@@ -192,10 +193,8 @@ export class QualifyService {
                 let qualifiedTeam;
                 if (poule.getState() === Game.STATE_PLAYED) {
                     const fromPoulePlace = fromPoulePlaces[poule.getNumber() - 1];
-                    const fromRankNr = fromPoulePlace.getNumber();
-                    const fromPoule = fromPoulePlace.getPoule();
-                    const ranking: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(fromPoule.getPlaces(), fromPoule.getGames());
-                    qualifiedTeam = ranking[fromRankNr - 1].getTeam();
+                    const rank = fromPoulePlace.getNumber();
+                    qualifiedTeam = this.getQualifiedTeam(fromPoulePlace.getPoule(), rank);
                 }
                 newQualifiers.push({ poulePlace: toPoulePlace, team: qualifiedTeam });
             });
@@ -203,42 +202,51 @@ export class QualifyService {
         }
 
         // multiple
-        if (rulePart.qualifyRule.getFromRound().getState() !== Game.STATE_PLAYED) {
+        if (fromRound.getState() !== Game.STATE_PLAYED) {
             toPoulePlaces.forEach((toPoulePlace) => {
                 newQualifiers.push({ poulePlace: toPoulePlace, team: undefined });
             });
             return newQualifiers;
         }
 
-        const selectedPoulePlaces: PoulePlace[] = [];
-        fromPoulePlaces.forEach(fromPoulePlace => {
-            const fromPoule = fromPoulePlace.getPoule();
-            const fromRankNr = fromPoulePlace.getNumber();
-            const ranking: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(fromPoule.getPlaces(), fromPoule.getGames());
-            selectedPoulePlaces.push(ranking[fromRankNr - 1]);
-        });
-
-        const rankedPoulePlaces: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(
-            selectedPoulePlaces,
-            rulePart.qualifyRule.getFromRound().getGames()
-        );
-        while (rankedPoulePlaces.length > toPoulePlaces.length) {
-            rankedPoulePlaces.pop();
+        const roundRankingItems: RankingItem[] = rankingService.getItemsForRound(fromRound, fromPoulePlaces);
+        const roundRankingPoulePlaces: PoulePlace[] = roundRankingItems.map(roundRankingItem => roundRankingItem.getPoulePlace());
+        while (roundRankingPoulePlaces.length > toPoulePlaces.length) {
+            roundRankingPoulePlaces.pop();
         }
 
         toPoulePlaces.forEach((toPoulePlace) => {
-            let rankedPoulePlace = this.getRankedPoulePlace(rankedPoulePlaces, toPoulePlace.getPoule());
-            if (rankedPoulePlace === undefined && rankedPoulePlaces.length > 0) {
-                rankedPoulePlace = rankedPoulePlaces[0];
+            let rankedPoulePlace = this.getRankedPoulePlace(roundRankingPoulePlaces, toPoulePlace.getPoule());
+            if (rankedPoulePlace === undefined && roundRankingPoulePlaces.length > 0) {
+                rankedPoulePlace = roundRankingPoulePlaces[0];
             }
             if (rankedPoulePlace === undefined) {
                 return;
             }
             newQualifiers.push({ poulePlace: toPoulePlace, team: rankedPoulePlace.getTeam() });
-            rankedPoulePlaces.splice(rankedPoulePlaces.indexOf(rankedPoulePlace), 1);
+            roundRankingPoulePlaces.splice(roundRankingPoulePlaces.indexOf(rankedPoulePlace), 1);
         });
         return newQualifiers;
     }
+
+    getQualifiedTeam(poule: Poule, rank: number): Team {
+        const rankingService = new Ranking(Ranking.RULESSET_WC);
+        const pouleRankingItems: RankingItem[] = rankingService.getItems(poule.getPlaces(), poule.getGames());
+        const poulePlace = rankingService.getItem(pouleRankingItems, rank).getPoulePlace();
+        return poulePlace ? poulePlace.getTeam() : undefined;
+    }
+
+    // getRankedPoulePlacesForRound(round: Round, fromPoulePlaces: PoulePlace[]): PoulePlace[] {
+    //     const rankingService = new Ranking(Ranking.RULESSET_WC);
+    //     const selectedPoulePlaces: PoulePlace[] = [];
+    //     fromPoulePlaces.forEach(fromPoulePlace => {
+    //         const fromPoule = fromPoulePlace.getPoule();
+    //         const fromRankNr = fromPoulePlace.getNumber();
+    //         const ranking: PoulePlace[] = rankingService.getPoulePlacesByRankSingle(fromPoule.getPlaces(), fromPoule.getGames());
+    //         selectedPoulePlaces.push(ranking[fromRankNr - 1]);
+    //     });
+    //     return rankingService.getPoulePlacesByRankSingle(selectedPoulePlaces, round.getGames());
+    // }
 
     protected getRankedPoulePlace(rankedPoulePlaces: PoulePlace[], toPoule: Poule): PoulePlace {
         const toTeams = toPoule.getTeams();

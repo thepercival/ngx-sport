@@ -42,13 +42,25 @@ export class RoundConfigService {
         const sport = round.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
             roundConfig.setHasExtension(!round.needsRanking());
-            roundConfig.setMinutesPerGameExt(5);
+            roundConfig.setMinutesPerGameExt(this.getDefaultMinutesPerGameExt());
             roundConfig.setEnableTime(true);
-            roundConfig.setMinutesPerGame(20);
-            roundConfig.setMinutesInBetween(5);
+            roundConfig.setMinutesPerGame(this.getDefaultMinutesPerGame());
+            roundConfig.setMinutesInBetween(this.getDefaultMinutesInBetween());
         }
         roundConfig.setScore(this.createScoreConfigFromRound(roundConfig));
         return roundConfig;
+    }
+
+    getDefaultMinutesPerGame(): number {
+        return 20;
+    }
+
+    getDefaultMinutesPerGameExt(): number {
+        return 5;
+    }
+
+    getDefaultMinutesInBetween(): number {
+        return 5;
     }
 
     protected createScoreConfigFromRound(config: RoundConfig): RoundConfigScore {
