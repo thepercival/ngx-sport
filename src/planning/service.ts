@@ -1,6 +1,3 @@
-/**
- * Created by coen on 10-10-17.
- */
 import { Field } from '../field';
 import { Game } from '../game';
 import { Poule } from '../poule';
@@ -11,6 +8,9 @@ import { RoundConfig } from '../round/config';
 import { StructureService } from '../structure/service';
 import { PlanningResourceService } from './resource/service';
 
+/**
+ * Created by coen on 10-10-17.
+ */
 export class PlanningService {
 
     private allRoundsByNumber: {};
@@ -143,18 +143,10 @@ export class PlanningService {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
 
         const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
-        let fields = this.structureService.getCompetition().getFields();
+        const fields = this.structureService.getCompetition().getFields();
         const referees = this.structureService.getCompetition().getReferees();
-        if (referees.length > 0 && referees.length < fields.length) {
-            fields = fields.slice(0, referees.length);
-        }
-        const poulesFields: PoulesFields[] = this.getPoulesFields(poules.slice(0), fields.slice(0));
-        poulesFields.forEach(poulesFieldsIt => this.assignFieldsToGames(poulesFieldsIt));
-        const poulesReferees: PoulesReferees[] = this.getPoulesReferees(poules.slice(0), referees.slice(0));
-        poulesReferees.forEach(poulesRefereesIt => this.assignRefereesToGames(poulesRefereesIt));
 
-        const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
-        return this.assignResourceBatchToGames(aRoundConfig, amountPerResourceBatch, dateTime);
+        return this.assignResourceBatchToGames(aRoundConfig, dateTime, fields, referees);
     }
 
     protected getAmountPerResourceBatch(roundNumber: number, fields: Field[], referees: Referee[]): number {
@@ -175,154 +167,30 @@ export class PlanningService {
         return amountPerResourceBatch;
     }
 
-    protected getPoulesFields(poules: Poule[], fields: Field[]): PoulesFields[] {
-        const gcd = this.greatestCommonDevisor(poules.length, fields.length);
-        if (gcd === 0) {
-            return [];
-        }
-        if (gcd === 1) {
-            return [{ poules: poules, fields: fields }];
-        }
-        const poulesFields: PoulesFields[] = [];
-        const nrOfPoulesPerPart = poules.length / gcd;
-        const poulesPart: Poule[] = poules.splice(0, nrOfPoulesPerPart);
-        const nrOfFieldsPerPart = fields.length / gcd;
-        const fieldsPart: Field[] = fields.splice(0, nrOfFieldsPerPart);
-        poulesFields.push({ poules: poulesPart, fields: fieldsPart });
-        return poulesFields.concat(this.getPoulesFields(poules, fields));
-    }
-
-    protected getPoulesReferees(poules: Poule[], referees: Referee[]): PoulesReferees[] {
-        const gcd = this.greatestCommonDevisor(poules.length, referees.length);
-        if (gcd === 0) {
-            return [];
-        }
-        if (gcd === 1) {
-            return [{ poules: poules, referees: referees }];
-        }
-        const poulesReferees: PoulesReferees[] = [];
-        const nrOfPoulesPerPart = poules.length / gcd;
-        const poulesPart: Poule[] = poules.splice(0, nrOfPoulesPerPart);
-        const nrOfFieldsPerPart = referees.length / gcd;
-        const refereesPart: Referee[] = referees.splice(0, nrOfFieldsPerPart);
-        poulesReferees.push({ poules: poulesPart, referees: refereesPart });
-        return poulesReferees.concat(this.getPoulesReferees(poules, referees));
-    }
-
-    protected greatestCommonDevisor(a: number, b: number) {
-        if (b) {
-            return this.greatestCommonDevisor(b, a % b);
-        } else {
-            return Math.abs(a);
-        }
-    }
-
-    protected assignFieldsToGames(poulesFields: PoulesFields) {
-        const games = this.getPoulesGamesByNumber(poulesFields.poules, Game.ORDER_BYNUMBER);
-        games.forEach(gamesPerRoundNumber => {
-            let fieldNr = 0;
-            let currentField = poulesFields.fields[fieldNr];
-            gamesPerRoundNumber.forEach(game => {
-                game.setField(currentField);
-                currentField = poulesFields.fields[++fieldNr];
-                if (currentField === undefined) {
-                    fieldNr = 0;
-                    currentField = poulesFields.fields[fieldNr];
-                }
-            });
-        });
-    }
-
-    protected assignRefereesToGames(poulesReferees: PoulesReferees) {
-        const games = this.getPoulesGamesByNumber(poulesReferees.poules, Game.ORDER_BYNUMBER);
-        games.forEach(gamesPerRoundNumber => {
-            let refNr = 0;
-            let currentReferee = poulesReferees.referees[refNr];
-            gamesPerRoundNumber.forEach(game => {
-                game.setReferee(currentReferee);
-                currentReferee = poulesReferees.referees[++refNr];
-                if (currentReferee === undefined) {
-                    refNr = 0;
-                    currentReferee = poulesReferees.referees[refNr];
-                }
-            });
-        });
-    }
-
-    protected assignResourceBatchToGames(roundConfig: RoundConfig, amountPerResourceBatch: number, dateTime?: Date): Date {
+    protected assignResourceBatchToGames(roundConfig: RoundConfig, dateTime: Date, fields: Field[], referees: Referee[]): Date {
+        const roundNumber = roundConfig.getRound().getNumber();
+        const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
         const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
-        const games = this.getGamesByNumber(roundConfig.getRound().getNumber(), Game.ORDER_BYNUMBER);
+        const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
 
-        let resourceBatch = 1;
-        games.forEach(gamesPerRoundNumber => {
-            while (gamesPerRoundNumber.length > 0) {
-                const resourceBatchGames = this.getResourceBatch(gamesPerRoundNumber, amountPerResourceBatch);
-                resourceBatchGames.forEach(game => {
-                    game.setStartDateTime(dateTime);
-                    game.setResourceBatch(resourceBatch);
-                    const index = gamesPerRoundNumber.indexOf(game);
-                    if (index === -1) {
-                        return;
-                    }
-                    gamesPerRoundNumber.splice(index, 1);
-                });
-                resourceBatch++;
-                if (dateTime !== undefined) {
-                    dateTime = new Date(dateTime.getTime());
-                    dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
-                }
+        const resourceService = new PlanningResourceService(amountPerResourceBatch, dateTime, maximalNrOfMinutesPerGame);
+        resourceService.setFields(fields);
+        resourceService.setReferees(referees);
+        while (gamesToProcess.length > 0) {
+            let gameToProcess = resourceService.getAssignableGame(gamesToProcess);
+            if (gameToProcess === undefined) {
+                resourceService.nextResourceBatch();
+                gameToProcess = resourceService.getAssignableGame(gamesToProcess);
             }
-        });
-        return dateTime;
-    }
-
-    // orderGames should be single array, because fields, ref and pouleplaces assignment should go over gameroundnumber and gamesubnumber
-    // protected assignResourceBatchToGames(roundConfig: RoundConfig, amountPerResourceBatch: number, dateTime?: Date): Date {
-    //     const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
-    //     const games = this.getGamesByNumber(roundConfig.getRound().getNumber(), Game.ORDER_BYNUMBER);
-
-    //     let resourceBatch = 1;
-    //     let unprocessedGamesFromPreviousRoundNumber: Game[] = [];
-    //     games.forEach(gamesPerRoundNumber => {
-    //         const gamesToProcess = unprocessedGamesFromPreviousRoundNumber.concat(gamesPerRoundNumber);
-    //         while (gamesToProcess.length >= amountPerResourceBatch) {
-    //             const resourceBatchGames = this.getResourceBatch(gamesToProcess, amountPerResourceBatch);
-    //             resourceBatchGames.forEach(game => {
-    //                 game.setStartDateTime(dateTime);
-    //                 game.setResourceBatch(resourceBatch);
-    //                 const index = gamesToProcess.indexOf(game);
-    //                 if (index === -1) {
-    //                     return;
-    //                 }
-    //                 gamesToProcess.splice(index, 1);
-    //             });
-    //             resourceBatch++;
-    //             if (dateTime !== undefined) {
-    //                 dateTime = new Date(dateTime.getTime());
-    //                 dateTime.setMinutes(dateTime.getMinutes() + maximalNrOfMinutesPerGame);
-    //             }
-    //         }
-    //         unprocessedGamesFromPreviousRoundNumber = gamesToProcess;
-    //     });
-    //     return dateTime;
-    // }
-
-    protected getResourceBatch(gamesPerRoundNumber: Game[], amountPerResourceBatch: number): Game[] {
-
-        const resourceBatch: Game[] = [];
-        const resourceService = new PlanningResourceService();
-
-        gamesPerRoundNumber.forEach(game => {
-            if (amountPerResourceBatch === resourceBatch.length) {
+            resourceService.assign(gameToProcess);
+            const index = gamesToProcess.indexOf(gameToProcess);
+            if (index === -1) {
                 return;
             }
-            if (resourceService.inUse(game)) {
-                return;
-            }
-            resourceService.add(game);
-            resourceBatch.push(game);
-        });
-        return resourceBatch;
+            gamesToProcess.splice(index, 1);
+        }
+        resourceService.setNextDateTime();
+        return resourceService.getDateTime();
     }
 
     protected getPoulesForRoundNumber(roundNumber: number): Poule[] {
@@ -342,44 +210,41 @@ export class PlanningService {
         return rounds.some(round => round.getGames().length > 0);
     }
 
-    getGamesByNumber(roundNumber: number, order: number): Game[][] {
-        const games = [];
-        const rounds = this.allRoundsByNumber[roundNumber];
-        rounds.forEach(round => {
-            round.getPoules().forEach(poule => {
-                poule.getGames().forEach(function (game) {
-                    if (games[game.getRoundNumber()] === undefined) {
-                        games[game.getRoundNumber()] = [];
-                    }
-                    games[game.getRoundNumber()].push(game);
-                });
-            });
-        });
-        return this.orderGames(games, order);
+    getGamesForRoundNumber(roundNumber: number, order: number): Game[] {
+
+        const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
+        return this.getPoulesGames(poules, order);
     }
 
-    protected getPoulesGamesByNumber(poules: Poule[], order: number): Game[][] {
-        const games = [];
+    protected getPoulesGames(poules: Poule[], order: number): Game[] {
+        let games = [];
         poules.forEach(poule => {
-            poule.getGames().forEach(function (game) {
-                if (games[game.getRoundNumber()] === undefined) {
-                    games[game.getRoundNumber()] = [];
-                }
-                games[game.getRoundNumber()].push(game);
-            });
+            games = games.concat(poule.getGames());
         });
         return this.orderGames(games, order);
     }
 
-    orderGames(games: Game[][], order: number): Game[][] {
-        games.forEach(gamesPerGameRoundNumber => gamesPerGameRoundNumber.sort((g1, g2) => {
-            if (order === Game.ORDER_BYNUMBER) {
-                if (g1.getSubNumber() === g2.getSubNumber()) {
-                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
-                }
-                return g1.getSubNumber() - g2.getSubNumber();
-            }
+    protected getPoulesGamesByRoundNumber(poules: Poule[], order: number): Game[][] {
+        const games = [];
+        return games;
+    }
 
+    orderGames(games: Game[], order: number): Game[] {
+        if (order === Game.ORDER_BYNUMBER) {
+            games.sort((g1, g2) => {
+                if (order === Game.ORDER_BYNUMBER) {
+                    if (g1.getRoundNumber() === g2.getRoundNumber()) {
+                        if (g1.getSubNumber() === g2.getSubNumber()) {
+                            return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+                        }
+                        return g1.getSubNumber() - g2.getSubNumber();
+                    }
+                    return g1.getRoundNumber() - g2.getRoundNumber();
+                }
+            });
+            return games;
+        }
+        games.sort((g1, g2) => {
             if (g1.getRound().getConfig().getEnableTime()) {
                 if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {
                     return g1.getStartDateTime().getTime() - g2.getStartDateTime().getTime();
@@ -391,7 +256,7 @@ export class PlanningService {
             }
             return (g1.getField() ? g1.getField().getNumber() : 0)
                 - (g2.getField() ? g2.getField().getNumber() : 0);
-        }));
+        });
         return games;
     }
 

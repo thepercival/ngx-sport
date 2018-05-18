@@ -5,57 +5,142 @@ import { Referee } from '../../referee';
 
 export class PlanningResourceService {
 
-    private usedResources: GameResources;
+    private poulePlaces: PoulePlace[] = [];
 
-    constructor() {
-        this.usedResources = {
-            poulePlaces: [],
-            fields: [],
-            referees: []
-        };
+    private amountPerResourceBatch: number;
+    private maximalNrOfMinutesPerGame: number;
+    private dateTime: Date;
+    private fields: Field[] = [];
+    private referees: Referee[] = [];
+    private assignableFields: Field[] = [];
+    private areFieldsAssignable: boolean;
+    private assignableReferees: Referee[] = [];
+    private areRefereesAssignable: boolean;
+    private resourceBatch = 1;
+
+    constructor(amountPerResourceBatch: number, dateTime: Date, maximalNrOfMinutesPerGame: number) {
+        this.amountPerResourceBatch = amountPerResourceBatch;
+        this.maximalNrOfMinutesPerGame = maximalNrOfMinutesPerGame;
+        this.dateTime = dateTime;
     }
 
-    public inUse(game: Game) {
+    setFields(fields: Field[]) {
+        this.fields = fields;
+        this.areFieldsAssignable = true;
+        this.fillAssignableFields();
+    }
+
+    setReferees(referees: Referee[]) {
+        this.referees = referees;
+        this.areRefereesAssignable = true;
+        this.fillAssignableReferees();
+    }
+
+    private fillAssignableFields() {
+        if (this.assignableFields.length < this.fields.length) {
+            if (this.assignableFields.length === 0) {
+                this.assignableFields = this.fields.slice(0);
+            } else {
+                const lastAssignableField = this.assignableFields[this.assignableFields.length - 1];
+                const idxLastAssignableField = this.fields.indexOf(lastAssignableField);
+                const firstAssignableField = this.assignableFields[0];
+                const idxFirstAssignableField = this.fields.indexOf(firstAssignableField);
+                const endIndex = idxFirstAssignableField > idxLastAssignableField ? idxFirstAssignableField : this.fields.length;
+                for (let i = idxLastAssignableField + 1; i < endIndex; i++) {
+                    this.assignableFields.push(this.fields[i]);
+                }
+                if (idxFirstAssignableField <= idxLastAssignableField) {
+                    for (let i = 0; i < idxFirstAssignableField; i++) {
+                        this.assignableFields.push(this.fields[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    private fillAssignableReferees() {
+        if (this.assignableReferees.length < this.referees.length) {
+            if (this.assignableReferees.length === 0) {
+                this.assignableReferees = this.referees.slice(0);
+            } else {
+                const lastAssignableReferee = this.assignableReferees[this.assignableReferees.length - 1];
+                const idxLastAssignableReferee = this.referees.indexOf(lastAssignableReferee);
+                const firstAssignableReferee = this.assignableReferees[0];
+                const idxFirstAssignableReferee = this.referees.indexOf(firstAssignableReferee);
+                const endIndex = idxFirstAssignableReferee > idxLastAssignableReferee ? idxFirstAssignableReferee : this.referees.length;
+                for (let i = idxLastAssignableReferee + 1; i < endIndex; i++) {
+                    this.assignableReferees.push(this.referees[i]);
+                }
+                if (idxFirstAssignableReferee <= idxLastAssignableReferee) {
+                    for (let i = 0; i < idxFirstAssignableReferee; i++) {
+                        this.assignableReferees.push(this.referees[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    getAssignableGame(gamesToProcess: Game[]): Game {
+        return gamesToProcess.find(game => {
+            return this.isGameAssignable(game);
+        });
+    }
+
+    assign(game: Game) {
+        if ((this.areFieldsAssignable && this.fields.length > 0 && this.assignableFields.length === 0)
+            || (this.areRefereesAssignable && this.referees.length > 0 && this.assignableReferees.length === 0)) {
+            this.nextResourceBatch();
+        }
+
+        game.setStartDateTime(this.getDateTime());
+        game.setResourceBatch(this.resourceBatch);
+        if (this.areFieldsAssignable) {
+            game.setField(this.assignableFields.shift());
+        }
+        if (this.areRefereesAssignable) {
+            game.setReferee(this.assignableReferees.shift());
+        }
+        this.addPoulePlaces(game);
+    }
+
+    nextResourceBatch() {
+        this.fillAssignableFields();
+        this.fillAssignableReferees();
+        this.resourceBatch++;
+        this.setNextDateTime();
+        this.resetPoulePlaces();
+    }
+
+    getDateTime(): Date {
+        return this.dateTime;
+    }
+
+    setNextDateTime() {
+        if (this.dateTime !== undefined) {
+            this.dateTime = new Date(this.dateTime.getTime());
+            this.dateTime.setMinutes(this.dateTime.getMinutes() + this.maximalNrOfMinutesPerGame);
+        }
+    }
+
+    private isGameAssignable(game: Game) {
         const homePoulePlace = game.getHomePoulePlace();
         const awayPoulePlace = game.getAwayPoulePlace();
-        const field = game.getField();
-        const referee = game.getReferee();
-        if (this.poulePlaceInUse(homePoulePlace)
-            || this.poulePlaceInUse(awayPoulePlace)
-            || (field !== undefined && this.fieldInUse(field))
-            || (referee !== undefined && this.refereeInUse(referee))
-        ) {
-            return true;
+        if (this.poulePlaceAssigned(homePoulePlace) || this.poulePlaceAssigned(awayPoulePlace)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
-    protected poulePlaceInUse(poulePlace: PoulePlace) {
-        return this.usedResources.poulePlaces.find(poulePlaceIt => poulePlaceIt === poulePlace) !== undefined;
+    protected poulePlaceAssigned(poulePlace: PoulePlace) {
+        return this.poulePlaces.find(poulePlaceIt => poulePlaceIt === poulePlace) !== undefined;
     }
 
-    protected fieldInUse(field: Field) {
-        return this.usedResources.fields.find(fieldIt => fieldIt === field) !== undefined;
+    private resetPoulePlaces() {
+        this.poulePlaces = [];
     }
 
-    protected refereeInUse(referee: Referee) {
-        return this.usedResources.referees.find(refereeIt => refereeIt === referee) !== undefined;
+    private addPoulePlaces(game: Game) {
+        this.poulePlaces.push(game.getHomePoulePlace());
+        this.poulePlaces.push(game.getAwayPoulePlace());
     }
-
-    public add(game: Game) {
-        this.usedResources.poulePlaces.push(game.getHomePoulePlace());
-        this.usedResources.poulePlaces.push(game.getAwayPoulePlace());
-        if (game.getField() !== undefined) {
-            this.usedResources.fields.push(game.getField());
-        }
-        if (game.getReferee() !== undefined) {
-            this.usedResources.referees.push(game.getReferee());
-        }
-    }
-}
-
-export interface GameResources {
-    poulePlaces: PoulePlace[];
-    fields: Field[];
-    referees: Referee[];
 }
