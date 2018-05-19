@@ -36,18 +36,16 @@ export class GameRepository extends SportRepository {
         return 'games';
     }
 
-    createObject(game: Game, poule: Poule): Observable<Game> {
+    /*createObject(game: Game, poule: Poule): Observable<Game> {
         return this.http.post(this.url, this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
             map((gameRes: IGame) => game.setId(gameRes.id)),
             catchError((err) => this.handleError(err))
         );
-    }
+    }*/
 
     editObject(game: Game, poule: Poule): Observable<Game> {
         return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
-            map((res: IGame) => {
-                return this.jsonToObjectHelper(res, game.getPoule(), game);
-            }),
+            map((res: IGame) => this.jsonToObjectHelper(res, game.getPoule(), game)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -65,26 +63,22 @@ export class GameRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IGame[], poule: Poule): Game[] {
         const objects: Game[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, poule);
-            objects.push(object);
+            const game = poule.getGames().find(gameIt => gameIt.getId() === json.id);
+            objects.push(this.jsonToObjectHelper(json, poule, game));
         }
         return objects;
     }
 
     jsonToObjectHelper(json: IGame, poule: Poule, game?: Game): Game {
-        // if (game === undefined && json.id !== undefined) {
-        //     game = this.cache[json.id];
-        // }
-        // if (game === undefined) {
-        game = new Game(
-            poule,
-            poule.getPlaces().find(pouleplaceIt => json.homePoulePlace.number === pouleplaceIt.getNumber()),
-            poule.getPlaces().find(pouleplaceIt => json.awayPoulePlace.number === pouleplaceIt.getNumber()),
-            json.roundNumber, json.subNumber
-        );
+        if (game === undefined) {
+            game = new Game(
+                poule,
+                poule.getPlaces().find(pouleplaceIt => json.homePoulePlace.number === pouleplaceIt.getNumber()),
+                poule.getPlaces().find(pouleplaceIt => json.awayPoulePlace.number === pouleplaceIt.getNumber()),
+                json.roundNumber, json.subNumber
+            );
+        }
         game.setId(json.id);
-        // this.cache[game.getId()] = game;
-        // }
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         game.setField(json.field !== undefined ? poule.getCompetition().getFieldByNumber(json.field.number) : undefined);
