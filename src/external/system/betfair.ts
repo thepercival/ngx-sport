@@ -1,11 +1,11 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 /**
  * Created by coen on 17-2-17.
  */
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { catchError } from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators/map';
+import { catchError ,  map } from 'rxjs/operators';
 
 import { League } from './../../league';
 import { ExternalSystem } from './../system';
@@ -94,6 +94,6 @@ export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
         } else if (error.statusText !== undefined) {
             errortext = error.statusText;
         }
-        return Observable.throw(errortext);
+        return observableThrowError(errortext);
     }
 }

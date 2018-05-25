@@ -1,7 +1,7 @@
 /**
  * Created by coen on 11-2-17.
  */
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Association } from './../../association';
 import { League } from './../../league';

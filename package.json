@@ -6,25 +6,26 @@
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
   "dependencies": {
-    "@angular/common": "^5.0.0",
-    "@angular/compiler": "^5.0.0",
-    "@angular/core": "^5.0.0",
-    "@angular/router": "^5.0.0",
-    "rxjs": "^5.5.2",
-    "zone.js": "^0.8.20"
+    "@angular/common": "^6.0.3",
+    "@angular/compiler": "^6.0.3",
+    "@angular/core": "^6.0.3",
+    "@angular/platform-browser": "^6.0.3",
+    "@angular/router": "^6.0.3",
+    "rxjs": "^6.2.0",
+    "zone.js": "^0.8.26"
   },
   "description": "jslib for voetbal and angular 5",
   "devDependencies": {
-    "@angular/compiler-cli": "^5.0.0",
-    "@semantic-release/git": "^2.0.2",
-    "@semantic-release/npm": "^2.6.4",
+    "@angular/compiler-cli": "^6.0.3",
+    "@semantic-release/git": "^2.2.0",
+    "@semantic-release/npm": "^2.7.0",
+    "codelyzer": "^4.3.0",
     "rollup": "^0.51.8",
-    "codelyzer": "^4.0.1",
     "semantic-release": "^11.0.2",
-    "travis-deploy-once": "^4.3.1",
-    "tslint": "^5.9.1",
-    "typescript": "~2.4.2",
-    "uglify-js": "^3.0.7"
+    "travis-deploy-once": "^4.4.1",
+    "tslint": "^5.10.0",
+    "typescript": "^2.7.2",
+    "uglify-js": "^3.3.27"
   },
   "directories": {},
   "dist": {

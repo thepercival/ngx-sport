@@ -1,10 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { catchError } from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators/map';
+import { Observable ,  forkJoin } from 'rxjs';
+import { catchError ,  map } from 'rxjs/operators';
 
 import { Game } from '../game';
 import { GameRepository, IGame } from '../game/repository';

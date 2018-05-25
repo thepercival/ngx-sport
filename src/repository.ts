@@ -1,8 +1,9 @@
-import 'rxjs/add/observable/throw';
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+
 
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 import { SportConfig } from './config';
 
@@ -50,6 +51,6 @@ export class SportRepository {
             this.getRouter().navigate(['/user/login'], { queryParams: { message: 'log opnieuw in' } });
         }
 
-        return Observable.throw(errortext);
+        return observableThrowError(errortext);
     }
 }

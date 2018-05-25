@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { catchError } from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { Association } from '../association';
 import { AssociationRepository } from '../association/repository';
