@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../../competition';
 import { SportRepository } from '../../repository';
@@ -40,7 +40,6 @@ export class RoundConfigRepository extends SportRepository {
     }
 
     protected getOptions(competition: Competition, roundNumber: number): { headers: HttpHeaders; params: HttpParams } {
-
         let httpParams = new HttpParams();
         httpParams = httpParams.set('competitionid', competition.getId().toString());
         httpParams = httpParams.set('roundnumber', roundNumber.toString());
