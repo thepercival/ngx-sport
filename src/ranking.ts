@@ -160,6 +160,7 @@ export class Ranking {
         p_poulePlaces.forEach(p_poulePlaceIt => {
             const goalDifference = this.getGoalDifference(p_poulePlaceIt, games);
             if (goalDifference === bestGoalDifference || bestGoalDifference === undefined) {
+                bestGoalDifference = goalDifference;
                 poulePlacesRet.push(p_poulePlaceIt);
             } else if (goalDifference > bestGoalDifference) {
                 bestGoalDifference = goalDifference;
@@ -170,11 +171,12 @@ export class Ranking {
     }
 
     private getPoulePlacesWithMostGoalsScored = (p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
-        let mostGoalsScored = 0;
+        let mostGoalsScored;
         let poulePlacesRet: PoulePlace[] = [];
         p_poulePlaces.forEach(p_poulePlaceIt => {
             const goalsScored = this.getNrOfGoalsScored(p_poulePlaceIt, games);
-            if (goalsScored === mostGoalsScored) {
+            if (goalsScored === mostGoalsScored || mostGoalsScored === undefined) {
+                mostGoalsScored = goalsScored;
                 poulePlacesRet.push(p_poulePlaceIt);
             } else if (goalsScored > mostGoalsScored) {
                 mostGoalsScored = goalsScored;
