@@ -11,6 +11,7 @@ export class Referee {
     protected competition: Competition;
     protected initials: string;
     protected name: string;
+    protected emailaddress: string;
     protected info: string;
 
     constructor(competition: Competition, initials: string) {
@@ -57,5 +58,13 @@ export class Referee {
 
     setInfo(info: string): void {
         this.info = info;
+    }
+
+    getEmailaddress(): string {
+        return this.emailaddress;
+    }
+
+    setEmailaddress(emailaddress: string): void {
+        this.emailaddress = emailaddress;
     }
 }

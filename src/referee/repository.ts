@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
 import { Referee } from '../referee';
@@ -72,6 +72,7 @@ export class RefereeRepository extends SportRepository {
         referee.setId(json.id);
         referee.setName(json.name);
         referee.setInfo(json.info);
+        referee.setEmailaddress(json.emailaddress);
         // this.cache.push(referee);
         return referee;
     }
@@ -90,6 +91,7 @@ export class RefereeRepository extends SportRepository {
             id: object.getId(),
             initials: object.getInitials(),
             name: object.getName(),
+            emailaddress: object.getEmailaddress(),
             info: object.getInfo()
         };
         return json;
@@ -100,5 +102,6 @@ export interface IReferee {
     id?: number;
     initials: string;
     name?: string;
+    emailaddress?: string;
     info?: string;
 }
