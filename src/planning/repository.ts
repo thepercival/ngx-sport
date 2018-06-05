@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable ,  forkJoin } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { Game } from '../game';
 import { GameRepository, IGame } from '../game/repository';
@@ -18,7 +18,6 @@ import { Round } from '../round';
 export class PlanningRepository extends SportRepository {
 
     private url: string;
-    private selfCache: Round[] = [];
 
     constructor(
         private http: HttpClient,

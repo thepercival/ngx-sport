@@ -44,13 +44,7 @@ export class RoundRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IRound, competition: Competition, parentRound?: Round, round?: Round): Round {
-        // if (round === undefined && json.id !== undefined) {
-        //     round = this.cache[json.id];
-        // }
-        // if (round === undefined) {
         round = new Round(competition, parentRound, json.winnersOrLosers);
-        // this.cache[round.getId()] = round;
-        // }
         round.setId(json.id);
         // round.setName(json.name);
         round.setQualifyOrder(json.qualifyOrder);

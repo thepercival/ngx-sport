@@ -1,6 +1,3 @@
-/**
- * Created by coen on 3-3-17.
- */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -11,6 +8,9 @@ import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
 import { SportRepository } from '../repository';
 import { Round } from '../round';
 
+/**
+ * Created by coen on 3-3-17.
+ */
 @Injectable()
 export class PouleRepository extends SportRepository {
 
@@ -38,13 +38,7 @@ export class PouleRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IPoule, round: Round, poule?: Poule): Poule {
-        // if (poule === undefined && json.id !== undefined) {
-        //     poule = this.cache[json.id];
-        // }
-        // if (poule === undefined) {
         poule = new Poule(round, json.number);
-        // this.cache[poule.getId()] = poule;
-        // }
         poule.setId(json.id);
         poule.setName(json.name);
         const jsonPlaces = json.places.sort((poulePlaceA, poulePlaceB) => {

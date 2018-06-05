@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
@@ -58,12 +58,8 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: IPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
-        // if (poulePlace === undefined && json.id !== undefined) {
-        //     poulePlace = this.cache[json.id];
-        // }
         if (poulePlace === undefined) {
             poulePlace = new PoulePlace(poule, json.number);
-            // this.cache[json.id] = poulePlace;
         }
         poulePlace.setId(json.id);
         // poule.setName(json.name);

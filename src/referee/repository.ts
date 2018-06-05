@@ -73,7 +73,6 @@ export class RefereeRepository extends SportRepository {
         referee.setName(json.name);
         referee.setInfo(json.info);
         referee.setEmailaddress(json.emailaddress);
-        // this.cache.push(referee);
         return referee;
     }
 

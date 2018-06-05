@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
 import { Field } from '../field';
@@ -72,7 +72,6 @@ export class FieldRepository extends SportRepository {
         }
         field.setId(json.id);
         field.setName(json.name);
-        // this.cache.push(field);
         return field;
     }
 

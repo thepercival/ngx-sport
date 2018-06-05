@@ -15,9 +15,7 @@ import { IRoundConfigScore, RoundConfigScoreRepository } from './score/repositor
  */
 @Injectable()
 export class RoundConfigRepository extends SportRepository {
-
     private url: string;
-    private selfCache: Round[] = [];
 
     constructor(
         private scoreRepository: RoundConfigScoreRepository,
