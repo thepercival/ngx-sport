@@ -2,6 +2,7 @@ import { Field } from '../../field';
 import { Game } from '../../game';
 import { PoulePlace } from '../../pouleplace';
 import { Referee } from '../../referee';
+import { BlockedPeriod } from '../service';
 
 export class PlanningResourceService {
 
@@ -9,6 +10,7 @@ export class PlanningResourceService {
 
     private amountPerResourceBatch: number;
     private maximalNrOfMinutesPerGame: number;
+    private nrOfMinutesBetweenGames: number;
     private dateTime: Date;
     private fields: Field[] = [];
     private referees: Referee[] = [];
@@ -17,11 +19,22 @@ export class PlanningResourceService {
     private assignableReferees: Referee[] = [];
     private areRefereesAssignable: boolean;
     private resourceBatch = 1;
+    private blockedPeriod;
 
-    constructor(amountPerResourceBatch: number, dateTime: Date, maximalNrOfMinutesPerGame: number) {
+    constructor(
+        amountPerResourceBatch: number,
+        dateTime: Date,
+        maximalNrOfMinutesPerGame: number,
+        nrOfMinutesBetweenGames: number
+    ) {
         this.amountPerResourceBatch = amountPerResourceBatch;
         this.maximalNrOfMinutesPerGame = maximalNrOfMinutesPerGame;
+        this.nrOfMinutesBetweenGames = nrOfMinutesBetweenGames;
         this.dateTime = dateTime;
+    }
+
+    setBlockedPeriod(blockedPeriod: BlockedPeriod) {
+        this.blockedPeriod = blockedPeriod;
     }
 
     setFields(fields: Field[]) {
@@ -112,14 +125,28 @@ export class PlanningResourceService {
     }
 
     getDateTime(): Date {
-        return this.dateTime;
+        return new Date(this.dateTime.getTime());
+    }
+
+    getEndDateTime(): Date {
+        const endDateTime = new Date(this.dateTime.getTime());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.maximalNrOfMinutesPerGame);
+        return endDateTime;
     }
 
     setNextDateTime() {
-        if (this.dateTime !== undefined) {
-            this.dateTime = new Date(this.dateTime.getTime());
-            this.dateTime.setMinutes(this.dateTime.getMinutes() + this.maximalNrOfMinutesPerGame);
+        if (this.dateTime === undefined) {
+            return;
         }
+        this.dateTime = this.addMinutes(this.dateTime, this.maximalNrOfMinutesPerGame + this.nrOfMinutesBetweenGames);
+    }
+
+    protected addMinutes(dateTime: Date, minutes: number): Date {
+        dateTime.setMinutes(dateTime.getMinutes() + minutes);
+        if (this.blockedPeriod !== undefined && dateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
+            dateTime = new Date(this.blockedPeriod.end.getTime());
+        }
+        return dateTime;
     }
 
     private isGameAssignable(game: Game) {

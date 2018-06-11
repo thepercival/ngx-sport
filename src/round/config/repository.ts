@@ -72,6 +72,7 @@ export class RoundConfigRepository extends SportRepository {
         roundConfig.setMinutesPerGameExt(json.minutesPerGameExt);
         roundConfig.setEnableTime(json.enableTime);
         roundConfig.setMinutesPerGame(json.minutesPerGame);
+        roundConfig.setMinutesBetweenGames(json.minutesBetweenGames);
         roundConfig.setMinutesInBetween(json.minutesInBetween);
         roundConfig.setScore(this.scoreRepository.jsonToObjectHelper(json.score, roundConfig));
         return roundConfig;
@@ -98,6 +99,7 @@ export class RoundConfigRepository extends SportRepository {
             minutesPerGameExt: object.getMinutesPerGameExt(),
             enableTime: object.getEnableTime(),
             minutesPerGame: object.getMinutesPerGame(),
+            minutesBetweenGames: object.getMinutesBetweenGames(),
             minutesInBetween: object.getMinutesInBetween(),
             score: this.scoreRepository.objectToJsonHelper(object.getScore())
         };
@@ -116,6 +118,7 @@ export interface IRoundConfig {
     minutesPerGameExt: number;
     enableTime: boolean;
     minutesPerGame: number;
+    minutesBetweenGames: number;
     minutesInBetween: number;
     score: IRoundConfigScore;
 }

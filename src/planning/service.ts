@@ -14,10 +14,17 @@ import { PlanningResourceService } from './resource/service';
 export class PlanningService {
 
     private allRoundsByNumber: {};
+    private blockedPeriod: BlockedPeriod;
 
     constructor(private structureService: StructureService) {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         // looping through rounds!! in constructor planningservice, made wc possible
+    }
+
+    setBlockedPeriod(startDateTime: Date, durationInMinutes: number) {
+        const endDateTime = new Date(startDateTime.getTime());
+        endDateTime.setMinutes(endDateTime.getMinutes() + durationInMinutes);
+        this.blockedPeriod = { start: startDateTime, end: endDateTime };
     }
 
     getRoundsByNumber(roundNumber: number): Round[] {
@@ -82,7 +89,16 @@ export class PlanningService {
         if (roundNumber === 1) {
             return this.getStartDateTime();
         }
-        return this.calculateEndDateTime(roundNumber - 1);
+        const previousEndDateTime = this.calculateEndDateTime(roundNumber - 1);
+        return this.addMinutes(previousEndDateTime, aRound.getConfig().getMinutesInBetween());
+    }
+
+    protected addMinutes(dateTime: Date, minutes: number): Date {
+        dateTime.setMinutes(dateTime.getMinutes() + minutes);
+        if (this.blockedPeriod !== undefined && dateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
+            dateTime = new Date(this.blockedPeriod.end.getTime());
+        }
+        return dateTime;
     }
 
     protected calculateEndDateTime(roundNumber: number) {
@@ -92,23 +108,23 @@ export class PlanningService {
             return undefined;
         }
 
-        let endDateTime;
+        let mostRecentStartDateTime;
         rounds.forEach(round => {
             round.getGames().forEach(game => {
-                if (endDateTime === undefined || game.getStartDateTime() > endDateTime) {
-                    endDateTime = game.getStartDateTime();
+                if (mostRecentStartDateTime === undefined || game.getStartDateTime() > mostRecentStartDateTime) {
+                    mostRecentStartDateTime = game.getStartDateTime();
                 }
             });
         });
 
-        if (endDateTime === undefined) {
+        if (mostRecentStartDateTime === undefined) {
             return undefined;
         }
 
-        const copiedEndDateTime = new Date(endDateTime.getTime());
-        const nrOfMinutes = aRound.getConfig().getMaximalNrOfMinutesPerGame(true);
-        copiedEndDateTime.setMinutes(copiedEndDateTime.getMinutes() + nrOfMinutes);
-        return copiedEndDateTime;
+        const endDateTime = new Date(mostRecentStartDateTime.getTime());
+        const nrOfMinutes = aRound.getConfig().getMaximalNrOfMinutesPerGame();
+        endDateTime.setMinutes(endDateTime.getMinutes() + nrOfMinutes);
+        return endDateTime;
     }
 
     protected createHelper(roundNumber: number) {
@@ -139,14 +155,18 @@ export class PlanningService {
 
     protected rescheduleHelper(roundNumber: number, pStartDateTime: Date): Date {
         const rounds = this.allRoundsByNumber[roundNumber];
-        const aRoundConfig = rounds[0].getConfig();
+        const aRoundConfig: RoundConfig = rounds[0].getConfig();
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
 
         const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
         const fields = this.structureService.getCompetition().getFields();
         const referees = this.structureService.getCompetition().getReferees();
 
-        return this.assignResourceBatchToGames(aRoundConfig, dateTime, fields, referees);
+        const nextDateTime = this.assignResourceBatchToGames(aRoundConfig, dateTime, fields, referees);
+        if (nextDateTime !== undefined) {
+            nextDateTime.setMinutes(nextDateTime.getMinutes() + aRoundConfig.getMinutesInBetween());
+        }
+        return nextDateTime;
     }
 
     protected getAmountPerResourceBatch(roundNumber: number, fields: Field[], referees: Referee[]): number {
@@ -170,10 +190,11 @@ export class PlanningService {
     protected assignResourceBatchToGames(roundConfig: RoundConfig, dateTime: Date, fields: Field[], referees: Referee[]): Date {
         const roundNumber = roundConfig.getRound().getNumber();
         const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
-        const maximalNrOfMinutesPerGame = roundConfig.getMaximalNrOfMinutesPerGame(true);
         const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
 
-        const resourceService = new PlanningResourceService(amountPerResourceBatch, dateTime, maximalNrOfMinutesPerGame);
+        const resourceService = new PlanningResourceService(
+            amountPerResourceBatch, dateTime, roundConfig.getMaximalNrOfMinutesPerGame(), roundConfig.getMinutesBetweenGames());
+        resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
         while (gamesToProcess.length > 0) {
@@ -189,8 +210,7 @@ export class PlanningService {
             }
             gamesToProcess.splice(index, 1);
         }
-        resourceService.setNextDateTime();
-        return resourceService.getDateTime();
+        return resourceService.getEndDateTime();
     }
 
     protected getPoulesForRoundNumber(roundNumber: number): Poule[] {
@@ -369,5 +389,10 @@ export interface PoulesFields {
 export interface PoulesReferees {
     poules: Poule[];
     referees: Referee[];
+}
+
+export interface BlockedPeriod {
+    start: Date;
+    end: Date;
 }
 

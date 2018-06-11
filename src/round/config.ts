@@ -20,6 +20,7 @@ export class RoundConfig {
     protected minutesPerGameExt: number;
     protected enableTime: boolean;
     protected minutesPerGame: number;
+    protected minutesBetweenGames: number;
     protected minutesInBetween: number;
     protected score: RoundConfigScore;
 
@@ -127,6 +128,14 @@ export class RoundConfig {
         this.minutesPerGame = minutesPerGame;
     }
 
+    getMinutesBetweenGames(): number {
+        return this.minutesBetweenGames;
+    }
+
+    setMinutesBetweenGames(minutesBetweenGames: number) {
+        this.minutesBetweenGames = minutesBetweenGames;
+    }
+
     getMinutesInBetween(): number {
         return this.minutesInBetween;
     }
@@ -143,13 +152,10 @@ export class RoundConfig {
         this.score = score;
     }
 
-    getMaximalNrOfMinutesPerGame(withMinutesInBetween: boolean = false): number {
+    getMaximalNrOfMinutesPerGame(): number {
         let nrOfMinutes = this.getMinutesPerGame();
         if (this.getHasExtension()) {
             nrOfMinutes += this.getMinutesPerGameExt();
-        }
-        if (withMinutesInBetween === true) {
-            nrOfMinutes += this.getMinutesInBetween();
         }
         return nrOfMinutes;
     }

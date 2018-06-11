@@ -23,6 +23,7 @@ export class RoundConfigService {
             roundConfig.setMinutesPerGameExt(parentConfig.getMinutesPerGameExt());
             roundConfig.setEnableTime(parentConfig.getEnableTime());
             roundConfig.setMinutesPerGame(parentConfig.getMinutesPerGame());
+            roundConfig.setMinutesBetweenGames(parentConfig.getMinutesBetweenGames());
             roundConfig.setMinutesInBetween(parentConfig.getMinutesInBetween());
             roundConfig.setScore(this.createScoreConfigFromRound(parentConfig));
             return roundConfig;
@@ -38,6 +39,7 @@ export class RoundConfigService {
         roundConfig.setMinutesPerGameExt(0);
         roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
         roundConfig.setMinutesPerGame(0);
+        roundConfig.setMinutesBetweenGames(0);
         roundConfig.setMinutesInBetween(0);
         const sport = round.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
