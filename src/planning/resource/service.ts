@@ -125,10 +125,16 @@ export class PlanningResourceService {
     }
 
     getDateTime(): Date {
+        if (this.dateTime === undefined) {
+            return undefined;
+        }
         return new Date(this.dateTime.getTime());
     }
 
     getEndDateTime(): Date {
+        if (this.dateTime === undefined) {
+            return undefined;
+        }
         const endDateTime = new Date(this.dateTime.getTime());
         endDateTime.setMinutes(endDateTime.getMinutes() + this.maximalNrOfMinutesPerGame);
         return endDateTime;
