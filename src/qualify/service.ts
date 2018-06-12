@@ -180,6 +180,7 @@ export class QualifyService {
         const fromRound = rulePart.qualifyRule.getFromRound();
         const fromPoulePlaces = rulePart.qualifyRule.getFromPoulePlaces();
         const toPoulePlaces = rulePart.qualifyRule.getToPoulePlaces();
+        const toWinnersLosers = rulePart.qualifyRule.getToRound().getWinnersOrLosers();
 
         if (!rulePart.qualifyRule.isMultiple()) {
             const poules: Poule[] = [];
@@ -210,7 +211,7 @@ export class QualifyService {
         }
 
         const roundRankingItems: RankingItem[] = rankingService.getItemsForRound(fromRound, fromPoulePlaces);
-        const roundRankingPoulePlaces: PoulePlace[] = roundRankingItems.map(roundRankingItem => roundRankingItem.getPoulePlace());
+        const roundRankingPoulePlaces: PoulePlace[] = rankingService.getPoulePlaces(roundRankingItems, toWinnersLosers);
         while (roundRankingPoulePlaces.length > toPoulePlaces.length) {
             roundRankingPoulePlaces.pop();
         }

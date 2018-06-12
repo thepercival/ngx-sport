@@ -65,21 +65,18 @@ export class Ranking {
         return items;
     }
 
-    // getPoulePlacesByRankSingle(p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] {
-    //     let ranking: PoulePlace[] = [];
-    //     this.getPoulePlacesByRank(p_poulePlaces, games).forEach(poulePlaces => ranking = ranking.concat(poulePlaces));
-    //     return ranking;
-    // }
-
     getItemsForRound(round: Round, fromPoulePlaces: PoulePlace[]): RankingItem[] {
         const selectedPoulePlaces: PoulePlace[] = this.getSingleRankedPoulePlaces(fromPoulePlaces);
         return this.getItems(selectedPoulePlaces, round.getGames());
     }
 
-    // getPoulePlacesByRankSingleForRound(round: Round, fromPoulePlaces: PoulePlace[]): RankingItem[] {
-    //     const selectedPoulePlaces: PoulePlace[] = this.getRankedPoulePlaces(fromPoulePlaces);
-    //     return this.getPoulePlacesByRankSingle(selectedPoulePlaces, round.getGames());
-    // }
+    getPoulePlaces(rankingItems: RankingItem[], winnersLosers: number): PoulePlace[] {
+        const rankingPoulePlaces: PoulePlace[] = rankingItems.map(rankingItem => rankingItem.getPoulePlace());
+        if (winnersLosers === Round.LOSERS) {
+            rankingPoulePlaces.reverse();
+        }
+        return rankingPoulePlaces;
+    }
 
     private getSingleRankedPoulePlaces(fromPoulePlaces: PoulePlace[]): PoulePlace[] {
         const selectedPoulePlaces: PoulePlace[] = [];
