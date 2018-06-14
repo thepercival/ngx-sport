@@ -27,6 +27,8 @@ export class StructureNameService {
         const nrOfRoundsToGo = round.getNrOfRoundsToGo();
         if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo - 1)) + ' finale';
+        } else if (nrOfRoundsToGo >= 1 && this.getNrOfPoulePlacesChildRound(round) > 1) {
+            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getPoulePlaces().length > 1)) {
             if (round.getPoulePlaces().length === 2 && sameName === false) {
                 const rankedPlace = this.getRankedPlace(round);
@@ -147,6 +149,14 @@ export class StructureNameService {
 
     private getHtmlNumber(number) {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
+    }
+
+    private getNrOfPoulePlacesChildRound(round: Round) {
+        let nrOfPoulePlaces = 0;
+        round.getChildRounds().forEach(childRound => {
+            nrOfPoulePlaces += childRound.getPoulePlaces().length;
+        });
+        return nrOfPoulePlaces;
     }
 
     private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {

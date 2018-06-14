@@ -158,7 +158,6 @@ export class PlanningService {
         const aRoundConfig: RoundConfig = rounds[0].getConfig();
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
 
-        const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
         const fields = this.structureService.getCompetition().getFields();
         const referees = this.structureService.getCompetition().getReferees();
 
@@ -191,7 +190,6 @@ export class PlanningService {
         const roundNumber = roundConfig.getRound().getNumber();
         const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
         const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-
         const resourceService = new PlanningResourceService(
             amountPerResourceBatch, dateTime, roundConfig.getMaximalNrOfMinutesPerGame(), roundConfig.getMinutesBetweenGames());
         resourceService.setBlockedPeriod(this.blockedPeriod);
@@ -231,31 +229,28 @@ export class PlanningService {
     }
 
     getGamesForRoundNumber(roundNumber: number, order: number): Game[] {
-
         const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
-        return this.getPoulesGames(poules, order);
-    }
-
-    protected getPoulesGames(poules: Poule[], order: number): Game[] {
         let games = [];
         poules.forEach(poule => {
             games = games.concat(poule.getGames());
         });
-        return this.orderGames(games, order);
+        return this.orderGames(games, order, roundNumber > 1);
     }
 
-    orderGames(games: Game[], order: number): Game[] {
+    orderGames(games: Game[], order: number, pouleNumberReversed: boolean = false): Game[] {
         if (order === Game.ORDER_BYNUMBER) {
             games.sort((g1, g2) => {
-                if (order === Game.ORDER_BYNUMBER) {
-                    if (g1.getRoundNumber() === g2.getRoundNumber()) {
-                        if (g1.getSubNumber() === g2.getSubNumber()) {
+                if (g1.getRoundNumber() === g2.getRoundNumber()) {
+                    if (g1.getSubNumber() === g2.getSubNumber()) {
+                        if (pouleNumberReversed === true) {
+                            return g2.getPoule().getNumber() - g1.getPoule().getNumber();
+                        } else {
                             return g1.getPoule().getNumber() - g2.getPoule().getNumber();
                         }
-                        return g1.getSubNumber() - g2.getSubNumber();
                     }
-                    return g1.getRoundNumber() - g2.getRoundNumber();
+                    return g1.getSubNumber() - g2.getSubNumber();
                 }
+                return g1.getRoundNumber() - g2.getRoundNumber();
             });
             return games;
         }
@@ -272,7 +267,11 @@ export class PlanningService {
             // like order === Game.ORDER_BYNUMBER
             if (g1.getRoundNumber() === g2.getRoundNumber()) {
                 if (g1.getSubNumber() === g2.getSubNumber()) {
-                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+                    if (pouleNumberReversed === true) {
+                        return g2.getPoule().getNumber() - g1.getPoule().getNumber();
+                    } else {
+                        return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+                    }
                 }
                 return g1.getSubNumber() - g2.getSubNumber();
             }
