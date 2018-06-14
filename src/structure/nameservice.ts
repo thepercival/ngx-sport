@@ -11,13 +11,6 @@ export class StructureNameService {
     constructor() {
     }
 
-    /**
-     * Wanneer needsranking en als zijn parents needsRanking dan xste ronde
-     * Wanneer er 2 children zijn, met beide ander maxDepth dan aanduiden met xste ronde
-     * Alle andere ronden zijn finales
-     *
-     * @param round
-     */
     getRoundName(round: Round, sameName: boolean = false) {
         if (this.roundAndParentsNeedsRanking(round) || (round.getChildRounds().length > 1
             && round.getChildRound(Round.WINNERS).getNrOfRoundsToGo() !== round.getChildRound(Round.LOSERS).getNrOfRoundsToGo())) {
