@@ -50,13 +50,13 @@ export class RoundRepository extends SportRepository {
         round.setQualifyOrder(json.qualifyOrder);
         this.configRepos.jsonToObjectHelper(json.config, round);
         this.pouleRepos.jsonArrayToObject(json.poules, round);
-        json.childRounds.forEach((jsonChildRound) => {
-            this.jsonToObjectHelper(jsonChildRound, competition, round, round.getChildRound(jsonChildRound.winnersOrLosers));
-        });
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round);
             qualifyService.createObjectsForParentRound();
         }
+        json.childRounds.forEach((jsonChildRound) => {
+            this.jsonToObjectHelper(jsonChildRound, competition, round, round.getChildRound(jsonChildRound.winnersOrLosers));
+        });
         return round;
     }
 

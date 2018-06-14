@@ -244,11 +244,6 @@ export class PlanningService {
         return this.orderGames(games, order);
     }
 
-    protected getPoulesGamesByRoundNumber(poules: Poule[], order: number): Game[][] {
-        const games = [];
-        return games;
-    }
-
     orderGames(games: Game[], order: number): Game[] {
         if (order === Game.ORDER_BYNUMBER) {
             games.sort((g1, g2) => {
@@ -274,8 +269,14 @@ export class PlanningService {
                     return g1.getResourceBatch() - g2.getResourceBatch();
                 }
             }
-            return (g1.getField() ? g1.getField().getNumber() : 0)
-                - (g2.getField() ? g2.getField().getNumber() : 0);
+            // like order === Game.ORDER_BYNUMBER
+            if (g1.getRoundNumber() === g2.getRoundNumber()) {
+                if (g1.getSubNumber() === g2.getSubNumber()) {
+                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
+                }
+                return g1.getSubNumber() - g2.getSubNumber();
+            }
+            return g1.getRoundNumber() - g2.getRoundNumber();
         });
         return games;
     }

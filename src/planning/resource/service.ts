@@ -18,7 +18,7 @@ export class PlanningResourceService {
     private areFieldsAssignable: boolean;
     private assignableReferees: Referee[] = [];
     private areRefereesAssignable: boolean;
-    private resourceBatch = 1;
+    private resourceBatch = 0;
     private blockedPeriod;
 
     constructor(
@@ -39,13 +39,13 @@ export class PlanningResourceService {
 
     setFields(fields: Field[]) {
         this.fields = fields;
-        this.areFieldsAssignable = true;
+        this.areFieldsAssignable = fields.length > 0;
         this.fillAssignableFields();
     }
 
     setReferees(referees: Referee[]) {
         this.referees = referees;
-        this.areRefereesAssignable = true;
+        this.areRefereesAssignable = referees.length > 0;
         this.fillAssignableReferees();
     }
 
@@ -100,11 +100,12 @@ export class PlanningResourceService {
     }
 
     assign(game: Game) {
-        if ((this.areFieldsAssignable && this.fields.length > 0 && this.assignableFields.length === 0)
-            || (this.areRefereesAssignable && this.referees.length > 0 && this.assignableReferees.length === 0)) {
+        if (this.fieldsOrRefereesNotAssignable()) {
             this.nextResourceBatch();
         }
-
+        if (this.resourceBatch === 0) {
+            this.resourceBatch++;
+        }
         game.setStartDateTime(this.getDateTime());
         game.setResourceBatch(this.resourceBatch);
         if (this.areFieldsAssignable) {
@@ -114,6 +115,16 @@ export class PlanningResourceService {
             game.setReferee(this.assignableReferees.shift());
         }
         this.addPoulePlaces(game);
+
+        if (this.fieldsOrRefereesNotAssignable()) {
+            this.resetPoulePlaces();
+        }
+    }
+
+    fieldsOrRefereesNotAssignable() {
+        return ((this.areFieldsAssignable === false && this.areRefereesAssignable === false)
+            || (this.areFieldsAssignable && this.fields.length > 0 && this.assignableFields.length === 0)
+            || (this.areRefereesAssignable && this.referees.length > 0 && this.assignableReferees.length === 0));
     }
 
     nextResourceBatch() {
