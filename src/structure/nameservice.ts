@@ -20,7 +20,7 @@ export class StructureNameService {
         const nrOfRoundsToGo = round.getNrOfRoundsToGo();
         if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo - 1)) + ' finale';
-        } else if (nrOfRoundsToGo >= 1 && this.getNrOfPoulePlacesChildRound(round) > 1) {
+        } else if (nrOfRoundsToGo === 1 && this.aChildRoundHasMultiplePlacesPerPoule(round)) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getPoulePlaces().length > 1)) {
             if (round.getPoulePlaces().length === 2 && sameName === false) {
@@ -144,12 +144,10 @@ export class StructureNameService {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
     }
 
-    private getNrOfPoulePlacesChildRound(round: Round) {
-        let nrOfPoulePlaces = 0;
-        round.getChildRounds().forEach(childRound => {
-            nrOfPoulePlaces += childRound.getPoulePlaces().length;
+    private aChildRoundHasMultiplePlacesPerPoule(round: Round) {
+        return round.getChildRounds().some(childRound => {
+            return childRound.getPoules().some(poule => poule.getPlaces().length > 1);
         });
-        return nrOfPoulePlaces;
     }
 
     private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {
