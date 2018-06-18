@@ -92,7 +92,7 @@ export class StructureNameService {
         }
 
         if (fromQualifyRule.isMultiple() === false) {
-            const fromPoulePlace = fromQualifyRule.getSingleFromEquivalent(pouleplace);
+            const fromPoulePlace = fromQualifyRule.getFromEquivalent(pouleplace);
             return this.getPoulePlaceNameSimple(fromPoulePlace, false);
         }
 

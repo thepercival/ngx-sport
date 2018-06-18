@@ -113,7 +113,21 @@ export class QualifyRule {
         return this.getFromPoulePlaces().length > this.getToPoulePlaces().length;
     }
 
-    getSingleFromEquivalent(toPoulePlace: PoulePlace): PoulePlace {
+    getToEquivalent(fromPoulePlace: PoulePlace): PoulePlace {
+        if (this.isMultiple()) {
+            return undefined;
+        }
+        const index = this.getFromPoulePlaces().indexOf(fromPoulePlace);
+        if (index < 0) {
+            return undefined;
+        }
+        return this.getToPoulePlaces()[index];
+    }
+
+    getFromEquivalent(toPoulePlace: PoulePlace): PoulePlace {
+        if (this.isMultiple()) {
+            return undefined;
+        }
         const index = this.getToPoulePlaces().indexOf(toPoulePlace);
         if (index < 0) {
             return undefined;

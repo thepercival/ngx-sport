@@ -167,10 +167,10 @@ export class QualifyService {
         // als winners dan
     }
 
-    getNewQualifiers(ruleParts: IQualifyRulePart[]): INewQualifier[] {
+    getNewQualifiers(rules: QualifyRule[]): INewQualifier[] {
         let qualifiers: INewQualifier[] = [];
-        ruleParts.forEach(rulePart => {
-            qualifiers = qualifiers.concat(this.getQualifiers(rulePart));
+        rules.forEach(rule => {
+            qualifiers = qualifiers.concat(this.getQualifiers(rule));
         });
         return qualifiers;
     }
@@ -185,8 +185,8 @@ export class QualifyService {
     // 5 van hele poule gespeeld naar niet hele poule gespeeld
     // 6 hele poule gespeeld
     //      update from poule
-    getRulePartsToProcess(poule: Poule, oldPouleState: number, oldRoundState: number): IQualifyRulePart[] {
-        const ruleParts: IQualifyRulePart[] = [];
+    getRulesToProcess(poule: Poule, oldPouleState: number, oldRoundState: number): QualifyRule[] {
+        const rules: QualifyRule[] = [];
 
         const newPouleState = poule.getState();
         const newRoundState = poule.getRound().getState();
@@ -194,7 +194,7 @@ export class QualifyService {
             || (oldRoundState === Game.STATE_PLAYED && newRoundState !== Game.STATE_PLAYED)
             || (oldRoundState === Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)) {
             const winnersOrLosers = this.childRound.getWinnersOrLosers();
-            poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => ruleParts.push({ qualifyRule: rule }));
+            poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => rules.push(rule));
         } else if ((oldPouleState !== Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)
             || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
             || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
@@ -202,38 +202,31 @@ export class QualifyService {
             poule.getPlaces().forEach(poulePlace => {
                 const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
                 if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
-                    ruleParts.push({ qualifyRule: qualifyRule, poule: poule });
+                    rules.push(qualifyRule);
                 }
             });
         }
-        return ruleParts;
+        return rules;
     }
 
-    protected getQualifiers(rulePart: IQualifyRulePart): INewQualifier[] {
+    protected getQualifiers(rule: QualifyRule): INewQualifier[] {
         // bij meerdere fromPoulePlace moet ik bepalen wie de beste is
         const newQualifiers: INewQualifier[] = [];
         const rankingService = new Ranking(Ranking.RULESSET_WC);
-        const fromRound = rulePart.qualifyRule.getFromRound();
-        const fromPoulePlaces = rulePart.qualifyRule.getFromPoulePlaces();
-        const toPoulePlaces = rulePart.qualifyRule.getToPoulePlaces();
-        const toWinnersLosers = rulePart.qualifyRule.getToRound().getWinnersOrLosers();
+        const fromRound = rule.getFromRound();
+        const fromPoulePlaces = rule.getFromPoulePlaces();
+        const toPoulePlaces = rule.getToPoulePlaces();
+        const toWinnersLosers = rule.getToRound().getWinnersOrLosers();
 
-        if (!rulePart.qualifyRule.isMultiple()) {
-            const poules: Poule[] = [];
-            if (rulePart.poule === undefined) {
-                fromRound.getPoules().forEach(poule => poules.push(poule));
-            } else {
-                poules.push(rulePart.poule);
-            }
-            poules.forEach((poule) => {
-                const toPoulePlace = toPoulePlaces[poule.getNumber() - 1];
+        if (!rule.isMultiple()) {
+            fromPoulePlaces.forEach(fromPoulePlace => {
+                const fromPoule = fromPoulePlace.getPoule();
                 let qualifiedTeam;
-                if (poule.getState() === Game.STATE_PLAYED) {
-                    const fromPoulePlace = fromPoulePlaces[poule.getNumber() - 1];
+                if (fromPoule.getState() === Game.STATE_PLAYED) {
                     const rank = fromPoulePlace.getNumber();
                     qualifiedTeam = this.getQualifiedTeam(fromPoulePlace.getPoule(), rank);
                 }
-                newQualifiers.push({ poulePlace: toPoulePlace, team: qualifiedTeam });
+                newQualifiers.push({ poulePlace: rule.getToEquivalent(fromPoulePlace), team: qualifiedTeam });
             });
             return newQualifiers;
         }
@@ -300,9 +293,4 @@ export class QualifyService {
 export interface INewQualifier {
     team: Team;
     poulePlace: PoulePlace;
-}
-
-export interface IQualifyRulePart {
-    qualifyRule: QualifyRule;
-    poule?: Poule;
 }
