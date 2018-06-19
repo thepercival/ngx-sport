@@ -28,6 +28,8 @@ import { QualifyRuleRepository } from './qualify/repository';
 import { QualifyRule } from './qualify/rule';
 import { QualifyService } from './qualify/service';
 import { Ranking } from './ranking';
+import { EndRanking } from './ranking/end';
+import { RankingItem } from './ranking/item';
 import { Referee } from './referee';
 import { RefereeRepository } from './referee/repository';
 import { SportRepository } from './repository';
@@ -50,7 +52,8 @@ import { TeamRepository } from './team/repository';
     imports: [],
     declarations: [
         Association, League, Competition, SportConfig, Field, Game, GameScore,
-        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
+        Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore,
+        Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundConfigService, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService,
@@ -61,7 +64,8 @@ import { TeamRepository } from './team/repository';
     ],
     exports: [
         Association, League, Competition, SportConfig, Field, Game, GameScore,
-        Poule, PoulePlace, QualifyRule, Ranking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore, Season, Team,
+        Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository, Round, RoundConfig, RoundConfigScore,
+        Season, Team,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
         PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundConfigRepository, RoundConfigService, RoundConfigScoreRepository, SeasonRepository, StructureRepository, StructureService,

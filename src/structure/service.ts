@@ -166,11 +166,11 @@ export class StructureService {
     }
 
     getWinnersLosersPosition(round: Round, winnersLosersPosition: number[] = []): number[] {
-        if (round.getParentRound() === undefined) {
+        if (round.getParent() === undefined) {
             return winnersLosersPosition.reverse();
         }
         winnersLosersPosition.push(round.getWinnersOrLosers());
-        return this.getWinnersLosersPosition(round.getParentRound(), winnersLosersPosition);
+        return this.getWinnersLosersPosition(round.getParent(), winnersLosersPosition);
     }
 
     addRound(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number): Round {
@@ -261,7 +261,7 @@ export class StructureService {
         }
 
         // there could be a place left in the last placenumber which does not start at the first poule
-        const poulePlacesPerNumberParentRound = round.getPoulePlacesPerNumber(undefined);
+        const poulePlacesPerNumberParentRound = round.getPoulePlacesPerNumber(Round.WINNERS);
         const lastPoulePlaces = poulePlacesPerNumberParentRound.pop();
         let pouleIt = round.getPoules()[0];
         lastPoulePlaces.forEach(function (lastPoulePlaceIt) {
@@ -354,7 +354,7 @@ export class StructureService {
         }
 
         if (places.length === 1) {
-            this.removeRound(round.getParentRound(), round.getWinnersOrLosers());
+            this.removeRound(round.getParent(), round.getWinnersOrLosers());
             return 1;
         }
 

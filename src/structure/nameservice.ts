@@ -110,8 +110,8 @@ export class StructureNameService {
     private roundAndParentsNeedsRanking(round: Round) {
 
         if (round.needsRanking()) {
-            if (round.getParentRound() !== undefined) {
-                return this.roundAndParentsNeedsRanking(round.getParentRound());
+            if (round.getParent() !== undefined) {
+                return this.roundAndParentsNeedsRanking(round.getParent());
             }
             return true;
         }
@@ -123,7 +123,7 @@ export class StructureNameService {
      * @param round
      */
     private getRankedPlace(round: Round, rankedPlace: number = 1) {
-        const parentRound = round.getParentRound();
+        const parentRound = round.getParent();
         if (parentRound === undefined) {
             return rankedPlace;
         }
@@ -175,7 +175,7 @@ export class StructureNameService {
     private getNrOfPoulesSiblingRounds(roundNumber: number, round: Round): number {
         let nrOfPoules = 0;
 
-        const parentRound = round.getParentRound();
+        const parentRound = round.getParent();
         if (parentRound !== undefined) {
             nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, parentRound/* round */);
         }

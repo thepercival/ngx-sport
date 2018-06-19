@@ -41,10 +41,10 @@ export class PouleRepository extends SportRepository {
         poule = new Poule(round, json.number);
         poule.setId(json.id);
         poule.setName(json.name);
-        const jsonPlaces = json.places.sort((poulePlaceA, poulePlaceB) => {
+        json.places.sort((poulePlaceA, poulePlaceB) => {
             return (poulePlaceA.number > poulePlaceB.number) ? 1 : -1;
         });
-        this.pouleplaceRepos.jsonArrayToObject(jsonPlaces, poule);
+        this.pouleplaceRepos.jsonArrayToObject(json.places, poule);
         if (json.games !== undefined) {
             this.gameRepos.jsonArrayToObject(json.games, poule);
         }

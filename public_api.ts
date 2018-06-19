@@ -35,6 +35,8 @@ export * from './src/qualify/rule';
 export * from './src/qualify/repository';
 export * from './src/qualify/service';
 export * from './src/ranking';
+export * from './src/ranking/item';
+export * from './src/ranking/end';
 export * from './src/referee';
 export * from './src/referee/repository';
 export * from './src/repository';

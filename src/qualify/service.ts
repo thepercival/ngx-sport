@@ -1,7 +1,8 @@
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { Ranking, RankingItem } from '../ranking';
+import { Ranking } from '../ranking';
+import { RankingItem } from '../ranking/item';
 import { Round } from '../round';
 import { Team } from '../team';
 import { QualifyRule } from './rule';
@@ -14,7 +15,7 @@ export class QualifyService {
     private parentRound: Round;
 
     constructor(private childRound: Round) {
-        this.parentRound = childRound.getParentRound();
+        this.parentRound = childRound.getParent();
     }
 
     createObjectsForParentRound() {
@@ -23,8 +24,9 @@ export class QualifyService {
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
             childRoundPoulePlaces.reverse();
         }
-
-        const parentRoundPoulePlacesPer: PoulePlace[][] = this.getParentRoundPoulePlacesPer();
+        const parentRoundPoulePlacesPer: PoulePlace[][] = this.parentRound.getPoulePlacesPer(
+            this.childRound.getWinnersOrLosers(), this.childRound.getQualifyOrder(), Round.ORDER_HORIZONTAL
+        );
 
         let nrOfShifts = 0;
         while (childRoundPoulePlaces.length > 0) {
@@ -56,42 +58,7 @@ export class QualifyService {
         }
     }
 
-    getParentRoundPoulePlacesPer(): PoulePlace[][] {
-        const parentRoundPoulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
-        if (this.childRound.getQualifyOrder() !== Round.ORDER_VERTICAL || this.parentRound.getNumber() === 1) {
-            return parentRoundPoulePlacesPerNumber;
-        }
-
-        // per qualify rule
-        const parentRoundPoulePlacesPerQualifyRule = [];
-        this.parentRound.getFromQualifyRules().forEach(fromQualifyRule => {
-            let parentRoundPoulePlaces = [];
-            fromQualifyRule.getToPoulePlaces().forEach(p => parentRoundPoulePlaces.push(p));
-            parentRoundPoulePlaces = parentRoundPoulePlaces.sort((poulePlaceA, poulePlaceB) => {
-                if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
-                    return 1;
-                }
-                if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
-                    return -1;
-                }
-                if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
-                    return 1;
-                }
-                if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
-                    return -1;
-                }
-                return 0;
-            });
-            let placeNumber = 0;
-            while (parentRoundPoulePlaces.length > 0) {
-                const tmp = parentRoundPoulePlaces.splice(0, parentRoundPoulePlacesPerNumber[placeNumber++].length);
-                parentRoundPoulePlacesPerQualifyRule.push(tmp);
-            }
-        });
-        return parentRoundPoulePlacesPerQualifyRule;
-    }
-
-    getShuffledPoulePlaces(poulePlaces: PoulePlace[], nrOfShifts: number, childRound: Round): PoulePlace[] {
+    protected getShuffledPoulePlaces(poulePlaces: PoulePlace[], nrOfShifts: number, childRound: Round): PoulePlace[] {
         let shuffledPoulePlaces: PoulePlace[] = [];
         const qualifyOrder = childRound.getQualifyOrder();
         if (qualifyOrder === Round.ORDER_VERTICAL || qualifyOrder === Round.ORDER_HORIZONTAL) {

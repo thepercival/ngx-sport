@@ -1,5 +1,6 @@
 import { Game } from './game';
 import { PoulePlace } from './pouleplace';
+import { RankingItem } from './ranking/item';
 import { Round } from './round';
 
 /* tslint:disable:no-bitwise */
@@ -43,6 +44,23 @@ export class Ranking {
         } else {
             throw new Error('Unknown qualifying rule');
         }
+    }
+
+    getRuleDescriptions() {
+        return this.rankFunctions.map(rankFunction => {
+            if (rankFunction === this.getPoulePlacesWithMostPoints) {
+                return 'het meeste aantal punten';
+            } else if (rankFunction === this.getPoulePlacesWithFewestGames) {
+                return 'het minste aantal wedstrijden';
+            } else if (rankFunction === this.getPoulePlacesWithBestGoalDifference) {
+                return 'het beste doelsaldo';
+            } else if (rankFunction === this.getPoulePlacesWithMostGoalsScored) {
+                return 'het meeste aantal doelpunten gemaakt';
+            } else if (rankFunction === this.getBestPoulePlacesAgainstEachOther) {
+                return 'het beste onderling resultaat';
+            }
+            return '';
+        });
     }
 
     getItems(p_poulePlaces: PoulePlace[], games: Game[]): RankingItem[] {
@@ -266,26 +284,5 @@ export class Ranking {
             nrOfGames++;
         });
         return nrOfGames;
-    }
-}
-
-export class RankingItem {
-    private rank: number;
-    private poulePlace: PoulePlace;
-
-    constructor(
-        rank: number,
-        poulePlace: PoulePlace
-    ) {
-        this.rank = rank;
-        this.poulePlace = poulePlace;
-    }
-
-    getRank(): number {
-        return this.rank;
-    }
-
-    getPoulePlace(): PoulePlace {
-        return this.poulePlace;
     }
 }

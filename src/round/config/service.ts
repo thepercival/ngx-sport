@@ -11,8 +11,8 @@ export class RoundConfigService {
 
     createConfigFromRound(round: Round): RoundConfig {
         const roundConfig = new RoundConfig(round);
-        if (round.getParentRound() !== undefined) {
-            const parentConfig = round.getParentRound().getConfig();
+        if (round.getParent() !== undefined) {
+            const parentConfig = round.getParent().getConfig();
             roundConfig.setQualifyRule(parentConfig.getQualifyRule());
             roundConfig.setNrOfHeadtoheadMatches(parentConfig.getNrOfHeadtoheadMatches());
             roundConfig.setWinPoints(parentConfig.getWinPoints());
@@ -69,8 +69,8 @@ export class RoundConfigService {
         const round = config.getRound();
         const sport = round.getCompetition().getLeague().getSport();
 
-        if (round.getParentRound() !== undefined) {
-            return this.copyScoreConfigFromParent(config, round.getParentRound().getConfig().getScore());
+        if (round.getParent() !== undefined) {
+            return this.copyScoreConfigFromParent(config, round.getParent().getConfig().getScore());
         } else if (sport === SportConfig.Darts) {
             return this.createScoreConfigFromRoundHelper(
                 config, 'punten', RoundConfigScore.DOWNWARDS, 501, this.createScoreConfigFromRoundHelper(

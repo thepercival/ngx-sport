@@ -66,7 +66,7 @@ export class Round {
         this.competition = competition;
     }
 
-    getParentRound(): Round {
+    getParent(): Round {
         return this.parentRound;
     }
 
@@ -84,13 +84,13 @@ export class Round {
     }
 
     // isAncestorOf(aParentRound: Round) {
-    //     if (this.getParentRound() === undefined) {
+    //     if (this.getParent() === undefined) {
     //         return false;
     //     }
-    //     if (this.getParentRound() === aParentRound) {
+    //     if (this.getParent() === aParentRound) {
     //         return true;
     //     }
-    //     return this.getParentRound().isAncestorOf(aParentRound);
+    //     return this.getParent().isAncestorOf(aParentRound);
     // }
 
     getNumber(): number {
@@ -106,8 +106,8 @@ export class Round {
     }
 
     getRootRound() {
-        if (this.getParentRound() !== undefined) {
-            return this.getParentRound().getRootRound();
+        if (this.getParent() !== undefined) {
+            return this.getParent().getRootRound();
         }
         return this;
     }
@@ -157,7 +157,7 @@ export class Round {
         }
 
         if (order === Round.ORDER_HORIZONTAL || order === 4) {
-            return poulePlaces.sort((poulePlaceA, poulePlaceB) => {
+            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
                     return 1;
                 }
@@ -174,7 +174,7 @@ export class Round {
             });
         }
         if (order === Round.ORDER_VERTICAL || order === 5) {
-            return poulePlaces.sort((poulePlaceA, poulePlaceB) => {
+            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
                     return 1;
                 }
@@ -191,6 +191,48 @@ export class Round {
             });
         }
         return poulePlaces;
+    }
+
+    getPoulePlacesPer(winnersOrLosers: number, qualifyOrder: number, poulePlaceOrder: number): PoulePlace[][] {
+        const poulePlacesPerNumber = this.getPoulePlacesPerNumber(winnersOrLosers);
+        if (qualifyOrder !== Round.ORDER_VERTICAL || this.getParent() === undefined) {
+            return poulePlacesPerNumber;
+        }
+        if (poulePlaceOrder === Round.ORDER_VERTICAL) {
+            return this.getPoulePlacesPerPoule();
+        }
+        // vertical qualify rule
+        const poulePlacesPerQualifyRule = [];
+        this.getFromQualifyRules().forEach(fromQualifyRule => {
+            const poulePlaces = fromQualifyRule.getToPoulePlaces().slice();
+            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
+                if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
+                    return 1;
+                }
+                if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
+                    return -1;
+                }
+                if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
+                    return 1;
+                }
+                if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
+                    return -1;
+                }
+                return 0;
+            });
+            let placeNumber = 0;
+            while (poulePlaces.length > 0) {
+                const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
+                poulePlacesPerQualifyRule.push(tmp);
+            }
+        });
+        return poulePlacesPerQualifyRule;
+    }
+
+    getPoulePlacesPerPoule(): PoulePlace[][] {
+        const poulePlacesPerPoule = [];
+        this.getPoules().forEach(poule => poulePlacesPerPoule.push(poule.getPlaces()));
+        return poulePlacesPerPoule;
     }
 
     getPoulePlacesPerNumber(winnersOrLosers: number): PoulePlace[][] {
@@ -341,10 +383,10 @@ export class Round {
     }
 
     getOpposing() {
-        if (this.getParentRound() === undefined) {
+        if (this.getParent() === undefined) {
             return undefined;
         }
-        return this.getParentRound().getChildRound(Round.getOpposing(this.getWinnersOrLosers()));
+        return this.getParent().getChildRound(Round.getOpposing(this.getWinnersOrLosers()));
     }
 
     // getActiveQualifyRuleMul() {
