@@ -1,8 +1,8 @@
+import { Team } from './team';
+
 /**
  * Created by coen on 30-1-17.
  */
-import { Team } from './team';
-
 
 export class Association {
     static readonly MIN_LENGTH_NAME = 2;
@@ -82,9 +82,5 @@ export class Association {
 
     getTeams(): Team[] {
         return this.teams;
-    }
-
-    getTeamByName(name: string): Team {
-        return this.teams.find(teamIt => name === teamIt.getName());
     }
 }

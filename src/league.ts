@@ -58,10 +58,6 @@ export class League implements ImportableObject {
     }
 
     setAssociation(association: Association): void {
-        // if (association.getTeamByName(this.getName()) !== undefined) {
-        //     throw new Error('de teamnaam bestaat al binnen de bond');
-        // }
         this.association = association;
-        // this.association.getTeams().push(this);
     }
 }

@@ -1,8 +1,8 @@
+import { Association } from './association';
+
 /**
  * Created by coen on 26-2-17.
  */
-import { Association } from './association';
-
 export class Team {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 30;
@@ -68,9 +68,6 @@ export class Team {
     }
 
     protected setAssociation(association: Association): void {
-        if (association.getTeamByName(this.getName()) !== undefined) {
-            throw new Error('de teamnaam bestaat al binnen de bond');
-        }
         this.association = association;
         this.association.getTeams().push(this);
     }
