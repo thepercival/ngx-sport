@@ -47,6 +47,7 @@ export class RoundConfigService {
             roundConfig.setMinutesPerGameExt(this.getDefaultMinutesPerGameExt());
             roundConfig.setEnableTime(true);
             roundConfig.setMinutesPerGame(this.getDefaultMinutesPerGame());
+            roundConfig.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
             roundConfig.setMinutesInBetween(this.getDefaultMinutesInBetween());
         }
         roundConfig.setScore(this.createScoreConfigFromRound(roundConfig));
@@ -58,6 +59,10 @@ export class RoundConfigService {
     }
 
     getDefaultMinutesPerGameExt(): number {
+        return 5;
+    }
+
+    getDefaultMinutesBetweenGames(): number {
         return 5;
     }
 
