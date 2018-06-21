@@ -60,7 +60,7 @@ export class EndRanking {
         }
         let rankingItems: RankingItem[];
         if (toRule.getFromRound().getState() !== Game.STATE_PLAYED) {
-            rankingItems = this.getUndeterminableItems(toRule.getFromPoulePlaces().length);
+            rankingItems = this.getUndeterminableItems(toRule.getFromPoulePlaces().length - toRule.getToPoulePlaces().length);
         } else {
             rankingItems = this.getRankingItemsForMultipleRule(toRule);
         }
