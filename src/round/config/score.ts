@@ -38,6 +38,10 @@ export class RoundConfigScore {
         this.name = name;
     }
 
+    getNameSingle(): string {
+        return this.getName().substring(0, this.getName().length - 1);
+    }
+
     getDirection(): number {
         return this.direction;
     }

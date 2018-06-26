@@ -1,10 +1,10 @@
 import { Field } from './field';
 import { GameScore } from './game/score';
+import { GameScoreHomeAway } from './game/score/homeaway';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { Referee } from './referee';
 import { Round } from './round';
-import { RoundConfigScore } from './round/config/score';
 
 /**
  * Created by coen on 20-3-17.
@@ -34,6 +34,7 @@ export class Game {
     protected awayPoulePlace: PoulePlace;
     protected startDateTime: Date;
     protected state: number;
+    protected scoresMoment: number;
     protected scores: GameScore[] = [];
 
     // constructor
@@ -161,15 +162,52 @@ export class Game {
         return this.scores;
     }
 
-    getFinalScore(): GameScore {
-        return this.getScores()[0];
+    getFinalScore(sub?: boolean): GameScoreHomeAway {
+        if (this.getScores().length === 0) {
+            return undefined;
+        }
+        if (sub === true) {
+            return this.getSubScore();
+        }
+        let home = this.getScores()[0].getHome();
+        let away = this.getScores()[0].getAway();
+        if (this.getRound().getConfig().getCalculateScore() !== this.getRound().getConfig().getInputScore()) {
+            home = 0;
+            away = 0;
+            this.getScores().forEach(score => {
+                if (score.getHome() > score.getAway()) {
+                    home++;
+                } else if (score.getHome() < score.getAway()) {
+                    away++;
+                }
+            });
+        }
+        return new GameScoreHomeAway(home, away);
     }
 
-    getScoreConfig(): RoundConfigScore {
+    private getSubScore(): GameScoreHomeAway {
+        let home = 0;
+        let away = 0;
+        this.getScores().forEach(score => {
+            home += score.getHome();
+            away += score.getAway();
+        });
+        return new GameScoreHomeAway(home, away);
+    }
+
+    /*getScoreConfig(): RoundConfigScore {
         let roundConfigScore = this.getRound().getConfig().getScore();
         while (roundConfigScore.isInput() === false && roundConfigScore.getParent() !== undefined) {
             roundConfigScore = roundConfigScore.getParent();
         }
         return roundConfigScore;
+    }*/
+
+    getScoresMoment(): number {
+        return this.scoresMoment;
+    }
+
+    setScoresMoment(scoresMoment: number): void {
+        this.scoresMoment = scoresMoment;
     }
 }

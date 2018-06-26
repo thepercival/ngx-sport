@@ -21,13 +21,9 @@ export class GameScoreRepository {
 
     jsonToObjectHelper(json: IGameScore, game: Game, gameScore?: GameScore): GameScore {
         if (gameScore === undefined) {
-            gameScore = new GameScore(game, json.number);
+            gameScore = new GameScore(game, json.home, json.away, json.number);
         }
         gameScore.setId(json.id);
-        gameScore.setHome(json.home);
-        gameScore.setAway(json.away);
-        gameScore.setMoment(json.moment);
-
         return gameScore;
     }
 
@@ -45,8 +41,7 @@ export class GameScoreRepository {
             id: object.getId(),
             number: object.getNumber(),
             home: object.getHome(),
-            away: object.getAway(),
-            moment: object.getMoment()
+            away: object.getAway()
         };
     }
 }
@@ -56,5 +51,4 @@ export interface IGameScore {
     number: number;
     home: number;
     away: number;
-    moment: number;
 }

@@ -1,18 +1,15 @@
 import { Game } from '../game';
+import { GameScoreHomeAway } from './score/homeaway';
 
-export class GameScore {
+export class GameScore extends GameScoreHomeAway {
 
     protected id: number;
     protected game: Game;
     protected number: number;
-    protected home: number;
-    protected away: number;
-    protected moment: number;
 
     // constructor
-    constructor(
-        game: Game, number?: number
-    ) {
+    constructor(game: Game, home: number, away: number, number?: number) {
+        super(home, away);
         this.setGame(game);
         if (!number) {
             number = game.getScores().length;
@@ -43,33 +40,5 @@ export class GameScore {
 
     private setNumber(number: number): void {
         this.number = number;
-    }
-
-    getHome(): number {
-        return this.home;
-    }
-
-    setHome(home: number): void {
-        this.home = home;
-    }
-
-    getAway(): number {
-        return this.away;
-    }
-
-    setAway(away: number): void {
-        this.away = away;
-    }
-
-    get(homeAway: boolean): number {
-        return homeAway === Game.HOME ? this.getHome() : this.getAway();
-    }
-
-    getMoment(): number {
-        return this.moment;
-    }
-
-    setMoment(moment: number): void {
-        this.moment = moment;
     }
 }

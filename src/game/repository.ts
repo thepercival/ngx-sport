@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { FieldRepository, IField } from '../field/repository';
 import { Game } from '../game';
@@ -80,6 +80,7 @@ export class GameRepository extends SportRepository {
         game.setId(json.id);
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
+        game.setScoresMoment(json.scoresMoment);
         game.setField(json.field !== undefined ? poule.getCompetition().getFieldByNumber(json.field.number) : undefined);
         game.setReferee(undefined);
         game.setReferee(json.referee !== undefined ? poule.getCompetition().getRefereeById(json.referee.id) : undefined);
@@ -113,6 +114,7 @@ export class GameRepository extends SportRepository {
             state: object.getState(),
             referee: object.getReferee() ? this.refereeRepos.objectToJsonHelper(object.getReferee()) : undefined,
             startDateTime: object.getStartDateTime() ? object.getStartDateTime().toISOString() : undefined,
+            scoresMoment: object.getScoresMoment(),
             scores: this.gameScoreRepos.objectsToJsonArray(object.getScores())
         };
     }
@@ -129,5 +131,6 @@ export interface IGame {
     state: number;
     startDateTime?: string;
     referee?: IReferee;
+    scoresMoment?: number;
     scores?: IGameScore[];
 }

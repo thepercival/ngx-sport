@@ -34,13 +34,17 @@ export class Ranking {
         this.rankFunctions.push(this.getPoulePlacesWithFewestGames);
 
         if (this.rulesSet === Ranking.RULESSET_WC) {
-            this.rankFunctions.push(this.getPoulePlacesWithBestGoalDifference);
-            this.rankFunctions.push(this.getPoulePlacesWithMostGoalsScored);
+            this.rankFunctions.push(this.getPoulePlacesWithBestUnitDifference);
+            this.rankFunctions.push(this.getPoulePlacesWithMostUnitsScored);
+            this.rankFunctions.push(this.getPoulePlacesWithBestSubUnitDifference);
+            this.rankFunctions.push(this.getPoulePlacesWithMostSubUnitsScored);
             this.rankFunctions.push(this.getBestPoulePlacesAgainstEachOther);
         } else if (this.rulesSet === Ranking.RULESSET_EC) {
             this.rankFunctions.push(this.getBestPoulePlacesAgainstEachOther);
-            this.rankFunctions.push(this.getPoulePlacesWithBestGoalDifference);
-            this.rankFunctions.push(this.getPoulePlacesWithMostGoalsScored);
+            this.rankFunctions.push(this.getPoulePlacesWithBestUnitDifference);
+            this.rankFunctions.push(this.getPoulePlacesWithMostUnitsScored);
+            this.rankFunctions.push(this.getPoulePlacesWithBestSubUnitDifference);
+            this.rankFunctions.push(this.getPoulePlacesWithMostSubUnitsScored);
         } else {
             throw new Error('Unknown qualifying rule');
         }
@@ -52,10 +56,10 @@ export class Ranking {
                 return 'het meeste aantal punten';
             } else if (rankFunction === this.getPoulePlacesWithFewestGames) {
                 return 'het minste aantal wedstrijden';
-            } else if (rankFunction === this.getPoulePlacesWithBestGoalDifference) {
-                return 'het beste doelsaldo';
-            } else if (rankFunction === this.getPoulePlacesWithMostGoalsScored) {
-                return 'het meeste aantal doelpunten gemaakt';
+            } else if (rankFunction === this.getPoulePlacesWithBestUnitDifference) {
+                return 'het beste saldo';
+            } else if (rankFunction === this.getPoulePlacesWithMostUnitsScored) {
+                return 'het meeste aantal eenheden voor';
             } else if (rankFunction === this.getBestPoulePlacesAgainstEachOther) {
                 return 'het beste onderling resultaat';
             }
@@ -169,32 +173,48 @@ export class Ranking {
         return this.getBestPoulePlaces(p_poulePlaces, gamesAgainstEachOther, true);
     }
 
-    private getPoulePlacesWithBestGoalDifference = (p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
-        let bestGoalDifference;
+    private getPoulePlacesWithBestUnitDifference = (poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
+        return this.getPoulePlacesWithBestDifference(poulePlaces, games, false);
+    }
+
+    private getPoulePlacesWithBestSubUnitDifference = (poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
+        return this.getPoulePlacesWithBestDifference(poulePlaces, games, true);
+    }
+
+    private getPoulePlacesWithBestDifference = (p_poulePlaces: PoulePlace[], games: Game[], sub: boolean): PoulePlace[] => {
+        let bestUnitDifference;
         let poulePlacesRet: PoulePlace[] = [];
         p_poulePlaces.forEach(p_poulePlaceIt => {
-            const goalDifference = this.getGoalDifference(p_poulePlaceIt, games);
-            if (goalDifference === bestGoalDifference || bestGoalDifference === undefined) {
-                bestGoalDifference = goalDifference;
+            const unitDifference = this.getUnitDifference(p_poulePlaceIt, games, sub);
+            if (unitDifference === bestUnitDifference || bestUnitDifference === undefined) {
+                bestUnitDifference = unitDifference;
                 poulePlacesRet.push(p_poulePlaceIt);
-            } else if (goalDifference > bestGoalDifference) {
-                bestGoalDifference = goalDifference;
+            } else if (unitDifference > bestUnitDifference) {
+                bestUnitDifference = unitDifference;
                 poulePlacesRet = [p_poulePlaceIt];
             }
         });
         return poulePlacesRet;
     }
 
-    private getPoulePlacesWithMostGoalsScored = (p_poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
-        let mostGoalsScored;
+    private getPoulePlacesWithMostUnitsScored = (poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
+        return this.getPoulePlacesWithMostScored(poulePlaces, games, false);
+    }
+
+    private getPoulePlacesWithMostSubUnitsScored = (poulePlaces: PoulePlace[], games: Game[]): PoulePlace[] => {
+        return this.getPoulePlacesWithMostScored(poulePlaces, games, true);
+    }
+
+    private getPoulePlacesWithMostScored = (p_poulePlaces: PoulePlace[], games: Game[], sub: boolean): PoulePlace[] => {
+        let mostUnitsScored;
         let poulePlacesRet: PoulePlace[] = [];
         p_poulePlaces.forEach(p_poulePlaceIt => {
-            const goalsScored = this.getNrOfGoalsScored(p_poulePlaceIt, games);
-            if (goalsScored === mostGoalsScored || mostGoalsScored === undefined) {
-                mostGoalsScored = goalsScored;
+            const unitsScored = this.getNrOfUnitsScored(p_poulePlaceIt, games, sub);
+            if (unitsScored === mostUnitsScored || mostUnitsScored === undefined) {
+                mostUnitsScored = unitsScored;
                 poulePlacesRet.push(p_poulePlaceIt);
-            } else if (goalsScored > mostGoalsScored) {
-                mostGoalsScored = goalsScored;
+            } else if (unitsScored > mostUnitsScored) {
+                mostUnitsScored = unitsScored;
                 poulePlacesRet = [p_poulePlaceIt];
             }
         });
@@ -229,13 +249,13 @@ export class Ranking {
             }
             const finalScore = game.getFinalScore();
             if (finalScore.get(homeAway) > finalScore.get(!homeAway)) {
-                if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
+                if (game.getScoresMoment() === Game.MOMENT_EXTRATIME) {
                     points += config.getWinPointsExt();
                 } else {
                     points += config.getWinPoints();
                 }
             } else if (finalScore.get(homeAway) === finalScore.get(!homeAway)) {
-                if (finalScore.getMoment() === Game.MOMENT_EXTRATIME) {
+                if (game.getScoresMoment() === Game.MOMENT_EXTRATIME) {
                     points += config.getDrawPointsExt();
                 } else {
                     points += config.getDrawPoints();
@@ -245,20 +265,20 @@ export class Ranking {
         return points;
     }
 
-    getGoalDifference(poulePlace: PoulePlace, games: Game[]): number {
-        return (this.getNrOfGoalsScored(poulePlace, games) - this.getNrOfGoalsReceived(poulePlace, games));
+    getUnitDifference(poulePlace: PoulePlace, games: Game[], sub?: boolean): number {
+        return (this.getNrOfUnitsScored(poulePlace, games, sub) - this.getNrOfUnitsReceived(poulePlace, games, sub));
     }
 
-    getNrOfGoalsScored(poulePlace: PoulePlace, games: Game[]): number {
-        return this.getNrOfGoals(poulePlace, games, Ranking.SCORED);
+    getNrOfUnitsScored(poulePlace: PoulePlace, games: Game[], sub?: boolean): number {
+        return this.getNrOfUnits(poulePlace, games, Ranking.SCORED, sub);
     }
 
-    getNrOfGoalsReceived(poulePlace: PoulePlace, games: Game[]): number {
-        return this.getNrOfGoals(poulePlace, games, Ranking.RECEIVED);
+    getNrOfUnitsReceived(poulePlace: PoulePlace, games: Game[], sub?: boolean): number {
+        return this.getNrOfUnits(poulePlace, games, Ranking.RECEIVED, sub);
     }
 
-    protected getNrOfGoals(poulePlace: PoulePlace, games: Game[], scoredReceived: number): number {
-        let nrOfGoals = 0;
+    protected getNrOfUnits(poulePlace: PoulePlace, games: Game[], scoredReceived: number, sub: boolean): number {
+        let nrOfUnits = 0;
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
@@ -267,9 +287,9 @@ export class Ranking {
             if (homeAway === undefined) {
                 return;
             }
-            nrOfGoals += game.getFinalScore().get(scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
+            nrOfUnits += game.getFinalScore(sub).get(scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
         });
-        return nrOfGoals;
+        return nrOfUnits;
     }
 
     getNrOfGamesWithState(poulePlace: PoulePlace, games: Game[]): number {
