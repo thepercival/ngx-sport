@@ -155,7 +155,7 @@ export class RoundConfig {
     getInputScore(): RoundConfigScore {
         let parentScoreConfig: RoundConfigScore = this.getScore().getRoot();
         let childScoreConfig = parentScoreConfig.getChild();
-        while (childScoreConfig !== undefined && childScoreConfig.getMaximum() > 0) {
+        while (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || parentScoreConfig.getMaximum() === 0)) {
             parentScoreConfig = childScoreConfig;
             childScoreConfig = childScoreConfig.getChild();
         }
@@ -168,6 +168,10 @@ export class RoundConfig {
             scoreConfig = scoreConfig.getChild();
         }
         return scoreConfig;
+    }
+
+    hasMultipleScores(): boolean {
+        return this.getScore().getRoot() !== this.getScore();
     }
 
     getMaximalNrOfMinutesPerGame(): number {
