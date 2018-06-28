@@ -78,10 +78,8 @@ export class RoundConfigService {
             return this.copyScoreConfigFromParent(config, round.getParent().getConfig().getScore());
         } else if (sport === SportConfig.Darts) {
             return this.createScoreConfigFromRoundHelper(
-                config, 'punten', RoundConfigScore.DOWNWARDS, 501, this.createScoreConfigFromRoundHelper(
-                    config, 'legs', RoundConfigScore.UPWARDS, 3, this.createScoreConfigFromRoundHelper(
-                        config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
-                    )
+                config, 'legs', RoundConfigScore.UPWARDS, 3, this.createScoreConfigFromRoundHelper(
+                    config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                 )
             );
         } else if (sport === SportConfig.Tennis) {
@@ -90,10 +88,11 @@ export class RoundConfigService {
                     config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                 )
             );
-        } else if (sport === SportConfig.TableTennis || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
+        } else if (sport === SportConfig.Squash || sport === SportConfig.TableTennis
+            || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
             return this.createScoreConfigFromRoundHelper(
                 config, 'punten', RoundConfigScore.UPWARDS,
-                sport === SportConfig.TableTennis ? 21 : (SportConfig.Volleyball ? 25 : 15),
+                sport === SportConfig.TableTennis ? 21 : (sport === SportConfig.Volleyball ? 25 : 15),
                 this.createScoreConfigFromRoundHelper(
                     config, 'sets', RoundConfigScore.UPWARDS, 0, undefined
                 )

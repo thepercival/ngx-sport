@@ -10,6 +10,7 @@ export class SportConfig {
     static readonly Tennis = 'tennis';
     static readonly Volleyball = 'volleybal';
     static readonly Badminton = 'badminton';
+    static readonly Squash = 'squash';
     static readonly Hockey = 'hockey';
     static readonly Korfball = 'korfbal';
 
@@ -33,6 +34,7 @@ export class SportConfig {
             SportConfig.Tennis,
             SportConfig.Volleyball,
             SportConfig.Badminton,
+            SportConfig.Squash,
             SportConfig.Hockey,
             SportConfig.Korfball
         ];
