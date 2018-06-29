@@ -248,6 +248,9 @@ export class Ranking {
                 return;
             }
             const finalScore = game.getFinalScore();
+            if (finalScore === undefined) {
+                return;
+            }
             if (finalScore.get(homeAway) > finalScore.get(!homeAway)) {
                 if (game.getScoresMoment() === Game.MOMENT_EXTRATIME) {
                     points += config.getWinPointsExt();
@@ -287,7 +290,11 @@ export class Ranking {
             if (homeAway === undefined) {
                 return;
             }
-            nrOfUnits += game.getFinalScore(sub).get(scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
+            const finalScore = game.getFinalScore(sub);
+            if (finalScore === undefined) {
+                return;
+            }
+            nrOfUnits += finalScore.get(scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
         });
         return nrOfUnits;
     }

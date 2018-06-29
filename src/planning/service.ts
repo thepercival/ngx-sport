@@ -137,13 +137,20 @@ export class PlanningService {
                     const headToHeadNumber = ((headToHead - 1) * schedGames.length);
                     for (let gameRoundNumber = 0; gameRoundNumber < schedGames.length; gameRoundNumber++) {
                         const schedRoundGames = schedGames[gameRoundNumber];
+                        const reverseHomeAway = headToHead === roundConfig.getNrOfHeadtoheadMatches() && (headToHead % 2) === 1
+                            && schedGames.length > 1;
                         let subNumber = 1;
                         schedRoundGames.forEach(schedGame => {
                             if (schedGame[0] === undefined || schedGame[1] === undefined) {
                                 return;
                             }
-                            const homePoulePlace = (headToHead % 2 === 0) ? schedGame[1] : schedGame[0];
-                            const awayPoulePlace = (headToHead % 2 === 0) ? schedGame[0] : schedGame[1];
+                            let homePoulePlace = (headToHead % 2 === 0) ? schedGame[1] : schedGame[0];
+                            let awayPoulePlace = (headToHead % 2 === 0) ? schedGame[0] : schedGame[1];
+                            if (reverseHomeAway && ((homePoulePlace.getNumber() + awayPoulePlace.getNumber()) % 2) === 0
+                                && homePoulePlace.getNumber() < awayPoulePlace.getNumber()) {
+                                homePoulePlace = schedGame[1];
+                                awayPoulePlace = schedGame[0];
+                            }
                             const gameTmp =
                                 new Game(poule, homePoulePlace, awayPoulePlace, headToHeadNumber + gameRoundNumber + 1, subNumber++);
                         });
@@ -308,7 +315,7 @@ export class PlanningService {
     }
 
 
-    private generateRRSchedule(places: PoulePlace[], rand = false) {
+    private generateRRSchedule(places: PoulePlace[]) {
         let nrOfPlaces = places.length;
         if (nrOfPlaces === 0) {
             return [];
@@ -348,22 +355,7 @@ export class PlanningService {
             places.unshift(first);
         }
 
-        // shuffle the results if desired
-        if (rand) {
-            matchups.forEach((match) => {
-                this.shuffle(match);
-            });
-            this.shuffle(matchups);
-        }
-
         return matchups;
-    }
-
-    private shuffle(a) {
-        for (let i = a.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [a[i], a[j]] = [a[j], a[i]];
-        }
     }
 
     private chunk(arr: PoulePlace[], pieces: number): any[][] {
