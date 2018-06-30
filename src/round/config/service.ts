@@ -24,7 +24,7 @@ export class RoundConfigService {
             roundConfig.setEnableTime(parentConfig.getEnableTime());
             roundConfig.setMinutesPerGame(parentConfig.getMinutesPerGame());
             roundConfig.setMinutesBetweenGames(parentConfig.getMinutesBetweenGames());
-            roundConfig.setMinutesInBetween(parentConfig.getMinutesInBetween());
+            roundConfig.setMinutesAfter(parentConfig.getMinutesAfter());
             roundConfig.setScore(this.createScoreConfigFromRound(parentConfig));
             return roundConfig;
         }
@@ -40,7 +40,7 @@ export class RoundConfigService {
         roundConfig.setEnableTime(RoundConfig.DEFAULTENABLETIME);
         roundConfig.setMinutesPerGame(0);
         roundConfig.setMinutesBetweenGames(0);
-        roundConfig.setMinutesInBetween(0);
+        roundConfig.setMinutesAfter(0);
         const sport = round.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
             roundConfig.setHasExtension(!round.needsRanking());
@@ -48,7 +48,7 @@ export class RoundConfigService {
             roundConfig.setEnableTime(true);
             roundConfig.setMinutesPerGame(this.getDefaultMinutesPerGame());
             roundConfig.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
-            roundConfig.setMinutesInBetween(this.getDefaultMinutesInBetween());
+            roundConfig.setMinutesAfter(this.getDefaultMinutesAfter());
         }
         roundConfig.setScore(this.createScoreConfigFromRound(roundConfig));
         return roundConfig;
@@ -66,7 +66,7 @@ export class RoundConfigService {
         return 5;
     }
 
-    getDefaultMinutesInBetween(): number {
+    getDefaultMinutesAfter(): number {
         return 5;
     }
 

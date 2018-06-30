@@ -21,7 +21,7 @@ export class RoundConfig {
     protected enableTime: boolean;
     protected minutesPerGame: number;
     protected minutesBetweenGames: number;
-    protected minutesInBetween: number;
+    protected minutesAfter: number;
     protected score: RoundConfigScore;
 
     // constructor
@@ -136,12 +136,12 @@ export class RoundConfig {
         this.minutesBetweenGames = minutesBetweenGames;
     }
 
-    getMinutesInBetween(): number {
-        return this.minutesInBetween;
+    getMinutesAfter(): number {
+        return this.minutesAfter;
     }
 
-    setMinutesInBetween(minutesInBetween: number) {
-        this.minutesInBetween = minutesInBetween;
+    setMinutesAfter(minutesAfter: number) {
+        this.minutesAfter = minutesAfter;
     }
 
     getScore(): RoundConfigScore {

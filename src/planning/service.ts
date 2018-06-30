@@ -90,7 +90,8 @@ export class PlanningService {
             return this.getStartDateTime();
         }
         const previousEndDateTime = this.calculateEndDateTime(roundNumber - 1);
-        return this.addMinutes(previousEndDateTime, aRound.getConfig().getMinutesInBetween());
+        const aPreviousRound = this.allRoundsByNumber[roundNumber - 1][0];
+        return this.addMinutes(previousEndDateTime, aPreviousRound.getConfig().getMinutesAfter());
     }
 
     protected addMinutes(dateTime: Date, minutes: number): Date {
@@ -170,7 +171,7 @@ export class PlanningService {
 
         const nextDateTime = this.assignResourceBatchToGames(aRoundConfig, dateTime, fields, referees);
         if (nextDateTime !== undefined) {
-            nextDateTime.setMinutes(nextDateTime.getMinutes() + aRoundConfig.getMinutesInBetween());
+            nextDateTime.setMinutes(nextDateTime.getMinutes() + aRoundConfig.getMinutesAfter());
         }
         return nextDateTime;
     }
