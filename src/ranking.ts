@@ -51,20 +51,24 @@ export class Ranking {
     }
 
     getRuleDescriptions() {
-        return this.rankFunctions.map(rankFunction => {
-            if (rankFunction === this.getPoulePlacesWithMostPoints) {
-                return 'het meeste aantal punten';
-            } else if (rankFunction === this.getPoulePlacesWithFewestGames) {
-                return 'het minste aantal wedstrijden';
-            } else if (rankFunction === this.getPoulePlacesWithBestUnitDifference) {
-                return 'het beste saldo';
-            } else if (rankFunction === this.getPoulePlacesWithMostUnitsScored) {
-                return 'het meeste aantal eenheden voor';
-            } else if (rankFunction === this.getBestPoulePlacesAgainstEachOther) {
-                return 'het beste onderling resultaat';
-            }
-            return '';
-        });
+        return this.rankFunctions.filter(rankFunction => {
+            return rankFunction !== this.getPoulePlacesWithBestSubUnitDifference
+                && rankFunction !== this.getPoulePlacesWithMostSubUnitsScored;
+        })
+            .map(rankFunction => {
+                if (rankFunction === this.getPoulePlacesWithMostPoints) {
+                    return 'het meeste aantal punten';
+                } else if (rankFunction === this.getPoulePlacesWithFewestGames) {
+                    return 'het minste aantal wedstrijden';
+                } else if (rankFunction === this.getPoulePlacesWithBestUnitDifference) {
+                    return 'het beste saldo';
+                } else if (rankFunction === this.getPoulePlacesWithMostUnitsScored) {
+                    return 'het meeste aantal eenheden voor';
+                } else if (rankFunction === this.getBestPoulePlacesAgainstEachOther) {
+                    return 'het beste onderling resultaat';
+                }
+                return '';
+            });
     }
 
     getItems(p_poulePlaces: PoulePlace[], games: Game[]): RankingItem[] {
