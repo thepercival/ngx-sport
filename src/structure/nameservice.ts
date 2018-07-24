@@ -99,12 +99,12 @@ export class StructureNameService {
         return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
     }
 
-    getPoulePlaceNameSimple(pouleplace: PoulePlace, teamName = false) {
-        if (teamName === true && pouleplace.getTeam() !== undefined) {
-            return pouleplace.getTeam().getName();
+    getPoulePlaceNameSimple(poulePlace: PoulePlace, teamName = false) {
+        if (teamName === true && poulePlace.getTeam() !== undefined) {
+            return poulePlace.getTeam().getName();
         }
-        const pouleplaceName = this.getPouleName(pouleplace.getPoule(), false);
-        return pouleplaceName + pouleplace.getNumber();
+        const pouleplaceName = this.getPouleName(poulePlace.getPoule(), false);
+        return pouleplaceName + poulePlace.getNumber();
     }
 
     private roundAndParentsNeedsRanking(round: Round) {

@@ -217,11 +217,11 @@ export class StructureService {
             return round;
         }
 
-        this.addRoundHelper(round, winnersOrLosers ? winnersOrLosers : Round.WINNERS, nrOfPlacesNextRound, opposing);
-        // const hasParentRoundOpposingChild = ( parentRound.getChildRound( Round.getOpposing( winnersOrLosers ) )!== undefined );
+        const winnersOrLosersTmp = winnersOrLosers ? winnersOrLosers : Round.WINNERS;
+        this.addRoundHelper(round, winnersOrLosersTmp, nrOfPlacesNextRound, opposing);
         if (opposing > 0 || (round.getPoulePlaces().length === 2)) {
-            opposing = opposing > 0 ? opposing : Round.getOpposing(winnersOrLosers);
-            this.addRoundHelper(round, opposing, nrOfOpposingPlacesNextRound, winnersOrLosers);
+            opposing = opposing > 0 ? opposing : Round.getOpposing(winnersOrLosersTmp);
+            this.addRoundHelper(round, opposing, nrOfOpposingPlacesNextRound, winnersOrLosersTmp);
         }
 
         return round;
@@ -490,7 +490,7 @@ export class StructureService {
         } else if (nrOfPlacesLeftForOpposing === nrOfChildPlacesOpposing) {
             const childRound = parentRound.getChildRound(winnersOrLosers);
             const qualifyService = new QualifyService(childRound);
-            qualifyService.oneMultipleToSingle();
+            qualifyService.theMultipleToSingle();
         }
     }
 

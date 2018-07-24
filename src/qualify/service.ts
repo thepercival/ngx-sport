@@ -103,7 +103,7 @@ export class QualifyService {
         fromQualifyRules = undefined;
     }
 
-    oneMultipleToSingle() {
+    theMultipleToSingle() {
         const fromQualifyRules = this.parentRound.getToQualifyRules();
         const multiples = fromQualifyRules.filter(function (qualifyRuleIt) {
             return qualifyRuleIt.isMultiple();
@@ -111,11 +111,13 @@ export class QualifyService {
         if (multiples.length !== 1) {
             return;
         }
-
         const multiple = multiples.pop();
         const multipleFromPlaces = multiple.getFromPoulePlaces().slice();
-        while (multiple.getFromPoulePlaces().length > 1) {
-            multiple.removeFromPoulePlace(multipleFromPlaces.pop());
+        while (multipleFromPlaces.length > 0 && multiple.getFromPoulePlaces().length > multiple.getToPoulePlaces().length) {
+            const multipleFromPlace = multipleFromPlaces.pop();
+            if (multipleFromPlace.getToQualifyRules().length > 1) {
+                multiple.removeFromPoulePlace(multipleFromPlace);
+            }
         }
     }
 
