@@ -103,39 +103,6 @@ export class QualifyService {
         fromQualifyRules = undefined;
     }
 
-    theMultipleToSingle() {
-        const fromQualifyRules = this.parentRound.getToQualifyRules();
-        const multiples = fromQualifyRules.filter(function (qualifyRuleIt) {
-            return qualifyRuleIt.isMultiple();
-        });
-        if (multiples.length !== 1) {
-            return;
-        }
-        const multiple = multiples.pop();
-        const multipleFromPlaces = multiple.getFromPoulePlaces().slice();
-        while (multipleFromPlaces.length > 0 && multiple.getFromPoulePlaces().length > multiple.getToPoulePlaces().length) {
-            const multipleFromPlace = multipleFromPlaces.pop();
-            if (multipleFromPlace.getToQualifyRules().length > 1) {
-                multiple.removeFromPoulePlace(multipleFromPlace);
-            }
-        }
-    }
-
-    // getActiveQualifyRules( winnersOrLosers: number ): QualifyRule[] {
-    // let qualifyRules: QualifyRule[] = [];
-    // const poulePlacesByNumber = this.round.getPoulePlaces( true );
-    // if( winnersOrLosers === Round.WINNERS ){
-    //  while
-    //
-    //  poulePlacesByNumber.forEach( (poulePlaceIt) => )
-    // }
-    // return qualifyRules;
-    // }
-
-    getActivePoulePlaceNumber(winnersOrLosers: number) {
-        // als winners dan
-    }
-
     getNewQualifiers(rules: QualifyRule[]): INewQualifier[] {
         let qualifiers: INewQualifier[] = [];
         rules.forEach(rule => {

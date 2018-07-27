@@ -34,12 +34,77 @@ export class EndRanking {
     }
 
     protected getDeadPlacesFromRound(round: Round): PoulePlace[] {
-        let deadPlaces: PoulePlace[] = [];
-        // eerst alles met multiplie winners torule
-        round.getToQualifyRules(Round.WINNERS).forEach(winnersToRule => {
-            deadPlaces = deadPlaces.concat(this.getDeadPlacesFromRule(winnersToRule));
-        });
+        if (round.hasGames() === false || round.getState() === Game.STATE_PLAYED) {
+            return this.getDeadPlacesFromRoundPlayed(round);
+        }
+        return this.getDeadPlacesFromRoundNotPlayed(round);
+    }
 
+    protected getDeadPlacesFromRoundNotPlayed(round: Round): PoulePlace[] {
+        const deadPlaces: PoulePlace[] = this.getDeadPlacesFromRulesNotPlayed(round, round.getToQualifyRules());
+        round.getPoulePlaces()
+            .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
+            .forEach(poulePlace => deadPlaces.push(undefined));
+        return deadPlaces;
+    }
+
+    protected getDeadPlacesFromRulesNotPlayed(fromRound: Round, toRules: QualifyRule[]): PoulePlace[] {
+        const fromPlaces = this.getUniqueFromPlaces(toRules);
+        let nrOfToPlaces = 0;
+        toRules.forEach(toRule => { nrOfToPlaces += toRule.getToPoulePlaces().length; });
+        const nrOfDeadPlaces = fromPlaces.length - nrOfToPlaces;
+        const deadPlaces = [];
+        for (let i = 0; i < nrOfDeadPlaces; i++) {
+            deadPlaces.push(undefined);
+        }
+        return deadPlaces;
+    }
+
+    protected getUniqueFromPlaces(toRules: QualifyRule[]): PoulePlace[] {
+        const fromPlaces: PoulePlace[] = [];
+        toRules.forEach(toRule => {
+            const ruleFromPlaces = toRule.getFromPoulePlaces();
+            ruleFromPlaces.forEach(ruleFromPlace => {
+                if (fromPlaces.find(fromPlace => fromPlace === ruleFromPlace) === undefined) {
+                    fromPlaces.push(ruleFromPlace);
+                }
+            });
+        });
+        return fromPlaces;
+    }
+
+    /**
+     * 1 pak weer de unique plaatsen
+     * 2 bepaal wie er doorgaan van de winnaars en haal deze eraf
+     * 3 doe de plekken zonder to - regels
+     * 4 bepaal wie er doorgaan van de verliezers en haal deze eraf
+     * 5 voeg de overgebleven plekken toe aan de deadplaces
+     *
+     * @param round
+     */
+    protected getDeadPlacesFromRoundPlayed(round: Round): PoulePlace[] {
+        const deadPlaces: PoulePlace[] = [];
+
+        const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
+        const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.WINNERS);
+        const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
+        const deadPlacesToAdd: PoulePlace[] = this.getUniqueFromPlaces(multipleRules);
+        {
+            if (multipleWinnersRule !== undefined) {
+                this.filterDeadPoulePlacesToAdd(multipleWinnersRule, deadPlacesToAdd);
+            }
+            if (multipleLosersRule !== undefined) {
+                this.filterDeadPoulePlacesToAdd(multipleLosersRule, deadPlacesToAdd);
+            }
+        }
+        if (multipleWinnersRule !== undefined) {
+            multipleWinnersRule.getFromPoulePlaces().forEach(fromPoulePlace => {
+                const index = deadPlacesToAdd.indexOf(fromPoulePlace);
+                if (index > -1) {
+                    deadPlaces.push(deadPlacesToAdd.splice(index, 1).shift());
+                }
+            });
+        }
         const poulePlacesPer: PoulePlace[][] = round.getPoulePlacesPer(Round.WINNERS, round.getQualifyOrder(), Round.ORDER_VERTICAL);
         poulePlacesPer.forEach(poulePlaces => {
             const deadPlacesPer = poulePlaces.filter(poulePlace => poulePlace.getToQualifyRules().length === 0);
@@ -47,47 +112,39 @@ export class EndRanking {
                 deadPlaces.push(deadPoulePlace);
             });
         });
-        // daarna alles met multiplie losers torule
-        round.getToQualifyRules(Round.LOSERS).forEach(losersToRule => {
-            deadPlaces = deadPlaces.concat(this.getDeadPlacesFromRule(losersToRule));
-        });
+        if (multipleLosersRule !== undefined) {
+            multipleLosersRule.getFromPoulePlaces().forEach(fromPoulePlace => {
+                const index = deadPlacesToAdd.indexOf(fromPoulePlace);
+                if (index > -1) {
+                    deadPlaces.push(deadPlacesToAdd.splice(index, 1).shift());
+                }
+            });
+        }
         return deadPlaces;
     }
 
-    protected getDeadPlacesFromRule(toRule: QualifyRule): PoulePlace[] {
-        if (toRule.isMultiple() === false) {
-            return [];
-        }
-        let rankingItems: RankingItem[];
-        if (toRule.getFromRound().getState() !== Game.STATE_PLAYED) {
-            rankingItems = this.getUndeterminableItems(toRule.getFromPoulePlaces().length - toRule.getToPoulePlaces().length);
-        } else {
-            rankingItems = this.getRankingItemsForMultipleRule(toRule);
-        }
-        return rankingItems.map(rankingItem => rankingItem.getPoulePlace());
+    protected filterDeadPoulePlacesToAdd(toRule: QualifyRule, deadPlacesToAdd: PoulePlace[]) {
+        const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(toRule);
+        this.getQualifiedRankingItems(toRule, rankingItems).forEach(qualRankingItem => {
+            const index = deadPlacesToAdd.indexOf(qualRankingItem.getPoulePlace());
+            if (index > -1) {
+                deadPlacesToAdd.splice(index, 1);
+            }
+        });
     }
 
-    protected filterDeadRankingItems(toRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[] {
-        const amount = rankingItems.length - toRule.getToPoulePlaces().length;
+    protected getQualifiedRankingItems(toRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[] {
+        const amount = toRule.getToPoulePlaces().length;
         const start = (toRule.getWinnersOrLosers() === Round.WINNERS) ? 0 : rankingItems.length - amount;
-        rankingItems.splice(start, amount);
-        return rankingItems;
+        return rankingItems.splice(start, amount);
     }
-
-    /*protected filterQualifiedRankingItems(toRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[] {
-        const amount = rankingItems.length - toRule.getToPoulePlaces().length;
-        const start = (toRule.getWinnersOrLosers() === Round.WINNERS) ? rankingItems.length - amount : 0;
-        rankingItems.splice(start, amount);
-        return rankingItems;
-    }*/
 
     protected getRankingItemsForMultipleRule(toRule: QualifyRule): RankingItem[] {
         const poulePlacesToCompare: PoulePlace[] = [];
         toRule.getFromPoulePlaces().forEach(fromPoulePlace => {
             poulePlacesToCompare.push(this.getRankedEquivalent(fromPoulePlace));
         });
-        const rankingItems = this.rankingService.getItems(poulePlacesToCompare, toRule.getFromRound().getGames());
-        return this.filterDeadRankingItems(toRule, rankingItems);
+        return this.rankingService.getItems(poulePlacesToCompare, toRule.getFromRound().getGames());
     }
 
     protected getRankedEquivalent(poulePlace: PoulePlace): PoulePlace {
@@ -97,9 +154,7 @@ export class EndRanking {
 
     protected getDeadPlacesFromPlaceNumber(poulePlaces: PoulePlace[], round: Round): PoulePlace[] {
         let rankingItems: RankingItem[];
-        if (round.getGames().length > 0 && round.getState() !== Game.STATE_PLAYED) {
-            rankingItems = this.getUndeterminableItems(poulePlaces.length);
-        } else {
+        {
             const poulePlacesToCompare: PoulePlace[] = [];
             poulePlaces.forEach(poulePlace => {
                 rankingItems = this.rankingService.getItems(poulePlace.getPoule().getPlaces(), poulePlace.getPoule().getGames());
@@ -111,14 +166,5 @@ export class EndRanking {
             rankingItems = this.rankingService.getItems(poulePlacesToCompare, round.getGames());
         }
         return rankingItems.map(rankingItem => rankingItem.getPoulePlace());
-    }
-
-    protected getUndeterminableItems(numberOfItems: number): RankingItem[] {
-        const rankingItems: RankingItem[] = [];
-        const rankingNumbers = Array(numberOfItems).fill(0).map((e, i) => i + 1);
-        rankingNumbers.forEach(rankingNumber => {
-            rankingItems.push(new RankingItem(rankingItems.length + 1));
-        });
-        return rankingItems;
     }
 }

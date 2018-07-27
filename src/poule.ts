@@ -87,6 +87,10 @@ export class Poule {
         return teams;
     }
 
+    hasGames(): boolean {
+        return this.getGames().length > 0;
+    }
+
     getGames(): Game[] {
         return this.games;
     }

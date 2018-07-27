@@ -279,6 +279,10 @@ export class Round {
         return teams;
     }
 
+    hasGames(): boolean {
+        return this.getPoules().some(poule => poule.hasGames());
+    }
+
     getGames(): Game[] {
         const games = [];
         this.getPoules().forEach(poule => {
@@ -388,15 +392,4 @@ export class Round {
         }
         return this.getParent().getChildRound(Round.getOpposing(this.getWinnersOrLosers()));
     }
-
-    // getActiveQualifyRuleMul() {
-    //     return ( ( this.getToQualifyRules() % this.getPoules().length ) === 0 );
-    // }
-
-    // isFromQualifyingAllSingle(): boolean{
-    //     const lastFromQualifyRule = this.fromQualifyRules[this.fromQualifyRules.length - 1];
-    //     return lastFromQualifyRule !== undefined && lastFromQualifyRule.isMultiple()  {
-    //         return true;
-    //     }
-    // }
 }

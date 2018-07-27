@@ -233,7 +233,7 @@ export class PlanningService {
         if (rounds === undefined) {
             return false;
         }
-        return rounds.some(round => round.getGames().length > 0);
+        return rounds.some(round => round.hasGames());
     }
 
     getGamesForRoundNumber(roundNumber: number, order: number): Game[] {
