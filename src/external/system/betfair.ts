@@ -1,16 +1,16 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
-/**
- * Created by coen on 17-2-17.
- */
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError ,  map } from 'rxjs/operators';
+import { Observable, throwError as observableThrowError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { League } from './../../league';
 import { ExternalSystem } from './../system';
 import { ExternalSystemLeagueInterface } from './interface';
 
+
+/**
+ * Created by coen on 17-2-17.
+ */
 export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
 
     constructor(
@@ -77,7 +77,6 @@ export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
         // level: "1"
         // cup: false,
         // federation: "UEFA"
-
         const league = new League(json.name);
         league.setId(json.league_slug);
         league.setAbbreviation(league.getName().substr(0, League.MAX_LENGTH_ABBREVIATION));
