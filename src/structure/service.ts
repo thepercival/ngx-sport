@@ -19,7 +19,7 @@ export interface IRoundStructure {
 
 export class StructureService {
 
-    private static readonly DEFAULTS: IRoundStructure[] = [
+    static readonly DEFAULTS: IRoundStructure[] = [
         undefined, undefined,
         { nrofpoules: 1, nrofwinners: 1 }, // 2
         { nrofpoules: 1, nrofwinners: 1 },
