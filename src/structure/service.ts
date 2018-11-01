@@ -396,7 +396,7 @@ export class StructureService {
         return nrOfRemovedPlaces;
     }
 
-    addPoulePlace(round, recalcQualify: boolean = true): boolean {
+    addPoulePlace(round, recalcQualify: boolean = true): PoulePlace {
         const poules = round.getPoules();
         if (poules.length === 0) {
             throw new Error('er moet minimaal 1 poule aanwezig zijn');
@@ -421,7 +421,7 @@ export class StructureService {
                 qualifyService.createObjectsForParentRound();
             });
         }
-        return true;
+        return poulePlace;
     }
 
     changeNrOfPlacesChildRound(nrOfChildPlacesNew: number, parentRound: Round, winnersOrLosers: number, checkOpposingQualifiers = true) {
