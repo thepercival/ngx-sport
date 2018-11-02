@@ -42,7 +42,7 @@ export class StructureNameService {
      *
      */
     getRoundsName(roundNumber, roundsByNumber: Round[]) {
-        if (this.roundsHaveSameName(roundsByNumber) === true) {
+        if (this.roundsHaveSameName(roundsByNumber)) {
             return this.getRoundName(roundsByNumber[0], true);
         }
         return this.getHtmlNumber(roundNumber) + ' ronde';
