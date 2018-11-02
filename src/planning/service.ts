@@ -81,7 +81,7 @@ export class PlanningService {
         return rounds.some(round => round.isStarted());
     }
 
-    protected calculateStartDateTime(roundNumber: number) {
+    calculateStartDateTime(roundNumber: number) {
         const aRound = this.allRoundsByNumber[roundNumber][0];
         if (aRound.getConfig().getEnableTime() === false) {
             return undefined;
