@@ -82,16 +82,18 @@
       "@semantic-release/git"
     ],
     "getLastRelease": "@semantic-release/npm",
-    "publish": [
-      {
-        "path": "@semantic-release/npm",
-        "pkgRoot": "dist"
-      },
+    "prepare": [
       {
         "path": "@semantic-release/git",
         "assets": [
           "package.json"
         ]
+      }
+    ],
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "pkgRoot": "dist"
       }
     ]
   },
