@@ -38,7 +38,7 @@ export class Round {
         this.setCompetition(competition);
         this.winnersOrLosers = winnersOrLosers;
         this.setParentRound(parentRound);
-        this.qualifyOrder = Round.ORDER_HORIZONTAL;
+        this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.ORDER_HORIZONTAL;
     }
 
     static getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {

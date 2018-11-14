@@ -12,13 +12,11 @@ import { QualifyRule } from './rule';
  */
 
 export class QualifyService {
-    private parentRound: Round;
-
-    constructor(private childRound: Round) {
-        this.parentRound = childRound.getParent();
+    constructor(private parentRound: Round, private childRound: Round) {
     }
 
-    createObjectsForParentRound() {
+    createRules() {
+        // console.log('createRules started: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
         // childRoundPoulePlaces
         const childRoundPoulePlaces = this.childRound.getPoulePlaces(this.childRound.getQualifyOrder());
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
@@ -29,7 +27,7 @@ export class QualifyService {
         );
 
         let nrOfShifts = 0;
-        while (childRoundPoulePlaces.length > 0) {
+        while (childRoundPoulePlaces.length > 0 && parentRoundPoulePlacesPer.length > 0) {
             const qualifyRule = new QualifyRule(this.parentRound, this.childRound);
             // from places
             let nrOfPoulePlaces = 0;
@@ -56,18 +54,23 @@ export class QualifyService {
                 qualifyRule.addToPoulePlace(toPoulePlace);
             }
         }
+        // console.log('createRules ended: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
     }
 
     protected getShuffledPoulePlaces(poulePlaces: PoulePlace[], nrOfShifts: number, childRound: Round): PoulePlace[] {
         let shuffledPoulePlaces: PoulePlace[] = [];
         const qualifyOrder = childRound.getQualifyOrder();
         if (qualifyOrder === Round.ORDER_VERTICAL || qualifyOrder === Round.ORDER_HORIZONTAL) {
-            for (let shiftTime = 0; shiftTime < nrOfShifts; shiftTime++) {
-                poulePlaces.push(poulePlaces.shift());
+            if ((poulePlaces.length % 2) === 0) {
+                for (let shiftTime = 0; shiftTime < nrOfShifts; shiftTime++) {
+                    poulePlaces.push(poulePlaces.shift());
+                }
+            } else {
+                shuffledPoulePlaces = poulePlaces;
             }
             shuffledPoulePlaces = poulePlaces;
         } else if (qualifyOrder === 4) { // shuffle per two on oneven placenumbers, horizontal-children
-            if (poulePlaces[0].getNumber() % 2 === 0) {
+            if ((poulePlaces[0].getNumber() % 2) === 0) {
                 while (poulePlaces.length > 0) {
                     shuffledPoulePlaces = shuffledPoulePlaces.concat(poulePlaces.splice(0, 2).reverse());
                 }
@@ -88,7 +91,8 @@ export class QualifyService {
         return shuffledPoulePlaces;
     }
 
-    removeObjectsForParentRound() {
+    removeRules() {
+        // console.log('removeRules: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
         let fromQualifyRules = this.childRound.getFromQualifyRules().slice();
         fromQualifyRules.forEach(function (qualifyRuleIt) {
             while (qualifyRuleIt.getFromPoulePlaces().length > 0) {

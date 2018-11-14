@@ -83,19 +83,14 @@ export class StructureNameService {
         if (teamName === true && pouleplace.getTeam() !== undefined) {
             return pouleplace.getTeam().getName();
         }
-        const poule = pouleplace.getPoule();
-        const round = poule.getRound();
-
         const fromQualifyRule = pouleplace.getFromQualifyRule();
         if (fromQualifyRule === undefined) { // first round
             return this.getPoulePlaceNameSimple(pouleplace, false);
         }
-
         if (fromQualifyRule.isMultiple() === false) {
             const fromPoulePlace = fromQualifyRule.getFromEquivalent(pouleplace);
             return this.getPoulePlaceNameSimple(fromPoulePlace, false);
         }
-
         return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
     }
 
