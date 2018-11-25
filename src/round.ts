@@ -33,10 +33,11 @@ export class Round {
     protected toQualifyRules: QualifyRule[] = [];
 
     constructor(roundNumber: RoundNumber, parentRound: Round, winnersOrLosers: number) {
-        this.number = roundNumber;
+        this.number = roundNumber;        
         this.winnersOrLosers = winnersOrLosers;
         this.setParentRound(parentRound);
         this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.ORDER_HORIZONTAL;
+        this.number.getRounds().push(this);
     }
 
     static getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {

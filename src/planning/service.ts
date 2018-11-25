@@ -151,12 +151,9 @@ export class PlanningService {
     }
 
     protected rescheduleHelper(roundNumber: RoundNumber, pStartDateTime: Date): Date {
-        const rounds = roundNumber.getRounds();
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
-
         const fields = this.competition.getFields();
         const referees = this.competition.getReferees();
-
         const nextDateTime = this.assignResourceBatchToGames(roundNumber, roundNumber.getConfig(), dateTime, fields, referees);
         if (nextDateTime !== undefined) {
             nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getConfig().getMinutesAfter());
