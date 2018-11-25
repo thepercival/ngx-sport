@@ -1,25 +1,25 @@
-import { RoundConfig } from '../config';
+import { RoundNumberConfig } from '../config';
 
-export class RoundConfigScore {
+export class RoundNumberConfigScore {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected config: RoundConfig;
-    protected parent: RoundConfigScore;
+    protected config: RoundNumberConfig;
+    protected parent: RoundNumberConfigScore;
     protected name: string;
     protected direction: number;
     protected maximum: number;
-    protected child: RoundConfigScore;
+    protected child: RoundNumberConfigScore;
 
     // constructor
-    constructor(config: RoundConfig, parent: RoundConfigScore) {
+    constructor(config: RoundNumberConfig, parent: RoundNumberConfigScore) {
         this.setConfig(config);
         this.setParent(parent);
     }
 
     static getDirectionDescription(direction: number) {
-        return direction === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
+        return direction === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     getId(): number {
@@ -58,19 +58,19 @@ export class RoundConfigScore {
         this.maximum = maximum;
     }
 
-    getConfig(): RoundConfig {
+    getConfig(): RoundNumberConfig {
         return this.config;
     }
 
-    private setConfig(config: RoundConfig) {
+    private setConfig(config: RoundNumberConfig) {
         this.config = config;
     }
 
-    getParent(): RoundConfigScore {
+    getParent(): RoundNumberConfigScore {
         return this.parent;
     }
 
-    private setParent(parent: RoundConfigScore) {
+    private setParent(parent: RoundNumberConfigScore) {
         this.parent = parent;
         if (this.parent !== undefined) {
             this.parent.setChild(this);
@@ -85,11 +85,11 @@ export class RoundConfigScore {
         return this;
     }
 
-    getChild(): RoundConfigScore {
+    getChild(): RoundNumberConfigScore {
         return this.child;
     }
 
-    setChild(child: RoundConfigScore) {
+    setChild(child: RoundNumberConfigScore) {
         this.child = child;
     }
 

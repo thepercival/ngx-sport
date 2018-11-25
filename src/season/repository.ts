@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { SportRepository } from '../repository';
 import { Season } from '../season';
@@ -25,7 +25,7 @@ export class SeasonRepository extends SportRepository {
     getObject(id: number): Observable<Season> {
         const url = this.url + '/' + id;
         return this.http.get(url, { headers: super.getHeaders() }).pipe(
-            map((res: ISeason) => this.jsonToObjectHelper(res)),
+            map((res: ISeason) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -48,15 +48,15 @@ export class SeasonRepository extends SportRepository {
 
     createObject(jsonObject: any): Observable<Season> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: ISeason) => this.jsonToObjectHelper(res)),
+            map((res: ISeason) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(object: Season): Observable<Season> {
         const url = this.url + '/' + object.getId();
-        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
-            map((res: ISeason) => this.jsonToObjectHelper(res)),
+        return this.http.put(url, this.objectToJson(object), { headers: super.getHeaders() }).pipe(
+            map((res: ISeason) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -75,12 +75,12 @@ export class SeasonRepository extends SportRepository {
     jsonArrayToObject(jsonArray: ISeason[]): Season[] {
         const seasons: Season[] = [];
         for (const json of jsonArray) {
-            seasons.push(this.jsonToObjectHelper(json));
+            seasons.push(this.jsonToObject(json));
         }
         return seasons;
     }
 
-    jsonToObjectHelper(json: ISeason, season?: Season): Season {
+    jsonToObject(json: ISeason, season?: Season): Season {
         if (season === undefined && json.id !== undefined) {
             season = this.cache[json.id];
         }
@@ -97,12 +97,12 @@ export class SeasonRepository extends SportRepository {
     objectsToJsonArray(objects: Season[]): ISeason[] {
         const jsonArray: ISeason[] = [];
         for (const object of objects) {
-            jsonArray.push(this.objectToJsonHelper(object));
+            jsonArray.push(this.objectToJson(object));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Season): any {
+    objectToJson(object: Season): any {
         const json: ISeason = {
             id: object.getId(),
             name: object.getName(),

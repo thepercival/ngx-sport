@@ -2,12 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
 import { SportRepository } from '../repository';
-import { Round } from '../round';
+import { IRoundNumber, RoundNumberRepository } from '../round/number/repository';
 import { IRound, RoundRepository } from '../round/repository';
+import { Structure } from '../structure';
 
 /**
  * Created by coen on 3-3-17.
@@ -20,6 +21,7 @@ export class StructureRepository extends SportRepository {
     constructor(
         private http: HttpClient,
         private roundRepos: RoundRepository,
+        private roundNumberRepos: RoundNumberRepository,
         router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
@@ -29,55 +31,63 @@ export class StructureRepository extends SportRepository {
         return 'structures';
     }
 
-    getObject(competition: Competition): Observable<Round> {
+    getObject(competition: Competition): Observable<Structure> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-
-        return this.http.get<Array<IRound>>(this.url, options).pipe(
-            map((roundRes: IRound[]) => {
-                const jsonRound = roundRes.shift();
-                if (jsonRound === undefined) {
-                    return undefined;
-                }
-                const round = this.roundRepos.jsonToObjectHelper(jsonRound, competition);
-                return round;
+        return this.http.get(this.url, options).pipe(
+            map((json: IStructure) => {
+                return this.jsonToObject(json, competition);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(jsonRound: IRound, competition: Competition, parentRound?: Round): Observable<Round> {
+    createObject(jsonStructure: IStructure, competition: Competition): Observable<Structure> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-        return this.http.post(this.url, jsonRound, options).pipe(
-            map((roundRes: IRound) => {
-                const round = this.roundRepos.jsonToObjectHelper(roundRes, competition, parentRound);
-                return round;
-            }),
+        return this.http.post(this.url, jsonStructure, options).pipe(
+            map((structureRes: IStructure) => this.jsonToObject(structureRes, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(round: Round, competition: Competition, parentRound?: Round): Observable<Round> {
+    editObject(structure: Structure, competition: Competition): Observable<Structure> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-        return this.http.put(this.url + '/' + round.getId(), this.roundRepos.objectToJsonHelper(round), options).pipe(
-            map((res: IRound) => this.roundRepos.jsonToObjectHelper(res, competition, parentRound, round)),
+        return this.http.put(this.url + '/' + competition.getId(), this.objectToJson(structure), options).pipe(
+            map((res: IStructure) => this.jsonToObject(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(round: Round): Observable<void> {
+    /*removeObject(round: Round): Observable<void> {
         const url = this.url + '/' + round.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res: Response) => {}),
+            map((res: Response) => { }),
             catchError((err) => this.handleError(err))
         );
+    }*/
+
+    objectToJson(structure: Structure): IStructure {
+        return {
+            firstRoundNumber: this.roundNumberRepos.objectToJson(structure.getFirstRoundNumber()),
+            rootRound: this.roundRepos.objectToJson(structure.getRootRound())
+        };
     }
+
+    jsonToObject(json: IStructure, competition: Competition): Structure {
+        const firstRoundNumber = this.roundNumberRepos.jsonToObject(json.firstRoundNumber, competition);
+        return new Structure(firstRoundNumber, this.roundRepos.jsonToObject(json.rootRound, firstRoundNumber));
+    }
+}
+
+export class IStructure {
+    firstRoundNumber: IRoundNumber;
+    rootRound: IRound;
 }

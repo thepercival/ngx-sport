@@ -16,7 +16,7 @@ export class QualifyService {
     }
 
     createRules() {
-        // console.log('createRules started: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
+        // console.log('createRules started: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
         // childRoundPoulePlaces
         const childRoundPoulePlaces = this.childRound.getPoulePlaces(this.childRound.getQualifyOrder());
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
@@ -54,7 +54,7 @@ export class QualifyService {
                 qualifyRule.addToPoulePlace(toPoulePlace);
             }
         }
-        // console.log('createRules ended: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
+        // console.log('createRules ended: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
     }
 
     protected getShuffledPoulePlaces(poulePlaces: PoulePlace[], nrOfShifts: number, childRound: Round): PoulePlace[] {
@@ -92,7 +92,7 @@ export class QualifyService {
     }
 
     removeRules() {
-        // console.log('removeRules: ' + this.parentRound.getNumber() + ' < -> ' + this.childRound.getNumber());
+        // console.log('removeRules: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
         let fromQualifyRules = this.childRound.getFromQualifyRules().slice();
         fromQualifyRules.forEach(function (qualifyRuleIt) {
             while (qualifyRuleIt.getFromPoulePlaces().length > 0) {

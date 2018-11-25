@@ -1,15 +1,15 @@
-/**
- * Created by coen on 30-1-17.
- */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Association } from '../association';
 import { SportRepository } from '../repository';
 
+/**
+ * Created by coen on 30-1-17.
+ */
 @Injectable()
 export class AssociationRepository extends SportRepository {
 
@@ -36,22 +36,22 @@ export class AssociationRepository extends SportRepository {
     getObject(id: number): Observable<Association> {
         const url = this.url + '/' + id;
         return this.http.get(url).pipe(
-            map((res: IAssociation) => this.jsonToObjectHelper(res)),
+            map((res: IAssociation) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     createObject(jsonObject: IAssociation): Observable<Association> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: IAssociation) => this.jsonToObjectHelper(res)),
+            map((res: IAssociation) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(object: Association): Observable<Association> {
         const url = this.url + '/' + object.getId();
-        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
-            map((res: IAssociation) => this.jsonToObjectHelper(res, object))
+        return this.http.put(url, this.objectToJson(object), { headers: super.getHeaders() }).pipe(
+            map((res: IAssociation) => this.jsonToObject(res, object))
         );
     }
 
@@ -69,12 +69,12 @@ export class AssociationRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IAssociation[]): Association[] {
         const objects: Association[] = [];
         for (const json of jsonArray) {
-            objects.push(this.jsonToObjectHelper(json));
+            objects.push(this.jsonToObject(json));
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IAssociation, association?: Association): Association {
+    jsonToObject(json: IAssociation, association?: Association): Association {
         if (association === undefined && json.id !== undefined) {
             association = this.cache[json.id];
         }
@@ -86,17 +86,17 @@ export class AssociationRepository extends SportRepository {
         association.setDescription(json.description);
 
         if (json.parent !== undefined) {
-            association.setParent(this.jsonToObjectHelper(json.parent, association ? association.getParent() : undefined));
+            association.setParent(this.jsonToObject(json.parent, association ? association.getParent() : undefined));
         }
         return association;
     }
 
-    objectToJsonHelper(object: Association): IAssociation {
+    objectToJson(object: Association): IAssociation {
         const json: IAssociation = {
             id: object.getId(),
             name: object.getName(),
             description: object.getDescription(),
-            parent: object.getParent() ? this.objectToJsonHelper(object.getParent()) : undefined
+            parent: object.getParent() ? this.objectToJson(object.getParent()) : undefined
         };
         return json;
     }

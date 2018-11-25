@@ -4,21 +4,20 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Competition } from '../../competition';
-import { SportRepository } from '../../repository';
-import { Round } from '../../round';
-import { RoundConfig } from '../config';
-import { IRoundConfigScore, RoundConfigScoreRepository } from './score/repository';
+import { SportRepository } from '../../../repository';
+import { RoundNumber } from '../../../round/number';
+import { RoundNumberConfig } from '../config';
+import { IRoundNumberConfigScore, RoundNumberConfigScoreRepository } from './score/repository';
 
 /**
  * Created by coen on 3-3-17.
  */
 @Injectable()
-export class RoundConfigRepository extends SportRepository {
+export class RoundNumberConfigRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private scoreRepository: RoundConfigScoreRepository,
+        private scoreRepository: RoundNumberConfigScoreRepository,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -29,17 +28,17 @@ export class RoundConfigRepository extends SportRepository {
         return 'roundconfigs';
     }
 
-    editObject(competition: Competition, roundNumber: number, roundConfig: IRoundConfig): Observable<boolean> {
-        const options = this.getOptions(competition, roundNumber);
-        return this.http.post(this.url, roundConfig, options).pipe(
+    editObject(roundNumber: RoundNumber, roundNumberConfig: IRoundNumberConfig): Observable<boolean> {
+        const options = this.getOptions(roundNumber);
+        return this.http.post(this.url, roundNumberConfig, options).pipe(
             map((res: boolean) => res),
             catchError((err) => this.handleError(err))
         );
     }
 
-    protected getOptions(competition: Competition, roundNumber: number): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(roundNumber: RoundNumber): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
-        httpParams = httpParams.set('competitionid', competition.getId().toString());
+        httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
         httpParams = httpParams.set('roundnumber', roundNumber.toString());
         if (name !== undefined) {
             httpParams = httpParams.set('name', name);
@@ -50,17 +49,17 @@ export class RoundConfigRepository extends SportRepository {
         };
     }
 
-    jsonArrayToObject(jsonArray: IRoundConfig[], round: Round): RoundConfig[] {
-        const objects: RoundConfig[] = [];
+    jsonArrayToObject(jsonArray: IRoundNumberConfig[], roundNumber: RoundNumber): RoundNumberConfig[] {
+        const objects: RoundNumberConfig[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, round);
+            const object = this.jsonToObject(json, roundNumber);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IRoundConfig, round: Round): RoundConfig {
-        const roundConfig = new RoundConfig(round);
+    jsonToObject(json: IRoundNumberConfig, roundNumber: RoundNumber): RoundNumberConfig {
+        const roundConfig = new RoundNumberConfig(roundNumber);
         roundConfig.setId(json.id);
         roundConfig.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
         roundConfig.setQualifyRule(json.qualifyRule);
@@ -74,19 +73,19 @@ export class RoundConfigRepository extends SportRepository {
         roundConfig.setMinutesPerGame(json.minutesPerGame);
         roundConfig.setMinutesBetweenGames(json.minutesBetweenGames);
         roundConfig.setMinutesAfter(json.minutesAfter);
-        roundConfig.setScore(this.scoreRepository.jsonToObjectHelper(json.score, roundConfig));
+        roundConfig.setScore(this.scoreRepository.jsonToObject(json.score, roundConfig));
         return roundConfig;
     }
 
-    objectsToJsonArray(objects: RoundConfig[]): IRoundConfig[] {
-        const jsonArray: IRoundConfig[] = [];
+    objectsToJsonArray(objects: RoundNumberConfig[]): IRoundNumberConfig[] {
+        const jsonArray: IRoundNumberConfig[] = [];
         for (const object of objects) {
-            jsonArray.push(this.objectToJsonHelper(object));
+            jsonArray.push(this.objectToJson(object));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: RoundConfig): IRoundConfig {
+    objectToJson(object: RoundNumberConfig): IRoundNumberConfig {
         return {
             id: object.getId(),
             nrOfHeadtoheadMatches: object.getNrOfHeadtoheadMatches(),
@@ -101,12 +100,12 @@ export class RoundConfigRepository extends SportRepository {
             minutesPerGame: object.getMinutesPerGame(),
             minutesBetweenGames: object.getMinutesBetweenGames(),
             minutesAfter: object.getMinutesAfter(),
-            score: this.scoreRepository.objectToJsonHelper(object.getScore())
+            score: this.scoreRepository.objectToJson(object.getScore())
         };
     }
 }
 
-export interface IRoundConfig {
+export interface IRoundNumberConfig {
     id?: number;
     nrOfHeadtoheadMatches: number;
     qualifyRule: number;
@@ -120,5 +119,5 @@ export interface IRoundConfig {
     minutesPerGame: number;
     minutesBetweenGames: number;
     minutesAfter: number;
-    score: IRoundConfigScore;
+    score: IRoundNumberConfigScore;
 }

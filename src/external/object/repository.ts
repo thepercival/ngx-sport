@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { SportRepository } from '../../repository';
 import { ExternalObject, ImportableObject } from '../object';
@@ -53,22 +53,22 @@ export class ExternalObjectRepository extends SportRepository {
 
         const url = this.getUrl() + '/-1';
         return this.http.get(url, options).pipe(
-            map((res: IExternalObject) => this.jsonToObjectHelper(res)),
+            map((res: IExternalObject) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     createObject(jsonObject: IExternalObject): Observable<ExternalObject> {
         return this.http.post(this.getUrl(), jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: IExternalObject) => this.jsonToObjectHelper(res)),
+            map((res: IExternalObject) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(object: ExternalObject): Observable<ExternalObject> {
         const url = this.getUrl() + '/' + object.getId();
-        return this.http.put(url, this.objectToJsonHelper(object), { headers: super.getHeaders() }).pipe(
-            map((res: IExternalObject) => this.jsonToObjectHelper(res, object))
+        return this.http.put(url, this.objectToJson(object), { headers: super.getHeaders() }).pipe(
+            map((res: IExternalObject) => this.jsonToObject(res, object))
         );
     }
 
@@ -104,12 +104,12 @@ export class ExternalObjectRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IExternalObject[]): ExternalObject[] {
         const externalObjects: ExternalObject[] = [];
         for (const json of jsonArray) {
-            externalObjects.push(this.jsonToObjectHelper(json));
+            externalObjects.push(this.jsonToObject(json));
         }
         return externalObjects;
     }
 
-    jsonToObjectHelper(json: IExternalObject, externalObject?: ExternalObject): ExternalObject {
+    jsonToObject(json: IExternalObject, externalObject?: ExternalObject): ExternalObject {
         if (externalObject === undefined && json.id !== undefined) {
             externalObject = this.cache[json.id];
         }
@@ -124,7 +124,7 @@ export class ExternalObjectRepository extends SportRepository {
         return externalObject;
     }
 
-    objectToJsonHelper(externalObject: ExternalObject): IExternalObject {
+    objectToJson(externalObject: ExternalObject): IExternalObject {
         const json: IExternalObject = {
             id: externalObject.getId(),
             importableObjectId: externalObject.getImportableObjectId(),

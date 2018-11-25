@@ -3,7 +3,7 @@ import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { QualifyRule } from './qualify/rule';
-import { RoundConfig } from './round/config';
+import { RoundNumber } from './round/number';
 import { Team } from './team';
 
 /**
@@ -22,20 +22,18 @@ export class Round {
     static readonly ORDER_CUSTOM = 3;
 
     protected id: number;
-    protected competition: Competition;
+    protected number: RoundNumber;
     protected parentRound: Round;
     protected childRounds: Round[] = [];
     protected winnersOrLosers: number;
     protected qualifyOrder: number;
-    protected number: number;
     protected name: string;
-    protected config: RoundConfig;
     protected poules: Poule[] = [];
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
 
-    constructor(competition: Competition, parentRound: Round, winnersOrLosers: number) {
-        this.setCompetition(competition);
+    constructor(roundNumber: RoundNumber, parentRound: Round, winnersOrLosers: number) {
+        this.number = roundNumber;
         this.winnersOrLosers = winnersOrLosers;
         this.setParentRound(parentRound);
         this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.ORDER_HORIZONTAL;
@@ -59,11 +57,7 @@ export class Round {
     }
 
     getCompetition(): Competition {
-        return this.competition;
-    }
-
-    protected setCompetition(competition: Competition): void {
-        this.competition = competition;
+        return this.getNumber().getCompetition();
     }
 
     getParent(): Round {
@@ -72,7 +66,6 @@ export class Round {
 
     protected setParentRound(round: Round) {
         this.parentRound = round;
-        this.number = this.parentRound !== undefined ? (this.parentRound.getNumber() + 1) : 1;
         if (this.parentRound !== undefined) {
             const childRounds = this.parentRound.getChildRounds();
             if (childRounds.length === 1 && this.getWinnersOrLosers() === Round.WINNERS) {
@@ -93,8 +86,12 @@ export class Round {
     //     return this.getParent().isAncestorOf(aParentRound);
     // }
 
-    getNumber(): number {
+    getNumber(): RoundNumber {
         return this.number;
+    }
+
+    getNumberAsValue(): number {
+        return this.number.getNumber();
     }
 
     getChildRounds(): Round[] {
@@ -103,6 +100,10 @@ export class Round {
 
     getChildRound(winnersOrLosers: number): Round {
         return this.childRounds.find(roundIt => roundIt.getWinnersOrLosers() === winnersOrLosers);
+    }
+
+    isRoot() {
+        return (this.getParent() === undefined);
     }
 
     getRootRound() {
@@ -132,20 +133,18 @@ export class Round {
         this.name = name;
     }
 
-    getConfig(): RoundConfig {
-        return this.config;
-    }
-
-    setConfig(config: RoundConfig) {
-        this.config = config;
-    }
-
     getPoules(): Poule[] {
         return this.poules;
     }
 
     getPoule(number: number): Poule {
         return this.getPoules().find(poule => poule.getNumber() === number);
+    }
+
+    getPath(): number[] {
+        const path = this.isRoot() ? [] : this.getParent().getPath();
+        path.push(this.getWinnersOrLosers());
+        return path;
     }
 
     getPoulePlaces(order: number = 0): PoulePlace[] {

@@ -26,14 +26,14 @@ export class FieldRepository extends SportRepository {
 
     createObject(jsonField: IField, competition: Competition): Observable<Field> {
         return this.http.post(this.url, jsonField, this.getOptions(competition)).pipe(
-            map((res: IField) => this.jsonToObjectHelper(res, competition)),
+            map((res: IField) => this.jsonToObject(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(field: Field, competition: Competition): Observable<Field> {
-        return this.http.put(this.url + '/' + field.getId(), this.objectToJsonHelper(field), this.getOptions(competition)).pipe(
-            map((res: IField) => this.jsonToObjectHelper(res, competition, field)),
+        return this.http.put(this.url + '/' + field.getId(), this.objectToJson(field), this.getOptions(competition)).pipe(
+            map((res: IField) => this.jsonToObject(res, competition, field)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -60,13 +60,13 @@ export class FieldRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IField[], competition: Competition): Field[] {
         const objects: Field[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, competition);
+            const object = this.jsonToObject(json, competition);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IField, competition: Competition, field?: Field): Field {
+    jsonToObject(json: IField, competition: Competition, field?: Field): Field {
         if (field === undefined) {
             field = new Field(competition, json.number);
         }
@@ -78,13 +78,13 @@ export class FieldRepository extends SportRepository {
     objectsToJsonArray(objects: Field[]): any[] {
         const jsonArray: IField[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Field): IField {
+    objectToJson(object: Field): IField {
         const json: IField = {
             id: object.getId(),
             number: object.getNumber(),

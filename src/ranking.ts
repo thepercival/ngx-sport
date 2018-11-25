@@ -241,7 +241,7 @@ export class Ranking {
     }
 
     getPoints(poulePlace: PoulePlace, games: Game[]): number {
-        const config = poulePlace.getPoule().getRound().getConfig();
+        const config = poulePlace.getPoule().getRound().getNumber().getConfig();
         let points = 0;
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {

@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { SportRepository } from '../../repository';
 import { ExternalSystem } from '../system';
+
 // import { ExternalSystemSoccerOdds } from './soccerodds';
 // import { ExternalSystemSoccerSports } from './soccersports';
 
@@ -48,7 +49,7 @@ export class ExternalSystemRepository extends SportRepository {
     // getObject(id: number): Observable<ExternalSystem> {
     //     const url = this.url + '/' + id;
     //     return this.http.get(url).pipe(
-    //         map((res) => this.jsonToObjectHelper(res)),
+    //         map((res) => this.jsonToObject(res)),
     //         catchError((err) => this.handleError(err))
     //     );
     // }
@@ -77,7 +78,7 @@ export class ExternalSystemRepository extends SportRepository {
 
     createObject(jsonObject: IExternalSystem): Observable<ExternalSystem> {
         return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: IExternalSystem) => this.jsonToObjectHelper(res)),
+            map((res: IExternalSystem) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -87,8 +88,8 @@ export class ExternalSystemRepository extends SportRepository {
             headers: super.getHeaders()
         };
         const url = this.url + '/' + externalSystem.getId();
-        return this.http.put(url, this.objectToJsonHelper(externalSystem), options).pipe(
-            map((res: IExternalSystem) => this.jsonToObjectHelper(res, externalSystem)),
+        return this.http.put(url, this.objectToJson(externalSystem), options).pipe(
+            map((res: IExternalSystem) => this.jsonToObject(res, externalSystem)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -104,12 +105,12 @@ export class ExternalSystemRepository extends SportRepository {
     jsonArrayToObject(jsonArray: any): ExternalSystem[] {
         const objects: ExternalSystem[] = [];
         for (const json of jsonArray) {
-            objects.push(this.jsonToObjectHelper(json));
+            objects.push(this.jsonToObject(json));
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IExternalSystem, externalSystem?: ExternalSystem): ExternalSystem {
+    jsonToObject(json: IExternalSystem, externalSystem?: ExternalSystem): ExternalSystem {
         if (externalSystem === undefined) {
             externalSystem = new ExternalSystem(json.name);
         }
@@ -125,12 +126,12 @@ export class ExternalSystemRepository extends SportRepository {
     objectsToJsonArray(objects: ExternalSystem[]): IExternalSystem[] {
         const jsonArray: IExternalSystem[] = [];
         for (const object of objects) {
-            jsonArray.push(this.objectToJsonHelper(object));
+            jsonArray.push(this.objectToJson(object));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: ExternalSystem): any {
+    objectToJson(object: ExternalSystem): any {
         const externalSystem: IExternalSystem = {
             id: object.getId(),
             name: object.getName(),

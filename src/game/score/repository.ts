@@ -13,13 +13,13 @@ export class GameScoreRepository {
     jsonArrayToObject(jsonArray: IGameScore[], game: Game): GameScore[] {
         const objects: GameScore[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, game);
+            const object = this.jsonToObject(json, game);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IGameScore, game: Game, gameScore?: GameScore): GameScore {
+    jsonToObject(json: IGameScore, game: Game, gameScore?: GameScore): GameScore {
         if (gameScore === undefined) {
             gameScore = new GameScore(game, json.home, json.away, json.number);
         }
@@ -30,13 +30,13 @@ export class GameScoreRepository {
     objectsToJsonArray(objects: GameScore[]): IGameScore[] {
         const jsonArray: IGameScore[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: GameScore): IGameScore {
+    objectToJson(object: GameScore): IGameScore {
         return {
             id: object.getId(),
             number: object.getNumber(),

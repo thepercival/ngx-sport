@@ -30,9 +30,9 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     editObject(poulePlace: PoulePlace, poule: Poule): Observable<PoulePlace> {
-        return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJsonHelper(poulePlace), this.getOptions(poule)).pipe(
+        return this.http.put(this.url + '/' + poulePlace.getId(), this.objectToJson(poulePlace), this.getOptions(poule)).pipe(
             map((res: IPoulePlace) => {
-                return this.jsonToObjectHelper(res, poulePlace.getPoule(), poulePlace);
+                return this.jsonToObject(res, poulePlace.getPoule(), poulePlace);
             }),
             catchError((err) => this.handleError(err))
         );
@@ -51,13 +51,13 @@ export class PoulePlaceRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IPoulePlace[], poule: Poule): PoulePlace[] {
         const objects: PoulePlace[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, poule/*, poule.getPlace(json.number)*/);
+            const object = this.jsonToObject(json, poule/*, poule.getPlace(json.number)*/);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
+    jsonToObject(json: IPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
         if (poulePlace === undefined) {
             poulePlace = new PoulePlace(poule, json.number);
         }
@@ -65,7 +65,7 @@ export class PoulePlaceRepository extends SportRepository {
         // poule.setName(json.name);
         let team;
         if (json.team) {
-            team = this.teamRepos.jsonToObjectHelper(json.team, poule.getCompetition().getLeague().getAssociation());
+            team = this.teamRepos.jsonToObject(json.team, poule.getCompetition().getLeague().getAssociation());
         }
         poulePlace.setTeam(team);
         poulePlace.setPenaltyPoints(json.penaltyPoints);
@@ -75,17 +75,17 @@ export class PoulePlaceRepository extends SportRepository {
     objectsToJsonArray(objects: PoulePlace[]): IPoulePlace[] {
         const jsonArray: IPoulePlace[] = [];
         for (const object of objects) {
-            jsonArray.push(this.objectToJsonHelper(object));
+            jsonArray.push(this.objectToJson(object));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: PoulePlace): IPoulePlace {
+    objectToJson(object: PoulePlace): IPoulePlace {
         return {
             id: object.getId(),
             number: object.getNumber(),
             name: object.getName(),
-            team: object.getTeam() ? this.teamRepos.objectToJsonHelper(object.getTeam()) : undefined,
+            team: object.getTeam() ? this.teamRepos.objectToJson(object.getTeam()) : undefined,
             penaltyPoints: object.getPenaltyPoints()
         };
     }

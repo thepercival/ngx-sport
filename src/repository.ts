@@ -1,11 +1,10 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
-
-
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Observable, throwError as observableThrowError } from 'rxjs';
 
 import { SportConfig } from './config';
+
+
 
 /**
  * Created by coen on 10-10-17.
@@ -25,6 +24,7 @@ export class SportRepository {
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+        headers = headers.append('X-Api-Version', '2');
         const token = SportConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);
@@ -46,6 +46,8 @@ export class SportRepository {
             errortext = error.error;
         } else if (error.statusText !== undefined) {
             errortext = error.statusText;
+        } else if (error.message !== undefined) {
+            errortext = error.message;
         }
         if (error.status === 401) {
             this.getRouter().navigate(['/user/login'], { queryParams: { message: 'log opnieuw in' } });

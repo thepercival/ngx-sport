@@ -32,12 +32,12 @@ export class PouleRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IPoule[], round: Round): Poule[] {
         const poules: Poule[] = [];
         for (const json of jsonArray) {
-            poules.push(this.jsonToObjectHelper(json, round, round.getPoule(json.number)));
+            poules.push(this.jsonToObject(json, round, round.getPoule(json.number)));
         }
         return poules;
     }
 
-    jsonToObjectHelper(json: IPoule, round: Round, poule?: Poule): Poule {
+    jsonToObject(json: IPoule, round: Round, poule?: Poule): Poule {
         poule = new Poule(round, json.number);
         poule.setId(json.id);
         poule.setName(json.name);
@@ -54,12 +54,12 @@ export class PouleRepository extends SportRepository {
     objectsToJsonArray(objects: Poule[]): IPoule[] {
         const jsonArray: IPoule[] = [];
         for (const object of objects) {
-            jsonArray.push(this.objectToJsonHelper(object));
+            jsonArray.push(this.objectToJson(object));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Poule): IPoule {
+    objectToJson(object: Poule): IPoule {
         const json: IPoule = {
             id: object.getId(),
             number: object.getNumber(),

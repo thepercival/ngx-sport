@@ -25,14 +25,14 @@ export class RefereeRepository extends SportRepository {
 
     createObject(jsonReferee: IReferee, competition: Competition): Observable<Referee> {
         return this.http.post(this.url, jsonReferee, this.getOptions(competition)).pipe(
-            map((res: IReferee) => this.jsonToObjectHelper(res, competition)),
+            map((res: IReferee) => this.jsonToObject(res, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(referee: Referee, competition: Competition): Observable<Referee> {
-        return this.http.put(this.url + '/' + referee.getId(), this.objectToJsonHelper(referee), this.getOptions(competition)).pipe(
-            map((res: IReferee) => this.jsonToObjectHelper(res, competition, referee)),
+        return this.http.put(this.url + '/' + referee.getId(), this.objectToJson(referee), this.getOptions(competition)).pipe(
+            map((res: IReferee) => this.jsonToObject(res, competition, referee)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -59,13 +59,13 @@ export class RefereeRepository extends SportRepository {
     jsonArrayToObject(jsonArray: IReferee[], competition: Competition): Referee[] {
         const objects: Referee[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, competition);
+            const object = this.jsonToObject(json, competition);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IReferee, competition: Competition, referee?: Referee): Referee {
+    jsonToObject(json: IReferee, competition: Competition, referee?: Referee): Referee {
         if (referee === undefined) {
             referee = new Referee(competition, json.initials);
         }
@@ -79,13 +79,13 @@ export class RefereeRepository extends SportRepository {
     objectsToJsonArray(objects: any[]): any[] {
         const jsonArray: any[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Referee): IReferee {
+    objectToJson(object: Referee): IReferee {
         const json: IReferee = {
             id: object.getId(),
             initials: object.getInitials(),

@@ -48,7 +48,7 @@ export class TeamRepository extends SportRepository {
     getObject(id: number, association: Association): Observable<Team> {
         const options = this.getOptions(association);
         return this.http.get(this.url + '/' + id, options).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res, association)),
+            map((res: ITeam) => this.jsonToObject(res, association)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -56,15 +56,15 @@ export class TeamRepository extends SportRepository {
     createObject(jsonTeam: ITeam, association: Association): Observable<Team> {
         const options = this.getOptions(association);
         return this.http.post(this.url, jsonTeam, options).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res, association)),
+            map((res: ITeam) => this.jsonToObject(res, association)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(team: Team): Observable<Team> {
         const options = this.getOptions(team.getAssociation());
-        return this.http.put(this.url + '/' + team.getId(), this.objectToJsonHelper(team), options).pipe(
-            map((res: ITeam) => this.jsonToObjectHelper(res, team.getAssociation(), team)),
+        return this.http.put(this.url + '/' + team.getId(), this.objectToJson(team), options).pipe(
+            map((res: ITeam) => this.jsonToObject(res, team.getAssociation(), team)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -96,12 +96,12 @@ export class TeamRepository extends SportRepository {
     jsonArrayToObject(jsonArray: Array<ITeam>, association: Association): Team[] {
         const teams: Team[] = [];
         for (const json of jsonArray) {
-            teams.push(this.jsonToObjectHelper(json, association));
+            teams.push(this.jsonToObject(json, association));
         }
         return teams;
     }
 
-    jsonToObjectHelper(json: ITeam, association: Association, team?: Team): Team {
+    jsonToObject(json: ITeam, association: Association, team?: Team): Team {
         if (team === undefined && json.id !== undefined) {
             team = this.cache[json.id];
         }
@@ -116,7 +116,7 @@ export class TeamRepository extends SportRepository {
         return team;
     }
 
-    objectToJsonHelper(team: Team): ITeam {
+    objectToJson(team: Team): ITeam {
         const json: ITeam = {
             id: team.getId(),
             name: team.getName(),

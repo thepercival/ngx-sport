@@ -1,7 +1,8 @@
-import { Round } from '../round';
-import { RoundConfigScore } from './config/score';
+import { RoundNumber } from '../number';
+import { RoundNumberConfigScore } from './config/score';
 
-export class RoundConfig {
+export class RoundNumberConfig {
+
     static readonly DEFAULTNROFHEADTOHEADMATCHES = 1;
     static readonly DEFAULTWINPOINTS = 3;
     static readonly DEFAULTDRAWPOINTS = 1;
@@ -9,7 +10,6 @@ export class RoundConfig {
     static readonly DEFAULTENABLETIME = false;
 
     protected id: number;
-    protected round: Round;
     protected nrOfHeadtoheadMatches: number;
     protected qualifyRule: number;
     protected winPoints: number;
@@ -22,11 +22,11 @@ export class RoundConfig {
     protected minutesPerGame: number;
     protected minutesBetweenGames: number;
     protected minutesAfter: number;
-    protected score: RoundConfigScore;
+    protected score: RoundNumberConfigScore;
 
     // constructor
-    constructor(round: Round) {
-        this.setRound(round);
+    constructor(protected roundNumber: RoundNumber) {
+        this.roundNumber.setConfig(this);
     }
 
     getId(): number {
@@ -35,17 +35,6 @@ export class RoundConfig {
 
     setId(id: number) {
         this.id = id;
-    }
-
-    getRound(): Round {
-        return this.round;
-    }
-
-    private setRound(round: Round) {
-        this.round = round;
-        if (round !== undefined) {
-            round.setConfig(this);
-        }
     }
 
     getNrOfHeadtoheadMatches(): number {
@@ -144,16 +133,16 @@ export class RoundConfig {
         this.minutesAfter = minutesAfter;
     }
 
-    getScore(): RoundConfigScore {
+    getScore(): RoundNumberConfigScore {
         return this.score;
     }
 
-    setScore(score: RoundConfigScore) {
+    setScore(score: RoundNumberConfigScore) {
         this.score = score;
     }
 
-    getInputScore(): RoundConfigScore {
-        let parentScoreConfig: RoundConfigScore = this.getScore().getRoot();
+    getInputScore(): RoundNumberConfigScore {
+        let parentScoreConfig: RoundNumberConfigScore = this.getScore().getRoot();
         let childScoreConfig = parentScoreConfig.getChild();
         while (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || parentScoreConfig.getMaximum() === 0)) {
             parentScoreConfig = childScoreConfig;
@@ -162,8 +151,8 @@ export class RoundConfig {
         return parentScoreConfig;
     }
 
-    getCalculateScore(): RoundConfigScore {
-        let scoreConfig: RoundConfigScore = this.getScore().getRoot();
+    getCalculateScore(): RoundNumberConfigScore {
+        let scoreConfig: RoundNumberConfigScore = this.getScore().getRoot();
         while (scoreConfig.getMaximum() === 0 && scoreConfig.getChild() !== undefined) {
             scoreConfig = scoreConfig.getChild();
         }
@@ -180,6 +169,10 @@ export class RoundConfig {
             nrOfMinutes += this.getMinutesPerGameExt();
         }
         return nrOfMinutes;
+    }
+
+    getRoundNumber(): RoundNumber {
+        return this.roundNumber;
     }
 }
 

@@ -16,13 +16,13 @@ export class QualifyRuleRepository {
     jsonArrayToObject(jsonArray: any, round: Round, fromRound?: Round): QualifyRule[] {
         const objects: QualifyRule[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, round, fromRound);
+            const object = this.jsonToObject(json, round, fromRound);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: any, round: Round, fromRound?: Round): QualifyRule {
+    jsonToObject(json: any, round: Round, fromRound?: Round): QualifyRule {
         const qualifyRule = new QualifyRule(fromRound, round);
 
         json.fromPoulePlaces.forEach(function (jsonFromPoulePlace) {
@@ -46,13 +46,13 @@ export class QualifyRuleRepository {
     objectsToJsonArray(objects: any[]): any[] {
         const jsonArray: any[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: QualifyRule): any {
+    objectToJson(object: QualifyRule): any {
         return {
             fromPoulePlaces: this.poulePlaceRepos.objectsToJsonArray(object.getFromPoulePlaces()),
             toPoulePlaces: this.poulePlaceRepos.objectsToJsonArray(object.getToPoulePlaces())

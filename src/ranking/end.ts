@@ -16,8 +16,8 @@ export class EndRanking {
         this.rankingService = new Ranking(ruleSet);
     }
 
-    getItems(firstRound: Round): RankingItem[] {
-        return this.getItemsHelper(firstRound);
+    getItems(rootRound: Round): RankingItem[] {
+        return this.getItemsHelper(rootRound);
     }
 
     protected getItemsHelper(round: Round, rankingItems: RankingItem[] = []): RankingItem[] {

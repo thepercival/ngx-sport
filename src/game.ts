@@ -5,6 +5,7 @@ import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { Referee } from './referee';
 import { Round } from './round';
+import { RoundNumberConfig } from './round/number/config';
 
 /**
  * Created by coen on 20-3-17.
@@ -171,7 +172,8 @@ export class Game {
         }
         let home = this.getScores()[0].getHome();
         let away = this.getScores()[0].getAway();
-        if (this.getRound().getConfig().getCalculateScore() !== this.getRound().getConfig().getInputScore()) {
+        const roundNumberConfig = this.getConfig();
+        if (roundNumberConfig.getCalculateScore() !== roundNumberConfig.getInputScore()) {
             home = 0;
             away = 0;
             this.getScores().forEach(score => {
@@ -193,6 +195,10 @@ export class Game {
             away += score.getAway();
         });
         return new GameScoreHomeAway(home, away);
+    }
+
+    getConfig(): RoundNumberConfig {
+        return this.getRound().getNumber().getConfig();
     }
 
     /*getScoreConfig(): RoundConfigScore {

@@ -36,15 +36,15 @@ export class GameRepository extends SportRepository {
     }
 
     /*createObject(game: Game, poule: Poule): Observable<Game> {
-        return this.http.post(this.url, this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
+        return this.http.post(this.url, this.objectToJson(game), this.getOptions(poule)).pipe(
             map((gameRes: IGame) => game.setId(gameRes.id)),
             catchError((err) => this.handleError(err))
         );
     }*/
 
     editObject(game: Game, poule: Poule): Observable<Game> {
-        return this.http.put(this.url + '/' + game.getId(), this.objectToJsonHelper(game), this.getOptions(poule)).pipe(
-            map((res: IGame) => this.jsonToObjectHelper(res, game.getPoule(), game)),
+        return this.http.put(this.url + '/' + game.getId(), this.objectToJson(game), this.getOptions(poule)).pipe(
+            map((res: IGame) => this.jsonToObject(res, game.getPoule(), game)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -63,12 +63,12 @@ export class GameRepository extends SportRepository {
         const objects: Game[] = [];
         for (const json of jsonArray) {
             const game = poule.getGames().find(gameIt => gameIt.getId() === json.id);
-            objects.push(this.jsonToObjectHelper(json, poule, game));
+            objects.push(this.jsonToObject(json, poule, game));
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: IGame, poule: Poule, game?: Game): Game {
+    jsonToObject(json: IGame, poule: Poule, game?: Game): Game {
         if (game === undefined) {
             game = new Game(
                 poule,
@@ -96,23 +96,23 @@ export class GameRepository extends SportRepository {
     objectsToJsonArray(objects: Game[]): IGame[] {
         const jsonArray: IGame[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Game): IGame {
+    objectToJson(object: Game): IGame {
         return {
             id: object.getId(),
-            homePoulePlace: this.pouleplaceRepos.objectToJsonHelper(object.getHomePoulePlace()),
-            awayPoulePlace: this.pouleplaceRepos.objectToJsonHelper(object.getAwayPoulePlace()),
+            homePoulePlace: this.pouleplaceRepos.objectToJson(object.getHomePoulePlace()),
+            awayPoulePlace: this.pouleplaceRepos.objectToJson(object.getAwayPoulePlace()),
             roundNumber: object.getRoundNumber(),
             subNumber: object.getSubNumber(),
             resourceBatch: object.getResourceBatch(),
-            field: object.getField() ? this.fieldRepos.objectToJsonHelper(object.getField()) : undefined,
+            field: object.getField() ? this.fieldRepos.objectToJson(object.getField()) : undefined,
             state: object.getState(),
-            referee: object.getReferee() ? this.refereeRepos.objectToJsonHelper(object.getReferee()) : undefined,
+            referee: object.getReferee() ? this.refereeRepos.objectToJson(object.getReferee()) : undefined,
             startDateTime: object.getStartDateTime() ? object.getStartDateTime().toISOString() : undefined,
             scoresMoment: object.getScoresMoment(),
             scores: this.gameScoreRepos.objectsToJsonArray(object.getScores())

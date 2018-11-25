@@ -1,6 +1,7 @@
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
+import { RoundNumber } from '../round/number';
 
 /**
  * Created by coen on 22-3-17.
@@ -11,10 +12,21 @@ export class StructureNameService {
     constructor() {
     }
 
+    /**
+    *  als allemaal dezelfde naam dan geef die naam
+    * als verschillde namen geef dan xde ronde met tooltip van de namen
+    */
+    getRoundNumberName(roundNumber: RoundNumber) {
+        if (this.roundsHaveSameName(roundNumber)) {
+            return this.getRoundName(roundNumber.getARound(), true);
+        }
+        return this.getHtmlNumber(roundNumber) + ' ronde';
+    }
+
     getRoundName(round: Round, sameName: boolean = false) {
         if (this.roundAndParentsNeedsRanking(round) || (round.getChildRounds().length > 1
             && round.getChildRound(Round.WINNERS).getNrOfRoundsToGo() !== round.getChildRound(Round.LOSERS).getNrOfRoundsToGo())) {
-            return this.getHtmlNumber(round.getNumber()) + ' ronde';
+            return this.getHtmlNumber(round.getNumberAsValue()) + ' ronde';
         }
 
         const nrOfRoundsToGo = round.getNrOfRoundsToGo();
@@ -34,38 +46,9 @@ export class StructureNameService {
         return '?';
     }
 
-    /**
-     *  als allemaal dezelfde naam dan geef die naam
-     * als verschillde namen geef dan xde ronde met tooltip van de namen
-     *
-     * @param roundsByNumber
-     *
-     */
-    getRoundsName(roundNumber, roundsByNumber: Round[]) {
-        if (this.roundsHaveSameName(roundsByNumber)) {
-            return this.getRoundName(roundsByNumber[0], true);
-        }
-        return this.getHtmlNumber(roundNumber) + ' ronde';
-    }
-
-    roundsHaveSameName(roundsByNumber: Round[]) {
-        let roundNameAll;
-        return roundsByNumber.some((round) => {
-            const roundName = this.getRoundName(round, true);
-            if (roundNameAll === undefined) {
-                roundNameAll = roundName;
-                return true;
-            }
-            if (roundNameAll === roundName) {
-                return true;
-            }
-            return false;
-        });
-    }
-
     getPouleName(poule: Poule, withPrefix: boolean) {
         const round = poule.getRound();
-        const previousNrOfPoules = this.getNrOfPreviousPoules(round.getNumber(), round, poule);
+        const previousNrOfPoules = this.getNrOfPreviousPoules(round.getNumberAsValue(), round, poule);
         let pouleName = '';
         if (withPrefix === true) {
             pouleName = round.getType() === Round.TYPE_KNOCKOUT ? 'wed. ' : 'poule ';
@@ -100,6 +83,21 @@ export class StructureNameService {
         }
         const pouleplaceName = this.getPouleName(poulePlace.getPoule(), false);
         return pouleplaceName + poulePlace.getNumber();
+    }
+
+    private roundsHaveSameName(roundNumber: RoundNumber): boolean {
+        let roundNameAll;
+        return roundNumber.getRounds().some((round) => {
+            const roundName = this.getRoundName(round, true);
+            if (roundNameAll === undefined) {
+                roundNameAll = roundName;
+                return true;
+            }
+            if (roundNameAll === roundName) {
+                return true;
+            }
+            return false;
+        });
     }
 
     private roundAndParentsNeedsRanking(round: Round) {
@@ -153,11 +151,11 @@ export class StructureNameService {
     }
 
     private getNrOfPoulesParentRounds(round: Round): number {
-        return this.getNrOfPoulesParentRoundsHelper(round.getNumber() - 1, round.getRootRound());
+        return this.getNrOfPoulesParentRoundsHelper(round.getNumberAsValue() - 1, round.getRootRound());
     }
 
     private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round): number {
-        if (round.getNumber() > maxRoundNumber) {
+        if (round.getNumberAsValue() > maxRoundNumber) {
             return 0;
         }
         let nrOfPoules = round.getPoules().length;
@@ -186,9 +184,9 @@ export class StructureNameService {
 
     private getNrOfPoulesForChildRounds(round: Round, roundNumber: number): number {
         let nrOfChildPoules = 0;
-        if (round.getNumber() > roundNumber) {
+        if (round.getNumberAsValue() > roundNumber) {
             return nrOfChildPoules;
-        } else if (round.getNumber() === roundNumber) {
+        } else if (round.getNumberAsValue() === roundNumber) {
             return round.getPoules().length;
         }
 
