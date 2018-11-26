@@ -39,7 +39,7 @@ export class RoundNumberConfigRepository extends SportRepository {
     protected getOptions(roundNumber: RoundNumber): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
-        httpParams = httpParams.set('roundnumber', roundNumber.toString());
+        httpParams = httpParams.set('roundnumber', roundNumber.getNumber().toString());
         if (name !== undefined) {
             httpParams = httpParams.set('name', name);
         }
