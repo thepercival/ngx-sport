@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
 
 import { SportRepository } from '../../../repository';
 import { RoundNumber } from '../../../round/number';
@@ -28,21 +28,29 @@ export class RoundNumberConfigRepository extends SportRepository {
         return 'roundconfigs';
     }
 
-    editObject(roundNumber: RoundNumber, roundNumberConfig: IRoundNumberConfig): Observable<boolean> {
+    editObject(roundNumber: RoundNumber, roundNumberConfig: IRoundNumberConfig): Observable<RoundNumberConfig[][]> {
+        return forkJoin(this.getUpdates(roundNumber, roundNumberConfig));
+    }
+
+    getUpdates(roundNumber: RoundNumber, roundNumberConfig: IRoundNumberConfig): Observable<RoundNumberConfig[]>[] {
+        let reposUpdates: Observable<RoundNumberConfig[]>[] = [];
         const options = this.getOptions(roundNumber);
-        return this.http.post(this.url, roundNumberConfig, options).pipe(
-            map((res: boolean) => res),
-            catchError((err) => this.handleError(err))
+        reposUpdates.push(
+            this.http.put(this.url + '/' + roundNumber.getConfig().getId(), roundNumberConfig, options).pipe(
+                map((res: IRoundNumberConfig) => this.jsonToObject(res, roundNumber)),
+                catchError((err) => this.handleError(err))
+            )
         );
+        if ( roundNumber.hasNext() ) {
+            reposUpdates = reposUpdates.concat( this.getUpdates(roundNumber.getNext(), roundNumberConfig) );
+        }
+        return reposUpdates;
     }
 
     protected getOptions(roundNumber: RoundNumber): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
-        httpParams = httpParams.set('roundnumber', roundNumber.toString());
-        if (name !== undefined) {
-            httpParams = httpParams.set('name', name);
-        }
+        httpParams = httpParams.set('roundnumberid', roundNumber.getId().toString());
         return {
             headers: super.getHeaders(),
             params: httpParams
@@ -58,23 +66,25 @@ export class RoundNumberConfigRepository extends SportRepository {
         return objects;
     }
 
-    jsonToObject(json: IRoundNumberConfig, roundNumber: RoundNumber): RoundNumberConfig {
-        const roundConfig = new RoundNumberConfig(roundNumber);
-        roundConfig.setId(json.id);
-        roundConfig.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
-        roundConfig.setQualifyRule(json.qualifyRule);
-        roundConfig.setWinPoints(json.winPoints);
-        roundConfig.setDrawPoints(json.drawPoints);
-        roundConfig.setHasExtension(json.hasExtension);
-        roundConfig.setWinPointsExt(json.winPointsExt);
-        roundConfig.setDrawPointsExt(json.drawPointsExt);
-        roundConfig.setMinutesPerGameExt(json.minutesPerGameExt);
-        roundConfig.setEnableTime(json.enableTime);
-        roundConfig.setMinutesPerGame(json.minutesPerGame);
-        roundConfig.setMinutesBetweenGames(json.minutesBetweenGames);
-        roundConfig.setMinutesAfter(json.minutesAfter);
-        roundConfig.setScore(this.scoreRepository.jsonToObject(json.score, roundConfig));
-        return roundConfig;
+    jsonToObject(json: IRoundNumberConfig, roundNumber: RoundNumber, config?: RoundNumberConfig): RoundNumberConfig {
+        if (config === undefined) {
+            config = new RoundNumberConfig(roundNumber);
+        }
+        config.setId(json.id);
+        config.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
+        config.setQualifyRule(json.qualifyRule);
+        config.setWinPoints(json.winPoints);
+        config.setDrawPoints(json.drawPoints);
+        config.setHasExtension(json.hasExtension);
+        config.setWinPointsExt(json.winPointsExt);
+        config.setDrawPointsExt(json.drawPointsExt);
+        config.setMinutesPerGameExt(json.minutesPerGameExt);
+        config.setEnableTime(json.enableTime);
+        config.setMinutesPerGame(json.minutesPerGame);
+        config.setMinutesBetweenGames(json.minutesBetweenGames);
+        config.setMinutesAfter(json.minutesAfter);
+        config.setScore(this.scoreRepository.jsonToObject(json.score, config));
+        return config;
     }
 
     objectsToJsonArray(objects: RoundNumberConfig[]): IRoundNumberConfig[] {

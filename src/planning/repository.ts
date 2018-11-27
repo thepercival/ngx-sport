@@ -8,7 +8,7 @@ import { Game } from '../game';
 import { GameRepository, IGame } from '../game/repository';
 import { Poule } from '../poule';
 import { SportRepository } from '../repository';
-import { Round } from '../round';
+import { RoundNumber } from '../round/number';
 
 /**
  * Created by coen on 3-3-17.
@@ -31,9 +31,9 @@ export class PlanningRepository extends SportRepository {
         return 'planning';
     }
 
-    createObject(rounds: Round[]): Observable<Game[][]> {
+    createObject(roundNumber: RoundNumber): Observable<Game[][]> {
         const reposCreates: Observable<Game[]>[] = [];
-        const poules = this.getPoules(rounds);
+        const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
             const removedGames = poule.getGames().splice(0, poule.getGames().length);
             reposCreates.push(
@@ -46,18 +46,20 @@ export class PlanningRepository extends SportRepository {
         return forkJoin(reposCreates);
     }
 
-    private getPoules(rounds: Round[]): Poule[] {
+    private getPoules(roundNumber: RoundNumber): Poule[] {
         let poules: Poule[] = [];
-        rounds.forEach(round => {
+        roundNumber.getRounds().forEach(round => {
             poules = poules.concat(round.getPoules());
-            poules = poules.concat(this.getPoules(round.getChildRounds()));
+            if (roundNumber.hasNext()) {
+                poules = poules.concat(this.getPoules(roundNumber.getNext()));
+            }
         });
         return poules.filter(poule => poule.getGames().length > 0);
     }
 
-    editObject(rounds: Round[]): Observable<Game[][]> {
+    editObject(roundNumber: RoundNumber): Observable<Game[][]> {
         const reposUpdates: Observable<Game[]>[] = [];
-        const poules = this.getPoules(rounds);
+        const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
             reposUpdates.push(
                 this.http.put(this.url, this.gameRepos.objectsToJsonArray(poule.getGames()), this.getOptions(poule)).pipe(

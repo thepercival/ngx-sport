@@ -13,12 +13,21 @@ export class RoundNumber {
     protected next: RoundNumber;
     protected rounds: Round[] = [];
     protected config: RoundNumberConfig;
+    protected id: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {
         this.competition = competition;
         this.previous = previous;
         this.number = previous === undefined ? 1 : previous.getNumber() + 1;
         this.competition = competition;
+    }
+
+    getId(): number {
+        return this.id;
+    }
+
+    setId(id: number): void {
+        this.id = id;
     }
 
     hasNext(): boolean {

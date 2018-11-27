@@ -15,6 +15,7 @@ export class RoundNumberRepository {
 
     jsonToObject(json: IRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
+        roundNumber.setId(json.id);
         this.configRepos.jsonToObject(json.config, roundNumber);
         if (json.next !== undefined) {
             this.jsonToObject(json.next, competition, roundNumber);
@@ -24,6 +25,7 @@ export class RoundNumberRepository {
 
     objectToJson(object: RoundNumber): IRoundNumber {
         const json: IRoundNumber = {
+            id: object.getId(),
             number: object.getNumber(),
             config: this.configRepos.objectToJson(object.getConfig()),
             next: object.hasNext() ? this.objectToJson(object.getNext()) : undefined
@@ -33,6 +35,7 @@ export class RoundNumberRepository {
 }
 
 export interface IRoundNumber {
+    id?: number;
     number: number;
     config: IRoundNumberConfig;
     next: IRoundNumber;
