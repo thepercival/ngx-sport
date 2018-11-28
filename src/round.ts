@@ -143,7 +143,10 @@ export class Round {
     }
 
     getPath(): number[] {
-        const path = this.isRoot() ? [] : this.getParent().getPath();
+        if ( this.isRoot() ) {
+            return [];
+        }
+        const path = this.getParent().getPath();
         path.push(this.getWinnersOrLosers());
         return path;
     }
