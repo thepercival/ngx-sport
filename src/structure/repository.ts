@@ -37,9 +37,7 @@ export class StructureRepository extends SportRepository {
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
         return this.http.get(this.url, options).pipe(
-            map((json: IStructure) => {
-                return this.jsonToObject(json, competition);
-            }),
+            map((json: IStructure) => this.jsonToObject(json, competition)),
             catchError((err) => this.handleError(err))
         );
     }
