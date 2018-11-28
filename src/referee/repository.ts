@@ -37,12 +37,9 @@ export class RefereeRepository extends SportRepository {
         );
     }
 
-    removeObject(referee: Referee, competition: Competition): Observable<any> {
+    removeObject(referee: Referee, competition: Competition): Observable<void> {
         const url = this.url + '/' + referee.getId();
         return this.http.delete(url, this.getOptions(competition)).pipe(
-            map((res: any) => {
-                referee.getCompetition().removeReferee(referee);
-            }),
             catchError((err) => this.handleError(err))
         );
     }
