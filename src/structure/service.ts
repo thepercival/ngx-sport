@@ -74,17 +74,17 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        this.configService.createConfig(firstRoundNumber);
+        this.configService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined, 0);
         this.fillRound(rootRound, nrOfPlaces);
         return new Structure(firstRoundNumber, rootRound);
     }
 
-    addRound(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number): Round {
+    private addChildRound(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number): Round {
         let nextRoundNumber = parentRound.getNumber().getNext();
         if (nextRoundNumber === undefined) {
             nextRoundNumber = parentRound.getNumber().createNext();
-            this.configService.createConfig(nextRoundNumber);
+            this.configService.createFromPrevious(nextRoundNumber);
         }
         const round = new Round(nextRoundNumber, parentRound, winnersOrLosers);
         return this.fillRound(round, nrOfPlaces);
@@ -372,7 +372,7 @@ export class StructureService {
         }
 
         if (add) {
-            childRound = this.addRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
+            childRound = this.addChildRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
             const qualifyServiceIn2 = new QualifyService(childRound.getParent(), childRound);
             qualifyServiceIn2.removeRules();
             qualifyServiceIn2.createRules();

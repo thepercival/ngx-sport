@@ -9,26 +9,27 @@ import { RoundNumberConfigScore } from './score';
  */
 export class RoundNumberConfigService {
 
-    createConfig(roundNumber: RoundNumber): RoundNumberConfig {
+    createFromPrevious(roundNumber: RoundNumber): RoundNumberConfig {
+        const previousConfig = roundNumber.getPrevious().getConfig();
         const config = new RoundNumberConfig(roundNumber);
-        if (!roundNumber.isFirst()) {
-            const previousConfig = roundNumber.getPrevious().getConfig();
-            config.setQualifyRule(previousConfig.getQualifyRule());
-            config.setNrOfHeadtoheadMatches(previousConfig.getNrOfHeadtoheadMatches());
-            config.setWinPoints(previousConfig.getWinPoints());
-            config.setDrawPoints(previousConfig.getDrawPoints());
-            config.setHasExtension(previousConfig.getHasExtension());
-            config.setWinPointsExt(previousConfig.getWinPointsExt());
-            config.setDrawPointsExt(previousConfig.getDrawPointsExt());
-            config.setMinutesPerGameExt(previousConfig.getMinutesPerGameExt());
-            config.setEnableTime(previousConfig.getEnableTime());
-            config.setMinutesPerGame(previousConfig.getMinutesPerGame());
-            config.setMinutesBetweenGames(previousConfig.getMinutesBetweenGames());
-            config.setMinutesAfter(previousConfig.getMinutesAfter());
-            config.setScore(this.createScoreConfig(previousConfig));
-            return config;
-        }
+        config.setQualifyRule(previousConfig.getQualifyRule());
+        config.setNrOfHeadtoheadMatches(previousConfig.getNrOfHeadtoheadMatches());
+        config.setWinPoints(previousConfig.getWinPoints());
+        config.setDrawPoints(previousConfig.getDrawPoints());
+        config.setHasExtension(previousConfig.getHasExtension());
+        config.setWinPointsExt(previousConfig.getWinPointsExt());
+        config.setDrawPointsExt(previousConfig.getDrawPointsExt());
+        config.setMinutesPerGameExt(previousConfig.getMinutesPerGameExt());
+        config.setEnableTime(previousConfig.getEnableTime());
+        config.setMinutesPerGame(previousConfig.getMinutesPerGame());
+        config.setMinutesBetweenGames(previousConfig.getMinutesBetweenGames());
+        config.setMinutesAfter(previousConfig.getMinutesAfter());
+        config.setScore(this.createScoreConfig(previousConfig));
+        return config;
+    }
 
+    createDefault(roundNumber: RoundNumber): RoundNumberConfig {
+        const config = new RoundNumberConfig(roundNumber);
         config.setQualifyRule(QualifyRule.SOCCERWORLDCUP);
         config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);
         config.setWinPoints(RoundNumberConfig.DEFAULTWINPOINTS);
@@ -43,8 +44,6 @@ export class RoundNumberConfigService {
         config.setMinutesAfter(0);
         const sport = roundNumber.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
-            config.setHasExtension(!roundNumber.needsRanking());
-            config.setMinutesPerGameExt(this.getDefaultMinutesPerGameExt());
             config.setEnableTime(true);
             config.setMinutesPerGame(this.getDefaultMinutesPerGame());
             config.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
