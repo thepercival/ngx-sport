@@ -65,8 +65,6 @@ export class QualifyService {
                 for (let shiftTime = 0; shiftTime < nrOfShifts; shiftTime++) {
                     poulePlaces.push(poulePlaces.shift());
                 }
-            } else {
-                shuffledPoulePlaces = poulePlaces;
             }
             shuffledPoulePlaces = poulePlaces;
         } else if (qualifyOrder === 4) { // shuffle per two on oneven placenumbers, horizontal-children

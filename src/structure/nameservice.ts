@@ -102,13 +102,13 @@ export class StructureNameService {
 
     private roundAndParentsNeedsRanking(round: Round) {
 
-        if (round.needsRanking()) {
-            if (round.getParent() !== undefined) {
-                return this.roundAndParentsNeedsRanking(round.getParent());
-            }
-            return true;
+        if (!round.needsRanking()) {
+            return false;
         }
-        return false;
+        if (!round.isRoot()) {
+            return this.roundAndParentsNeedsRanking(round.getParent());
+        }
+        return true;
     }
 
     /**
@@ -151,7 +151,7 @@ export class StructureNameService {
     }
 
     private getNrOfPoulesParentRounds(round: Round): number {
-        return this.getNrOfPoulesParentRoundsHelper(round.getNumberAsValue() - 1, round.getRootRound());
+        return this.getNrOfPoulesParentRoundsHelper(round.getNumberAsValue() - 1, round.getRoot());
     }
 
     private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round): number {

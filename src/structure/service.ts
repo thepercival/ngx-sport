@@ -237,7 +237,7 @@ export class StructureService {
     }
 
     recalculateQualifyRulesForRound(round: Round, recalculateChildRounds: boolean = true) {
-        if (round.getParent() !== undefined) {
+        if (!round.isRoot()) {
             const qualifyService = new QualifyService(round.getParent(), round);
             qualifyService.removeRules();
             qualifyService.createRules();

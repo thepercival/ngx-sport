@@ -77,16 +77,6 @@ export class Round {
         }
     }
 
-    // isAncestorOf(aParentRound: Round) {
-    //     if (this.getParent() === undefined) {
-    //         return false;
-    //     }
-    //     if (this.getParent() === aParentRound) {
-    //         return true;
-    //     }
-    //     return this.getParent().isAncestorOf(aParentRound);
-    // }
-
     getNumber(): RoundNumber {
         return this.number;
     }
@@ -107,9 +97,9 @@ export class Round {
         return (this.getParent() === undefined);
     }
 
-    getRootRound() {
-        if (this.getParent() !== undefined) {
-            return this.getParent().getRootRound();
+    getRoot() {
+        if (!this.isRoot()) {
+            return this.getParent().getRoot();
         }
         return this;
     }
@@ -198,7 +188,7 @@ export class Round {
 
     getPoulePlacesPer(winnersOrLosers: number, qualifyOrder: number, poulePlaceOrder: number): PoulePlace[][] {
         const poulePlacesPerNumber = this.getPoulePlacesPerNumber(winnersOrLosers);
-        if (qualifyOrder !== Round.ORDER_VERTICAL || this.getParent() === undefined) {
+        if (qualifyOrder !== Round.ORDER_VERTICAL || this.isRoot()) {
             return poulePlacesPerNumber;
         }
         if (poulePlaceOrder === Round.ORDER_VERTICAL) {
@@ -390,7 +380,7 @@ export class Round {
     }
 
     getOpposing() {
-        if (this.getParent() === undefined) {
+        if (this.isRoot() === undefined) {
             return undefined;
         }
         return this.getParent().getChildRound(Round.getOpposing(this.getWinnersOrLosers()));
