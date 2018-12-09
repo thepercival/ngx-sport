@@ -65,11 +65,16 @@ export class StructureService {
     ];
 
     private configService: RoundNumberConfigService;
+    private maxNrOfPoulePlacesForChildRound: number;
 
     constructor(
         private competitorRange: ICompetitorRange
     ) {
         this.configService = new RoundNumberConfigService();
+    }
+
+    setMaxNrOfPoulePlacesForChildRound(maxNrOfPoulePlacesForChildRound: number ) {
+        this.maxNrOfPoulePlacesForChildRound = maxNrOfPoulePlacesForChildRound;
     }
 
     create(competition: Competition, nrOfPlaces: number): Structure {
@@ -115,36 +120,32 @@ export class StructureService {
         return round;
     }
 
-    protected removeRound(parentRound: Round, winnersOrLosers: number, recalcQualify: boolean = true): Round {
+    removeChildRound(parentRound: Round, winnersOrLosers: number): Round {
         const childRound = parentRound.getChildRound(winnersOrLosers);
-
-        if (childRound !== undefined) {
-            const roundNumber = childRound.getNumber();
-            const numberRounds = roundNumber.getRounds();
-            const indexNumber = numberRounds.indexOf(childRound);
-            if (indexNumber > -1) {
-                // console.log('removeRound from number, number: ' + childRound.getNumberAsValue());
-                numberRounds.splice(indexNumber, 1);
-                if (numberRounds.length === 0) {
-                    parentRound.getNumber().removeNext();
-                    // console.log('removeRoundNumber, number: ' + childRound.getNumberAsValue());
-                }
+        if (childRound === undefined) {
+            return undefined;
+        }
+        const roundNumber = childRound.getNumber();
+        const numberRounds = roundNumber.getRounds();
+        const indexNumber = numberRounds.indexOf(childRound);
+        if (indexNumber > -1) {
+            // console.log('removeRound from number, number: ' + childRound.getNumberAsValue());
+            numberRounds.splice(indexNumber, 1);
+            if (numberRounds.length === 0) {
+                parentRound.getNumber().removeNext();
+                // console.log('removeRoundNumber, number: ' + childRound.getNumberAsValue());
             }
         }
-
         const index = parentRound.getChildRounds().indexOf(childRound);
-        if (index > -1) {
-            // console.log('removeRound from parent, number: ' + childRound.getNumberAsValue());
-            parentRound.getChildRounds().splice(index, 1);
-            if (recalcQualify === true) {
-                this.recalculateQualifyRulesForRound(childRound, false);
-            }
-            return childRound;
-        }
-        return undefined;
+
+        // console.log('removeRound from parent, number: ' + childRound.getNumberAsValue());
+        parentRound.getChildRounds().splice(index, 1);
+        const qualifyService = new QualifyService(parentRound, childRound);
+        qualifyService.removeRules();
+        return childRound;
     }
 
-    addPoule(round: Round, fillPouleToMinimum: boolean = true, recalcQualify: boolean = true): number {
+    addPoule(round: Round, fillPouleTo: number = 2): number {
         // console.log('addPoule for round ' + round.getNumberAsValue());
         const poules = round.getPoules();
         const places = round.getPoulePlaces();
@@ -181,15 +182,11 @@ export class StructureService {
             pouleIt = pouleIt.next();
         });
 
-        if (fillPouleToMinimum === true) {
-            while (newPoule.getPlaces().length < 2) {
-                const tmp = new PoulePlace(newPoule);
-            }
+        while (newPoule.getPlaces().length < fillPouleTo) {
+            const tmp = new PoulePlace(newPoule);
         }
 
-        if (recalcQualify === true) {
-            this.recalculateQualifyRulesForRound(round);
-        }
+        this.recalculateQualifyRulesForRound(round);
         return newPoule.getPlaces().length;
     }
 
@@ -305,9 +302,9 @@ export class StructureService {
         // remove childrounds with no pouleplaces
         if (round.getPoulePlaces().length < 1) {
             round.getChildRounds().forEach(function (childRound) {
-                this.removeRound(round, childRound.getWinnersOrLosers());
+                this.removeChildRound(round, childRound.getWinnersOrLosers());
             }, this);
-            this.removeRound(round.getParent(), round.getWinnersOrLosers());
+            this.removeChildRound(round.getParent(), round.getWinnersOrLosers());
         }
 
         return nrOfRemovedPlaces;
@@ -362,20 +359,18 @@ export class StructureService {
         // console.log('changeNrOfPlacesChildRound(' + nrOfChildPlacesNew + ', parentRound: ' + parentRound.getNumber()
         //     + ', winnersOrLosers: ' + winnersOrLosers + ')');
         let childRound = parentRound.getChildRound(winnersOrLosers);
-        let add = (childRound === undefined && nrOfChildPlacesNew > 0);
+        let addRound = (childRound === undefined && nrOfChildPlacesNew > 0);
         if (childRound !== undefined && childRound.getPoulePlaces().length > 0 && nrOfChildPlacesNew === 2) {
-            const qualifyServiceIn = new QualifyService(childRound.getParent(), childRound);
-            qualifyServiceIn.removeRules();
-            this.removeRound(parentRound, winnersOrLosers);
+            // const qualifyServiceIn = new QualifyService(childRound.getParent(), childRound);
+            // qualifyServiceIn.removeRules();
+            this.removeChildRound(parentRound, winnersOrLosers);
             childRound = undefined;
-            add = true;
+            addRound = true;
         }
 
-        if (add) {
+        if (addRound) {
             childRound = this.addChildRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
-            const qualifyServiceIn2 = new QualifyService(childRound.getParent(), childRound);
-            qualifyServiceIn2.removeRules();
-            qualifyServiceIn2.createRules();
+            this.recalculateQualifyRulesForRound(childRound, false);
             if (checkOpposingQualifiers) {
                 this.checkOpposingQualifiers(parentRound, winnersOrLosers);
             }
@@ -385,14 +380,9 @@ export class StructureService {
             return;
         }
 
-        // check wat the last number was
         const nrOfPlacesChildRound = childRound.getPoulePlaces().length;
         let nrOfPlacesDifference = nrOfChildPlacesNew - nrOfPlacesChildRound;
         if (nrOfPlacesDifference === 0) {
-            //     const removedChildRound = this.removeRound(parentRound, winnersOrLosers);
-            //     const qualifyService = new QualifyService(removedChildRound.getParent(), removedChildRound);
-            //     qualifyService.removeRules();
-            //     qualifyService.createRules();
             return;
         }
         if (nrOfPlacesDifference < 0) {
@@ -400,18 +390,12 @@ export class StructureService {
                 nrOfPlacesDifference += this.removePoulePlace(childRound);
             }
         } else {
-            const needsRanking = nrOfPlacesChildRound !== 1 && !childRound.needsRanking();
-            const addPoules = (needsRanking && ((nrOfPlacesChildRound + nrOfPlacesDifference) % 2) === 0);
             for (let nI = 0; nI < nrOfPlacesDifference; nI++) {
-                if (addPoules) {
-                    this.addPoule(childRound, true, true);
-                    nI++;
-                } else {
-                    this.addPoulePlace(childRound, true);
-                }
+                this.addPoulePlace(childRound, false);
             }
+            this.checkMaxNrOfPoulePlacesForChildRound(childRound);
+            this.recalculateQualifyRulesForRound(childRound);
         }
-        // qualifyService.createRules();
 
         if (checkOpposingQualifiers) {
             this.checkOpposingQualifiers(parentRound, winnersOrLosers);
@@ -440,6 +424,28 @@ export class StructureService {
        }*/
     }
 
+    private checkMaxNrOfPoulePlacesForChildRound(childRound: Round) {
+        const nrOfPoules = childRound.getPoules().length;
+        const nrOfPlaces = childRound.getPoulePlaces().length;
+        const onePouleTwoOrThreePlaces = nrOfPoules === 1 && ( nrOfPlaces === 2 || nrOfPlaces === 3 );
+        if ( onePouleTwoOrThreePlaces ) {
+            return;
+        }
+        if ( this.getNrOfPlacesPerPoule(nrOfPlaces - 1, nrOfPoules) <= this.maxNrOfPoulePlacesForChildRound ) {
+            return;
+        }
+        const newPoule = new Poule(childRound);
+        const poulePlaces = childRound.getPoulePlaces(Round.ORDER_HORIZONTAL);
+        while ( newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1) ) {
+            const poulePlace = poulePlaces.pop();
+            childRound.movePoulePlace( poulePlace, newPoule );
+        }
+        const poulePlaceTmp = poulePlaces.pop();
+        if ( newPoule.getPlaces().length === (this.maxNrOfPoulePlacesForChildRound - 1)
+         && poulePlaceTmp.getNumber() > this.maxNrOfPoulePlacesForChildRound ) {
+            childRound.movePoulePlace( poulePlaceTmp, newPoule );
+        }
+    }
 
     private checkOpposingQualifiersBase(parentRound: Round, winnersOrLosers: number) {
         const opposing = Round.getOpposing(winnersOrLosers);
@@ -519,6 +525,9 @@ export class StructureService {
 
     getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules) {
         const nrOfPlaceLeft = (nrOfPlaces % nrOfPoules);
-        return (nrOfPlaces + nrOfPlaceLeft) / nrOfPoules;
+        if ( nrOfPlaceLeft === 0 ) {
+            return nrOfPlaces / nrOfPoules;
+        }
+        return ( (nrOfPlaces - nrOfPlaceLeft) / nrOfPoules ) + 1;
     }
 }
