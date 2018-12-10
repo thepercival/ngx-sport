@@ -31,7 +31,7 @@ export class StructureNameService {
 
         const nrOfRoundsToGo = round.getNrOfRoundsToGo();
         if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
-            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo - 1)) + ' finale';
+            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 && this.aChildRoundHasMultiplePlacesPerPoule(round)) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getPoulePlaces().length > 1)) {
@@ -127,7 +127,7 @@ export class StructureNameService {
     }
 
     private getHtmlFractalNumber(number) {
-        if (number === 4 || number === 3 || number === 2) {
+        if (number === 2 || number === 4) {
             return '&frac1' + number + ';';
         }
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';

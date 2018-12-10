@@ -50,10 +50,10 @@ export class PlanningRepository extends SportRepository {
         let poules: Poule[] = [];
         roundNumber.getRounds().forEach(round => {
             poules = poules.concat(round.getPoules());
-            if (roundNumber.hasNext()) {
-                poules = poules.concat(this.getPoules(roundNumber.getNext()));
-            }
         });
+        if (roundNumber.hasNext()) {
+            poules = poules.concat(this.getPoules(roundNumber.getNext()));
+        }
         return poules.filter(poule => poule.getGames().length > 0);
     }
 

@@ -20,10 +20,7 @@ export class RoundRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private http: HttpClient,
         private pouleRepos: PouleRepository,
-        private competitionRepos: CompetitionRepository,
-        private qualifyRuleRepos: QualifyRuleRepository,
         router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
@@ -70,7 +67,6 @@ export class RoundRepository extends SportRepository {
     objectToJson(round: Round): IRound {
         return {
             id: round.getId(),
-            number: round.getNumberAsValue(),
             winnersOrLosers: round.getWinnersOrLosers(),
             qualifyOrder: round.getQualifyOrder(),
             name: round.getName(),
@@ -82,7 +78,6 @@ export class RoundRepository extends SportRepository {
 
 export interface IRound {
     id?: number;
-    number: number;
     winnersOrLosers: number;
     qualifyOrder: number;
     name: string;
