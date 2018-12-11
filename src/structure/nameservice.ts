@@ -51,7 +51,7 @@ export class StructureNameService {
         const previousNrOfPoules = this.getNrOfPreviousPoules(round.getNumberAsValue(), round, poule);
         let pouleName = '';
         if (withPrefix === true) {
-            pouleName = round.getType() === Round.TYPE_KNOCKOUT ? 'wed. ' : 'poule ';
+            pouleName = poule.needsRanking() ? 'poule ' : 'wed. ';
         }
         const secondLetter = previousNrOfPoules % 26;
         if (previousNrOfPoules >= 26) {

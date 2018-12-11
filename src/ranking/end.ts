@@ -105,7 +105,7 @@ export class EndRanking {
                 }
             });
         }
-        const poulePlacesPer: PoulePlace[][] = round.getPoulePlacesPer(Round.WINNERS, round.getQualifyOrder(), Round.ORDER_VERTICAL);
+        const poulePlacesPer: PoulePlace[][] = round.getPoulePlacesPer(Round.WINNERS, round.getQualifyOrder(), Round.ORDER_POULE_NUMBER);
         poulePlacesPer.forEach(poulePlaces => {
             const deadPlacesPer = poulePlaces.filter(poulePlace => poulePlace.getToQualifyRules().length === 0);
             this.getDeadPlacesFromPlaceNumber(deadPlacesPer, round).forEach(deadPoulePlace => {

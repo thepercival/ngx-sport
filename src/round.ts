@@ -11,15 +11,19 @@ import { Team } from './team';
  */
 
 export class Round {
-    static readonly TYPE_POULE = 1;
-    static readonly TYPE_KNOCKOUT = 2;
-    static readonly TYPE_WINNER = 4;
     static readonly WINNERS = 1;
     static readonly LOSERS = 2;
 
-    static readonly ORDER_HORIZONTAL = 1;
-    static readonly ORDER_VERTICAL = 2;
-    static readonly ORDER_CUSTOM = 3;
+    static readonly ORDER_NUMBER_POULE = 1;
+    static readonly ORDER_POULE_NUMBER = 2;
+
+    static readonly QUALIFYORDER_CROSS = 1;
+    static readonly QUALIFYORDER_RANK = 2;
+    static readonly QUALIFYORDER_CUSTOM1 = 4;
+    static readonly QUALIFYORDER_CUSTOM2 = 5;
+
+    static readonly RANK_NUMBER_POULE = 6;
+    static readonly RANK_POULE_NUMBER = 7;
 
     protected id: number;
     protected number: RoundNumber;
@@ -36,7 +40,7 @@ export class Round {
         this.number = roundNumber;
         this.winnersOrLosers = winnersOrLosers;
         this.setParentRound(parentRound);
-        this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.ORDER_HORIZONTAL;
+        this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.QUALIFYORDER_CROSS;
         this.number.getRounds().push(this);
     }
 
@@ -116,6 +120,10 @@ export class Round {
         this.qualifyOrder = qualifyOrder;
     }
 
+    hasCustomQualifyOrder(): boolean {
+        return !(this.getQualifyOrder() === Round.QUALIFYORDER_CROSS || this.getQualifyOrder() === Round.QUALIFYORDER_RANK );
+    }
+
     getName(): string {
         return this.name;
     }
@@ -141,15 +149,14 @@ export class Round {
         return path;
     }
 
-    getPoulePlaces(order: number = 0): PoulePlace[] {
+    getPoulePlaces(order?: number): PoulePlace[] {
         const poulePlaces: PoulePlace[] = [];
         for (const poule of this.getPoules()) {
             for (const place of poule.getPlaces()) {
                 poulePlaces.push(place);
             }
         }
-
-        if (order === Round.ORDER_HORIZONTAL || order === 4) {
+        if (order === Round.ORDER_NUMBER_POULE || order === 4) {
             poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
                     return 1;
@@ -166,7 +173,7 @@ export class Round {
                 return 0;
             });
         }
-        if (order === Round.ORDER_VERTICAL || order === 5) {
+        if (order === Round.ORDER_POULE_NUMBER || order === 5) {
             poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
                     return 1;
@@ -188,13 +195,13 @@ export class Round {
 
     getPoulePlacesPer(winnersOrLosers: number, qualifyOrder: number, poulePlaceOrder: number): PoulePlace[][] {
         const poulePlacesPerNumber = this.getPoulePlacesPerNumber(winnersOrLosers);
-        if (qualifyOrder !== Round.ORDER_VERTICAL || this.isRoot()) {
+        if ( ( qualifyOrder !== Round.QUALIFYORDER_RANK ) || this.isRoot()) {
             return poulePlacesPerNumber;
         }
-        if (poulePlaceOrder === Round.ORDER_VERTICAL) {
+        if (poulePlaceOrder === Round.ORDER_POULE_NUMBER) {
             return this.getPoulePlacesPerPoule();
         }
-        // vertical qualify rule
+        // Round.QUALIFYORDER_RANK
         const poulePlacesPerQualifyRule = [];
         this.getFromQualifyRules().forEach(fromQualifyRule => {
             const poulePlaces = fromQualifyRule.getToPoulePlaces().slice();
@@ -216,9 +223,15 @@ export class Round {
             let placeNumber = 0;
             while (poulePlaces.length > 0) {
                 const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
+                if ( winnersOrLosers === Round.LOSERS ) {
+                    tmp.reverse();
+                }
                 poulePlacesPerQualifyRule.push(tmp);
             }
         });
+        if ( winnersOrLosers === Round.LOSERS ) {
+            poulePlacesPerQualifyRule.reverse();
+        }
         return poulePlacesPerQualifyRule;
     }
 
@@ -231,7 +244,7 @@ export class Round {
     getPoulePlacesPerNumber(winnersOrLosers: number): PoulePlace[][] {
         const poulePlacesPerNumber = [];
 
-        const poulePlacesOrderedByPlace = this.getPoulePlaces(Round.ORDER_HORIZONTAL);
+        const poulePlacesOrderedByPlace = this.getPoulePlaces(Round.ORDER_NUMBER_POULE);
         if (winnersOrLosers === Round.LOSERS) {
             poulePlacesOrderedByPlace.reverse();
         }
@@ -303,13 +316,6 @@ export class Round {
 
     isStarted(): boolean {
         return this.getState() > Game.STATE_CREATED;
-    }
-
-    getType(): number {
-        if (this.getPoules().length === 1 && this.getPoulePlaces().length < 2) {
-            return Round.TYPE_WINNER;
-        }
-        return (this.needsRanking() ? Round.TYPE_POULE : Round.TYPE_KNOCKOUT);
     }
 
     needsRanking(): boolean {

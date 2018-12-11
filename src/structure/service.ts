@@ -159,7 +159,7 @@ export class StructureService {
             placesToAddToNewPoule = nrOfPlacesNotEvenOld;
         }
 
-        const poulePlacesOrderedByPlace = round.getPoulePlaces(Round.ORDER_HORIZONTAL);
+        const poulePlacesOrderedByPlace = round.getPoulePlaces(Round.ORDER_NUMBER_POULE);
         while (placesToAddToNewPoule > 0) {
 
             poulePlacesOrderedByPlace.forEach(function (poulePlaceIt) {
@@ -435,7 +435,7 @@ export class StructureService {
             return;
         }
         const newPoule = new Poule(childRound);
-        const poulePlaces = childRound.getPoulePlaces(Round.ORDER_HORIZONTAL);
+        const poulePlaces = childRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
         while ( newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1) ) {
             const poulePlace = poulePlaces.pop();
             childRound.movePoulePlace( poulePlace, newPoule );

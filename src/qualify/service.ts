@@ -18,12 +18,13 @@ export class QualifyService {
     createRules() {
         // console.log('createRules started: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
         // childRoundPoulePlaces
-        const childRoundPoulePlaces = this.childRound.getPoulePlaces(this.childRound.getQualifyOrder());
+        const order = this.childRound.getQualifyOrder() === Round.QUALIFYORDER_RANK ? Round.ORDER_POULE_NUMBER : Round.ORDER_NUMBER_POULE;
+        const childRoundPoulePlaces = this.childRound.getPoulePlaces(order);
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
             childRoundPoulePlaces.reverse();
         }
         const parentRoundPoulePlacesPer: PoulePlace[][] = this.parentRound.getPoulePlacesPer(
-            this.childRound.getWinnersOrLosers(), this.childRound.getQualifyOrder(), Round.ORDER_HORIZONTAL
+            this.childRound.getWinnersOrLosers(), this.childRound.getQualifyOrder(), Round.ORDER_NUMBER_POULE
         );
 
         let nrOfShifts = 0;
@@ -33,7 +34,7 @@ export class QualifyService {
             let nrOfPoulePlaces = 0;
             {
                 let poulePlaces: PoulePlace[] = parentRoundPoulePlacesPer.shift();
-                if (this.childRound.getQualifyOrder() === Round.ORDER_HORIZONTAL) {
+                if (this.childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS) {
                     poulePlaces = this.getShuffledPoulePlaces(poulePlaces, nrOfShifts, this.childRound);
                     nrOfShifts++;
                 }
@@ -60,7 +61,7 @@ export class QualifyService {
     protected getShuffledPoulePlaces(poulePlaces: PoulePlace[], nrOfShifts: number, childRound: Round): PoulePlace[] {
         let shuffledPoulePlaces: PoulePlace[] = [];
         const qualifyOrder = childRound.getQualifyOrder();
-        if (qualifyOrder === Round.ORDER_VERTICAL || qualifyOrder === Round.ORDER_HORIZONTAL) {
+        if (!childRound.hasCustomQualifyOrder()) {
             if ((poulePlaces.length % 2) === 0) {
                 for (let shiftTime = 0; shiftTime < nrOfShifts; shiftTime++) {
                     poulePlaces.push(poulePlaces.shift());
