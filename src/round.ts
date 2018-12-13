@@ -223,13 +223,13 @@ export class Round {
             let placeNumber = 0;
             while (poulePlaces.length > 0) {
                 const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
-                if ( winnersOrLosers === Round.LOSERS ) {
-                    tmp.reverse();
-                }
+                // if ( winnersOrLosers === Round.LOSERS ) {
+                //     tmp.reverse();
+                // }
                 poulePlacesPerQualifyRule.push(tmp);
             }
         });
-        if ( winnersOrLosers === Round.LOSERS ) {
+        if ( this.getWinnersOrLosers() !== 0 && this.getWinnersOrLosers() !== winnersOrLosers ) {
             poulePlacesPerQualifyRule.reverse();
         }
         return poulePlacesPerQualifyRule;
