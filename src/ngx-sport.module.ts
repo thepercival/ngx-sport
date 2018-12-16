@@ -15,13 +15,11 @@ import { FieldRepository } from './field/repository';
 import { Game } from './game';
 import { GameRepository } from './game/repository';
 import { GameScore } from './game/score';
-import { GameScoreRepository } from './game/score/repository';
 import { League } from './league';
 import { LeagueRepository } from './league/repository';
 import { PlanningRepository } from './planning/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
-import { PouleRepository } from './poule/repository';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceRepository } from './pouleplace/repository';
 import { QualifyRuleRepository } from './qualify/repository';
@@ -38,9 +36,7 @@ import { RoundNumber } from './round/number';
 import { RoundNumberConfig } from './round/number/config';
 import { RoundNumberConfigRepository } from './round/number/config/repository';
 import { RoundNumberConfigScore } from './round/number/config/score';
-import { RoundNumberConfigScoreRepository } from './round/number/config/score/repository';
 import { RoundNumberConfigService } from './round/number/config/service';
-import { RoundNumberRepository } from './round/number/repository';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
@@ -50,31 +46,28 @@ import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
 import { Team } from './team';
 import { TeamRepository } from './team/repository';
+import { JsonTeam } from './team/mapper';
+import { RoundNumberConfigMapper } from './round/number/config/mapper';
 
 @NgModule({
-    imports: [],
-    declarations: [
-        Association, League, Competition, SportConfig, Field, Game, GameScore,
-        Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository,
-        Round, RoundNumberConfig, RoundNumberConfig, RoundNumberConfigScore,
-        Season, Team,
-        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
-        PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository,
-        RoundRepository, RoundNumberRepository, RoundNumberConfigRepository, RoundNumberConfigService, RoundNumberConfigScoreRepository,
+    imports: [
+        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
+        PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository,
+        RoundRepository, RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
         TeamRepository,
         PlanningRepository, StructureNameService,
         ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
+        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, RoundNumberConfigMapper
     ],
     exports: [
         Association, League, Competition, SportConfig, Field, Game, GameScore,
         Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
         Season, Team,
-        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository, GameScoreRepository,
-        PlanningService, PouleRepository, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
-        RoundNumberConfigRepository, RoundNumberConfigService, RoundNumberConfigScoreRepository,
+        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
+        PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
+        RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService,
         TeamRepository,
         PlanningRepository, StructureNameService,

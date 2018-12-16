@@ -6,9 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
 import { SportRepository } from '../repository';
-import { IRoundNumber, RoundNumberRepository } from '../round/number/repository';
-import { IRound, RoundRepository } from '../round/repository';
+import { JsonStructure } from './mapper';
 import { Structure } from '../structure';
+import { StructureMapper } from '../structure/mapper';
 
 /**
  * Created by coen on 3-3-17.
@@ -19,9 +19,8 @@ export class StructureRepository extends SportRepository {
     private url: string;
 
     constructor(
+        private mapper: StructureMapper,
         private http: HttpClient,
-        private roundRepos: RoundRepository,
-        private roundNumberRepos: RoundNumberRepository,
         router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
@@ -37,18 +36,18 @@ export class StructureRepository extends SportRepository {
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
         return this.http.get(this.url, options).pipe(
-            map((json: IStructure) => this.jsonToObject(json, competition)),
+            map((json: JsonStructure) => this.mapper.toObject(json, competition)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(jsonStructure: IStructure, competition: Competition): Observable<Structure> {
+    createObject(json: JsonStructure, competition: Competition): Observable<Structure> {
         const options = {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-        return this.http.post(this.url, jsonStructure, options).pipe(
-            map((structureRes: IStructure) => this.jsonToObject(structureRes, competition)),
+        return this.http.post(this.url, json, options).pipe(
+            map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, competition)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -58,8 +57,8 @@ export class StructureRepository extends SportRepository {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-        return this.http.put(this.url + '/' + competition.getId(), this.objectToJson(structure), options).pipe(
-            map((res: IStructure) => this.jsonToObject(res, competition)),
+        return this.http.put(this.url + '/' + competition.getId(), this.mapper.toJson(structure), options).pipe(
+            map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, competition)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -71,21 +70,4 @@ export class StructureRepository extends SportRepository {
             catchError((err) => this.handleError(err))
         );
     }*/
-
-    objectToJson(structure: Structure): IStructure {
-        return {
-            firstRoundNumber: this.roundNumberRepos.objectToJson(structure.getFirstRoundNumber()),
-            rootRound: this.roundRepos.objectToJson(structure.getRootRound())
-        };
-    }
-
-    jsonToObject(json: IStructure, competition: Competition): Structure {
-        const firstRoundNumber = this.roundNumberRepos.jsonToObject(json.firstRoundNumber, competition);
-        return new Structure(firstRoundNumber, this.roundRepos.jsonToObject(json.rootRound, firstRoundNumber));
-    }
-}
-
-export class IStructure {
-    firstRoundNumber: IRoundNumber;
-    rootRound: IRound;
 }

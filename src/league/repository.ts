@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { AssociationRepository, IAssociation } from '../association/repository';
+import { JsonLeague, LeagueMapper } from './mapper';
 import { League } from '../league';
 import { SportRepository } from '../repository';
+import { SportCache } from '../cache';
 
 /**
  * Created by coen on 10-2-17.
@@ -17,7 +18,7 @@ export class LeagueRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private associationRepos: AssociationRepository,
+        private mapper: LeagueMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -30,7 +31,7 @@ export class LeagueRepository extends SportRepository {
 
     getObjects(): Observable<League[]> {
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((res: ILeague[]) => this.jsonArrayToObject(res)),
+            map((json: JsonLeague[]) => json.map( jsonLeague => this.mapper.toObject(jsonLeague))),
             catchError((err) => this.handleError(err))
         );
     }
@@ -38,78 +39,34 @@ export class LeagueRepository extends SportRepository {
     getObject(id: number): Observable<League> {
         const url = this.url + '/' + id;
         return this.http.get(url).pipe(
-            map((res: ILeague) => this.jsonToObject(res)),
+            map((json: JsonLeague) => this.mapper.toObject(json)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(json: ILeague): Observable<League> {
+    createObject(json: JsonLeague): Observable<League> {
         return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
-            map((res: ILeague) => this.jsonToObject(res)),
+            map((jsonRes: JsonLeague) => this.mapper.toObject(jsonRes)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(league: League): Observable<League> {
-        const options = {
-            headers: super.getHeaders()
-        };
         const url = this.url + '/' + league.getId();
-        return this.http.put(url, this.objectToJson(league), options).pipe(
-            map((res: ILeague) => this.jsonToObject(res, league)),
+        return this.http.put(url, this.mapper.toJson(league), { headers: super.getHeaders() }).pipe(
+            map((json: JsonLeague) => this.mapper.toObject(json, league)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(league: League): Observable<League> {
+    removeObject(league: League): Observable<JsonLeague> {
         const url = this.url + '/' + league.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((leagueRes: League) => {
-                this.cache[league.getId()] = undefined;
-                return leagueRes;
+            map((json: JsonLeague) => {
+                SportCache.leagues[league.getId()] = undefined;
+                return json;
             }),
             catchError((err) => this.handleError(err))
         );
     }
-
-    jsonArrayToObject(jsonArray: ILeague[]): League[] {
-        const objects: League[] = [];
-        for (const json of jsonArray) {
-            objects.push(this.jsonToObject(json));
-        }
-        return objects;
-    }
-
-    jsonToObject(json: ILeague, league?: League): League {
-        if (league === undefined && json.id !== undefined) {
-            league = this.cache[json.id];
-        }
-        if (league === undefined) {
-            league = new League(json.name);
-            league.setId(json.id);
-            this.cache[league.getId()] = league;
-        }
-        league.setAssociation(this.associationRepos.jsonToObject(json.association));
-        league.setAbbreviation(json.abbreviation);
-        league.setSport(json.sport);
-        return league;
-    }
-
-    objectToJson(league: League): ILeague {
-        return {
-            id: league.getId(),
-            name: league.getName(),
-            abbreviation: league.getAbbreviation(),
-            association: this.associationRepos.objectToJson(league.getAssociation()),
-            sport: league.getSport()
-        };
-    }
-}
-
-export interface ILeague {
-    id?: number;
-    association: IAssociation;
-    name: string;
-    abbreviation?: string;
-    sport: string;
 }

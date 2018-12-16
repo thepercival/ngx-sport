@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { IPoulePlace, PoulePlaceRepository } from '../pouleplace/repository';
+import { JsonPoulePlace, PoulePlaceMapper } from '../pouleplace/mapper';
 import { Round } from '../round';
 import { QualifyRule } from './rule';
 
@@ -10,7 +10,7 @@ import { QualifyRule } from './rule';
 @Injectable()
 export class QualifyRuleRepository {
 
-    constructor(private poulePlaceRepos: PoulePlaceRepository) {
+    constructor(private poulePlaceMapper: PoulePlaceMapper) {
     }
 
     jsonArrayToObject(jsonArray: any, round: Round, fromRound?: Round): QualifyRule[] {
@@ -52,15 +52,15 @@ export class QualifyRuleRepository {
         return jsonArray;
     }
 
-    objectToJson(object: QualifyRule): any {
+    objectToJson(qualifyRule: QualifyRule): any {
         return {
-            fromPoulePlaces: this.poulePlaceRepos.objectsToJsonArray(object.getFromPoulePlaces()),
-            toPoulePlaces: this.poulePlaceRepos.objectsToJsonArray(object.getToPoulePlaces())
+            fromPoulePlaces: qualifyRule.getFromPoulePlaces().map( poulePlace => this.poulePlaceMapper.toJson(poulePlace)),
+            toPoulePlaces: qualifyRule.getToPoulePlaces().map( poulePlace => this.poulePlaceMapper.toJson(poulePlace))
         };
     }
 }
 
-export interface IQualifyRule {
-    fromPoulePlaces: IPoulePlace[];
-    toPoulePlaces: IPoulePlace[];
+export interface JsonQualifyRule {
+    fromPoulePlaces: JsonPoulePlace[];
+    toPoulePlaces: JsonPoulePlace[];
 }

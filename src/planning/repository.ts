@@ -5,7 +5,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Game } from '../game';
-import { GameRepository, IGame } from '../game/repository';
+import { GameMapper, JsonGame } from '../game/mapper';
 import { Poule } from '../poule';
 import { SportRepository } from '../repository';
 import { RoundNumber } from '../round/number';
@@ -21,7 +21,7 @@ export class PlanningRepository extends SportRepository {
 
     constructor(
         private http: HttpClient,
-        private gameRepos: GameRepository,
+        private gameMapper: GameMapper,
         router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
@@ -36,9 +36,10 @@ export class PlanningRepository extends SportRepository {
         const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
             const removedGames = poule.getGames().splice(0, poule.getGames().length);
+            const jsonRemovedGames = removedGames.map( removedGame => this.gameMapper.toJson(removedGame));
             reposCreates.push(
-                this.http.post(this.url, this.gameRepos.objectsToJsonArray(removedGames), this.getOptions(poule)).pipe(
-                    map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
+                this.http.post(this.url, jsonRemovedGames, this.getOptions(poule)).pipe(
+                    map((jsonGames: JsonGame[]) => this.gameMapper.toArray(jsonGames, poule)),
                     catchError((err) => this.handleError(err))
                 )
             );
@@ -61,9 +62,10 @@ export class PlanningRepository extends SportRepository {
         const reposUpdates: Observable<Game[]>[] = [];
         const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
+            const jsonGames = poule.getGames().map( game => this.gameMapper.toJson(game));
             reposUpdates.push(
-                this.http.put(this.url, this.gameRepos.objectsToJsonArray(poule.getGames()), this.getOptions(poule)).pipe(
-                    map((gamesRes: IGame[]) => this.gameRepos.jsonArrayToObject(gamesRes, poule)),
+                this.http.put(this.url, jsonGames, this.getOptions(poule)).pipe(
+                    map((jsonGamesRes: JsonGame[]) => this.gameMapper.toArray(jsonGamesRes, poule)),
                     catchError((err) => this.handleError(err))
                 )
             );

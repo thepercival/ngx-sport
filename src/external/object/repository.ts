@@ -8,6 +8,7 @@ import { SportRepository } from '../../repository';
 import { ExternalObject, ImportableObject } from '../object';
 import { ExternalSystem } from '../system';
 import { ExternalSystemRepository } from '../system/repository';
+import { SportCache } from '../../cache';
 
 @Injectable()
 export class ExternalObjectRepository extends SportRepository {
@@ -76,7 +77,7 @@ export class ExternalObjectRepository extends SportRepository {
         const url = this.getUrl() + '/' + externalObject.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((associationRes: IExternalObject) => {
-                this.cache[externalObject.getId()] = undefined;
+                SportCache.externals[externalObject.getId()] = undefined;
                 return associationRes;
             }),
             catchError((err) => this.handleError(err))
@@ -111,7 +112,7 @@ export class ExternalObjectRepository extends SportRepository {
 
     jsonToObject(json: IExternalObject, externalObject?: ExternalObject): ExternalObject {
         if (externalObject === undefined && json.id !== undefined) {
-            externalObject = this.cache[json.id];
+            externalObject = SportCache.externals[json.id];
         }
         if (externalObject === undefined) {
             externalObject = new ExternalObject(
@@ -119,7 +120,7 @@ export class ExternalObjectRepository extends SportRepository {
                 json.externalSystemId);
             externalObject.setId(json.id);
             externalObject.setExternalId(json.externalId);
-            this.cache[externalObject.getId()] = externalObject;
+            SportCache.externals[externalObject.getId()] = externalObject;
         }
         return externalObject;
     }
