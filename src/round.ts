@@ -121,7 +121,7 @@ export class Round {
     }
 
     hasCustomQualifyOrder(): boolean {
-        return !(this.getQualifyOrder() === Round.QUALIFYORDER_CROSS || this.getQualifyOrder() === Round.QUALIFYORDER_RANK );
+        return !(this.getQualifyOrder() === Round.QUALIFYORDER_CROSS || this.getQualifyOrder() === Round.QUALIFYORDER_RANK);
     }
 
     getName(): string {
@@ -141,7 +141,7 @@ export class Round {
     }
 
     getPath(): number[] {
-        if ( this.isRoot() ) {
+        if (this.isRoot()) {
             return [];
         }
         const path = this.getParent().getPath();
@@ -195,7 +195,7 @@ export class Round {
 
     getPoulePlacesPer(winnersOrLosers: number, qualifyOrder: number, poulePlaceOrder: number): PoulePlace[][] {
         const poulePlacesPerNumber = this.getPoulePlacesPerNumber(winnersOrLosers);
-        if ( ( qualifyOrder !== Round.QUALIFYORDER_RANK ) || this.isRoot()) {
+        if ((qualifyOrder !== Round.QUALIFYORDER_RANK) || this.isRoot()) {
             return poulePlacesPerNumber;
         }
         if (poulePlaceOrder === Round.ORDER_POULE_NUMBER) {
@@ -229,7 +229,7 @@ export class Round {
                 poulePlacesPerQualifyRule.push(tmp);
             }
         });
-        if ( this.getWinnersOrLosers() !== 0 && this.getWinnersOrLosers() !== winnersOrLosers ) {
+        if (this.getWinnersOrLosers() !== 0 && this.getWinnersOrLosers() !== winnersOrLosers) {
             poulePlacesPerQualifyRule.reverse();
         }
         return poulePlacesPerQualifyRule;
@@ -283,10 +283,6 @@ export class Round {
             }
         }
         return teams;
-    }
-
-    hasGames(): boolean {
-        return this.getPoules().some(poule => poule.hasGames());
     }
 
     getGames(): Game[] {

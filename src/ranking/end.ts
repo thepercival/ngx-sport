@@ -34,7 +34,7 @@ export class EndRanking {
     }
 
     protected getDeadPlacesFromRound(round: Round): PoulePlace[] {
-        if (round.hasGames() === false || round.getState() === Game.STATE_PLAYED) {
+        if (round.getState() === Game.STATE_PLAYED) {
             return this.getDeadPlacesFromRoundPlayed(round);
         }
         return this.getDeadPlacesFromRoundNotPlayed(round);
@@ -88,24 +88,25 @@ export class EndRanking {
         const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
         const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.WINNERS);
         const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
-        const deadPlacesToAdd: PoulePlace[] = this.getUniqueFromPlaces(multipleRules);
-        {
-            if (multipleWinnersRule !== undefined) {
-                this.filterDeadPoulePlacesToAdd(multipleWinnersRule, deadPlacesToAdd);
-            }
-            if (multipleLosersRule !== undefined) {
-                this.filterDeadPoulePlacesToAdd(multipleLosersRule, deadPlacesToAdd);
-            }
-        }
+
+        let nrOfUniqueFromPlacesMultiple = this.getUniqueFromPlaces(multipleRules).length;
         if (multipleWinnersRule !== undefined) {
-            multipleWinnersRule.getFromPoulePlaces().forEach(fromPoulePlace => {
-                const index = deadPlacesToAdd.indexOf(fromPoulePlace);
-                if (index > -1) {
-                    deadPlaces.push(deadPlacesToAdd.splice(index, 1).shift());
-                }
-            });
+            const qualifyAmount = multipleWinnersRule.getToPoulePlaces().length;
+            const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(multipleWinnersRule);
+            for (let i = 0; i < qualifyAmount; i++) {
+                nrOfUniqueFromPlacesMultiple--;
+                rankingItems.shift();
+            }
+            const amountQualifyLosers = multipleLosersRule !== undefined ? multipleLosersRule.getToPoulePlaces().length : 0;
+            while (nrOfUniqueFromPlacesMultiple - amountQualifyLosers > 0) {
+                nrOfUniqueFromPlacesMultiple--;
+                deadPlaces.push(rankingItems.shift().getPoulePlace());
+            }
         }
         const poulePlacesPer: PoulePlace[][] = round.getPoulePlacesPer(Round.WINNERS, round.getQualifyOrder(), Round.ORDER_POULE_NUMBER);
+        if (round.getWinnersOrLosers() === Round.LOSERS) {
+            poulePlacesPer.reverse();
+        }
         poulePlacesPer.forEach(poulePlaces => {
             const deadPlacesPer = poulePlaces.filter(poulePlace => poulePlace.getToQualifyRules().length === 0);
             this.getDeadPlacesFromPlaceNumber(deadPlacesPer, round).forEach(deadPoulePlace => {
@@ -113,12 +114,16 @@ export class EndRanking {
             });
         });
         if (multipleLosersRule !== undefined) {
-            multipleLosersRule.getFromPoulePlaces().forEach(fromPoulePlace => {
-                const index = deadPlacesToAdd.indexOf(fromPoulePlace);
-                if (index > -1) {
-                    deadPlaces.push(deadPlacesToAdd.splice(index, 1).shift());
-                }
-            });
+            const qualifyAmount = multipleLosersRule.getToPoulePlaces().length;
+            const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(multipleLosersRule);
+            for (let i = 0; i < qualifyAmount; i++) {
+                nrOfUniqueFromPlacesMultiple--;
+                rankingItems.pop(); // or shift()???
+            }
+            while (nrOfUniqueFromPlacesMultiple) {
+                nrOfUniqueFromPlacesMultiple--;
+                deadPlaces.push(rankingItems.pop().getPoulePlace());
+            }
         }
         return deadPlaces;
     }

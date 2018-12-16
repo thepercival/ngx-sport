@@ -212,14 +212,6 @@ export class PlanningService {
         return poules;
     }
 
-    hasGames(roundNumber: RoundNumber): boolean {
-        const rounds = roundNumber.getRounds();
-        if (rounds.length === 0) {
-            return false;
-        }
-        return rounds.some(round => round.hasGames());
-    }
-
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
         const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
         let games = [];

@@ -19,10 +19,16 @@
     "@angular/compiler-cli": "^7.0.2",
     "@semantic-release/git": "^7.0.5",
     "@semantic-release/npm": "^5.0.5",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
     "codelyzer": "^4.5.0",
+    "cross-env": "^5.2.0",
+    "mocha": "^5.2.0",
     "rollup": "^0.66.6",
     "semantic-release": "^15.10.6",
     "travis-deploy-once": "^5.0.9",
+    "ts-node": "^7.0.1",
     "tsickle": "^0.34.0",
     "tslint": "^5.11.0",
     "typescript": "^3.1.6",
@@ -74,7 +80,8 @@
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
     "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
-    "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/"
+    "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
+    "test": "cross-env TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' mocha -r ts-node/register test/cases/**/*.ts"
   },
   "release": {
     "verifyConditions": [
