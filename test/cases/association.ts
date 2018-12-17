@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { Association } from '../../src/association';
 
 describe('Assocation', () => {
-    it('check inheritance', () => {
+    it('Inheritance', () => {
         const fifa = new Association('FIFA');
         const uefa = new Association('UEFA', fifa);
         const knvb = new Association('KNVB', uefa);

@@ -23,9 +23,7 @@ export class QualifyService {
         if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
             childRoundPoulePlaces.reverse();
         }
-        const parentRoundPoulePlacesPer: PoulePlace[][] = this.parentRound.getPoulePlacesPer(
-            this.childRound.getWinnersOrLosers(), this.childRound.getQualifyOrder(), Round.ORDER_NUMBER_POULE
-        );
+        const parentRoundPoulePlacesPer: PoulePlace[][] = this.getParentPoulePlacesPer();
 
         let nrOfShifts = 0;
         while (childRoundPoulePlaces.length > 0 && parentRoundPoulePlacesPer.length > 0) {
@@ -88,6 +86,45 @@ export class QualifyService {
             }
         }
         return shuffledPoulePlaces;
+    }
+
+    protected getParentPoulePlacesPer(): PoulePlace[][] {
+        const poulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
+        if ((this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) || this.parentRound.isRoot()) {
+            return poulePlacesPerNumber;
+        }
+        // Round.QUALIFYORDER_RANK
+        const poulePlacesPerQualifyRule = [];
+        this.parentRound.getFromQualifyRules().forEach(fromQualifyRule => {
+            const poulePlaces = fromQualifyRule.getToPoulePlaces().slice();
+            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
+                if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
+                    return 1;
+                }
+                if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
+                    return -1;
+                }
+                if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
+                    return 1;
+                }
+                if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
+                    return -1;
+                }
+                return 0;
+            });
+            let placeNumber = 0;
+            while (poulePlaces.length > 0) {
+                const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
+                // if ( winnersOrLosers === Round.LOSERS ) {
+                //     tmp.reverse();
+                // }
+                poulePlacesPerQualifyRule.push(tmp);
+            }
+        });
+        if (this.parentRound.getWinnersOrLosers() !== 0 && this.parentRound.getWinnersOrLosers() !== this.childRound.getWinnersOrLosers()) {
+            poulePlacesPerQualifyRule.reverse();
+        }
+        return poulePlacesPerQualifyRule;
     }
 
     removeRules() {

@@ -103,11 +103,11 @@ export class EndRanking {
                 deadPlaces.push(rankingItems.shift().getPoulePlace());
             }
         }
-        const poulePlacesPer: PoulePlace[][] = round.getPoulePlacesPer(Round.WINNERS, round.getQualifyOrder(), Round.ORDER_POULE_NUMBER);
-        if (round.getWinnersOrLosers() === Round.LOSERS) {
-            poulePlacesPer.reverse();
-        }
+        const poulePlacesPer: PoulePlace[][] = this.getPoulePlacesPer(round);
         poulePlacesPer.forEach(poulePlaces => {
+            if (round.getWinnersOrLosers() === Round.LOSERS) {
+                poulePlaces.reverse();
+            }
             const deadPlacesPer = poulePlaces.filter(poulePlace => poulePlace.getToQualifyRules().length === 0);
             this.getDeadPlacesFromPlaceNumber(deadPlacesPer, round).forEach(deadPoulePlace => {
                 deadPlaces.push(deadPoulePlace);
@@ -126,6 +126,13 @@ export class EndRanking {
             }
         }
         return deadPlaces;
+    }
+
+    getPoulePlacesPer(round: Round): PoulePlace[][] {
+        if ( round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK ) {
+            return round.getPoulePlacesPerNumber(Round.WINNERS);
+        }
+        return round.getPoulePlacesPerPoule();
     }
 
     protected filterDeadPoulePlacesToAdd(toRule: QualifyRule, deadPlacesToAdd: PoulePlace[]) {

@@ -193,54 +193,25 @@ export class Round {
         return poulePlaces;
     }
 
-    getPoulePlacesPer(winnersOrLosers: number, qualifyOrder: number, poulePlaceOrder: number): PoulePlace[][] {
-        const poulePlacesPerNumber = this.getPoulePlacesPerNumber(winnersOrLosers);
-        if ((qualifyOrder !== Round.QUALIFYORDER_RANK) || this.isRoot()) {
-            return poulePlacesPerNumber;
-        }
-        if (poulePlaceOrder === Round.ORDER_POULE_NUMBER) {
-            return this.getPoulePlacesPerPoule();
-        }
-        // Round.QUALIFYORDER_RANK
-        const poulePlacesPerQualifyRule = [];
-        this.getFromQualifyRules().forEach(fromQualifyRule => {
-            const poulePlaces = fromQualifyRule.getToPoulePlaces().slice();
-            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
-                if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
-                    return 1;
-                }
-                if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
-                    return -1;
-                }
-                if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
-                    return 1;
-                }
-                if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
-                    return -1;
-                }
-                return 0;
-            });
-            let placeNumber = 0;
-            while (poulePlaces.length > 0) {
-                const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
-                // if ( winnersOrLosers === Round.LOSERS ) {
-                //     tmp.reverse();
-                // }
-                poulePlacesPerQualifyRule.push(tmp);
-            }
-        });
-        if (this.getWinnersOrLosers() !== 0 && this.getWinnersOrLosers() !== winnersOrLosers) {
-            poulePlacesPerQualifyRule.reverse();
-        }
-        return poulePlacesPerQualifyRule;
-    }
-
     getPoulePlacesPerPoule(): PoulePlace[][] {
         const poulePlacesPerPoule = [];
         this.getPoules().forEach(poule => poulePlacesPerPoule.push(poule.getPlaces()));
         return poulePlacesPerPoule;
     }
 
+    /**
+     * winnerslosers = Round.WINNERS
+     *  [ A1 B1 C1 ]
+     *  [ A2 B2 C2 ]
+     *  [ A3 B3 C3 ]
+     * winnerslosers = Round.LOSERS
+     *  [ C3 B3 A3 ]
+     *  [ C2 B2 A2 ]
+     *  [ C1 B1 A1 ]
+     *
+     * @param winnersOrLosers
+     *
+     **/
     getPoulePlacesPerNumber(winnersOrLosers: number): PoulePlace[][] {
         const poulePlacesPerNumber = [];
 
