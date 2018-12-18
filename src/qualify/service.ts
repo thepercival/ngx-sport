@@ -20,9 +20,7 @@ export class QualifyService {
         // childRoundPoulePlaces
         const order = this.childRound.getQualifyOrder() === Round.QUALIFYORDER_RANK ? Round.ORDER_POULE_NUMBER : Round.ORDER_NUMBER_POULE;
         const childRoundPoulePlaces = this.childRound.getPoulePlaces(order);
-        if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
-            childRoundPoulePlaces.reverse();
-        }
+
         const parentRoundPoulePlacesPer: PoulePlace[][] = this.getParentPoulePlacesPer();
 
         let nrOfShifts = 0;
@@ -40,6 +38,11 @@ export class QualifyService {
                     qualifyRule.addFromPoulePlace(poulePlaceIt);
                 });
                 nrOfPoulePlaces = poulePlaces.length;
+                if (this.childRound.getWinnersOrLosers() === Round.LOSERS
+                    && this.childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS
+                    && (childRoundPoulePlaces.length % nrOfPoulePlaces) !== 0) {
+                    nrOfPoulePlaces = (childRoundPoulePlaces.length % nrOfPoulePlaces);
+                }
             }
             if (nrOfPoulePlaces === 0) {
                 break;
@@ -89,42 +92,71 @@ export class QualifyService {
     }
 
     protected getParentPoulePlacesPer(): PoulePlace[][] {
-        const poulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
-        if ((this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) || this.parentRound.isRoot()) {
+        /** LOSERS
+         * [ C3 B3 A3 ]
+        *  [ C2 B2 A2 ]
+        *  [ C1 B1 A1 ]
+         */
+        const nrOfChildRoundPlaces = this.childRound.getPoulePlaces().length;
+        if (this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
+            const poulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(Round.WINNERS);
+            if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
+                poulePlacesPerNumber.reverse();
+                let spliceIndexReversed;
+                for (let i = 0, x = 0; i < poulePlacesPerNumber.length; i++) {
+                    if (x >= nrOfChildRoundPlaces) {
+                        spliceIndexReversed = i; break;
+                    }
+                    x += poulePlacesPerNumber[i].length;
+                }
+                poulePlacesPerNumber.splice(spliceIndexReversed);
+                poulePlacesPerNumber.reverse();
+            }
             return poulePlacesPerNumber;
         }
-        // Round.QUALIFYORDER_RANK
+
+        const poulePlacesToAdd = this.getPoulePlacesPerParentFromQualifyRule();
+        if (this.childRound.getWinnersOrLosers() === Round.LOSERS) {
+            poulePlacesToAdd.splice(0, poulePlacesToAdd.length - nrOfChildRoundPlaces);
+        }
+
         const poulePlacesPerQualifyRule = [];
-        this.parentRound.getFromQualifyRules().forEach(fromQualifyRule => {
-            const poulePlaces = fromQualifyRule.getToPoulePlaces().slice();
-            poulePlaces.sort((poulePlaceA, poulePlaceB) => {
-                if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
+        let placeNumber = 0;
+        const poulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
+        while (poulePlacesToAdd.length > 0) {
+            const tmp = poulePlacesToAdd.splice(0, poulePlacesPerNumber[placeNumber++].length);
+            poulePlacesPerQualifyRule.push(tmp);
+        }
+        return poulePlacesPerQualifyRule;
+    }
+
+    protected getPoulePlacesPerParentFromQualifyRule(): PoulePlace[] {
+
+        if (this.parentRound.isRoot()) {
+            return this.parentRound.getPoulePlaces(Round.ORDER_NUMBER_POULE); // ANDERSOM
+        }
+
+        let poulePlaces = [];
+        this.parentRound.getFromQualifyRules().forEach(parentFromQualifyRule => {
+            const parentPoulePlaces = parentFromQualifyRule.getToPoulePlaces().slice();
+            parentPoulePlaces.sort((pPoulePlaceA, pPoulePlaceB) => {
+                if (pPoulePlaceA.getNumber() > pPoulePlaceB.getNumber()) {
                     return 1;
                 }
-                if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
+                if (pPoulePlaceA.getNumber() < pPoulePlaceB.getNumber()) {
                     return -1;
                 }
-                if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
+                if (pPoulePlaceA.getPoule().getNumber() > pPoulePlaceB.getPoule().getNumber()) {
                     return 1;
                 }
-                if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
+                if (pPoulePlaceA.getPoule().getNumber() < pPoulePlaceB.getPoule().getNumber()) {
                     return -1;
                 }
                 return 0;
             });
-            let placeNumber = 0;
-            while (poulePlaces.length > 0) {
-                const tmp = poulePlaces.splice(0, poulePlacesPerNumber[placeNumber++].length);
-                // if ( winnersOrLosers === Round.LOSERS ) {
-                //     tmp.reverse();
-                // }
-                poulePlacesPerQualifyRule.push(tmp);
-            }
+            poulePlaces = poulePlaces.concat(parentPoulePlaces);
         });
-        if (this.parentRound.getWinnersOrLosers() !== 0 && this.parentRound.getWinnersOrLosers() !== this.childRound.getWinnersOrLosers()) {
-            poulePlacesPerQualifyRule.reverse();
-        }
-        return poulePlacesPerQualifyRule;
+        return poulePlaces;
     }
 
     removeRules() {

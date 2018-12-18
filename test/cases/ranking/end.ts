@@ -1,10 +1,9 @@
-import { jsonStructure9 } from '../../data/structure9';
-import { jsonStructure16 } from '../../data/structure16';
-import { jsonCompetition } from '../../data/competition';
-import { getMapper } from '../../createmapper';
-import { EndRanking } from '../../../src/ranking/end';
+import { expect } from 'chai';
 
-import { expect, should } from 'chai';
+import { EndRanking } from '../../../src/ranking/end';
+import { getMapper } from '../../createmapper';
+import { jsonCompetition } from '../../data/competition';
+import { jsonStructure9 } from '../../data/structure9';
 
 describe('Ranking/End', () => {
     it('structure9', () => {
@@ -15,7 +14,7 @@ describe('Ranking/End', () => {
         const structure = structureMapper.toObject(jsonStructure9, competition);
 
         const endRanking = new EndRanking();
-        const items = endRanking.getItems( structure.getRootRound() );
+        const items = endRanking.getItems(structure.getRootRound());
         expect(items[0].getPoulePlace().getTeam().getName()).to.equal('jil');
         expect(items[1].getPoulePlace().getTeam().getName()).to.equal('max');
         expect(items[2].getPoulePlace().getTeam().getName()).to.equal('zed');

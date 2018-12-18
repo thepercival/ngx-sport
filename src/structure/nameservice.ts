@@ -62,22 +62,22 @@ export class StructureNameService {
         return pouleName;
     }
 
-    getPoulePlaceName(pouleplace: PoulePlace, teamName = false) {
+    getPoulePlaceFromName(pouleplace: PoulePlace, teamName = false) {
         if (teamName === true && pouleplace.getTeam() !== undefined) {
             return pouleplace.getTeam().getName();
         }
         const fromQualifyRule = pouleplace.getFromQualifyRule();
         if (fromQualifyRule === undefined) { // first round
-            return this.getPoulePlaceNameSimple(pouleplace, false);
+            return this.getPoulePlaceName(pouleplace, false);
         }
         if (fromQualifyRule.isMultiple() === false) {
             const fromPoulePlace = fromQualifyRule.getFromEquivalent(pouleplace);
-            return this.getPoulePlaceNameSimple(fromPoulePlace, false);
+            return this.getPoulePlaceName(fromPoulePlace, false);
         }
         return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
     }
 
-    getPoulePlaceNameSimple(poulePlace: PoulePlace, teamName = false) {
+    getPoulePlaceName(poulePlace: PoulePlace, teamName = false) {
         if (teamName === true && poulePlace.getTeam() !== undefined) {
             return poulePlace.getTeam().getName();
         }

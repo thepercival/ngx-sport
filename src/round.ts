@@ -149,7 +149,7 @@ export class Round {
         return path;
     }
 
-    getPoulePlaces(order?: number): PoulePlace[] {
+    getPoulePlaces(order?: number, reversed: boolean = false): PoulePlace[] {
         const poulePlaces: PoulePlace[] = [];
         for (const poule of this.getPoules()) {
             for (const place of poule.getPlaces()) {
@@ -189,6 +189,9 @@ export class Round {
                 }
                 return 0;
             });
+        }
+        if (reversed === true) {
+            poulePlaces.reverse();
         }
         return poulePlaces;
     }

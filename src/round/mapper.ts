@@ -1,8 +1,9 @@
-import { RoundNumber } from './number';
-import { Round } from '../round';
-import { QualifyService } from '../qualify/service';
-import { PouleMapper, JsonPoule } from '../poule/mapper';
 import { Injectable } from '@angular/core';
+
+import { JsonPoule, PouleMapper } from '../poule/mapper';
+import { QualifyService } from '../qualify/service';
+import { Round } from '../round';
+import { RoundNumber } from './number';
 
 @Injectable()
 export class RoundMapper {
@@ -12,7 +13,7 @@ export class RoundMapper {
         round = new Round(roundNumber, parentRound, json.winnersOrLosers);
         round.setId(json.id);
         round.setQualifyOrder(json.qualifyOrder);
-        json.poules.map( jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
+        json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
         if (parentRound !== undefined) {
             const qualifyService = new QualifyService(round.getParent(), round);
             qualifyService.createRules();
@@ -29,7 +30,7 @@ export class RoundMapper {
             winnersOrLosers: round.getWinnersOrLosers(),
             qualifyOrder: round.getQualifyOrder(),
             name: round.getName(),
-            poules: round.getPoules().map( poule => this.pouleMapper.toJson(poule)),
+            poules: round.getPoules().map(poule => this.pouleMapper.toJson(poule)),
             childRounds: round.getChildRounds().map(roundIt => this.toJson(roundIt))
         };
     }
