@@ -213,25 +213,42 @@ export class PlanningService {
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
-        const poules: Poule[] = this.getPoulesForRoundNumber(roundNumber);
+
+        const rounds = roundNumber.getRounds().slice();
+        if ( !roundNumber.isFirst() ) {
+            rounds.sort((r1, r2) => this.getRoundPathAsNumber(r1) - this.getRoundPathAsNumber(r2) );
+        }
+
         let games = [];
-        poules.forEach(poule => {
-            games = games.concat(poule.getGames());
+        rounds.forEach( round => {
+            const poules = round.getPoules().slice();
+            if ( roundNumber.isFirst() ) {
+                poules.sort((p1, p2) => p1.getNumber() - p2.getNumber() );
+            } else {
+                poules.sort((p1, p2) => p2.getNumber() - p1.getNumber() );
+            }
+            poules.forEach(poule => {
+                games = games.concat(poule.getGames());
+            });
         });
-        return this.orderGames(games, order, !roundNumber.isFirst());
+        return this.orderGames(games, order);
     }
 
-    orderGames(games: Game[], order: number, pouleNumberReversed: boolean = false): Game[] {
+    protected getRoundPathAsNumber( round: Round ): number {
+        let value = 0;
+        const path = round.getPath();
+        let pow = path.length;
+        path.forEach( winnersOrLosers => {
+            value += winnersOrLosers === Round.WINNERS ? Math.pow( 2, pow ) : 0;
+            pow--;
+        });
+        return value;
+    }
+
+    protected orderGames(games: Game[], order: number): Game[] {
         if (order === Game.ORDER_BYNUMBER) {
             games.sort((g1, g2) => {
                 if (g1.getRoundNumber() === g2.getRoundNumber()) {
-                    if (g1.getSubNumber() === g2.getSubNumber()) {
-                        if (pouleNumberReversed === true) {
-                            return g2.getPoule().getNumber() - g1.getPoule().getNumber();
-                        } else {
-                            return g1.getPoule().getNumber() - g2.getPoule().getNumber();
-                        }
-                    }
                     return g1.getSubNumber() - g2.getSubNumber();
                 }
                 return g1.getRoundNumber() - g2.getRoundNumber();
@@ -251,11 +268,7 @@ export class PlanningService {
             // like order === Game.ORDER_BYNUMBER
             if (g1.getRoundNumber() === g2.getRoundNumber()) {
                 if (g1.getSubNumber() === g2.getSubNumber()) {
-                    if (pouleNumberReversed === true) {
-                        return g2.getPoule().getNumber() - g1.getPoule().getNumber();
-                    } else {
-                        return g1.getPoule().getNumber() - g2.getPoule().getNumber();
-                    }
+                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
                 }
                 return g1.getSubNumber() - g2.getSubNumber();
             }

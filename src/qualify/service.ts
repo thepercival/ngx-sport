@@ -122,9 +122,9 @@ export class QualifyService {
 
         const poulePlacesPerQualifyRule = [];
         let placeNumber = 0;
-        const poulePlacesPerNumber = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
+        const poulePlacesPerNumberRank = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
         while (poulePlacesToAdd.length > 0) {
-            const tmp = poulePlacesToAdd.splice(0, poulePlacesPerNumber[placeNumber++].length);
+            const tmp = poulePlacesToAdd.splice(0, poulePlacesPerNumberRank[placeNumber++].length);
             poulePlacesPerQualifyRule.push(tmp);
         }
         return poulePlacesPerQualifyRule;
