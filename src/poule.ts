@@ -4,10 +4,6 @@ import { PoulePlace } from './pouleplace';
 import { Round } from './round';
 import { Team } from './team';
 
-/**
- * Created by coen on 27-2-17.
- */
-
 export class Poule {
     protected id: number;
     protected round: Round;
@@ -16,7 +12,6 @@ export class Poule {
     protected places: PoulePlace[] = [];
     protected games: Game[] = [];
 
-    // constructor
     constructor(round: Round, number?: number) {
         if (number === undefined) {
             number = round.getPoules().length + 1;
