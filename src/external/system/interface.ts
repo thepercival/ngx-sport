@@ -1,6 +1,3 @@
-/**
- * Created by coen on 11-2-17.
- */
 import { Observable } from 'rxjs';
 
 import { Association } from './../../association';

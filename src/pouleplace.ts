@@ -1,11 +1,7 @@
-/**
- * Created by coen on 27-2-17.
- */
 import { Game } from './game';
 import { Poule } from './poule';
 import { QualifyRule } from './qualify/rule';
 import { Team } from './team';
-
 
 export class PoulePlace {
     protected id: number;
@@ -17,7 +13,6 @@ export class PoulePlace {
     protected fromQualifyRule: QualifyRule;
     protected toQualifyRules: QualifyRule[] = [];
 
-    // constructor
     constructor(poule: Poule, number?: number) {
         if (number === undefined) {
             number = poule.getPlaces().length + 1;

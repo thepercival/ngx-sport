@@ -6,10 +6,6 @@ import { QualifyRule } from './qualify/rule';
 import { RoundNumber } from './round/number';
 import { Team } from './team';
 
-/**
- * Created by coen on 27-2-17.
- */
-
 export class Round {
     static readonly WINNERS = 1;
     static readonly LOSERS = 2;

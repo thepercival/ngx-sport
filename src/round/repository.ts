@@ -3,9 +3,6 @@ import { Router } from '@angular/router';
 
 import { SportRepository } from '../repository';
 
-/**
- * Created by coen on 3-3-17.
- */
 @Injectable()
 export class RoundRepository extends SportRepository {
 

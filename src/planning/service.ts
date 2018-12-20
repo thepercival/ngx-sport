@@ -9,9 +9,6 @@ import { RoundNumber } from '../round/number';
 import { RoundNumberConfig } from '../round/number/config';
 import { PlanningResourceService } from './resource/service';
 
-/**
- * Created by coen on 10-10-17.
- */
 export class PlanningService {
 
     private blockedPeriod: BlockedPeriod;
@@ -215,17 +212,17 @@ export class PlanningService {
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
 
         const rounds = roundNumber.getRounds().slice();
-        if ( !roundNumber.isFirst() ) {
-            rounds.sort((r1, r2) => this.getRoundPathAsNumber(r1) - this.getRoundPathAsNumber(r2) );
+        if (!roundNumber.isFirst()) {
+            rounds.sort((r1, r2) => this.getRoundPathAsNumber(r1) - this.getRoundPathAsNumber(r2));
         }
 
         let games = [];
-        rounds.forEach( round => {
+        rounds.forEach(round => {
             const poules = round.getPoules().slice();
-            if ( roundNumber.isFirst() ) {
-                poules.sort((p1, p2) => p1.getNumber() - p2.getNumber() );
+            if (roundNumber.isFirst()) {
+                poules.sort((p1, p2) => p1.getNumber() - p2.getNumber());
             } else {
-                poules.sort((p1, p2) => p2.getNumber() - p1.getNumber() );
+                poules.sort((p1, p2) => p2.getNumber() - p1.getNumber());
             }
             poules.forEach(poule => {
                 games = games.concat(poule.getGames());
@@ -234,12 +231,12 @@ export class PlanningService {
         return this.orderGames(games, order);
     }
 
-    protected getRoundPathAsNumber( round: Round ): number {
+    protected getRoundPathAsNumber(round: Round): number {
         let value = 0;
         const path = round.getPath();
         let pow = path.length;
-        path.forEach( winnersOrLosers => {
-            value += winnersOrLosers === Round.WINNERS ? Math.pow( 2, pow ) : 0;
+        path.forEach(winnersOrLosers => {
+            value += winnersOrLosers === Round.WINNERS ? Math.pow(2, pow) : 0;
             pow--;
         });
         return value;

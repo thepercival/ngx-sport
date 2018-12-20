@@ -1,10 +1,6 @@
 import { Round } from './round';
 import { RoundNumber } from './round/number';
 
-/**
- * Created by coen on 27-2-17.
- */
-
 export class Structure {
     constructor(
         protected firstRoundNumber: RoundNumber,

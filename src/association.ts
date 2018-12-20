@@ -1,9 +1,5 @@
 import { Team } from './team';
 
-/**
- * Created by coen on 30-1-17.
- */
-
 export class Association {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 20;

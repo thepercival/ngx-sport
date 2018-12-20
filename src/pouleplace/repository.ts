@@ -7,11 +7,8 @@ import { catchError, map } from 'rxjs/operators';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { SportRepository } from '../repository';
-import { PoulePlaceMapper, JsonPoulePlace } from './mapper';
+import { JsonPoulePlace, PoulePlaceMapper } from './mapper';
 
-/**
- * Created by coen on 3-3-17.
- */
 @Injectable()
 export class PoulePlaceRepository extends SportRepository {
 
@@ -31,7 +28,7 @@ export class PoulePlaceRepository extends SportRepository {
 
     editObject(poulePlace: PoulePlace, poule: Poule): Observable<PoulePlace> {
         return this.http.put(this.url + '/' + poulePlace.getId(), this.mapper.toJson(poulePlace), this.getOptions(poule)).pipe(
-            map((jsonRes: JsonPoulePlace) => this.mapper.toObject(jsonRes, poulePlace.getPoule(), poulePlace) ),
+            map((jsonRes: JsonPoulePlace) => this.mapper.toObject(jsonRes, poulePlace.getPoule(), poulePlace)),
             catchError((err) => this.handleError(err))
         );
     }

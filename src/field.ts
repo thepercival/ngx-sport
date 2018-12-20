@@ -10,7 +10,6 @@ export class Field {
     protected number: number;
     protected name: string;
 
-    // constructor
     constructor(competition: Competition, number: number) {
         this.setCompetition(competition);
         this.setNumber(number);

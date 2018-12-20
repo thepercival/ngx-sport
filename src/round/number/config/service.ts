@@ -4,9 +4,6 @@ import { RoundNumber } from '../../../round/number';
 import { RoundNumberConfig } from '../config';
 import { RoundNumberConfigScore } from './score';
 
-/**
- * Created by coen on 3-3-17.
- */
 export class RoundNumberConfigService {
 
     createFromPrevious(roundNumber: RoundNumber): RoundNumberConfig {

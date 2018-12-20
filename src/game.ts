@@ -7,10 +7,6 @@ import { Referee } from './referee';
 import { Round } from './round';
 import { RoundNumberConfig } from './round/number/config';
 
-/**
- * Created by coen on 20-3-17.
- */
-
 export class Game {
     static readonly HOME = true;
     static readonly AWAY = false;
@@ -38,7 +34,6 @@ export class Game {
     protected scoresMoment: number;
     protected scores: GameScore[] = [];
 
-    // constructor
     constructor(
         poule: Poule,
         homePouleplace: PoulePlace,

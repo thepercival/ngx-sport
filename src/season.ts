@@ -1,7 +1,3 @@
-/**
- * Created by coen on 11-2-17.
- */
-
 export class Season {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 9;
@@ -11,8 +7,6 @@ export class Season {
     protected startDateTime: Date;
     protected endDateTime: Date;
 
-
-    // constructor
     constructor(name: string) {
         this.setName(name);
     }

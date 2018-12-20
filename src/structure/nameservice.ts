@@ -3,11 +3,6 @@ import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 
-/**
- * Created by coen on 22-3-17.
- */
-
-
 export class StructureNameService {
     constructor() {
     }

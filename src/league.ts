@@ -1,9 +1,6 @@
 import { Association } from './association';
 import { ImportableObject } from './external/object';
 
-/**
- * Created by coen on 10-2-17.
- */
 export class League implements ImportableObject {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
@@ -16,7 +13,6 @@ export class League implements ImportableObject {
     protected sport: string;
     protected association: Association;
 
-    // constructor
     constructor(name: string) {
         this.setName(name);
     }

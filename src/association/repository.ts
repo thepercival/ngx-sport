@@ -4,14 +4,11 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { SportCache } from '../cache';
 import { Association } from '../association';
-import { JsonAssociation, AssociationMapper } from '../association/mapper';
+import { AssociationMapper, JsonAssociation } from '../association/mapper';
+import { SportCache } from '../cache';
 import { SportRepository } from '../repository';
 
-/**
- * Created by coen on 30-1-17.
- */
 @Injectable()
 export class AssociationRepository extends SportRepository {
 
@@ -28,7 +25,7 @@ export class AssociationRepository extends SportRepository {
 
     getObjects(): Observable<Association[]> {
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((json: JsonAssociation[]) => json.map( jsonAss => this.mapper.toObject(jsonAss))),
+            map((json: JsonAssociation[]) => json.map(jsonAss => this.mapper.toObject(jsonAss))),
             catchError((err) => this.handleError(err))
         );
     }

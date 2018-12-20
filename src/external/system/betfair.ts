@@ -7,10 +7,6 @@ import { League } from './../../league';
 import { ExternalSystem } from './../system';
 import { ExternalSystemLeagueInterface } from './interface';
 
-
-/**
- * Created by coen on 17-2-17.
- */
 export class ExternalSystemBetFair implements ExternalSystemLeagueInterface {
 
     constructor(

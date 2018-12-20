@@ -4,14 +4,11 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { JsonLeague, LeagueMapper } from './mapper';
+import { SportCache } from '../cache';
 import { League } from '../league';
 import { SportRepository } from '../repository';
-import { SportCache } from '../cache';
+import { JsonLeague, LeagueMapper } from './mapper';
 
-/**
- * Created by coen on 10-2-17.
- */
 @Injectable()
 export class LeagueRepository extends SportRepository {
 
@@ -31,7 +28,7 @@ export class LeagueRepository extends SportRepository {
 
     getObjects(): Observable<League[]> {
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((json: JsonLeague[]) => json.map( jsonLeague => this.mapper.toObject(jsonLeague))),
+            map((json: JsonLeague[]) => json.map(jsonLeague => this.mapper.toObject(jsonLeague))),
             catchError((err) => this.handleError(err))
         );
     }

@@ -5,13 +5,10 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Game } from '../game';
-import { Poule } from '../poule';
 import { GameMapper, JsonGame } from '../game/mapper';
+import { Poule } from '../poule';
 import { SportRepository } from '../repository';
 
-/**
- * Created by coen on 20-3-17.
- */
 @Injectable()
 export class GameRepository extends SportRepository {
 

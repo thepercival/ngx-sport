@@ -4,9 +4,6 @@ import { JsonPoulePlace, PoulePlaceMapper } from '../pouleplace/mapper';
 import { Round } from '../round';
 import { QualifyRule } from './rule';
 
-/**
- * Created by coen on 3-3-17.
- */
 @Injectable()
 export class QualifyRuleRepository {
 
@@ -54,8 +51,8 @@ export class QualifyRuleRepository {
 
     objectToJson(qualifyRule: QualifyRule): any {
         return {
-            fromPoulePlaces: qualifyRule.getFromPoulePlaces().map( poulePlace => this.poulePlaceMapper.toJson(poulePlace)),
-            toPoulePlaces: qualifyRule.getToPoulePlaces().map( poulePlace => this.poulePlaceMapper.toJson(poulePlace))
+            fromPoulePlaces: qualifyRule.getFromPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace)),
+            toPoulePlaces: qualifyRule.getToPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace))
         };
     }
 }

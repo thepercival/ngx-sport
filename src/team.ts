@@ -1,8 +1,5 @@
 import { Association } from './association';
 
-/**
- * Created by coen on 26-2-17.
- */
 export class Team {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 30;
@@ -17,7 +14,6 @@ export class Team {
     protected imageUrl: string;
     protected association: Association;
 
-    // constructor
     constructor(association: Association, name: string) {
         this.setName(name);
         this.setAssociation(association);

@@ -1,7 +1,3 @@
-/**
- * Created by coen on 13-2-17.
- */
-
 export class ExternalObject {
     static readonly MAX_LENGTH_EXTERNALID = 100;
 

@@ -1,6 +1,3 @@
-/**
- * Created by cdunnink on 7-2-2017.
- */
 
 export class ExternalSystem {
     static readonly MAX_LENGTH_NAME = 50;
@@ -18,7 +15,6 @@ export class ExternalSystem {
     protected apiurl: string;
     protected apikey: string;
 
-    // constructor
     constructor(name: string) {
         this.setName(name);
     }

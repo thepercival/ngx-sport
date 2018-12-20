@@ -3,7 +3,6 @@ export class GameScoreHomeAway {
     protected home: number;
     protected away: number;
 
-    // constructor
     constructor(home: number, away: number) {
         this.setHome(home);
         this.setAway(away);

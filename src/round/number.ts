@@ -2,10 +2,6 @@ import { Competition } from '../competition';
 import { Round } from '../round';
 import { RoundNumberConfig } from '../round/number/config';
 
-/**
- * Created by coen on 27-2-17.
- */
-
 export class RoundNumber {
     protected competition: Competition;
     protected number: number;
