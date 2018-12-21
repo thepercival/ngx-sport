@@ -48,7 +48,8 @@ export class SportRepository {
             errortext = error.message;
         }
         if (error.status === 401) {
-            this.getRouter().navigate(['/user/login'], { queryParams: { message: 'log opnieuw in' } });
+            const message = 'autorisatie fout: ' + error.error.title;
+            this.getRouter().navigate([''], { queryParams: { type: 'danger', message: message } });
         }
 
         return observableThrowError(errortext);
