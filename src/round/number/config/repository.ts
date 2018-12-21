@@ -9,9 +9,6 @@ import { RoundNumber } from '../../../round/number';
 import { RoundNumberConfig } from '../config';
 import { JsonRoundNumberConfig, RoundNumberConfigMapper } from './mapper';
 
-/**
- * Created by coen on 3-3-17.
- */
 @Injectable()
 export class RoundNumberConfigRepository extends SportRepository {
     private url: string;

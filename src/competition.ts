@@ -3,10 +3,6 @@ import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
 
-/**
- * Created by coen on 16-2-17.
- */
-
 export class Competition {
     static readonly STATE_CREATED = 1;
     static readonly STATE_PUBLISHED = 2;
@@ -19,7 +15,6 @@ export class Competition {
     protected referees: Referee[] = [];
     protected fields: Field[] = [];
 
-    // constructor
     constructor(league: League, season: Season) {
         this.setLeague(league);
         this.setSeason(season);

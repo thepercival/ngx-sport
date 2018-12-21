@@ -7,10 +7,6 @@ import { Round } from '../round';
 import { Team } from '../team';
 import { QualifyRule } from './rule';
 
-/**
- * Created by coen on 18-10-17.
- */
-
 export class QualifyService {
     constructor(private parentRound: Round, private childRound: Round) {
     }

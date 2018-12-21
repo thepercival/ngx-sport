@@ -12,7 +12,6 @@ export class RoundNumberConfigScore {
     protected maximum: number;
     protected child: RoundNumberConfigScore;
 
-    // constructor
     constructor(config: RoundNumberConfig, parent: RoundNumberConfigScore) {
         this.setConfig(config);
         this.setParent(parent);

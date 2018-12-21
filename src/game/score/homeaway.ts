@@ -1,11 +1,8 @@
-import { Game } from '../../game';
-
 export class GameScoreHomeAway {
 
     protected home: number;
     protected away: number;
 
-    // constructor
     constructor(home: number, away: number) {
         this.setHome(home);
         this.setAway(away);
@@ -25,9 +22,5 @@ export class GameScoreHomeAway {
 
     setAway(away: number): void {
         this.away = away;
-    }
-
-    get(homeAway: boolean): number {
-        return homeAway === Game.HOME ? this.getHome() : this.getAway();
     }
 }

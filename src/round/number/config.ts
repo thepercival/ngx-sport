@@ -24,7 +24,6 @@ export class RoundNumberConfig {
     protected minutesAfter: number;
     protected score: RoundNumberConfigScore;
 
-    // constructor
     constructor(protected roundNumber: RoundNumber) {
         this.roundNumber.setConfig(this);
     }

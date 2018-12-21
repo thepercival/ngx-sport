@@ -1,4 +1,5 @@
 import { Game } from './game';
+import { GameScoreHomeAway } from './game/score/homeaway';
 import { PoulePlace } from './pouleplace';
 import { RankingItem } from './ranking/item';
 import { Round } from './round';
@@ -255,13 +256,13 @@ export class Ranking {
             if (finalScore === undefined) {
                 return;
             }
-            if (finalScore.get(homeAway) > finalScore.get(!homeAway)) {
+            if (this.get(finalScore, homeAway) > this.get(finalScore, !homeAway)) {
                 if (game.getScoresMoment() === Game.MOMENT_EXTRATIME) {
                     points += config.getWinPointsExt();
                 } else {
                     points += config.getWinPoints();
                 }
-            } else if (finalScore.get(homeAway) === finalScore.get(!homeAway)) {
+            } else if (this.get(finalScore, homeAway) === this.get(finalScore, !homeAway)) {
                 if (game.getScoresMoment() === Game.MOMENT_EXTRATIME) {
                     points += config.getDrawPointsExt();
                 } else {
@@ -298,7 +299,7 @@ export class Ranking {
             if (finalScore === undefined) {
                 return;
             }
-            nrOfUnits += finalScore.get(scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
+            nrOfUnits += this.get(finalScore, scoredReceived === Ranking.SCORED ? homeAway : !homeAway);
         });
         return nrOfUnits;
     }
@@ -315,5 +316,9 @@ export class Ranking {
             nrOfGames++;
         });
         return nrOfGames;
+    }
+
+    get(gameScoreHomeAway: GameScoreHomeAway, homeAway: boolean): number {
+        return homeAway === Game.HOME ? gameScoreHomeAway.getHome() : gameScoreHomeAway.getAway();
     }
 }

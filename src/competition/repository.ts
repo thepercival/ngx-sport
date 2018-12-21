@@ -5,12 +5,9 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
-import { JsonCompetition, CompetitionMapper } from '../competition/mapper';
+import { CompetitionMapper, JsonCompetition } from '../competition/mapper';
 import { SportRepository } from '../repository';
 
-/**
- * Created by coen on 16-2-17.
- */
 @Injectable()
 export class CompetitionRepository extends SportRepository {
 
@@ -31,7 +28,7 @@ export class CompetitionRepository extends SportRepository {
     getObjects(): Observable<Competition[]> {
         const options = this.getOptions();
         return this.http.get(this.url, options).pipe(
-            map((json: JsonCompetition[]) => json.map( jsonComp => this.mapper.toObject(jsonComp))),
+            map((json: JsonCompetition[]) => json.map(jsonComp => this.mapper.toObject(jsonComp))),
             catchError((err) => this.handleError(err))
         );
     }

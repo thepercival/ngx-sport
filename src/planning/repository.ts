@@ -10,10 +10,6 @@ import { Poule } from '../poule';
 import { SportRepository } from '../repository';
 import { RoundNumber } from '../round/number';
 
-/**
- * Created by coen on 3-3-17.
- */
-
 @Injectable()
 export class PlanningRepository extends SportRepository {
 
@@ -36,7 +32,7 @@ export class PlanningRepository extends SportRepository {
         const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
             const removedGames = poule.getGames().splice(0, poule.getGames().length);
-            const jsonRemovedGames = removedGames.map( removedGame => this.gameMapper.toJson(removedGame));
+            const jsonRemovedGames = removedGames.map(removedGame => this.gameMapper.toJson(removedGame));
             reposCreates.push(
                 this.http.post(this.url, jsonRemovedGames, this.getOptions(poule)).pipe(
                     map((jsonGames: JsonGame[]) => this.gameMapper.toArray(jsonGames, poule)),
@@ -62,7 +58,7 @@ export class PlanningRepository extends SportRepository {
         const reposUpdates: Observable<Game[]>[] = [];
         const poules = this.getPoules(roundNumber);
         poules.forEach(poule => {
-            const jsonGames = poule.getGames().map( game => this.gameMapper.toJson(game));
+            const jsonGames = poule.getGames().map(game => this.gameMapper.toJson(game));
             reposUpdates.push(
                 this.http.put(this.url, jsonGames, this.getOptions(poule)).pipe(
                     map((jsonGamesRes: JsonGame[]) => this.gameMapper.toArray(jsonGamesRes, poule)),

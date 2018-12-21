@@ -10,10 +10,6 @@ import { JsonStructure } from './mapper';
 import { Structure } from '../structure';
 import { StructureMapper } from '../structure/mapper';
 
-/**
- * Created by coen on 3-3-17.
- */
-
 @Injectable()
 export class StructureRepository extends SportRepository {
     private url: string;

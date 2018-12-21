@@ -1,7 +1,3 @@
-/**
- * Created by coen on 10-10-17.
- */
-// import { environment } from '../../src/environments/environment';
 
 export class SportConfig {
     static readonly TableTennis = 'tafeltennis';

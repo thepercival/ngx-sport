@@ -7,7 +7,6 @@ export class GameScore extends GameScoreHomeAway {
     protected game: Game;
     protected number: number;
 
-    // constructor
     constructor(game: Game, home: number, away: number, number?: number) {
         super(home, away);
         this.setGame(game);

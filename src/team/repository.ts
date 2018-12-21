@@ -11,10 +11,6 @@ import { SportRepository } from '../repository';
 import { Team } from '../team';
 import { SportCache } from '../cache';
 
-/**
- * Created by coen on 26-2-17.
- */
-
 @Injectable()
 export class TeamRepository extends SportRepository {
 

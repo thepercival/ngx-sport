@@ -9,10 +9,6 @@ import { RoundNumber } from '../round/number';
 import { RoundNumberConfigService } from '../round/number/config/service';
 import { Structure } from '../structure';
 
-/**
- * Created by coen on 22-3-17.
- */
-
 export interface IRoundStructure {
     nrofpoules: number;
     nrofwinners: number;

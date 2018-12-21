@@ -4,11 +4,6 @@ import { Observable, throwError as observableThrowError } from 'rxjs';
 
 import { SportConfig } from './config';
 
-
-
-/**
- * Created by coen on 10-10-17.
- */
 export class SportRepository {
 
     protected router: Router;
