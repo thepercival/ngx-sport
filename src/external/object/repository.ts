@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { SportRepository } from '../../repository';
 import { ExternalObject, ImportableObject } from '../object';
 import { ExternalSystem } from '../system';
-import { ExternalSystemRepository } from '../system/repository';
+import { ExternalObjectMapper, JsonExternalObject } from './mapper';
 import { SportCache } from '../../cache';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ExternalObjectRepository extends SportRepository {
 
     constructor(
         private http: HttpClient,
-        private externalSystemRepository: ExternalSystemRepository,
+        private mapper: ExternalObjectMapper,
         router: Router) {
         super(router);
     }
@@ -54,29 +54,29 @@ export class ExternalObjectRepository extends SportRepository {
 
         const url = this.getUrl() + '/-1';
         return this.http.get(url, options).pipe(
-            map((res: IExternalObject) => this.jsonToObject(res)),
+            map((json: JsonExternalObject) => this.mapper.toObject(json)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(jsonObject: IExternalObject): Observable<ExternalObject> {
+    createObject(jsonObject: JsonExternalObject): Observable<ExternalObject> {
         return this.http.post(this.getUrl(), jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: IExternalObject) => this.jsonToObject(res)),
+            map((res: JsonExternalObject) => this.mapper.toObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(object: ExternalObject): Observable<ExternalObject> {
         const url = this.getUrl() + '/' + object.getId();
-        return this.http.put(url, this.objectToJson(object), { headers: super.getHeaders() }).pipe(
-            map((res: IExternalObject) => this.jsonToObject(res, object))
+        return this.http.put(url, this.mapper.toJson(object), { headers: super.getHeaders() }).pipe(
+            map((res: JsonExternalObject) => this.mapper.toObject(res, object))
         );
     }
 
-    removeObject(externalObject: ExternalObject): Observable<IExternalObject> {
+    removeObject(externalObject: ExternalObject): Observable<JsonExternalObject> {
         const url = this.getUrl() + '/' + externalObject.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((associationRes: IExternalObject) => {
+            map((associationRes: JsonExternalObject) => {
                 SportCache.externals[externalObject.getId()] = undefined;
                 return associationRes;
             }),
@@ -102,44 +102,4 @@ export class ExternalObjectRepository extends SportRepository {
     //     ).shift();
     // }
 
-    jsonArrayToObject(jsonArray: IExternalObject[]): ExternalObject[] {
-        const externalObjects: ExternalObject[] = [];
-        for (const json of jsonArray) {
-            externalObjects.push(this.jsonToObject(json));
-        }
-        return externalObjects;
-    }
-
-    jsonToObject(json: IExternalObject, externalObject?: ExternalObject): ExternalObject {
-        if (externalObject === undefined && json.id !== undefined) {
-            externalObject = SportCache.externals[json.id];
-        }
-        if (externalObject === undefined) {
-            externalObject = new ExternalObject(
-                json.importableObjectId,
-                json.externalSystemId);
-            externalObject.setId(json.id);
-            externalObject.setExternalId(json.externalId);
-            SportCache.externals[externalObject.getId()] = externalObject;
-        }
-        return externalObject;
-    }
-
-    objectToJson(externalObject: ExternalObject): IExternalObject {
-        const json: IExternalObject = {
-            id: externalObject.getId(),
-            importableObjectId: externalObject.getImportableObjectId(),
-            externalSystemId: externalObject.getExternalSystemId(),
-            externalId: externalObject.getExternalId()
-        };
-        return json;
-    }
 }
-
-export interface IExternalObject {
-    id?: number;
-    importableObjectId: number;
-    externalSystemId: number;
-    externalId: string;
-}
-

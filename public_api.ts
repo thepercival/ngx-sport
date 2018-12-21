@@ -73,7 +73,9 @@ export * from './src/team/mapper';
 
 export * from './src/external/object';
 export * from './src/external/object/repository';
+export * from './src/external/object/mapper';
 export * from './src/external/system';
+export * from './src/external/system/mapper';
 export * from './src/external/system/repository';
 export * from './src/external/system/interface';
 export * from './src/external/system/betfair';

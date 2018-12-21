@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { SportRepository } from '../../repository';
 import { ExternalSystem } from '../system';
+import { JsonExternalSystem, ExternalSystemMapper } from './mapper';
 
 // import { ExternalSystemSoccerOdds } from './soccerodds';
 // import { ExternalSystemSoccerSports } from './soccersports';
@@ -17,7 +18,7 @@ export class ExternalSystemRepository extends SportRepository {
     // private objects: ExternalSystem[];
     // private specificObjects: ExternalSystem[] = [];
 
-    constructor(private http: HttpClient, router: Router) {
+    constructor(private http: HttpClient, private mapper: ExternalSystemMapper, router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
     }
@@ -35,12 +36,10 @@ export class ExternalSystemRepository extends SportRepository {
         //     });
         // }
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((res) => this.jsonArrayToObject(res)),
+            map((jsonSystems: JsonExternalSystem[]) => jsonSystems.map( jsonSystem => this.mapper.toObject(jsonSystem))),
             catchError((err) => this.handleError(err))
         );
     }
-
-
 
     // getObject(id: number): Observable<ExternalSystem> {
     //     const url = this.url + '/' + id;
@@ -72,9 +71,9 @@ export class ExternalSystemRepository extends SportRepository {
     //     return externalSystem;
     // }
 
-    createObject(jsonObject: IExternalSystem): Observable<ExternalSystem> {
-        return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
-            map((res: IExternalSystem) => this.jsonToObject(res)),
+    createObject(json: JsonExternalSystem): Observable<ExternalSystem> {
+        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
+            map((jsonRes: JsonExternalSystem) => this.mapper.toObject(jsonRes)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -84,8 +83,8 @@ export class ExternalSystemRepository extends SportRepository {
             headers: super.getHeaders()
         };
         const url = this.url + '/' + externalSystem.getId();
-        return this.http.put(url, this.objectToJson(externalSystem), options).pipe(
-            map((res: IExternalSystem) => this.jsonToObject(res, externalSystem)),
+        return this.http.put(url, this.mapper.toJson(externalSystem), options).pipe(
+            map((res: JsonExternalSystem) => this.mapper.toObject(res, externalSystem)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -97,56 +96,6 @@ export class ExternalSystemRepository extends SportRepository {
             catchError((err) => this.handleError(err))
         );
     }
-
-    jsonArrayToObject(jsonArray: any): ExternalSystem[] {
-        const objects: ExternalSystem[] = [];
-        for (const json of jsonArray) {
-            objects.push(this.jsonToObject(json));
-        }
-        return objects;
-    }
-
-    jsonToObject(json: IExternalSystem, externalSystem?: ExternalSystem): ExternalSystem {
-        if (externalSystem === undefined) {
-            externalSystem = new ExternalSystem(json.name);
-        }
-        externalSystem.setId(json.id);
-        externalSystem.setWebsite(json.website);
-        externalSystem.setUsername(json.username);
-        externalSystem.setPassword(json.password);
-        externalSystem.setApiurl(json.apiurl);
-        externalSystem.setApikey(json.apikey);
-        return externalSystem;
-    }
-
-    objectsToJsonArray(objects: ExternalSystem[]): IExternalSystem[] {
-        const jsonArray: IExternalSystem[] = [];
-        for (const object of objects) {
-            jsonArray.push(this.objectToJson(object));
-        }
-        return jsonArray;
-    }
-
-    objectToJson(object: ExternalSystem): any {
-        const externalSystem: IExternalSystem = {
-            id: object.getId(),
-            name: object.getName(),
-            website: object.getWebsite(),
-            username: object.getUsername(),
-            password: object.getPassword(),
-            apiurl: object.getApiurl(),
-            apikey: object.getApikey()
-        };
-        return externalSystem;
-    }
 }
 
-export interface IExternalSystem {
-    id?: number;
-    name: string;
-    website?: string;
-    username?: string;
-    password?: string;
-    apiurl?: string;
-    apikey?: string;
-}
+
