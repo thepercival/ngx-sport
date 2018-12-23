@@ -35,7 +35,7 @@ export class LeagueRepository extends SportRepository {
 
     getObject(id: number): Observable<League> {
         const url = this.url + '/' + id;
-        return this.http.get(url).pipe(
+        return this.http.get(url, { headers: super.getHeaders() }).pipe(
             map((json: JsonLeague) => this.mapper.toObject(json)),
             catchError((err) => this.handleError(err))
         );

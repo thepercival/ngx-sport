@@ -4,6 +4,7 @@ import { Association } from './association';
 import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
 import { CompetitionRepository } from './competition/repository';
+import { CompetitionMapper } from './competition/mapper';
 import { SportConfig } from './config';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
@@ -66,6 +67,7 @@ import { RoundNumberConfigMapper } from './round/number/config/mapper';
         Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
         Season, Team,
+        CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundNumberConfigRepository, RoundNumberConfigService,
