@@ -1,9 +1,9 @@
-import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
-import { Round } from '../round';
-import { RoundNumber } from '../round/number';
+import { Poule } from './poule';
+import { PoulePlace } from './pouleplace';
+import { Round } from './round';
+import { RoundNumber } from './round/number';
 
-export class StructureNameService {
+export class NameService {
     constructor() {
     }
 

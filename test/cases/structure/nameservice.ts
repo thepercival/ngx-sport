@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { PoulePlace } from '../../../src/pouleplace';
 import { Round } from '../../../src/round';
-import { StructureNameService } from '../../../src/structure/nameservice';
+import { NameService } from '../../../src/nameservice';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { jsonStructure9 } from '../../data/structure9';
@@ -16,7 +16,6 @@ describe('Structure/NameService', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure9, competition);
 
-        const nameService = new StructureNameService();
         const rootRound = structure.getRootRound();
 
         checkNames(rootRound);
@@ -24,7 +23,7 @@ describe('Structure/NameService', () => {
 
     function checkNames(round: Round) {
         round.getPoulePlaces().forEach(poulePlace => {
-            const nameService = new StructureNameService();
+            const nameService = new NameService();
             /*    */ if (locationEquals(poulePlace, round, [1, 1])) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A1');
                 expect(nameService.getPoulePlaceName(poulePlace, true)).to.equal('wim');

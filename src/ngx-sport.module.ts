@@ -8,6 +8,7 @@ import { SportConfig } from './config';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
 import { ExternalSystem } from './external/system';
+import { ExternalSystemMapper } from './external/system/mapper';
 import { ExternalSystemBetFair } from './external/system/betfair';
 import { ExternalSystemRepository } from './external/system/repository';
 import { Field } from './field';
@@ -41,7 +42,7 @@ import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
 import { Structure } from './structure';
-import { StructureNameService } from './structure/nameservice';
+import { NameService } from './nameservice';
 import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
 import { Team } from './team';
@@ -56,7 +57,7 @@ import { RoundNumberConfigMapper } from './round/number/config/mapper';
         RoundRepository, RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
         TeamRepository,
-        PlanningRepository, StructureNameService,
+        PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, RoundNumberConfigMapper
     ],
@@ -70,9 +71,9 @@ import { RoundNumberConfigMapper } from './round/number/config/mapper';
         RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService,
         TeamRepository,
-        PlanningRepository, StructureNameService,
+        PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair
+        ExternalSystem, ExternalSystemMapper, ExternalSystemRepository, ExternalSystemBetFair
     ]
 })
 export class SportModule { }
