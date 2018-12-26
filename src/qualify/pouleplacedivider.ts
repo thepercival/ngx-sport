@@ -23,13 +23,16 @@ export class PoulePlaceDivider {
     divide(qualifyRule: QualifyRule, fromPoulePlaces: PoulePlace[]) {
         let currentToPouleNumber = this.getNextToPouleNumber();
         let nrOfShifts = 0; let maxShifts = fromPoulePlaces.length;
+        const isMultiple = fromPoulePlaces.length > qualifyRule.getToPoulePlaces().length;
         while ( fromPoulePlaces.length > 0 ) {
             const fromPoulePlace = fromPoulePlaces.shift();
-            if ( !this.crossFinals || qualifyRule.isMultiple()
-                || this.isPouleFree( currentToPouleNumber, fromPoulePlace.getPoule() )
-                || nrOfShifts === maxShifts
-                ) {
-                currentToPouleNumber = this.reservePoule(currentToPouleNumber, fromPoulePlace.getPoule());
+            if ( !this.crossFinals || isMultiple
+            || this.isPouleFree( currentToPouleNumber, fromPoulePlace.getPoule() )
+            || nrOfShifts === maxShifts
+            ) {
+                if ( !isMultiple ) {
+                    currentToPouleNumber = this.reservePoule(currentToPouleNumber, fromPoulePlace.getPoule());
+                }
                 qualifyRule.addFromPoulePlace(fromPoulePlace);
                 maxShifts = fromPoulePlaces.length;
                 nrOfShifts = 0;

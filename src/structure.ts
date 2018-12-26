@@ -38,4 +38,12 @@ export class Structure {
         }
         return this.getRoundNumberHelper(roundNumberAsValue, roundNumber.getNext());
     }
+
+    getRound( winnersOrLosersPath: number[] ): Round {
+        let round = this.getRootRound();
+        winnersOrLosersPath.forEach( winnersOrLosers => {
+            round = round.getChildRound(winnersOrLosers);
+        });
+        return round;
+    }
 }
