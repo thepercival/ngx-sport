@@ -9,6 +9,7 @@ import { QualifyRule } from './rule';
 
 export class PoulePlaceDivider {
     private reservations: PouleNumberReservations[] = [];
+    private currentToPouleNumber = 1;
     private nrOfPoules = 0;
     private crossFinals;
 
@@ -21,17 +22,16 @@ export class PoulePlaceDivider {
     }
 
     divide(qualifyRule: QualifyRule, fromPoulePlaces: PoulePlace[]) {
-        let currentToPouleNumber = this.getNextToPouleNumber();
         let nrOfShifts = 0; let maxShifts = fromPoulePlaces.length;
         const isMultiple = fromPoulePlaces.length > qualifyRule.getToPoulePlaces().length;
         while ( fromPoulePlaces.length > 0 ) {
             const fromPoulePlace = fromPoulePlaces.shift();
             if ( !this.crossFinals || isMultiple
-            || this.isPouleFree( currentToPouleNumber, fromPoulePlace.getPoule() )
+            || this.isPouleFree( fromPoulePlace.getPoule() )
             || nrOfShifts === maxShifts
             ) {
                 if ( !isMultiple ) {
-                    currentToPouleNumber = this.reservePoule(currentToPouleNumber, fromPoulePlace.getPoule());
+                    this.reservePoule(fromPoulePlace.getPoule());
                 }
                 qualifyRule.addFromPoulePlace(fromPoulePlace);
                 maxShifts = fromPoulePlaces.length;
@@ -44,22 +44,15 @@ export class PoulePlaceDivider {
         // custom rules kunnen hier eventueel nog worden uitgevoerd.
     }
 
-    protected getNextToPouleNumber( toPouleNumber?: number ): number {
-        if ( toPouleNumber === undefined || toPouleNumber === this.nrOfPoules ) {
-            return 1;
-        }
-        return toPouleNumber + 1;
-    }
-
-    protected isPouleFree( toPouleNumber: number, fromPoule: Poule ): boolean {
-        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === toPouleNumber );
+    protected isPouleFree( fromPoule: Poule ): boolean {
+        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === this.currentToPouleNumber );
         return !reservation.fromPoules.some( fromPouleIt => fromPouleIt === fromPoule);
     }
 
-    protected reservePoule( toPouleNumber: number, fromPoule: Poule ): number {
-        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === toPouleNumber );
+    protected reservePoule( fromPoule: Poule ) {
+        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === this.currentToPouleNumber );
         reservation.fromPoules.push(fromPoule);
-        return this.getNextToPouleNumber( toPouleNumber );
+        this.currentToPouleNumber = ( this.currentToPouleNumber === this.nrOfPoules ? 1 : this.currentToPouleNumber + 1 );
     }
 
     // Wanneer de rule multiple is moet ik eerst de bepalen wie er door zijn en vervolgens wordt pas verdeling gemaakt!

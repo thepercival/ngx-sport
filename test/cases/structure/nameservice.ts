@@ -6,6 +6,7 @@ import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { jsonStructure9 } from '../../data/structure9';
 import { jsonStructure16rank } from '../../data/structure16rank';
+import { jsonStructure163poules } from '../../data/structure163poules';
 
 describe('Structure/NameService', () => {
     it('structure9', () => {
@@ -144,7 +145,6 @@ describe('Structure/NameService', () => {
         const structure = structureMapper.toObject(jsonStructure16rank, competition);
 
         structure.getRound( [] ).getPoulePlaces().forEach(poulePlace => {
-            // console.log( structure.getRound( [] ).getNumberAsValue());
             const nameService = new NameService();
             /*  */ if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1 ) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A1');
@@ -352,6 +352,104 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('T2');
                 expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('L2');
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('toon'); /* nr 16 */
+            }
+        });
+    });
+
+    it('structure163poules', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+
+        const structureMapper = getMapper('structure');
+        const structure = structureMapper.toObject(jsonStructure163poules, competition);
+
+        structure.getRound( [] ).getPoulePlaces().forEach(poulePlace => {
+            const nameService = new NameService();
+            /*  */ if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A1');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A2');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 3 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A3');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 4 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A4');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 5 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A5');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 6 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('A6');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('B1');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('B2');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 3 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('B3');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 4 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('B4');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 5 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('B5');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('C1');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('C2');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 3 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('C3');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 4 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('C4');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 5 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('C5');
+            }
+        });
+
+        structure.getRound( [Round.WINNERS] ).getPoulePlaces().forEach(poulePlace => {
+            const nameService = new NameService();
+            /*  */ if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('D1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A1');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('E1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('B1');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('F1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('C1');
+            } else if ( poulePlace.getPoule().getNumber() === 4 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('G1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A2');
+            } else if ( poulePlace.getPoule().getNumber() === 5 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('H1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('B2');
+            } else if ( poulePlace.getPoule().getNumber() === 6 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('I1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('C2');
+            } else if ( poulePlace.getPoule().getNumber() === 7 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('J1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A3');
+            } else if ( poulePlace.getPoule().getNumber() === 8 && poulePlace.getNumber() === 1 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('K1');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('B3');
+            } else if ( poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('D2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('C3');
+            } else if ( poulePlace.getPoule().getNumber() === 2 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('E2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A4');
+            } else if ( poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('F2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('B4');
+            } else if ( poulePlace.getPoule().getNumber() === 4 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('G2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('C4');
+            } else if ( poulePlace.getPoule().getNumber() === 5 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('H2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A5');
+            } else if ( poulePlace.getPoule().getNumber() === 6 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('I2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('B5');
+            } else if ( poulePlace.getPoule().getNumber() === 7 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('J2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('C5');
+            } else if ( poulePlace.getPoule().getNumber() === 8 && poulePlace.getNumber() === 2 ) {
+                expect(nameService.getPoulePlaceName(poulePlace)).to.equal('K2');
+                expect(nameService.getPoulePlaceFromName(poulePlace)).to.equal('A6');
             }
         });
     });
