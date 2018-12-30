@@ -7,7 +7,7 @@ import { Round } from '../round';
 import { Team } from '../team';
 import { QualifyRule } from './rule';
 import { PoulePlaceDivider } from './pouleplacedivider';
-
+import { QualifyReservationService} from './reservationservice';
 export class QualifyService {
     constructor(private parentRound: Round, private childRound: Round) {
     }
@@ -130,8 +130,10 @@ export class QualifyService {
 
     getNewQualifiers(rules: QualifyRule[]): INewQualifier[] {
         let qualifiers: INewQualifier[] = [];
+        const qualifyReservationService = new QualifyReservationService(this.childRound);
+        qualifyReservationService.reserveSingleRules();
         rules.forEach(rule => {
-            qualifiers = qualifiers.concat(this.getQualifiers(rule));
+            qualifiers = qualifiers.concat(this.getQualifiers(rule, qualifyReservationService));
         });
         return qualifiers;
     }
@@ -170,7 +172,7 @@ export class QualifyService {
         return rules;
     }
 
-    protected getQualifiers(rule: QualifyRule): INewQualifier[] {
+    protected getQualifiers(rule: QualifyRule, qualifyReservationService: QualifyReservationService): INewQualifier[] {
         // bij meerdere fromPoulePlace moet ik bepalen wie de beste is
         const newQualifiers: INewQualifier[] = [];
         const rankingService = new Ranking(Ranking.RULESSET_WC);
@@ -207,10 +209,8 @@ export class QualifyService {
         }
 
         toPoulePlaces.forEach((toPoulePlace) => {
-            let rankedPoulePlace = this.getRankedPoulePlace(roundRankingPoulePlaces, toPoulePlace.getPoule());
-            if (rankedPoulePlace === undefined && roundRankingPoulePlaces.length > 0) {
-                rankedPoulePlace = roundRankingPoulePlaces[0];
-            }
+            const toPouleNumber = toPoulePlace.getPoule().getNumber();
+            const rankedPoulePlace =  qualifyReservationService.getFreeAndLeastAvailabe( toPouleNumber, roundRankingPoulePlaces );
             if (rankedPoulePlace === undefined) {
                 return;
             }

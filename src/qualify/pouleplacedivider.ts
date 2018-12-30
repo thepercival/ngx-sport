@@ -1,23 +1,18 @@
-import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { Ranking } from '../ranking';
-import { RankingItem } from '../ranking/item';
 import { Round } from '../round';
-import { Team } from '../team';
+import { QualifyReservationService } from './reservationservice';
 import { QualifyRule } from './rule';
 
 export class PoulePlaceDivider {
-    private reservations: PouleNumberReservations[] = [];
+    private qualifyReservationService: QualifyReservationService;
     private currentToPouleNumber = 1;
     private nrOfPoules = 0;
     private crossFinals;
 
     constructor( childRound: Round) {
-        childRound.getPoules().forEach( poule => {
-            this.reservations.push( { toPouleNr: poule.getNumber(), fromPoules: [] } );
-            this.nrOfPoules++;
-        });
+        this.qualifyReservationService = new QualifyReservationService( childRound );
+        this.nrOfPoules = childRound.getPoules().length;
         this.crossFinals = childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
     }
 
@@ -27,11 +22,12 @@ export class PoulePlaceDivider {
         while ( fromPoulePlaces.length > 0 ) {
             const fromPoulePlace = fromPoulePlaces.shift();
             if ( !this.crossFinals || isMultiple
-            || this.isPouleFree( fromPoulePlace.getPoule() )
+            || this.qualifyReservationService.isFree( this.currentToPouleNumber, fromPoulePlace.getPoule() )
             || nrOfShifts === maxShifts
             ) {
                 if ( !isMultiple ) {
-                    this.reservePoule(fromPoulePlace.getPoule());
+                    this.qualifyReservationService.reserve(this.currentToPouleNumber, fromPoulePlace.getPoule());
+                    this.currentToPouleNumber = ( this.currentToPouleNumber === this.nrOfPoules ? 1 : this.currentToPouleNumber + 1 );
                 }
                 qualifyRule.addFromPoulePlace(fromPoulePlace);
                 maxShifts = fromPoulePlaces.length;
@@ -42,17 +38,6 @@ export class PoulePlaceDivider {
             }
         }
         // custom rules kunnen hier eventueel nog worden uitgevoerd.
-    }
-
-    protected isPouleFree( fromPoule: Poule ): boolean {
-        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === this.currentToPouleNumber );
-        return !reservation.fromPoules.some( fromPouleIt => fromPouleIt === fromPoule);
-    }
-
-    protected reservePoule( fromPoule: Poule ) {
-        const reservation = this.reservations.find( reservationIt => reservationIt.toPouleNr === this.currentToPouleNumber );
-        reservation.fromPoules.push(fromPoule);
-        this.currentToPouleNumber = ( this.currentToPouleNumber === this.nrOfPoules ? 1 : this.currentToPouleNumber + 1 );
     }
 
     // Wanneer de rule multiple is moet ik eerst de bepalen wie er door zijn en vervolgens wordt pas verdeling gemaakt!
