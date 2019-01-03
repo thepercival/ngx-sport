@@ -128,7 +128,7 @@ export class EndRanking {
         return deadPlaces;
     }
 
-    getPoulePlacesPer(round: Round): PoulePlace[][] {
+    protected getPoulePlacesPer(round: Round): PoulePlace[][] {
         if ( round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK ) {
             return round.getPoulePlacesPerNumber(Round.WINNERS);
         }
