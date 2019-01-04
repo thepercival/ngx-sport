@@ -26,11 +26,12 @@ export class RoundNumberConfigService {
     }
 
     createDefault(roundNumber: RoundNumber): RoundNumberConfig {
+        const sport = roundNumber.getCompetition().getLeague().getSport();
         const config = new RoundNumberConfig(roundNumber);
         config.setQualifyRule(QualifyRule.SOCCERWORLDCUP);
-        config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);
-        config.setWinPoints(RoundNumberConfig.DEFAULTWINPOINTS);
-        config.setDrawPoints(RoundNumberConfig.DEFAULTDRAWPOINTS);
+        config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);        
+        config.setWinPoints(this.getDefaultWinPoints(sport));
+        config.setDrawPoints(this.getDefaultDrawPoints(sport));
         config.setHasExtension(RoundNumberConfig.DEFAULTHASEXTENSION);
         config.setWinPointsExt(config.getWinPoints() - 1);
         config.setDrawPointsExt(config.getDrawPoints());
@@ -38,16 +39,27 @@ export class RoundNumberConfigService {
         config.setEnableTime(RoundNumberConfig.DEFAULTENABLETIME);
         config.setMinutesPerGame(0);
         config.setMinutesBetweenGames(0);
-        config.setMinutesAfter(0);
-        const sport = roundNumber.getCompetition().getLeague().getSport();
-        if (sport === SportConfig.Football || sport === SportConfig.Hockey || sport === SportConfig.Korfball) {
-            config.setEnableTime(true);
-            config.setMinutesPerGame(this.getDefaultMinutesPerGame());
-            config.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
-            config.setMinutesAfter(this.getDefaultMinutesAfter());
-        }
+        config.setMinutesAfter(0);        
+        config.setEnableTime(true);
+        config.setMinutesPerGame(this.getDefaultMinutesPerGame());
+        config.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
+        config.setMinutesAfter(this.getDefaultMinutesAfter());
         config.setScore(this.createScoreConfig(config));
         return config;
+    }
+
+    getDefaultWinPoints( sport: string ): number {
+        if( sport === SportConfig.Chess ) {
+            return 1;
+        }
+        return RoundNumberConfig.DEFAULTWINPOINTS;
+    }        
+
+    getDefaultDrawPoints( sport: string ): number {
+        if( sport === SportConfig.Chess ) {
+            return 0.5;
+        }
+        return RoundNumberConfig.DEFAULTDRAWPOINTS;
     }
 
     getDefaultMinutesPerGame(): number {

@@ -1,14 +1,17 @@
 
 export class SportConfig {
-    static readonly TableTennis = 'tafeltennis';
-    static readonly Football = 'voetbal';
-    static readonly Darts = 'darten';
-    static readonly Tennis = 'tennis';
-    static readonly Volleyball = 'volleybal';
     static readonly Badminton = 'badminton';
-    static readonly Squash = 'squash';
+    static readonly Basketball = 'basketbal';
+    static readonly Chess = 'schaken';
+    static readonly Darts = 'darten';
+    static readonly ESports = 'e-sporten';
+    static readonly Football = 'voetbal';
     static readonly Hockey = 'hockey';
     static readonly Korfball = 'korfbal';
+    static readonly Squash = 'squash';
+    static readonly TableTennis = 'tafeltennis';
+    static readonly Tennis = 'tennis';
+    static readonly Volleyball = 'volleybal';
     // mayb eother types of tournaments, like ladders
 
     static useExternal = false; // environment.useExternal;
@@ -25,15 +28,18 @@ export class SportConfig {
 
     static getSports(): string[] {
         return [
-            SportConfig.TableTennis,
-            SportConfig.Football,
-            SportConfig.Darts,
-            SportConfig.Tennis,
-            SportConfig.Volleyball,
+            SportConfig.Basketball,
             SportConfig.Badminton,
-            SportConfig.Squash,
+            SportConfig.Chess,
+            SportConfig.Darts,
+            SportConfig.ESports,
+            SportConfig.Football,
             SportConfig.Hockey,
-            SportConfig.Korfball
+            SportConfig.Korfball,
+            SportConfig.Squash,
+            SportConfig.TableTennis,
+            SportConfig.Tennis,
+            SportConfig.Volleyball,            
         ];
     }
 }
