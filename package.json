@@ -6,17 +6,17 @@
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
   "dependencies": {
-    "@angular/common": "^7.0.2",
-    "@angular/compiler": "^7.0.2",
-    "@angular/core": "^7.0.2",
-    "@angular/platform-browser": "^7.0.2",
-    "@angular/router": "^7.0.2",
+    "@angular/common": "^7.1.4",
+    "@angular/compiler": "^7.1.4",
+    "@angular/core": "^7.1.4",
+    "@angular/platform-browser": "^7.1.4",
+    "@angular/router": "^7.1.4",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   },
   "description": "jslib for voetbal and angular 5",
   "devDependencies": {
-    "@angular/compiler-cli": "^7.0.2",
+    "@angular/compiler-cli": "^7.1.4",
     "@semantic-release/git": "^7.0.5",
     "@semantic-release/npm": "^5.0.5",
     "@types/chai": "^4.1.7",
@@ -104,5 +104,5 @@
       }
     ]
   },
-  "version": "0.0.62"
+  "version": "0.0.63"
 }
