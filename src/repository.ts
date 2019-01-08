@@ -43,8 +43,8 @@ export class SportRepository {
             errortext = error.message;
         }
         if (error.status === 401) {
-            const message = 'autorisatie fout: ' + error.error.title;
-            this.getRouter().navigate([''], { queryParams: { type: 'danger', message: message } });
+            errortext = 'autorisatie fout: ' + error.error.title;
+            this.getRouter().navigate([''], { queryParams: { type: 'danger', message: errortext } });
         }
 
         return observableThrowError(errortext);
