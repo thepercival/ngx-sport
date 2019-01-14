@@ -12,6 +12,17 @@ export class Structure {
         return this.firstRoundNumber;
     }
 
+    getLastRoundNumber(): RoundNumber {
+        return this.getLastRoundNumberHelper(this.getFirstRoundNumber());
+    }
+
+    private getLastRoundNumberHelper( roundNumber: RoundNumber ): RoundNumber {
+        if( !roundNumber.hasNext() ) {
+            return roundNumber;
+        }
+        return this.getLastRoundNumberHelper(roundNumber.getNext());
+    }
+
     getRootRound(): Round {
         return this.rootRound;
     }

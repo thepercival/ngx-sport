@@ -1,6 +1,7 @@
 import { Competition } from '../competition';
 import { Round } from '../round';
 import { RoundNumberConfig } from '../round/number/config';
+import { Game } from '../game';
 
 export class RoundNumber {
     protected competition: Competition;
@@ -36,6 +37,10 @@ export class RoundNumber {
 
     removeNext() {
         this.next = undefined;
+    }
+
+    hasPrevious(): boolean {
+        return this.previous !== undefined;
     }
 
     getPrevious(): RoundNumber {
@@ -84,5 +89,18 @@ export class RoundNumber {
 
     needsRanking(): boolean {
         return this.getRounds().some(round => round.needsRanking());
+    }
+
+    getState(): number {
+        if (this.getRounds().every(round => round.getState() === Game.STATE_PLAYED)) {
+            return Game.STATE_PLAYED;
+        } else if (this.getRounds().some(round => round.getState() !== Game.STATE_CREATED)) {
+            return Game.STATE_INPLAY;
+        }
+        return Game.STATE_CREATED;
+    }
+
+    isStarted(): boolean {
+        return this.getState() > Game.STATE_CREATED;
     }
 }

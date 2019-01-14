@@ -78,4 +78,4 @@ import { RoundNumberConfigMapper } from './round/number/config/mapper';
         ExternalSystem, ExternalSystemMapper, ExternalSystemRepository, ExternalSystemBetFair
     ]
 })
-export class SportModule { }
+export class SportModule {}
