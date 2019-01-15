@@ -8,7 +8,6 @@ export class PlanningResourceService {
 
     private poulePlaces: PoulePlace[] = [];
 
-    private amountPerResourceBatch: number;
     private maximalNrOfMinutesPerGame: number;
     private nrOfMinutesBetweenGames: number;
     private dateTime: Date;
@@ -22,12 +21,10 @@ export class PlanningResourceService {
     private blockedPeriod;
 
     constructor(
-        amountPerResourceBatch: number,
         dateTime: Date,
         maximalNrOfMinutesPerGame: number,
         nrOfMinutesBetweenGames: number
     ) {
-        this.amountPerResourceBatch = amountPerResourceBatch;
         this.maximalNrOfMinutesPerGame = maximalNrOfMinutesPerGame;
         this.nrOfMinutesBetweenGames = nrOfMinutesBetweenGames;
         this.dateTime = dateTime;

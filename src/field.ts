@@ -3,7 +3,7 @@ import { Competition } from './competition';
 
 export class Field {
     static readonly MIN_LENGTH_NAME = 1;
-    static readonly MAX_LENGTH_NAME = 2;
+    static readonly MAX_LENGTH_NAME = 3;
 
     protected id: number;
     protected competition: Competition;

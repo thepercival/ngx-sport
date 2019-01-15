@@ -158,30 +158,16 @@ export class PlanningService {
         return nextDateTime;
     }
 
-    protected getAmountPerResourceBatch(roundNumber: RoundNumber, fields: Field[], referees: Referee[]): number {
-        let amountPerResourceBatch;
-        if (referees.length === 0) {
-            amountPerResourceBatch = fields.length;
-        } else if (fields.length === 0) {
-            amountPerResourceBatch = referees.length;
-        } else {
-            amountPerResourceBatch = referees.length > fields.length ? fields.length : referees.length;
-        }
-        if (amountPerResourceBatch === 0) {
-            const poules = this.getPoulesForRoundNumber(roundNumber);
-            poules.forEach(poule => {
-                amountPerResourceBatch += poule.getNrOfGamesPerRound();
-            });
-        }
-        return amountPerResourceBatch;
-    }
-
-    protected assignResourceBatchToGames(roundNumber: RoundNumber, roundNumberConfig: RoundNumberConfig
-        , dateTime: Date, fields: Field[], referees: Referee[]): Date {
-        const amountPerResourceBatch = this.getAmountPerResourceBatch(roundNumber, fields, referees);
+    protected assignResourceBatchToGames(
+        roundNumber: RoundNumber, 
+        roundNumberConfig: RoundNumberConfig, 
+        dateTime: Date, 
+        fields: Field[], 
+        referees: Referee[]): Date
+    {
         const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
         const resourceService = new PlanningResourceService(
-            amountPerResourceBatch, dateTime, roundNumberConfig.getMaximalNrOfMinutesPerGame(), roundNumberConfig.getMinutesBetweenGames());
+            dateTime, roundNumberConfig.getMaximalNrOfMinutesPerGame(), roundNumberConfig.getMinutesBetweenGames());
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
