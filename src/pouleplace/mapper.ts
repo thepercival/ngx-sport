@@ -1,7 +1,8 @@
+import { Injectable } from '@angular/core';
+
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { TeamMapper, JsonTeam } from '../team/mapper';
-import { Injectable } from '@angular/core';
+import { JsonTeam, TeamMapper } from '../team/mapper';
 
 @Injectable()
 export class PoulePlaceMapper {

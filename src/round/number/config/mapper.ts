@@ -1,12 +1,12 @@
-import { Competition } from '../../../competition';
+import { Injectable } from '@angular/core';
+
 import { RoundNumber } from '../../number';
 import { RoundNumberConfig } from '../../number/config';
-import { RoundNumberConfigScoreMapper, JsonRoundNumberConfigScore } from './score/mapper';
-import { Injectable } from '@angular/core';
+import { JsonRoundNumberConfigScore, RoundNumberConfigScoreMapper } from './score/mapper';
 
 @Injectable()
 export class RoundNumberConfigMapper {
-    constructor( private scoreConfigMapper: RoundNumberConfigScoreMapper ) {}
+    constructor(private scoreConfigMapper: RoundNumberConfigScoreMapper) { }
 
     toObject(json: JsonRoundNumberConfig, roundNumber: RoundNumber, config?: RoundNumberConfig): RoundNumberConfig {
         if (config === undefined) {
