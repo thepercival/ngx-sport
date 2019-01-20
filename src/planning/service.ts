@@ -34,9 +34,8 @@ export class PlanningService {
             this.removeNumber(roundNumber);
             this.createHelper(roundNumber);
             const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
-            const nextRoundNumber = roundNumber.getNext();
-            if (nextRoundNumber !== undefined) {
-                this.create(nextRoundNumber, startNextRound);
+            if (roundNumber.hasNext()) {
+                this.create(roundNumber.getNext(), startNextRound);
             }
         } catch (e) {
             console.error(e.message);
@@ -159,12 +158,11 @@ export class PlanningService {
     }
 
     protected assignResourceBatchToGames(
-        roundNumber: RoundNumber, 
-        roundNumberConfig: RoundNumberConfig, 
-        dateTime: Date, 
-        fields: Field[], 
-        referees: Referee[]): Date
-    {
+        roundNumber: RoundNumber,
+        roundNumberConfig: RoundNumberConfig,
+        dateTime: Date,
+        fields: Field[],
+        referees: Referee[]): Date {
         const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
         const resourceService = new PlanningResourceService(
             dateTime, roundNumberConfig.getMaximalNrOfMinutesPerGame(), roundNumberConfig.getMinutesBetweenGames());
