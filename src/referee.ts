@@ -4,7 +4,7 @@ export class Referee {
     static readonly MIN_LENGTH_INITIALS = 1;
     static readonly MAX_LENGTH_INITIALS = 3;
     static readonly MIN_LENGTH_NAME = 1;
-    static readonly MAX_LENGTH_NAME = 15;
+    static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_INFO = 200;
 
     protected id: number;
