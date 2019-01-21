@@ -317,6 +317,12 @@ export class Round {
         return this.toQualifyRules;
     }
 
+    getNrOfPlaces(): number {
+        let nrOfPlaces = 0;
+        this.getPoules().forEach( poule => nrOfPlaces += poule.getPlaces().length );
+        return nrOfPlaces;
+    }
+
     getNrOfPlacesChildRounds(): number {
         let nrOfPlacesChildRounds = 0;
         this.getChildRounds().forEach(function (childRound) {
