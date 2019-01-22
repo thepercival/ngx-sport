@@ -1,15 +1,43 @@
 language: node_js
-cache:
-  directories:
-    - ~/.npm
-notifications:
-  email: false
 node_js:
-  - '10'
-after_success:
-  - npm run travis-deploy-once
-  - npm run build
-  - npm run semantic-release
-branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+  - 10
+os:
+  - linux
+env:
+  - BUILD_LEADER_ID=2
+jobs:
+  include:
+    - stage: release
+      node_js: 10
+      os: linux
+      after_success: 
+        - npm run semantic-release
+
+# language: node_js
+# cache:
+#   directories:
+#     - ~/.npm
+# notifications:
+#   email: false
+# node_js:
+#   - '10'
+# after_success:
+#   - npm run travis-deploy-once
+#   - npm run build
+#   - npm run semantic-release
+# branches:
+#   except:
+#     - /^v\d+\.\d+\.\d+$/
+
+
+
+
+
+    jobs:
+  include:
+    - stage: test
+      script: ./test 1
+    - # stage name not required, will continue to use `test`
+      script: ./test 2
+    - stage: deploy
+      script: ./deploy

@@ -27,7 +27,6 @@
     "mocha": "^5.2.0",
     "rollup": "^0.66.6",
     "semantic-release": "^15.13.3",
-    "travis-deploy-once": "^5.0.11",
     "ts-node": "^7.0.1",
     "tsickle": "^0.34.0",
     "tslint": "^5.12.1",
@@ -76,9 +75,7 @@
     "build:umd-min": "uglifyjs dist/bundles/ngx-sport.umd.js -c -m -o dist/bundles/ngx-sport.umd.min.js",
     "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json README.md dist/ && rm dist/src/*.js",
     "clean": "rm -rf ./tmp && rm -rf ./dist",
-    "postpublish": "cp -r package.json ../",
     "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once",
     "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
     "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
     "test": "cross-env TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' mocha -r ts-node/register --recursive test/cases/**/*.ts"
@@ -104,5 +101,5 @@
       }
     ]
   },
-  "version": "0.0.64"
+  "version": "0.0.66"
 }
