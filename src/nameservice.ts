@@ -57,27 +57,38 @@ export class NameService {
         return pouleName;
     }
 
-    getPoulePlaceFromName(pouleplace: PoulePlace, teamName = false) {
+    getPoulePlaceFromName(pouleplace: PoulePlace, teamName = false, longName = false) {
         if (teamName === true && pouleplace.getTeam() !== undefined) {
             return pouleplace.getTeam().getName();
         }
         const fromQualifyRule = pouleplace.getFromQualifyRule();
         if (fromQualifyRule === undefined) { // first round
-            return this.getPoulePlaceName(pouleplace, false);
+            return this.getPoulePlaceName(pouleplace, false, longName);
         }
         if (fromQualifyRule.isMultiple() === false) {
             const fromPoulePlace = fromQualifyRule.getFromEquivalent(pouleplace);
-            return this.getPoulePlaceName(fromPoulePlace, false);
+            if (longName !== true || fromPoulePlace.getPoule().needsRanking()) {
+                return this.getPoulePlaceName(fromPoulePlace, false, longName);
+            }
+            const name = Round.getWinnersLosersDescription(fromPoulePlace.getNumber() === 1 ? Round.WINNERS : Round.LOSERS);
+            return name + ' ' + this.getPouleName(fromPoulePlace.getPoule(), false);
+        }
+        if (longName === true) {
+            return 'nr. ' + fromQualifyRule.getFromPoulePlaces()[0].getNumber() + ' poule ?';
         }
         return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
     }
 
-    getPoulePlaceName(poulePlace: PoulePlace, teamName = false) {
+    getPoulePlaceName(poulePlace: PoulePlace, teamName = false, longName = false) {
         if (teamName === true && poulePlace.getTeam() !== undefined) {
             return poulePlace.getTeam().getName();
         }
-        const pouleplaceName = this.getPouleName(poulePlace.getPoule(), false);
-        return pouleplaceName + poulePlace.getNumber();
+        if (longName === true) {
+            const name = this.getPouleName(poulePlace.getPoule(), true);
+            return 'nr. ' + poulePlace.getNumber() + ' ' + name;
+        }
+        const name = this.getPouleName(poulePlace.getPoule(), false);
+        return name + poulePlace.getNumber();
     }
 
     private roundsHaveSameName(roundNumber: RoundNumber): boolean {
