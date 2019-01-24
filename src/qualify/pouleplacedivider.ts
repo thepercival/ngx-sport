@@ -10,8 +10,8 @@ export class PoulePlaceDivider {
     private nrOfPoules = 0;
     private crossFinals;
 
-    constructor( childRound: Round) {
-        this.qualifyReservationService = new QualifyReservationService( childRound );
+    constructor(childRound: Round) {
+        this.qualifyReservationService = new QualifyReservationService(childRound);
         this.nrOfPoules = childRound.getPoules().length;
         this.crossFinals = childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
     }
@@ -19,15 +19,15 @@ export class PoulePlaceDivider {
     divide(qualifyRule: QualifyRule, fromPoulePlaces: PoulePlace[]) {
         let nrOfShifts = 0; let maxShifts = fromPoulePlaces.length;
         const isMultiple = fromPoulePlaces.length > qualifyRule.getToPoulePlaces().length;
-        while ( fromPoulePlaces.length > 0 ) {
+        while (fromPoulePlaces.length > 0) {
             const fromPoulePlace = fromPoulePlaces.shift();
-            if ( !this.crossFinals || isMultiple
-            || this.qualifyReservationService.isFree( this.currentToPouleNumber, fromPoulePlace.getPoule() )
-            || nrOfShifts === maxShifts
+            if (!this.crossFinals || isMultiple
+                || this.qualifyReservationService.isFree(this.currentToPouleNumber, fromPoulePlace.getPoule())
+                || nrOfShifts === maxShifts
             ) {
-                if ( !isMultiple ) {
+                if (!isMultiple) {
                     this.qualifyReservationService.reserve(this.currentToPouleNumber, fromPoulePlace.getPoule());
-                    this.currentToPouleNumber = ( this.currentToPouleNumber === this.nrOfPoules ? 1 : this.currentToPouleNumber + 1 );
+                    this.currentToPouleNumber = (this.currentToPouleNumber === this.nrOfPoules ? 1 : this.currentToPouleNumber + 1);
                 }
                 qualifyRule.addFromPoulePlace(fromPoulePlace);
                 maxShifts = fromPoulePlaces.length;

@@ -99,6 +99,10 @@ export class QualifyRule {
         return this.getFromPoulePlaces().length > this.getToPoulePlaces().length;
     }
 
+    isSingle(): boolean {
+        return !this.isMultiple();
+    }
+
     getToEquivalent(fromPoulePlace: PoulePlace): PoulePlace {
         if (this.isMultiple()) {
             return undefined;
