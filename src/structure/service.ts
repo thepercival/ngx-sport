@@ -38,7 +38,7 @@ export class StructureService {
         { nrofpoules: 3, nrofwinners: 4 },
         { nrofpoules: 4, nrofwinners: 4 },
         { nrofpoules: 4, nrofwinners: 4 },
-        { nrofpoules: 4, nrofwinners: 8 },
+        { nrofpoules: 4, nrofwinners: 8 }, // 18
         { nrofpoules: 4, nrofwinners: 8 },
         { nrofpoules: 5, nrofwinners: 8 },
         { nrofpoules: 5, nrofwinners: 8 },
