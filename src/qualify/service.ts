@@ -26,12 +26,8 @@ export class QualifyService {
             const qualifyRule = new QualifyRule(this.parentRound, this.childRound);
 
             const poulePlaces: PoulePlace[] = parentRoundPoulePlacesPer.shift();
-            let nrOfToPoulePlaces = poulePlaces.length;
-            if (this.childRound.getWinnersOrLosers() === Round.LOSERS
-                && this.childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS
-                && (childRoundPoulePlaces.length % nrOfToPoulePlaces) !== 0) {
-                nrOfToPoulePlaces = (childRoundPoulePlaces.length % nrOfToPoulePlaces);
-            }
+            const nrOfPlacesToAdd = this.getNrOfToPlacesToAdd(parentRoundPoulePlacesPer);
+            const nrOfToPoulePlaces = this.getNrOfToPoulePlaces(childRoundPoulePlaces.length, poulePlaces.length, nrOfPlacesToAdd);
             // to places
             for (let nI = 0; nI < nrOfToPoulePlaces; nI++) {
                 if (childRoundPoulePlaces.length === 0) {
@@ -44,6 +40,24 @@ export class QualifyService {
         }
         this.repairOverlappingRules();
         // console.log('createRules ended: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
+    }
+
+    protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
+        let nrOfPlacesToAdd = 0;
+        parentRoundPoulePlacesPer.forEach(poulePlaces => nrOfPlacesToAdd += poulePlaces.length);
+        return nrOfPlacesToAdd;
+    }
+
+    protected getNrOfToPoulePlaces(childRoundPoulePlaces: number, nrOfPlacesAdding: number, nrOfPlacesToAdd: number): number {
+        if (this.childRound.getWinnersOrLosers() === Round.WINNERS
+           /* || this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_CROSS */) {
+            return nrOfPlacesAdding;
+        }
+        const nrOfPlacesTooMuch = (nrOfPlacesAdding + nrOfPlacesToAdd) - childRoundPoulePlaces;
+        if (nrOfPlacesTooMuch > 0) {
+            return (childRoundPoulePlaces % this.parentRound.getPoules().length);
+        }
+        return nrOfPlacesAdding;
     }
 
     protected repairOverlappingRules() {
