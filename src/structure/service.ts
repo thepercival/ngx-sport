@@ -56,7 +56,11 @@ export class StructureService {
         { nrofpoules: 6, nrofwinners: 8 },
         { nrofpoules: 6, nrofwinners: 8 },
         { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 }
+        { nrofpoules: 6, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 8, nrofwinners: 8 }
     ];
 
     private configService: RoundNumberConfigService;
