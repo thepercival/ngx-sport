@@ -8,6 +8,8 @@ export class RoundNumberConfig {
     static readonly DEFAULTDRAWPOINTS = 1;
     static readonly DEFAULTHASEXTENSION = false;
     static readonly DEFAULTENABLETIME = false;
+    static readonly TEAMUP_MIN = 4;
+    static readonly TEAMUP_MAX = 6;
     static readonly POINTS_CALC_GAMEPOINTS = 0;
     static readonly POINTS_CALC_SCOREPOINTS = 1;
     static readonly POINTS_CALC_BOTH = 2;

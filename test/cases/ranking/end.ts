@@ -3,8 +3,9 @@ import { expect } from 'chai';
 import { EndRanking } from '../../../src/ranking/end';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
-import { jsonStructure9 } from '../../data/structure9';
 import { jsonStructure16rank } from '../../data/structure16rank';
+import { jsonStructure4rankteamup } from '../../data/structure4rankteamup';
+import { jsonStructure9 } from '../../data/structure9';
 
 describe('Ranking/End', () => {
     it('structure9', () => {
@@ -52,5 +53,20 @@ describe('Ranking/End', () => {
         expect(items[13].getPoulePlace().getTeam().getName()).to.equal('mart');
         expect(items[14].getPoulePlace().getTeam().getName()).to.equal('fred');
         expect(items[15].getPoulePlace().getTeam().getName()).to.equal('toon');
+    });
+
+    it('structure4rankteamup', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+
+        const structureMapper = getMapper('structure');
+        const structure = structureMapper.toObject(jsonStructure4rankteamup, competition);
+
+        const endRanking = new EndRanking();
+        const items = endRanking.getItems(structure.getRootRound());
+        expect(items[0].getPoulePlace().getTeam().getName()).to.equal('rank1');
+        expect(items[1].getPoulePlace().getTeam().getName()).to.equal('rank2');
+        expect(items[2].getPoulePlace().getTeam().getName()).to.equal('rank3');
+        expect(items[3].getPoulePlace().getTeam().getName()).to.equal('rank4');
     });
 });

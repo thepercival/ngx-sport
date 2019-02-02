@@ -82,6 +82,17 @@ export class RoundNumberConfigService {
         return 5;
     }
 
+    canSportBeDoneTeamup(sportName: string): boolean {
+        return sportName === SportConfig.Badminton || sportName === SportConfig.Darts || sportName === SportConfig.ESports
+            || sportName === SportConfig.Squash || sportName === SportConfig.TableTennis || sportName === SportConfig.Tennis
+            || sportName === undefined;
+
+        // return SportConfig.getSports().filter(sportName => {
+        //     return sportName === SportConfig.Badminton || sportName === SportConfig.Darts || sportName === SportConfig.ESports
+        //         || sportName === SportConfig.Squash || sportName === SportConfig.TableTennis || sportName === SportConfig.Tennis;
+        // });
+    }
+
     protected createScoreConfig(config: RoundNumberConfig): RoundNumberConfigScore {
         const roundNumber = config.getRoundNumber();
         const sport = roundNumber.getCompetition().getLeague().getSport();

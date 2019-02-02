@@ -1,6 +1,7 @@
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { PoulePlaceCombination, PoulePlaceCombinationNumber } from '../pouleplace/combination';
+import { RoundNumberConfig } from '../round/number/config';
 import { PlanningGameRound } from './gameround';
 
 export class GameGenerator {
@@ -63,7 +64,8 @@ export class GameGenerator {
     public generate(teamUp: boolean): PlanningGameRound[] {
         const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(this.poule.getPlaces().slice());
 
-        if (teamUp !== true) {
+        const nrOfPoulePlaces = this.poule.getPlaces().length;
+        if (teamUp !== true || nrOfPoulePlaces < RoundNumberConfig.TEAMUP_MIN || nrOfPoulePlaces > RoundNumberConfig.TEAMUP_MAX) {
             return gameRoundsSingle;
         }
         const teams: PoulePlace[][] = [];
@@ -90,7 +92,7 @@ export class GameGenerator {
 
         let games = this.flattenGameRounds(gameRoundsTmp);
 
-        let nrOfPoulePlaces = this.poule.getPlaces().length;
+
 
         const totalNrOfCombinations = this.getTotalNrOfCombinations(nrOfPoulePlaces);
         if (totalNrOfCombinations !== games.length) {
