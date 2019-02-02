@@ -232,11 +232,11 @@ export class Ranking {
             if ((p_gameIt.getState() & this.gameStates) === 0) {
                 return;
             }
-            if (!p_poulePlaces.find(p_poulePlaceIt => p_poulePlaceIt === p_gameIt.getPoulePlace(Game.HOME))
-                || !p_poulePlaces.find(p_poulePlaceIt => p_poulePlaceIt === p_gameIt.getPoulePlace(Game.AWAY))) {
-                return;
+            const inHome = p_poulePlaces.some(poulePlace => p_gameIt.isParticipating(poulePlace, Game.HOME));
+            const inAway = p_poulePlaces.some(poulePlace => p_gameIt.isParticipating(poulePlace, Game.AWAY));
+            if (inHome && inAway) {
+                gamesRet.push(p_gameIt);
             }
-            gamesRet.push(p_gameIt);
         });
         return gamesRet;
     }
@@ -310,7 +310,7 @@ export class Ranking {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            if (game.getHomeAway(poulePlace) === undefined) {
+            if (!game.isParticipating(poulePlace)) {
                 return;
             }
             nrOfGames++;

@@ -28,6 +28,8 @@ export * from './src/field/mapper';
 export * from './src/game';
 export * from './src/game/repository';
 export * from './src/game/mapper';
+export * from './src/game/pouleplace';
+export * from './src/game/pouleplace/mapper';
 export * from './src/game/score';
 export * from './src/game/score/mapper';
 export * from './src/game/score/homeaway';

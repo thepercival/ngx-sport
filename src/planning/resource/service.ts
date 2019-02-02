@@ -158,12 +158,7 @@ export class PlanningResourceService {
     }
 
     private isGameAssignable(game: Game) {
-        const homePoulePlace = game.getHomePoulePlace();
-        const awayPoulePlace = game.getAwayPoulePlace();
-        if (this.isPoulePlaceAssigned(homePoulePlace) || this.isPoulePlaceAssigned(awayPoulePlace)) {
-            return false;
-        }
-        return true;
+        return game.getPoulePlaces().every(gamePoulePlace => !this.isPoulePlaceAssigned(gamePoulePlace.getPoulePlace()));
     }
 
     protected isPoulePlaceAssigned(poulePlace: PoulePlace) {
@@ -175,7 +170,6 @@ export class PlanningResourceService {
     }
 
     private addPoulePlaces(game: Game) {
-        this.poulePlaces.push(game.getHomePoulePlace());
-        this.poulePlaces.push(game.getAwayPoulePlace());
+        game.getPoulePlaces().forEach(gamePoulePlace => this.poulePlaces.push(gamePoulePlace.getPoulePlace()));
     }
 }

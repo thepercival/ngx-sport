@@ -102,6 +102,8 @@ export class PoulePlace {
     }
 
     getGames(): Game[] {
-        return this.getPoule().getGames().filter((gameIt) => gameIt.getHomePoulePlace() === this || gameIt.getAwayPoulePlace() === this);
+        return this.getPoule().getGames().filter(gameIt => {
+            return gameIt.getPoulePlaces().find(gamePoulePlace => gamePoulePlace.getPoulePlace() === this) !== undefined;
+        });
     }
 }

@@ -1,4 +1,5 @@
 import { Field } from './field';
+import { GamePoulePlace } from './game/pouleplace';
 import { GameScore } from './game/score';
 import { GameScoreHomeAway } from './game/score/homeaway';
 import { Poule } from './poule';
@@ -27,24 +28,19 @@ export class Game {
     protected resourceBatch: number;
     protected field: Field;
     protected referee: Referee;
-    protected homePoulePlace: PoulePlace;
-    protected awayPoulePlace: PoulePlace;
     protected startDateTime: Date;
     protected state: number;
     protected scoresMoment: number;
     protected scores: GameScore[] = [];
+    protected poulePlaces: GamePoulePlace[] = [];
 
     constructor(
         poule: Poule,
-        homePouleplace: PoulePlace,
-        awayPouleplace: PoulePlace,
         roundNumber: number,
         subNumber: number) {
         this.setPoule(poule);
         this.setRoundNumber(roundNumber);
         this.setSubNumber(subNumber);
-        this.setHomePoulePlace(homePouleplace);
-        this.setAwayPoulePlace(awayPouleplace);
         this.setState(Game.STATE_CREATED);
     }
 
@@ -113,30 +109,25 @@ export class Game {
         this.startDateTime = startDateTime;
     }
 
-    getHomePoulePlace(): PoulePlace {
-        return this.homePoulePlace;
+    getPoulePlaces(homeaway: boolean = undefined): GamePoulePlace[] {
+        if (homeaway !== undefined) {
+            return this.poulePlaces.filter(poulePlace => poulePlace.getHomeaway() === homeaway);
+        }
+        return this.poulePlaces;
     }
 
-    setHomePoulePlace(homePoulePlace: PoulePlace): void {
-        this.homePoulePlace = homePoulePlace;
+    setPoulePlaces(poulePlaces: GamePoulePlace[]): void {
+        this.poulePlaces = poulePlaces;
     }
 
-    getAwayPoulePlace(): PoulePlace {
-        return this.awayPoulePlace;
-    }
-
-    setAwayPoulePlace(awayPoulePlace: PoulePlace): void {
-        this.awayPoulePlace = awayPoulePlace;
-    }
-
-    getPoulePlace(homeAway: boolean): PoulePlace {
-        return homeAway === Game.HOME ? this.getHomePoulePlace() : (homeAway === Game.AWAY ? this.getAwayPoulePlace() : undefined);
+    isParticipating(poulePlace: PoulePlace, homeaway: boolean = undefined): boolean {
+        return this.getPoulePlaces(homeaway).find(gamePoulePlace => gamePoulePlace.getPoulePlace() === poulePlace) !== undefined;
     }
 
     getHomeAway(poulePlace: PoulePlace): boolean {
-        if (poulePlace === this.getHomePoulePlace()) {
+        if (this.isParticipating(poulePlace, Game.HOME)) {
             return Game.HOME;
-        } else if (poulePlace === this.getAwayPoulePlace()) {
+        } else if (this.isParticipating(poulePlace, Game.AWAY)) {
             return Game.AWAY;
         }
         return undefined;

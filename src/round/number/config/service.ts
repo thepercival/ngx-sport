@@ -22,6 +22,8 @@ export class RoundNumberConfigService {
         config.setMinutesBetweenGames(previousConfig.getMinutesBetweenGames());
         config.setMinutesAfter(previousConfig.getMinutesAfter());
         config.setScore(this.createScoreConfig(previousConfig));
+        config.setTeamup(previousConfig.getTeamup());
+        config.setPointsCalculation(previousConfig.getPointsCalculation());
         return config;
     }
 
@@ -29,7 +31,7 @@ export class RoundNumberConfigService {
         const sport = roundNumber.getCompetition().getLeague().getSport();
         const config = new RoundNumberConfig(roundNumber);
         config.setQualifyRule(QualifyRule.SOCCERWORLDCUP);
-        config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);        
+        config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
         config.setHasExtension(RoundNumberConfig.DEFAULTHASEXTENSION);
@@ -39,24 +41,26 @@ export class RoundNumberConfigService {
         config.setEnableTime(RoundNumberConfig.DEFAULTENABLETIME);
         config.setMinutesPerGame(0);
         config.setMinutesBetweenGames(0);
-        config.setMinutesAfter(0);        
+        config.setMinutesAfter(0);
         config.setEnableTime(true);
         config.setMinutesPerGame(this.getDefaultMinutesPerGame());
         config.setMinutesBetweenGames(this.getDefaultMinutesBetweenGames());
         config.setMinutesAfter(this.getDefaultMinutesAfter());
         config.setScore(this.createScoreConfig(config));
+        config.setTeamup(false);
+        config.setPointsCalculation(RoundNumberConfig.POINTS_CALC_GAMEPOINTS);
         return config;
     }
 
-    getDefaultWinPoints( sport: string ): number {
-        if( sport === SportConfig.Chess ) {
+    getDefaultWinPoints(sport: string): number {
+        if (sport === SportConfig.Chess) {
             return 1;
         }
         return RoundNumberConfig.DEFAULTWINPOINTS;
-    }        
+    }
 
-    getDefaultDrawPoints( sport: string ): number {
-        if( sport === SportConfig.Chess ) {
+    getDefaultDrawPoints(sport: string): number {
+        if (sport === SportConfig.Chess) {
             return 0.5;
         }
         return RoundNumberConfig.DEFAULTDRAWPOINTS;

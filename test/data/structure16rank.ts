@@ -29,7 +29,9 @@ export const jsonStructure16rank: JsonStructure = {
                         'name': 'goals',
                         'direction': 1,
                         'maximum': 0
-                    }
+                    },
+                    'teamup': false,
+                    'pointsCalculation': 0
                 }
             },
             'config': {
@@ -51,7 +53,9 @@ export const jsonStructure16rank: JsonStructure = {
                     'name': 'goals',
                     'direction': 1,
                     'maximum': 0
-                }
+                },
+                'teamup': false,
+                'pointsCalculation': 0
             }
         },
         'config': {
@@ -73,7 +77,9 @@ export const jsonStructure16rank: JsonStructure = {
                 'name': 'goals',
                 'direction': 1,
                 'maximum': 0
-            }
+            },
+            'teamup': false,
+            'pointsCalculation': 0
         }
     },
     'rootRound': {
@@ -120,24 +126,30 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 8,
                                         'startDateTime': '2018-12-26T00:15:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21785,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4542,
-                                                'name': 'tiem'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4542,
+                                                        'name': 'tiem'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4554,
+                                                        'name': 'kira'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21786,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4554,
-                                                'name': 'kira'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -186,24 +198,31 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 7,
                                         'startDateTime': '2018-12-25T23:50:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21787,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4546,
-                                                'name': 'bart'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4546,
+                                                        'name': 'bart'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'id': 21788,
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4549,
+                                                        'name': 'luuk'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21788,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4549,
-                                                'name': 'luuk'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -260,24 +279,31 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 6,
                                         'startDateTime': '2018-12-25T23:25:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21789,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4548,
-                                                'name': 'huub'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4548,
+                                                        'name': 'huub'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'id': 21788,
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4553,
+                                                        'name': 'mira'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21790,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4553,
-                                                'name': 'mira'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -326,24 +352,31 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 5,
                                         'startDateTime': '2018-12-25T23:00:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21791,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4544,
-                                                'name': 'nova'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4544,
+                                                        'name': 'nova'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'id': 21788,
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4551,
+                                                        'name': 'mats'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21792,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4551,
-                                                'name': 'mats'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -396,24 +429,31 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 8,
                                 'startDateTime': '2018-12-25T20:55:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21777,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4542,
-                                        'name': 'tiem'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4542,
+                                                'name': 'tiem'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'id': 21788,
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4546,
+                                                'name': 'bart'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21778,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4546,
-                                        'name': 'bart'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -462,24 +502,31 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 7,
                                 'startDateTime': '2018-12-25T20:30:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21779,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4549,
-                                        'name': 'luuk'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4549,
+                                                'name': 'luuk'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'id': 21788,
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4554,
+                                                'name': 'kira'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21780,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4554,
-                                        'name': 'kira'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -528,24 +575,31 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 6,
                                 'startDateTime': '2018-12-25T20:05:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21781,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4544,
-                                        'name': 'nova'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4544,
+                                                'name': 'nova'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'id': 21788,
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4548,
+                                                'name': 'huub'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21782,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4548,
-                                        'name': 'huub'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -594,24 +648,31 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 5,
                                 'startDateTime': '2018-12-25T19:40:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21783,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4551,
-                                        'name': 'mats'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4551,
+                                                'name': 'mats'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'id': 21788,
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4553,
+                                                'name': 'mira'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21784,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4553,
-                                        'name': 'mira'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -673,24 +734,30 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 4,
                                         'startDateTime': '2018-12-25T22:35:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21801,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4547,
-                                                'name': 'stan'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4547,
+                                                        'name': 'stan'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4556,
+                                                        'name': 'bram'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21802,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4556,
-                                                'name': 'bram'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -739,24 +806,30 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 3,
                                         'startDateTime': '2018-12-25T22:10:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21803,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4541,
-                                                'name': 'maan'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4541,
+                                                        'name': 'maan'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4552,
+                                                        'name': 'mila'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21804,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4552,
-                                                'name': 'mila'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -813,24 +886,30 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 2,
                                         'startDateTime': '2018-12-25T21:45:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21805,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4543,
-                                                'name': 'noud'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4543,
+                                                        'name': 'noud'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4550,
+                                                        'name': 'mart'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21806,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4550,
-                                                'name': 'mart'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -879,24 +958,30 @@ export const jsonStructure16rank: JsonStructure = {
                                         'subNumber': 1,
                                         'resourceBatch': 1,
                                         'startDateTime': '2018-12-25T21:20:00.000000Z',
-                                        'homePoulePlace': {
-                                            'id': 21807,
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4545,
-                                                'name': 'fred'
+                                        'poulePlaces': [
+                                            {
+                                                'poulePlace': {
+                                                    'number': 1,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4545,
+                                                        'name': 'fred'
+                                                    }
+                                                },
+                                                homeaway: true
+                                            },
+                                            {
+                                                'poulePlace': {
+                                                    'number': 2,
+                                                    'penaltyPoints': 0,
+                                                    'team': {
+                                                        'id': 4555,
+                                                        'name': 'toon'
+                                                    }
+                                                },
+                                                homeaway: false
                                             }
-                                        },
-                                        'awayPoulePlace': {
-                                            'id': 21808,
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'team': {
-                                                'id': 4555,
-                                                'name': 'toon'
-                                            }
-                                        },
+                                        ],
                                         'field': {
                                             'id': 2384,
                                             'name': '1',
@@ -949,24 +1034,30 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 4,
                                 'startDateTime': '2018-12-25T19:15:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21793,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4541,
-                                        'name': 'maan'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4541,
+                                                'name': 'maan'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4547,
+                                                'name': 'stan'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21794,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4547,
-                                        'name': 'stan'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -1015,24 +1106,30 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 3,
                                 'startDateTime': '2018-12-25T18:50:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21795,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4552,
-                                        'name': 'mila'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4552,
+                                                'name': 'mila'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4556,
+                                                'name': 'bram'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21796,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4556,
-                                        'name': 'bram'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -1081,24 +1178,30 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 2,
                                 'startDateTime': '2018-12-25T18:25:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21797,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4543,
-                                        'name': 'noud'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4543,
+                                                'name': 'noud'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4545,
+                                                'name': 'fred'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21798,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4545,
-                                        'name': 'fred'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -1147,24 +1250,30 @@ export const jsonStructure16rank: JsonStructure = {
                                 'subNumber': 1,
                                 'resourceBatch': 1,
                                 'startDateTime': '2018-12-25T18:00:00.000000Z',
-                                'homePoulePlace': {
-                                    'id': 21799,
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4550,
-                                        'name': 'mart'
+                                'poulePlaces': [
+                                    {
+                                        'poulePlace': {
+                                            'number': 1,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4550,
+                                                'name': 'mart'
+                                            }
+                                        },
+                                        homeaway: true
+                                    },
+                                    {
+                                        'poulePlace': {
+                                            'number': 2,
+                                            'penaltyPoints': 0,
+                                            'team': {
+                                                'id': 4555,
+                                                'name': 'toon'
+                                            }
+                                        },
+                                        homeaway: false
                                     }
-                                },
-                                'awayPoulePlace': {
-                                    'id': 21800,
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'team': {
-                                        'id': 4555,
-                                        'name': 'toon'
-                                    }
-                                },
+                                ],
                                 'field': {
                                     'id': 2384,
                                     'name': '1',
@@ -1235,24 +1344,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 1,
                         'startDateTime': '2018-12-25T08:00:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21761,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4541,
-                                'name': 'maan'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4541,
+                                        'name': 'maan'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4544,
+                                        'name': 'nova'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21764,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4544,
-                                'name': 'nova'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1275,24 +1390,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 5,
                         'startDateTime': '2018-12-25T09:40:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21762,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4542,
-                                'name': 'tiem'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4542,
+                                        'name': 'tiem'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4543,
+                                        'name': 'noud'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21763,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4543,
-                                'name': 'noud'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1315,24 +1436,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 9,
                         'startDateTime': '2018-12-25T11:20:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21761,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4541,
-                                'name': 'maan'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4541,
+                                        'name': 'maan'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4542,
+                                        'name': 'tiem'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21762,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4542,
-                                'name': 'tiem'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1355,24 +1482,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 13,
                         'startDateTime': '2018-12-25T13:00:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21763,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4543,
-                                'name': 'noud'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4543,
+                                        'name': 'noud'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4544,
+                                        'name': 'nova'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21764,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4544,
-                                'name': 'nova'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1395,24 +1528,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 17,
                         'startDateTime': '2018-12-25T14:40:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21763,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4543,
-                                'name': 'noud'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4543,
+                                        'name': 'noud'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4541,
+                                        'name': 'maan'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21761,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4541,
-                                'name': 'maan'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1435,24 +1574,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 21,
                         'startDateTime': '2018-12-25T16:20:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21764,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4544,
-                                'name': 'nova'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4544,
+                                        'name': 'nova'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4542,
+                                        'name': 'tiem'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21762,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4542,
-                                'name': 'tiem'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1519,24 +1664,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 2,
                         'startDateTime': '2018-12-25T08:25:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21765,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4545,
-                                'name': 'fred'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4545,
+                                        'name': 'fred'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4548,
+                                        'name': 'huub'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21768,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4548,
-                                'name': 'huub'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1559,24 +1710,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 6,
                         'startDateTime': '2018-12-25T10:05:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21766,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4546,
-                                'name': 'bart'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4546,
+                                        'name': 'bart'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4547,
+                                        'name': 'stan'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21767,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4547,
-                                'name': 'stan'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1599,24 +1756,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 10,
                         'startDateTime': '2018-12-25T11:45:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21765,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4545,
-                                'name': 'fred'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4545,
+                                        'name': 'fred'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4546,
+                                        'name': 'bart'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21766,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4546,
-                                'name': 'bart'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1639,24 +1802,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 14,
                         'startDateTime': '2018-12-25T13:25:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21767,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4547,
-                                'name': 'stan'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4547,
+                                        'name': 'stan'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4548,
+                                        'name': 'huub'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21768,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4548,
-                                'name': 'huub'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1679,24 +1848,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 18,
                         'startDateTime': '2018-12-25T15:05:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21767,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4547,
-                                'name': 'stan'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4547,
+                                        'name': 'stan'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4545,
+                                        'name': 'fred'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21765,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4545,
-                                'name': 'fred'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1719,24 +1894,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 22,
                         'startDateTime': '2018-12-25T16:45:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21768,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4548,
-                                'name': 'huub'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4548,
+                                        'name': 'huub'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4546,
+                                        'name': 'bart'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21766,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4546,
-                                'name': 'bart'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1803,24 +1984,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 3,
                         'startDateTime': '2018-12-25T08:50:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21769,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4549,
-                                'name': 'luuk'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4549,
+                                        'name': 'luuk'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4552,
+                                        'name': 'mila'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21772,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4552,
-                                'name': 'mila'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1843,24 +2030,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 7,
                         'startDateTime': '2018-12-25T10:30:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21770,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4550,
-                                'name': 'mart'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4550,
+                                        'name': 'mart'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4551,
+                                        'name': 'mats'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21771,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4551,
-                                'name': 'mats'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1883,24 +2076,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 11,
                         'startDateTime': '2018-12-25T12:10:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21769,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4549,
-                                'name': 'luuk'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4549,
+                                        'name': 'luuk'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4550,
+                                        'name': 'mart'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21770,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4550,
-                                'name': 'mart'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1923,24 +2122,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 15,
                         'startDateTime': '2018-12-25T13:50:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21771,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4551,
-                                'name': 'mats'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4551,
+                                        'name': 'mats'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4552,
+                                        'name': 'mila'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21772,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4552,
-                                'name': 'mila'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -1963,24 +2168,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 19,
                         'startDateTime': '2018-12-25T15:30:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21771,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4551,
-                                'name': 'mats'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4551,
+                                        'name': 'mats'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4549,
+                                        'name': 'luuk'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21769,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4549,
-                                'name': 'luuk'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2003,24 +2214,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 23,
                         'startDateTime': '2018-12-25T17:10:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21772,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4552,
-                                'name': 'mila'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4552,
+                                        'name': 'mila'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4550,
+                                        'name': 'mart'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21770,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4550,
-                                'name': 'mart'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2087,24 +2304,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 4,
                         'startDateTime': '2018-12-25T09:15:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21773,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4553,
-                                'name': 'mira'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4553,
+                                        'name': 'mira'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4556,
+                                        'name': 'bram'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21776,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4556,
-                                'name': 'bram'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2127,24 +2350,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 8,
                         'startDateTime': '2018-12-25T10:55:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21774,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4554,
-                                'name': 'kira'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4554,
+                                        'name': 'kira'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4555,
+                                        'name': 'toon'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21775,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4555,
-                                'name': 'toon'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2167,24 +2396,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 12,
                         'startDateTime': '2018-12-25T12:35:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21773,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4553,
-                                'name': 'mira'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4553,
+                                        'name': 'mira'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4554,
+                                        'name': 'kira'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21774,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4554,
-                                'name': 'kira'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2207,24 +2442,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 16,
                         'startDateTime': '2018-12-25T14:15:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21775,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4555,
-                                'name': 'toon'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4555,
+                                        'name': 'toon'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4556,
+                                        'name': 'bram'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21776,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4556,
-                                'name': 'bram'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2247,24 +2488,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 1,
                         'resourceBatch': 20,
                         'startDateTime': '2018-12-25T15:55:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21775,
-                            'number': 3,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4555,
-                                'name': 'toon'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 3,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4555,
+                                        'name': 'toon'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 1,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4553,
+                                        'name': 'mira'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21773,
-                            'number': 1,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4553,
-                                'name': 'mira'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',
@@ -2287,24 +2534,30 @@ export const jsonStructure16rank: JsonStructure = {
                         'subNumber': 2,
                         'resourceBatch': 24,
                         'startDateTime': '2018-12-25T17:35:00.000000Z',
-                        'homePoulePlace': {
-                            'id': 21776,
-                            'number': 4,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4556,
-                                'name': 'bram'
+                        'poulePlaces': [
+                            {
+                                'poulePlace': {
+                                    'number': 4,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4556,
+                                        'name': 'bram'
+                                    }
+                                },
+                                homeaway: true
+                            },
+                            {
+                                'poulePlace': {
+                                    'number': 2,
+                                    'penaltyPoints': 0,
+                                    'team': {
+                                        'id': 4554,
+                                        'name': 'kira'
+                                    }
+                                },
+                                homeaway: false
                             }
-                        },
-                        'awayPoulePlace': {
-                            'id': 21774,
-                            'number': 2,
-                            'penaltyPoints': 0,
-                            'team': {
-                                'id': 4554,
-                                'name': 'kira'
-                            }
-                        },
+                        ],
                         'field': {
                             'id': 2384,
                             'name': '1',

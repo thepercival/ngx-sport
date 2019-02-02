@@ -2,11 +2,11 @@ import { Competition } from '../competition';
 import { Field } from '../field';
 import { Game } from '../game';
 import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
 import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { RoundNumberConfig } from '../round/number/config';
+import { GameGenerator } from './gamegenerator';
 import { PlanningResourceService } from './resource/service';
 
 export class PlanningService {
@@ -119,29 +119,22 @@ export class PlanningService {
     protected createHelper(roundNumber: RoundNumber) {
         const roundNumberConfig = roundNumber.getConfig();
         this.getPoulesForRoundNumber(roundNumber).forEach((poule) => {
-            const schedGames = this.generateRRSchedule(poule.getPlaces().slice());
+            const generator = new GameGenerator(poule);
+            const gameRounds = generator.generate(roundNumberConfig.getTeamup());
+            // if (poule.getPlaces().length === 8) {
+            //     gameRounds = generator.generateBen();
+            // }
             for (let headToHead = 1; headToHead <= roundNumberConfig.getNrOfHeadtoheadMatches(); headToHead++) {
-                const headToHeadNumber = ((headToHead - 1) * schedGames.length);
-                for (let gameRoundNumber = 0; gameRoundNumber < schedGames.length; gameRoundNumber++) {
-                    const schedRoundGames = schedGames[gameRoundNumber];
-                    const reverseHomeAway = headToHead === roundNumberConfig.getNrOfHeadtoheadMatches() && (headToHead % 2) === 1
-                        && schedGames.length > 1;
+                const reverseHomeAway = (headToHead % 2) === 0;
+
+                const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
+                gameRounds.forEach(gameRound => {
                     let subNumber = 1;
-                    schedRoundGames.forEach(schedGame => {
-                        if (schedGame[0] === undefined || schedGame[1] === undefined) {
-                            return;
-                        }
-                        let homePoulePlace = (headToHead % 2 === 0) ? schedGame[1] : schedGame[0];
-                        let awayPoulePlace = (headToHead % 2 === 0) ? schedGame[0] : schedGame[1];
-                        if (reverseHomeAway && ((homePoulePlace.getNumber() + awayPoulePlace.getNumber()) % 2) === 0
-                            && homePoulePlace.getNumber() < awayPoulePlace.getNumber()) {
-                            homePoulePlace = schedGame[1];
-                            awayPoulePlace = schedGame[0];
-                        }
-                        const gameTmp =
-                            new Game(poule, homePoulePlace, awayPoulePlace, headToHeadNumber + gameRoundNumber + 1, subNumber++);
+                    gameRound.getCombinations().forEach(combination => {
+                        const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+                        game.setPoulePlaces(combination.getGamePoulePlaces(game, reverseHomeAway/*, reverseCombination*/));
                     });
-                }
+                });
             }
         });
     }
@@ -283,64 +276,6 @@ export class PlanningService {
         round.getPoules().forEach(poule => {
             poule.getGames().splice(0, poule.getGames().length);
         });
-    }
-
-
-    private generateRRSchedule(places: PoulePlace[]) {
-        let nrOfPlaces = places.length;
-        if (nrOfPlaces === 0) {
-            return [];
-        }
-
-        // add a placeholder if the count is odd
-        if ((nrOfPlaces % 2) !== 0) {
-            places.push(undefined);
-            nrOfPlaces++;
-        }
-
-        // calculate the number of sets and matches per set
-        const nrOfSets = nrOfPlaces - 1;
-        const nrOfMatches = nrOfPlaces / 2;
-
-        const matchups = [];
-
-        // generate each set
-        for (let j = 0; j < nrOfSets; j++) {
-            matchups[j] = [];
-            // break the list in half
-            const halves = this.chunk(places, 2);
-            // reverse the order of one half
-            halves[1] = halves[1].reverse();
-            // generate each match in the set
-            for (let i = 0; i < nrOfMatches; i++) {
-                matchups[j][i] = [];
-                // match each pair of elements
-                matchups[j][i][0] = halves[0][i];
-                matchups[j][i][1] = halves[1][i];
-            }
-            // remove the first player and store
-            const first = places.shift();
-            // move the second player to the end of the list
-            places.push(places.shift());
-            // place the first item back in the first position
-            places.unshift(first);
-        }
-
-        return matchups;
-    }
-
-    private chunk(arr: PoulePlace[], pieces: number): any[][] {
-        const chunkSize = Math.round(arr.length / pieces);
-        const result = [];
-        for (let i = 0; i < arr.length; i += chunkSize) {
-            if (result.length < pieces - 1) {
-                result.push(arr.slice(i, i + chunkSize).map(a => a));
-            } else {
-                result.push(arr.slice(i).map(a => a));
-                break;
-            }
-        }
-        return result;
     }
 }
 

@@ -1,3 +1,4 @@
+import { GamePoulePlace } from './game/pouleplace';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { Round } from './round';
@@ -77,6 +78,10 @@ export class NameService {
             return 'nr. ' + fromQualifyRule.getFromPoulePlaces()[0].getNumber() + ' poule ?';
         }
         return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
+    }
+
+    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], teamName = false, longName = false) {
+        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), teamName, longName)).join(' & ');
     }
 
     getPoulePlaceName(poulePlace: PoulePlace, teamName = false, longName = false) {

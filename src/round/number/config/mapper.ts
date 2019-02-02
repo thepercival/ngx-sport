@@ -26,6 +26,8 @@ export class RoundNumberConfigMapper {
         config.setMinutesBetweenGames(json.minutesBetweenGames);
         config.setMinutesAfter(json.minutesAfter);
         config.setScore(this.scoreConfigMapper.toObject(json.score, config));
+        config.setTeamup(json.teamup);
+        config.setPointsCalculation(json.pointsCalculation);
         return config;
     }
 
@@ -44,7 +46,9 @@ export class RoundNumberConfigMapper {
             minutesPerGame: config.getMinutesPerGame(),
             minutesBetweenGames: config.getMinutesBetweenGames(),
             minutesAfter: config.getMinutesAfter(),
-            score: this.scoreConfigMapper.toJson(config.getScore())
+            score: this.scoreConfigMapper.toJson(config.getScore()),
+            teamup: config.getTeamup(),
+            pointsCalculation: config.getPointsCalculation()
         };
     }
 }
@@ -64,4 +68,6 @@ export interface JsonRoundNumberConfig {
     minutesBetweenGames: number;
     minutesAfter: number;
     score: JsonRoundNumberConfigScore;
+    teamup: boolean;
+    pointsCalculation: number;
 }

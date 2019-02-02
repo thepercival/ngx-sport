@@ -8,6 +8,9 @@ export class RoundNumberConfig {
     static readonly DEFAULTDRAWPOINTS = 1;
     static readonly DEFAULTHASEXTENSION = false;
     static readonly DEFAULTENABLETIME = false;
+    static readonly POINTS_CALC_GAMEPOINTS = 0;
+    static readonly POINTS_CALC_SCOREPOINTS = 1;
+    static readonly POINTS_CALC_BOTH = 2;
 
     protected id: number;
     protected nrOfHeadtoheadMatches: number;
@@ -23,6 +26,8 @@ export class RoundNumberConfig {
     protected minutesBetweenGames: number;
     protected minutesAfter: number;
     protected score: RoundNumberConfigScore;
+    protected teamup: boolean;
+    protected pointsCalculation: number;
 
     constructor(protected roundNumber: RoundNumber) {
         this.roundNumber.setConfig(this);
@@ -130,6 +135,22 @@ export class RoundNumberConfig {
 
     setMinutesAfter(minutesAfter: number) {
         this.minutesAfter = minutesAfter;
+    }
+
+    getTeamup(): boolean {
+        return this.teamup;
+    }
+
+    setTeamup(teamup: boolean) {
+        this.teamup = teamup;
+    }
+
+    getPointsCalculation(): number {
+        return this.pointsCalculation;
+    }
+
+    setPointsCalculation(pointsCalculation: number) {
+        this.pointsCalculation = pointsCalculation;
     }
 
     getScore(): RoundNumberConfigScore {
