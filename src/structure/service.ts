@@ -2,7 +2,6 @@ import { Competition } from '../competition';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { QualifyRule } from '../qualify/rule';
 import { QualifyService } from '../qualify/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
@@ -39,7 +38,7 @@ export class StructureService {
         { nrofpoules: 3, nrofwinners: 4 },
         { nrofpoules: 4, nrofwinners: 4 },
         { nrofpoules: 4, nrofwinners: 4 },
-        { nrofpoules: 4, nrofwinners: 8 },
+        { nrofpoules: 4, nrofwinners: 8 }, // 18
         { nrofpoules: 4, nrofwinners: 8 },
         { nrofpoules: 5, nrofwinners: 8 },
         { nrofpoules: 5, nrofwinners: 8 },
@@ -57,7 +56,11 @@ export class StructureService {
         { nrofpoules: 6, nrofwinners: 8 },
         { nrofpoules: 6, nrofwinners: 8 },
         { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 }
+        { nrofpoules: 6, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 7, nrofwinners: 8 },
+        { nrofpoules: 8, nrofwinners: 8 }
     ];
 
     private configService: RoundNumberConfigService;
@@ -69,7 +72,7 @@ export class StructureService {
         this.configService = new RoundNumberConfigService();
     }
 
-    setMaxNrOfPoulePlacesForChildRound(maxNrOfPoulePlacesForChildRound: number ) {
+    setMaxNrOfPoulePlacesForChildRound(maxNrOfPoulePlacesForChildRound: number) {
         this.maxNrOfPoulePlacesForChildRound = maxNrOfPoulePlacesForChildRound;
     }
 
@@ -99,14 +102,15 @@ export class StructureService {
         if (roundStructure === undefined) {
             return;
         }
-        const nrOfPlacesPerPoule = this.getNrOfPlacesPerPoule(nrOfPlaces, roundStructure.nrofpoules);
+        let nrOfPoulesToAdd = roundStructure.nrofpoules;
         while (nrOfPlaces > 0) {
-            const nrOfPlacesToAdd = nrOfPlaces < nrOfPlacesPerPoule ? nrOfPlaces : nrOfPlacesPerPoule;
+            const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoulesToAdd);
             const poule = new Poule(round);
             for (let i = 0; i < nrOfPlacesToAdd; i++) {
-                const tmp = new PoulePlace(poule);
+                new PoulePlace(poule);
             }
-            nrOfPlaces -= nrOfPlacesPerPoule;
+            nrOfPlaces -= nrOfPlacesToAdd;
+            nrOfPoulesToAdd--;
         }
         if (!round.isRoot()) {
             const qualifyService = new QualifyService(round.getParent(), round);
@@ -363,7 +367,7 @@ export class StructureService {
 
         if (addRound) {
             childRound = this.addChildRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
-            this.recalculateQualifyRulesForRound(childRound, false);            
+            this.recalculateQualifyRulesForRound(childRound, false);
             return;
         }
         if (childRound === undefined) {
@@ -386,31 +390,31 @@ export class StructureService {
             this.checkMaxNrOfPoulePlacesForChildRound(childRound);
             this.recalculateQualifyRulesForRound(childRound);
         }
-    }   
+    }
 
     private checkMaxNrOfPoulePlacesForChildRound(childRound: Round) {
         const nrOfPoules = childRound.getPoules().length;
         const nrOfPlaces = childRound.getPoulePlaces().length;
-        const onePouleTwoOrThreePlaces = nrOfPoules === 1 && ( nrOfPlaces === 2 || nrOfPlaces === 3 );
-        if ( onePouleTwoOrThreePlaces ) {
+        const onePouleTwoOrThreePlaces = nrOfPoules === 1 && (nrOfPlaces === 2 || nrOfPlaces === 3);
+        if (onePouleTwoOrThreePlaces) {
             return;
         }
-        if ( this.getNrOfPlacesPerPoule(nrOfPlaces - 1, nrOfPoules) <= this.maxNrOfPoulePlacesForChildRound ) {
+        if (this.getNrOfPlacesPerPoule(nrOfPlaces - 1, nrOfPoules) <= this.maxNrOfPoulePlacesForChildRound) {
             return;
         }
         const newPoule = new Poule(childRound);
         const poulePlaces = childRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
-        while ( newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1) ) {
+        while (newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1)) {
             const poulePlace = poulePlaces.pop();
-            childRound.movePoulePlace( poulePlace, newPoule );
+            childRound.movePoulePlace(poulePlace, newPoule);
         }
         const poulePlaceTmp = poulePlaces.pop();
-        if ( newPoule.getPlaces().length === (this.maxNrOfPoulePlacesForChildRound - 1)
-         && poulePlaceTmp.getNumber() > this.maxNrOfPoulePlacesForChildRound ) {
-            childRound.movePoulePlace( poulePlaceTmp, newPoule );
+        if (newPoule.getPlaces().length === (this.maxNrOfPoulePlacesForChildRound - 1)
+            && poulePlaceTmp.getNumber() > this.maxNrOfPoulePlacesForChildRound) {
+            childRound.movePoulePlace(poulePlaceTmp, newPoule);
         }
     }
-    
+
     getDefaultRoundStructure(roundNr, nrOfTeams): IRoundStructure {
         if (nrOfTeams < 1) {
             return undefined;
@@ -432,11 +436,11 @@ export class StructureService {
         return roundStructure;
     }
 
-    getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules) {
+    getNrOfPlacesPerPoule(nrOfPlaces: number, nrOfPoules: number): number {
         const nrOfPlaceLeft = (nrOfPlaces % nrOfPoules);
-        if ( nrOfPlaceLeft === 0 ) {
+        if (nrOfPlaceLeft === 0) {
             return nrOfPlaces / nrOfPoules;
         }
-        return ( (nrOfPlaces - nrOfPlaceLeft) / nrOfPoules ) + 1;
+        return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules) + 1;
     }
 }

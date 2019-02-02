@@ -76,7 +76,6 @@
     "build:umd-min": "uglifyjs dist/bundles/ngx-sport.umd.js -c -m -o dist/bundles/ngx-sport.umd.min.js",
     "move:assets": "cp -r tmp/esm2015/*.d.ts tmp/esm2015/src tmp/esm2015/*.json package.json README.md dist/ && rm dist/src/*.js",
     "clean": "rm -rf ./tmp && rm -rf ./dist",
-    "postpublish": "cp -r package.json ../",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
     "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
@@ -104,5 +103,5 @@
       }
     ]
   },
-  "version": "0.0.65"
+  "version": "0.0.69"
 }

@@ -1,6 +1,7 @@
 import { GamePoulePlace } from './game/pouleplace';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
+import { QualifyRule } from './qualify/rule';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
 
@@ -75,9 +76,17 @@ export class NameService {
             return name + ' ' + this.getPouleName(fromPoulePlace.getPoule(), false);
         }
         if (longName === true) {
-            return 'nr. ' + fromQualifyRule.getFromPoulePlaces()[0].getNumber() + ' poule ?';
+            return 'poule ? nr. ' + this.getMultipleRulePlaceName(fromQualifyRule);
         }
-        return '?' + fromQualifyRule.getFromPoulePlaces()[0].getNumber();
+        return '?' + this.getMultipleRulePlaceName(fromQualifyRule);
+    }
+
+    protected getMultipleRulePlaceName(qualifyRule: QualifyRule): number {
+        const poulePlaces = qualifyRule.getFromPoulePlaces();
+        if (qualifyRule.getWinnersOrLosers() === Round.WINNERS) {
+            return poulePlaces[0].getNumber();
+        }
+        return poulePlaces[poulePlaces.length - 1].getNumber();
     }
 
     getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], teamName = false, longName = false) {
@@ -89,8 +98,7 @@ export class NameService {
             return poulePlace.getTeam().getName();
         }
         if (longName === true) {
-            const name = this.getPouleName(poulePlace.getPoule(), true);
-            return 'nr. ' + poulePlace.getNumber() + ' ' + name;
+            return this.getPouleName(poulePlace.getPoule(), true) + ' nr. ' + poulePlace.getNumber();
         }
         const name = this.getPouleName(poulePlace.getPoule(), false);
         return name + poulePlace.getNumber();

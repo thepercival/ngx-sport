@@ -5,9 +5,10 @@ import { Ranking } from '../ranking';
 import { RankingItem } from '../ranking/item';
 import { Round } from '../round';
 import { Team } from '../team';
-import { QualifyRule } from './rule';
 import { PoulePlaceDivider } from './pouleplacedivider';
-import { QualifyReservationService} from './reservationservice';
+import { QualifyReservationService } from './reservationservice';
+import { QualifyRule } from './rule';
+
 export class QualifyService {
     constructor(private parentRound: Round, private childRound: Round) {
     }
@@ -25,12 +26,8 @@ export class QualifyService {
             const qualifyRule = new QualifyRule(this.parentRound, this.childRound);
 
             const poulePlaces: PoulePlace[] = parentRoundPoulePlacesPer.shift();
-            let nrOfToPoulePlaces = poulePlaces.length;
-            if (this.childRound.getWinnersOrLosers() === Round.LOSERS
-                && this.childRound.getQualifyOrder() === Round.QUALIFYORDER_CROSS
-                && (childRoundPoulePlaces.length % nrOfToPoulePlaces) !== 0) {
-                    nrOfToPoulePlaces = (childRoundPoulePlaces.length % nrOfToPoulePlaces);
-            }
+            const nrOfPlacesToAdd = this.getNrOfToPlacesToAdd(parentRoundPoulePlacesPer);
+            const nrOfToPoulePlaces = this.getNrOfToPoulePlaces(childRoundPoulePlaces.length, poulePlaces.length, nrOfPlacesToAdd);
             // to places
             for (let nI = 0; nI < nrOfToPoulePlaces; nI++) {
                 if (childRoundPoulePlaces.length === 0) {
@@ -41,7 +38,38 @@ export class QualifyService {
             // from places (needs toplaces)
             poulePlaceDivider.divide(qualifyRule, poulePlaces);
         }
+        this.repairOverlappingRules();
         // console.log('createRules ended: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
+    }
+
+    protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
+        let nrOfPlacesToAdd = 0;
+        parentRoundPoulePlacesPer.forEach(poulePlaces => nrOfPlacesToAdd += poulePlaces.length);
+        return nrOfPlacesToAdd;
+    }
+
+    protected getNrOfToPoulePlaces(childRoundPoulePlaces: number, nrOfPlacesAdding: number, nrOfPlacesToAdd: number): number {
+        if (this.childRound.getWinnersOrLosers() === Round.WINNERS
+           /* || this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_CROSS */) {
+            return nrOfPlacesAdding;
+        }
+        const nrOfPlacesTooMuch = (nrOfPlacesAdding + nrOfPlacesToAdd) - childRoundPoulePlaces;
+        if (nrOfPlacesTooMuch > 0) {
+            return (childRoundPoulePlaces % this.parentRound.getPoules().length);
+        }
+        return nrOfPlacesAdding;
+    }
+
+    protected repairOverlappingRules() {
+        this.parentRound.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length > 1).forEach(poulePlace => {
+            const winnersRule = poulePlace.getToQualifyRule(Round.WINNERS);
+            const losersRule = poulePlace.getToQualifyRule(Round.LOSERS);
+            if (winnersRule.isSingle() && losersRule.isMultiple()) {
+                losersRule.removeFromPoulePlace(poulePlace);
+            } else if (winnersRule.isMultiple() && losersRule.isSingle()) {
+                winnersRule.removeFromPoulePlace(poulePlace);
+            }
+        });
     }
 
     protected getParentPoulePlacesPer(): PoulePlace[][] {
@@ -58,9 +86,9 @@ export class QualifyService {
         const poulePlacesPerNumber: PoulePlace[][] = [];
         const nrOfPoules = this.parentRound.getPoules().length;
         const reversedPoulePlaces = this.parentRound.getPoulePlaces(Round.ORDER_NUMBER_POULE, true);
-        let nrOfChildRoundPlaces = this.childRound.getPoulePlaces().length;        
-        while( nrOfChildRoundPlaces > 0 ) {
-            let tmp = reversedPoulePlaces.splice(0, nrOfPoules).reverse().filter( poulePlace => {
+        let nrOfChildRoundPlaces = this.childRound.getPoulePlaces().length;
+        while (nrOfChildRoundPlaces > 0) {
+            let tmp = reversedPoulePlaces.splice(0, nrOfPoules).reverse().filter(poulePlace => {
                 const toQualifyRule = poulePlace.getToQualifyRule(Round.WINNERS);
                 return toQualifyRule === undefined || toQualifyRule.isMultiple();
             });
@@ -70,7 +98,7 @@ export class QualifyService {
             poulePlacesPerNumber.unshift(tmp);
             nrOfChildRoundPlaces -= nrOfPoules;
         }
-        return poulePlacesPerNumber;        
+        return poulePlacesPerNumber;
     }
 
     protected getParentPoulePlacesPerQualifyRule(): PoulePlace[][] {
@@ -218,7 +246,7 @@ export class QualifyService {
 
         toPoulePlaces.forEach((toPoulePlace) => {
             const toPouleNumber = toPoulePlace.getPoule().getNumber();
-            const rankedPoulePlace =  qualifyReservationService.getFreeAndLeastAvailabe( toPouleNumber, roundRankingPoulePlaces );
+            const rankedPoulePlace = qualifyReservationService.getFreeAndLeastAvailabe(toPouleNumber, roundRankingPoulePlaces);
             if (rankedPoulePlace === undefined) {
                 return;
             }
