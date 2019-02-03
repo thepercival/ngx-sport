@@ -28,6 +28,7 @@ export class RoundNumberConfigMapper {
         config.setScore(this.scoreConfigMapper.toObject(json.score, config));
         config.setTeamup(json.teamup);
         config.setPointsCalculation(json.pointsCalculation);
+        config.setSelfReferee(json.selfReferee);
         return config;
     }
 
@@ -48,7 +49,8 @@ export class RoundNumberConfigMapper {
             minutesAfter: config.getMinutesAfter(),
             score: this.scoreConfigMapper.toJson(config.getScore()),
             teamup: config.getTeamup(),
-            pointsCalculation: config.getPointsCalculation()
+            pointsCalculation: config.getPointsCalculation(),
+            selfReferee: config.getSelfReferee(),
         };
     }
 }
@@ -70,4 +72,5 @@ export interface JsonRoundNumberConfig {
     score: JsonRoundNumberConfigScore;
     teamup: boolean;
     pointsCalculation: number;
+    selfReferee: boolean;
 }

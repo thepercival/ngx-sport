@@ -30,6 +30,7 @@ export class RoundNumberConfig {
     protected score: RoundNumberConfigScore;
     protected teamup: boolean;
     protected pointsCalculation: number;
+    protected selfReferee: boolean;
 
     constructor(protected roundNumber: RoundNumber) {
         this.roundNumber.setConfig(this);
@@ -153,6 +154,14 @@ export class RoundNumberConfig {
 
     setPointsCalculation(pointsCalculation: number) {
         this.pointsCalculation = pointsCalculation;
+    }
+
+    getSelfReferee(): boolean {
+        return this.selfReferee;
+    }
+
+    setSelfReferee(selfReferee: boolean) {
+        this.selfReferee = selfReferee;
     }
 
     getScore(): RoundNumberConfigScore {

@@ -24,6 +24,7 @@ export class RoundNumberConfigService {
         config.setScore(this.createScoreConfig(previousConfig));
         config.setTeamup(previousConfig.getTeamup());
         config.setPointsCalculation(previousConfig.getPointsCalculation());
+        config.setSelfReferee(previousConfig.getSelfReferee());
         return config;
     }
 
@@ -49,6 +50,7 @@ export class RoundNumberConfigService {
         config.setScore(this.createScoreConfig(config));
         config.setTeamup(false);
         config.setPointsCalculation(RoundNumberConfig.POINTS_CALC_GAMEPOINTS);
+        config.setSelfReferee(false);
         return config;
     }
 
