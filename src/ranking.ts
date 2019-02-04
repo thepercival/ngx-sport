@@ -3,6 +3,7 @@ import { GameScoreHomeAway } from './game/score/homeaway';
 import { PoulePlace } from './pouleplace';
 import { RankingItem } from './ranking/item';
 import { Round } from './round';
+import { QualifyRule } from './qualify/rule';
 
 /* tslint:disable:no-bitwise */
 
@@ -75,26 +76,39 @@ export class Ranking {
     getItems(p_poulePlaces: PoulePlace[], games: Game[]): RankingItem[] {
         const items: RankingItem[] = [];
         const poulePlaces = p_poulePlaces.slice(0);
-        let nrOfIterations = 0;
+        let nrOfIterations = 0; let rank = 1;
         while (poulePlaces.length > 0) {
             const bestPoulePlaces = this.getBestPoulePlaces(poulePlaces, games, false);
             bestPoulePlaces.forEach(bestPoulePlace => {
-                items.push(new RankingItem(++nrOfIterations, bestPoulePlace));
+                items.push(new RankingItem(++nrOfIterations, rank, bestPoulePlace));
                 const index = poulePlaces.indexOf(bestPoulePlace);
                 if (index > -1) {
                     poulePlaces.splice(index, 1);
                 }
             });
+            rank++;            
             if (nrOfIterations > this.maxPoulePlaces) {
                 break;
             }
         }
         return items;
     }
+    
+    getItemsForMultipleRule(multipleRule: QualifyRule): RankingItem[] {
+        const selectedPoulePlaces: PoulePlace[] = this.getSingleRankedPoulePlaces(multipleRule.getFromPoulePlaces());
+        return this.getItems(selectedPoulePlaces, multipleRule.getFromRound().getGames());
+    }
 
-    getItemsForRound(round: Round, fromPoulePlaces: PoulePlace[]): RankingItem[] {
-        const selectedPoulePlaces: PoulePlace[] = this.getSingleRankedPoulePlaces(fromPoulePlaces);
-        return this.getItems(selectedPoulePlaces, round.getGames());
+    getEqualItems(rankingItems: RankingItem[]): RankingItem[][] {
+        const equalItems = [];
+        const maxRank = rankingItems[rankingItems.length-1].getRankExt();
+        for( let rank = 1 ; rank <= maxRank ; rank++ ) {
+            const equalItemsTmp = rankingItems.filter( item => item.getRankExt() === rank );
+            if( equalItemsTmp.length > 1 ) {
+                equalItems.push(equalItemsTmp);
+            }
+        }
+        return equalItems;
     }
 
     getPoulePlaces(rankingItems: RankingItem[], winnersLosers: number): PoulePlace[] {

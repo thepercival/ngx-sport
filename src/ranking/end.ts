@@ -27,7 +27,7 @@ export class EndRanking {
         this.getItemsHelper(round.getChildRound(Round.WINNERS), rankingItems);
         const deadPlaces = this.getDeadPlacesFromRound(round);
         deadPlaces.forEach(deadPlace => {
-            rankingItems.push(new RankingItem(rankingItems.length + 1, deadPlace));
+            rankingItems.push(new RankingItem(rankingItems.length + 1, rankingItems.length + 1, deadPlace));
         });
         this.getItemsHelper(round.getChildRound(Round.LOSERS), rankingItems);
         return rankingItems;
@@ -133,22 +133,6 @@ export class EndRanking {
             return round.getPoulePlacesPerNumber(Round.WINNERS);
         }
         return round.getPoulePlacesPerPoule();
-    }
-
-    protected filterDeadPoulePlacesToAdd(toRule: QualifyRule, deadPlacesToAdd: PoulePlace[]) {
-        const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(toRule);
-        this.getQualifiedRankingItems(toRule, rankingItems).forEach(qualRankingItem => {
-            const index = deadPlacesToAdd.indexOf(qualRankingItem.getPoulePlace());
-            if (index > -1) {
-                deadPlacesToAdd.splice(index, 1);
-            }
-        });
-    }
-
-    protected getQualifiedRankingItems(toRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[] {
-        const amount = toRule.getToPoulePlaces().length;
-        const start = (toRule.getWinnersOrLosers() === Round.WINNERS) ? 0 : rankingItems.length - amount;
-        return rankingItems.splice(start, amount);
     }
 
     protected getRankingItemsForMultipleRule(toRule: QualifyRule): RankingItem[] {

@@ -211,14 +211,11 @@ export class QualifyService {
     protected getQualifiers(rule: QualifyRule, qualifyReservationService: QualifyReservationService): INewQualifier[] {
         // bij meerdere fromPoulePlace moet ik bepalen wie de beste is
         const newQualifiers: INewQualifier[] = [];
-        const rankingService = new Ranking(Ranking.RULESSET_WC);
-        const fromRound = rule.getFromRound();
-        const fromPoulePlaces = rule.getFromPoulePlaces();
         const toPoulePlaces = rule.getToPoulePlaces();
         const toWinnersLosers = rule.getToRound().getWinnersOrLosers();
 
         if (!rule.isMultiple()) {
-            fromPoulePlaces.forEach(fromPoulePlace => {
+            rule.getFromPoulePlaces().forEach(fromPoulePlace => {
                 const fromPoule = fromPoulePlace.getPoule();
                 let qualifiedTeam;
                 if (fromPoule.getState() === Game.STATE_PLAYED) {
@@ -231,14 +228,14 @@ export class QualifyService {
         }
 
         // multiple
-        if (fromRound.getState() !== Game.STATE_PLAYED) {
+        if (rule.getFromRound().getState() !== Game.STATE_PLAYED) {
             toPoulePlaces.forEach((toPoulePlace) => {
                 newQualifiers.push({ poulePlace: toPoulePlace, team: undefined });
             });
             return newQualifiers;
         }
-
-        const roundRankingItems: RankingItem[] = rankingService.getItemsForRound(fromRound, fromPoulePlaces);
+        const rankingService = new Ranking(Ranking.RULESSET_WC);
+        const roundRankingItems: RankingItem[] = rankingService.getItemsForMultipleRule(rule);
         const roundRankingPoulePlaces: PoulePlace[] = rankingService.getPoulePlaces(roundRankingItems, toWinnersLosers);
         while (roundRankingPoulePlaces.length > toPoulePlaces.length) {
             roundRankingPoulePlaces.pop();
