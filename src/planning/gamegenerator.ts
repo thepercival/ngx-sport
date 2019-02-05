@@ -8,7 +8,7 @@ export class GameGenerator {
     public constructor(private poule: Poule) {
     }
 
-    public generateBen(): PlanningGameRound[] {
+    /*public generateBen(): PlanningGameRound[] {
         const gameRounds: PlanningGameRound[] = [];
         let gameRound = new PlanningGameRound(1, []); gameRounds.push(gameRound);
         const p = this.poule.getPlaces();
@@ -103,7 +103,7 @@ export class GameGenerator {
 
         p.shift();
         return gameRounds;
-    }
+    }*/
 
     public generate(teamUp: boolean): PlanningGameRound[] {
         const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(this.poule.getPlaces().slice());

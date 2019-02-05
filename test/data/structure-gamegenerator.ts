@@ -25,7 +25,8 @@ export const jsonStructureGameGenerator: JsonStructure = {
                 'maximum': 0
             },
             'teamup': false,
-            'pointsCalculation': 0
+            'pointsCalculation': 0,
+            'selfReferee': false
         }
     },
     'rootRound': {

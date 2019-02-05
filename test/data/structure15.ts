@@ -28,7 +28,8 @@ export const jsonStructure15: JsonStructure = {
                     'maximum': 0
                 },
                 'teamup': false,
-                'pointsCalculation': 0
+                'pointsCalculation': 0,
+                'selfReferee': false
             }
         },
         'config': {
@@ -52,7 +53,8 @@ export const jsonStructure15: JsonStructure = {
                 'maximum': 0
             },
             'teamup': false,
-            'pointsCalculation': 0
+            'pointsCalculation': 0,
+            'selfReferee': false
         }
     },
     'rootRound': {

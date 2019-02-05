@@ -34,7 +34,8 @@ export const jsonStructure163poules: JsonStructure = {
                     'maximum': 30
                 },
                 'teamup': false,
-                'pointsCalculation': 0
+                'pointsCalculation': 0,
+                'selfReferee': false
             }
         },
         'config': {
@@ -64,7 +65,8 @@ export const jsonStructure163poules: JsonStructure = {
                 'maximum': 30
             },
             'teamup': false,
-            'pointsCalculation': 0
+            'pointsCalculation': 0,
+            'selfReferee': false
         }
     },
     'rootRound': {

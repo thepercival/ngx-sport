@@ -31,7 +31,8 @@ export const jsonStructure4rankteamup: JsonStructure = {
                 "maximum": 15
             },
             "teamup": true,
-            "pointsCalculation": 0
+            "pointsCalculation": 0,
+            'selfReferee': false
         }
     },
     "rootRound": {
