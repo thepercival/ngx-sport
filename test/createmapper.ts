@@ -54,7 +54,8 @@ export function getMapper(mapper: string) {
             getMapper('gamepouleplace'),
             getMapper('field'),
             getMapper('referee'),
-            getMapper('gamescore')
+            getMapper('gamescore'),
+            getMapper('pouleplace'),
         );
     } else if (mapper === 'poule') {
         return new PouleMapper(getMapper('pouleplace'), getMapper('game'));
