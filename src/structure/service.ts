@@ -283,7 +283,8 @@ export class StructureService {
 
         const tooMuchChildRoundPlaces = round.getNrOfPlacesChildRounds() > round.getPoulePlaces().length;
         if (recalcQualify === true) {
-            this.recalculateQualifyRulesForRound(round);
+            // do parent, because opposing can be changed too!
+            this.recalculateQualifyRulesForRound(round.getParent());
         }
 
         if (tooMuchChildRoundPlaces) {
