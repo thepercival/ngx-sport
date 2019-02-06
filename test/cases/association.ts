@@ -11,5 +11,4 @@ describe('Assocation', () => {
         expect(uefa.getAncestors().length).to.equal(1);
         expect(fifa.getAncestors().length).to.equal(0);
     });
-
 });
