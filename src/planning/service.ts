@@ -2,11 +2,13 @@ import { Competition } from '../competition';
 import { Field } from '../field';
 import { Game } from '../game';
 import { Poule } from '../poule';
+import { PoulePlace } from '../pouleplace';
 import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { RoundNumberConfig } from '../round/number/config';
 import { GameGenerator } from './gamegenerator';
+import { PlanningReferee } from './referee';
 import { PlanningResourceService } from './resource/service';
 
 export class PlanningService {
@@ -142,7 +144,7 @@ export class PlanningService {
     protected rescheduleHelper(roundNumber: RoundNumber, pStartDateTime: Date): Date {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
         const fields = this.competition.getFields();
-        const referees = this.competition.getReferees();
+        const referees = this.getReferees(roundNumber);
         const nextDateTime = this.assignResourceBatchToGames(roundNumber, roundNumber.getConfig(), dateTime, fields, referees);
         if (nextDateTime !== undefined) {
             nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getConfig().getMinutesAfter());
@@ -150,12 +152,21 @@ export class PlanningService {
         return nextDateTime;
     }
 
+    protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
+        roundNumber
+        if (roundNumber.getConfig().getSelfReferee()) {
+            const places = this.getPlacesForRoundNumber(roundNumber);
+            return places.map(place => new PlanningReferee(undefined, place));
+        }
+        return this.competition.getReferees().map(referee => new PlanningReferee(referee, undefined));
+    }
+
     protected assignResourceBatchToGames(
         roundNumber: RoundNumber,
         roundNumberConfig: RoundNumberConfig,
         dateTime: Date,
         fields: Field[],
-        referees: Referee[]): Date {
+        referees: PlanningReferee[]): Date {
         const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
         const resourceService = new PlanningResourceService(
             dateTime, roundNumberConfig.getMaximalNrOfMinutesPerGame(), roundNumberConfig.getMinutesBetweenGames());
@@ -186,13 +197,21 @@ export class PlanningService {
         return poules;
     }
 
-    getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
+    protected getPlacesForRoundNumber(roundNumber: RoundNumber): PoulePlace[] {
+        let places = [];
+        roundNumber.getRounds().forEach(round => {
+            round.getPoules().forEach(poule => {
+                places = places.concat(poule.getPlaces());
+            });
+        });
+        return places;
+    }
 
+    getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
         const rounds = roundNumber.getRounds().slice();
         if (!roundNumber.isFirst()) {
             rounds.sort((r1, r2) => this.getRoundPathAsNumber(r1) - this.getRoundPathAsNumber(r2));
         }
-
         let games = [];
         rounds.forEach(round => {
             const poules = round.getPoules().slice();

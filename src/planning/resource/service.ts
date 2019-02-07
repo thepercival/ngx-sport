@@ -1,16 +1,16 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
 import { PoulePlace } from '../../pouleplace';
-import { Referee } from '../../referee';
+import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
 
 export class PlanningResourceService {
     private poulePlaces: PoulePlace[] = [];
     private fields: Field[] = [];
-    private referees: Referee[] = [];
+    private referees: PlanningReferee[] = [];
     private assignableFields: Field[] = [];
     private areFieldsAssignable: boolean;
-    private assignableReferees: Referee[] = [];
+    private assignableReferees: PlanningReferee[] = [];
     private areRefereesAssignable: boolean;
     private resourceBatch = 0;
     private blockedPeriod;
@@ -32,7 +32,13 @@ export class PlanningResourceService {
         this.fillAssignableFields();
     }
 
-    setReferees(referees: Referee[]) {
+    /*setSelfReferees(poulePlaceReferees: PoulePlace[]) {
+        this.referees = referees;
+        this.areRefereesAssignable = referees.length > 0;
+        this.fillAssignableReferees();
+    }*/
+
+    setReferees(referees: PlanningReferee[]) {
         this.referees = referees;
         this.areRefereesAssignable = referees.length > 0;
         this.fillAssignableReferees();
@@ -103,7 +109,7 @@ export class PlanningResourceService {
             game.setField(this.assignableFields.shift());
         }
         if (this.areRefereesAssignable) {
-            game.setReferee(this.assignableReferees.shift());
+            this.assignableReferees.shift().assign(game);
         }
         this.addPoulePlaces(game);
 
