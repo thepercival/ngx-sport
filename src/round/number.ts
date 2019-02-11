@@ -1,7 +1,10 @@
 import { Competition } from '../competition';
+import { Game } from '../game';
+import { Poule } from '../poule';
+import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 import { RoundNumberConfig } from '../round/number/config';
-import { Game } from '../game';
+
 
 export class RoundNumber {
     protected competition: Competition;
@@ -73,6 +76,22 @@ export class RoundNumber {
 
     getRounds() {
         return this.rounds;
+    }
+
+    getPoules(): Poule[] {
+        let poules: Poule[] = [];
+        this.getRounds().forEach(round => {
+            poules = poules.concat(round.getPoules());
+        });
+        return poules;
+    }
+
+    getPlaces(): PoulePlace[] {
+        let places = [];
+        this.getPoules().forEach(poule => {
+            places = places.concat(poule.getPlaces());
+        });
+        return places;
     }
 
     getARound(): Round {

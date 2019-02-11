@@ -38,6 +38,9 @@ export class RoundNumberConfigScore {
     }
 
     getNameSingle(): string {
+        if (this.getName().endsWith('en')) {
+            return this.getName().substring(0, this.getName().length - 2);
+        }
         return this.getName().substring(0, this.getName().length - 1);
     }
 

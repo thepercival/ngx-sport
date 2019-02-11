@@ -2,7 +2,6 @@ import { Competition } from '../competition';
 import { Field } from '../field';
 import { Game } from '../game';
 import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
 import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
@@ -120,7 +119,7 @@ export class PlanningService {
 
     protected createHelper(roundNumber: RoundNumber) {
         const roundNumberConfig = roundNumber.getConfig();
-        this.getPoulesForRoundNumber(roundNumber).forEach((poule) => {
+        roundNumber.getPoules().forEach((poule) => {
             const generator = new GameGenerator(poule);
             const gameRounds = generator.generate(roundNumberConfig.getTeamup());
             // if (poule.getPlaces().length === 8) {
@@ -155,7 +154,7 @@ export class PlanningService {
     protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
         roundNumber
         if (roundNumber.getConfig().getSelfReferee()) {
-            const places = this.getPlacesForRoundNumber(roundNumber);
+            const places = roundNumber.getPlaces();
             return places.map(place => new PlanningReferee(undefined, place));
         }
         return this.competition.getReferees().map(referee => new PlanningReferee(referee, undefined));
@@ -187,24 +186,6 @@ export class PlanningService {
             gamesToProcess.splice(index, 1);
         }
         return resourceService.getEndDateTime();
-    }
-
-    protected getPoulesForRoundNumber(roundNumber: RoundNumber): Poule[] {
-        let poules: Poule[] = [];
-        roundNumber.getRounds().forEach(round => {
-            poules = poules.concat(round.getPoules());
-        });
-        return poules;
-    }
-
-    protected getPlacesForRoundNumber(roundNumber: RoundNumber): PoulePlace[] {
-        let places = [];
-        roundNumber.getRounds().forEach(round => {
-            round.getPoules().forEach(poule => {
-                places = places.concat(poule.getPlaces());
-            });
-        });
-        return places;
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
