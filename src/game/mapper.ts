@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { FieldMapper, JsonField } from '../field/mapper';
+import { FieldMapper } from '../field/mapper';
 import { Game } from '../game';
 import { GamePoulePlaceMapper, JsonGamePoulePlace } from '../game/pouleplace/mapper';
 import { Poule } from '../poule';
-import { JsonPoulePlace, PoulePlaceMapper } from '../pouleplace/mapper';
-import { JsonReferee, RefereeMapper } from '../referee/mapper';
+import { PoulePlaceMapper } from '../pouleplace/mapper';
+import { RefereeMapper } from '../referee/mapper';
 import { GameScoreMapper, JsonGameScore } from './score/mapper';
 
 @Injectable()
@@ -27,10 +27,10 @@ export class GameMapper {
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         game.setScoresMoment(json.scoresMoment);
-        game.setField(json.field !== undefined ? poule.getCompetition().getFieldByNumber(json.field.number) : undefined);
-        game.setReferee(json.referee !== undefined ? poule.getCompetition().getRefereeById(json.referee.id) : undefined);
-        if (json.poulePlaceReferee !== undefined) {
-            const poulePlaceReferee = poule.getPlaces().find(pouleplaceIt => json.poulePlaceReferee.number === pouleplaceIt.getNumber());
+        game.setField(json.fieldNr !== undefined ? poule.getCompetition().getField(json.fieldNr) : undefined);
+        game.setReferee(json.refereeInitials !== undefined ? poule.getCompetition().getReferee(json.refereeInitials) : undefined);
+        if (json.refereePoulePlaceNr !== undefined) {
+            const poulePlaceReferee = poule.getPlaces().find(pouleplaceIt => json.refereePoulePlaceNr === pouleplaceIt.getNumber());
             game.setPoulePlaceReferee(poulePlaceReferee);
         }
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
@@ -59,10 +59,10 @@ export class GameMapper {
             roundNumber: game.getRoundNumber(),
             subNumber: game.getSubNumber(),
             resourceBatch: game.getResourceBatch(),
-            field: game.getField() ? this.fieldMapper.toJson(game.getField()) : undefined,
+            fieldNr: game.getField() ? game.getField().getNumber() : undefined,
             state: game.getState(),
-            referee: game.getReferee() ? this.refereeMapper.toJson(game.getReferee()) : undefined,
-            poulePlaceReferee: game.getPoulePlaceReferee() ? this.poulePlaceMapper.toJson(game.getPoulePlaceReferee()) : undefined,
+            refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
+            refereePoulePlaceNr: game.getPoulePlaceReferee() ? game.getPoulePlaceReferee().getNumber() : undefined,
             startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
             scoresMoment: game.getScoresMoment(),
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
@@ -76,11 +76,11 @@ export interface JsonGame {
     roundNumber: number;
     subNumber: number;
     resourceBatch: number;
-    field?: JsonField;
+    fieldNr: number;
     state: number;
     startDateTime?: string;
-    referee?: JsonReferee;
-    poulePlaceReferee?: JsonPoulePlace;
+    refereeInitials?: string;
+    refereePoulePlaceNr?: number;
     scoresMoment?: number;
     scores?: JsonGameScore[];
 }

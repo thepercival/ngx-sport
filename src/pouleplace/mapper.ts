@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
+import { CompetitorMapper, JsonCompetitor } from '../competitor/mapper';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { JsonTeam, TeamMapper } from '../team/mapper';
 
 @Injectable()
 export class PoulePlaceMapper {
-    constructor(private teamMapper: TeamMapper) {
+    constructor(private competitorMapper: CompetitorMapper) {
     }
 
     toObject(json: JsonPoulePlace, poule: Poule, poulePlace?: PoulePlace): PoulePlace {
@@ -15,11 +15,11 @@ export class PoulePlaceMapper {
         }
         poulePlace.setId(json.id);
         // poule.setName(json.name);
-        let team;
-        if (json.team) {
-            team = this.teamMapper.toObject(json.team, poule.getCompetition().getLeague().getAssociation());
+        let competitor;
+        if (json.competitor) {
+            competitor = this.competitorMapper.toObject(json.competitor, poule.getCompetition().getLeague().getAssociation());
         }
-        poulePlace.setTeam(team);
+        poulePlace.setCompetitor(competitor);
         poulePlace.setPenaltyPoints(json.penaltyPoints);
         return poulePlace;
     }
@@ -29,7 +29,7 @@ export class PoulePlaceMapper {
             id: poulePlace.getId(),
             number: poulePlace.getNumber(),
             name: poulePlace.getName(),
-            team: poulePlace.getTeam() ? this.teamMapper.toJson(poulePlace.getTeam()) : undefined,
+            competitor: poulePlace.getCompetitor() ? this.competitorMapper.toJson(poulePlace.getCompetitor()) : undefined,
             penaltyPoints: poulePlace.getPenaltyPoints()
         };
     }
@@ -39,6 +39,6 @@ export interface JsonPoulePlace {
     id?: number;
     number: number;
     name?: string;
-    team?: JsonTeam;
+    competitor?: JsonCompetitor;
     penaltyPoints: number;
 }

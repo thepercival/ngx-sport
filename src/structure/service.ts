@@ -416,22 +416,18 @@ export class StructureService {
         }
     }
 
-    getDefaultRoundStructure(roundNr, nrOfTeams): IRoundStructure {
-        if (nrOfTeams < 1) {
+    getDefaultRoundStructure(roundNr, nrOfPlaces): IRoundStructure {
+        if (nrOfPlaces < 1) {
             return undefined;
-        } else if (nrOfTeams === 1) {
+        } else if (nrOfPlaces === 1) {
             return { nrofpoules: 1, nrofwinners: 0 };
         }
-        if (roundNr > 1 && (nrOfTeams % 2) === 0) {
-            return { nrofpoules: nrOfTeams / 2, nrofwinners: nrOfTeams / 2 };
+        if (roundNr > 1 && (nrOfPlaces % 2) === 0) {
+            return { nrofpoules: nrOfPlaces / 2, nrofwinners: nrOfPlaces / 2 };
         }
-        // if (nrOfTeams > 32) {
-        //     const nrOfPoules = ((nrOfTeams % 5) === 0 ? nrOfTeams : (nrOfTeams + 5 - (nrOfTeams % 5))) / 5;
-        //     return { nrofpoules: nrOfPoules, nrofwinners: nrOfPoules };
-        // }
-        const roundStructure = StructureService.DEFAULTS[nrOfTeams];
+        const roundStructure = StructureService.DEFAULTS[nrOfPlaces];
         if (roundStructure === undefined) {
-            throw new Error('het aantal teams moet minimaal ' + (this.competitorRange.min - 1) +
+            throw new Error('het aantal deelnemers moet minimaal ' + (this.competitorRange.min - 1) +
                 ' zijn en mag maximaal ' + this.competitorRange.max + ' zijn');
         }
         return roundStructure;

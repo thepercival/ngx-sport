@@ -59,9 +59,9 @@ export class NameService {
         return pouleName;
     }
 
-    getPoulePlaceFromName(pouleplace: PoulePlace, teamName = false, longName = false) {
-        if (teamName === true && pouleplace.getTeam() !== undefined) {
-            return pouleplace.getTeam().getName();
+    getPoulePlaceFromName(pouleplace: PoulePlace, competitorName = false, longName = false) {
+        if (competitorName === true && pouleplace.getCompetitor() !== undefined) {
+            return pouleplace.getCompetitor().getName();
         }
         const fromQualifyRule = pouleplace.getFromQualifyRule();
         if (fromQualifyRule === undefined) { // first round
@@ -105,13 +105,13 @@ export class NameService {
         return poulePlaces[poulePlaces.length - 1].getNumber();
     }
 
-    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], teamName = false, longName = false) {
-        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), teamName, longName)).join(' & ');
+    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false) {
+        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
     }
 
-    getPoulePlaceName(poulePlace: PoulePlace, teamName = false, longName = false) {
-        if (teamName === true && poulePlace.getTeam() !== undefined) {
-            return poulePlace.getTeam().getName();
+    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false) {
+        if (competitorName === true && poulePlace.getCompetitor() !== undefined) {
+            return poulePlace.getCompetitor().getName();
         }
         if (longName === true) {
             return this.getPouleName(poulePlace.getPoule(), true) + ' nr. ' + poulePlace.getNumber();

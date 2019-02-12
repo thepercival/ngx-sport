@@ -69,9 +69,9 @@ export * from './src/structure/repository';
 export * from './src/structure/service';
 export * from './src/structure/mapper';
 export * from './src/nameservice';
-export * from './src/team';
-export * from './src/team/repository';
-export * from './src/team/mapper';
+export * from './src/competitor';
+export * from './src/competitor/repository';
+export * from './src/competitor/mapper';
 
 export * from './src/external/object';
 export * from './src/external/object/repository';

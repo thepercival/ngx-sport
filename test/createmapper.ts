@@ -1,5 +1,6 @@
 import { AssociationMapper } from '../src/association/mapper';
 import { CompetitionMapper } from '../src/competition/mapper';
+import { CompetitorMapper } from '../src/competitor/mapper';
 import { FieldMapper } from '../src/field/mapper';
 import { GameMapper } from '../src/game/mapper';
 import { GamePoulePlaceMapper } from '../src/game/pouleplace/mapper';
@@ -14,7 +15,6 @@ import { RoundNumberConfigScoreMapper } from '../src/round/number/config/score/m
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
-import { TeamMapper } from '../src/team/mapper';
 
 
 export function getMapper(mapper: string) {
@@ -41,12 +41,12 @@ export function getMapper(mapper: string) {
         return new RoundNumberConfigMapper(getMapper('roundconfigscore'));
     } else if (mapper === 'roundnumber') {
         return new RoundNumberMapper(getMapper('roundconfig'));
-    } else if (mapper === 'team') {
-        return new TeamMapper();
+    } else if (mapper === 'competitor') {
+        return new CompetitorMapper();
     } else if (mapper === 'pouleplace') {
-        return new PoulePlaceMapper(getMapper('team'));
+        return new PoulePlaceMapper(getMapper('competitor'));
     } else if (mapper === 'gamepouleplace') {
-        return new GamePoulePlaceMapper(getMapper('pouleplace'));
+        return new GamePoulePlaceMapper();
     } else if (mapper === 'gamescore') {
         return new GameScoreMapper();
     } else if (mapper === 'game') {

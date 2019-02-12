@@ -1,6 +1,6 @@
 import { Association } from './association';
 
-export class Team {
+export class Competitor {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
@@ -65,6 +65,6 @@ export class Team {
 
     protected setAssociation(association: Association): void {
         this.association = association;
-        this.association.getTeams().push(this);
+        this.association.getCompetitors().push(this);
     }
 }

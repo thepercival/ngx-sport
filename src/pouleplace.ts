@@ -1,7 +1,7 @@
+import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
 import { QualifyRule } from './qualify/rule';
-import { Team } from './team';
 
 export class PoulePlace {
     protected id: number;
@@ -9,7 +9,7 @@ export class PoulePlace {
     protected number: number;
     protected penaltyPoints = 0;
     protected name: string;
-    protected team: Team;
+    protected competitor: Competitor;
     protected fromQualifyRule: QualifyRule;
     protected toQualifyRules: QualifyRule[] = [];
 
@@ -53,12 +53,12 @@ export class PoulePlace {
         this.name = name;
     }
 
-    getTeam(): Team {
-        return this.team;
+    getCompetitor(): Competitor {
+        return this.competitor;
     }
 
-    setTeam(team: Team): void {
-        this.team = team;
+    setCompetitor(competitor: Competitor): void {
+        this.competitor = competitor;
     }
 
     getPenaltyPoints(): number {

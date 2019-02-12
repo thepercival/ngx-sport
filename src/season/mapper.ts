@@ -1,11 +1,11 @@
-import { Team } from '../team';
-import { Season } from '../season';
-import { SportCache } from '../cache';
 import { Injectable } from '@angular/core';
+
+import { SportCache } from '../cache';
+import { Season } from '../season';
 
 @Injectable()
 export class SeasonMapper {
-    constructor() {}
+    constructor() { }
 
     toObject(json: JsonSeason, season?: Season): Season {
         if (season === undefined && json.id !== undefined) {

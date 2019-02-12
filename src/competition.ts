@@ -79,7 +79,7 @@ export class Competition {
         return this.fields;
     }
 
-    getFieldByNumber(number: number): Field {
+    getField(number: number): Field {
         return this.fields.find(fieldIt => number === fieldIt.getNumber());
     }
 
@@ -94,8 +94,8 @@ export class Competition {
         return this.referees;
     }
 
-    getRefereeById(id: number): Referee {
-        return this.referees.find(refereeIt => id === refereeIt.getId());
+    getReferee(initials: string): Referee {
+        return this.referees.find(refereeIt => initials === refereeIt.getInitials());
     }
 
     removeReferee(referee: Referee) {

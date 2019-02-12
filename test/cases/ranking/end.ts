@@ -17,15 +17,15 @@ describe('Ranking/End', () => {
 
         const endRanking = new EndRanking();
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getTeam().getName()).to.equal('jil');
-        expect(items[1].getPoulePlace().getTeam().getName()).to.equal('max');
-        expect(items[2].getPoulePlace().getTeam().getName()).to.equal('zed');
-        expect(items[3].getPoulePlace().getTeam().getName()).to.equal('jip');
-        expect(items[4].getPoulePlace().getTeam().getName()).to.equal('jan');
-        expect(items[5].getPoulePlace().getTeam().getName()).to.equal('jos');
-        expect(items[6].getPoulePlace().getTeam().getName()).to.equal('wim');
-        expect(items[7].getPoulePlace().getTeam().getName()).to.equal('cor');
-        expect(items[8].getPoulePlace().getTeam().getName()).to.equal('pim');
+        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('jil');
+        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('max');
+        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('zed');
+        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('jip');
+        expect(items[4].getPoulePlace().getCompetitor().getName()).to.equal('jan');
+        expect(items[5].getPoulePlace().getCompetitor().getName()).to.equal('jos');
+        expect(items[6].getPoulePlace().getCompetitor().getName()).to.equal('wim');
+        expect(items[7].getPoulePlace().getCompetitor().getName()).to.equal('cor');
+        expect(items[8].getPoulePlace().getCompetitor().getName()).to.equal('pim');
     });
 
     it('structure16rank', () => {
@@ -37,22 +37,22 @@ describe('Ranking/End', () => {
 
         const endRanking = new EndRanking();
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getTeam().getName()).to.equal('tiem');
-        expect(items[1].getPoulePlace().getTeam().getName()).to.equal('kira');
-        expect(items[2].getPoulePlace().getTeam().getName()).to.equal('luuk');
-        expect(items[3].getPoulePlace().getTeam().getName()).to.equal('bart');
-        expect(items[4].getPoulePlace().getTeam().getName()).to.equal('mira');
-        expect(items[5].getPoulePlace().getTeam().getName()).to.equal('huub');
-        expect(items[6].getPoulePlace().getTeam().getName()).to.equal('nova');
-        expect(items[7].getPoulePlace().getTeam().getName()).to.equal('mats');
-        expect(items[8].getPoulePlace().getTeam().getName()).to.equal('bram');
-        expect(items[9].getPoulePlace().getTeam().getName()).to.equal('stan');
-        expect(items[10].getPoulePlace().getTeam().getName()).to.equal('maan');
-        expect(items[11].getPoulePlace().getTeam().getName()).to.equal('mila');
-        expect(items[12].getPoulePlace().getTeam().getName()).to.equal('noud');
-        expect(items[13].getPoulePlace().getTeam().getName()).to.equal('mart');
-        expect(items[14].getPoulePlace().getTeam().getName()).to.equal('fred');
-        expect(items[15].getPoulePlace().getTeam().getName()).to.equal('toon');
+        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('tiem');
+        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('kira');
+        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('luuk');
+        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('bart');
+        expect(items[4].getPoulePlace().getCompetitor().getName()).to.equal('mira');
+        expect(items[5].getPoulePlace().getCompetitor().getName()).to.equal('huub');
+        expect(items[6].getPoulePlace().getCompetitor().getName()).to.equal('nova');
+        expect(items[7].getPoulePlace().getCompetitor().getName()).to.equal('mats');
+        expect(items[8].getPoulePlace().getCompetitor().getName()).to.equal('bram');
+        expect(items[9].getPoulePlace().getCompetitor().getName()).to.equal('stan');
+        expect(items[10].getPoulePlace().getCompetitor().getName()).to.equal('maan');
+        expect(items[11].getPoulePlace().getCompetitor().getName()).to.equal('mila');
+        expect(items[12].getPoulePlace().getCompetitor().getName()).to.equal('noud');
+        expect(items[13].getPoulePlace().getCompetitor().getName()).to.equal('mart');
+        expect(items[14].getPoulePlace().getCompetitor().getName()).to.equal('fred');
+        expect(items[15].getPoulePlace().getCompetitor().getName()).to.equal('toon');
     });
 
     it('structure4rankteamup', () => {
@@ -64,9 +64,9 @@ describe('Ranking/End', () => {
 
         const endRanking = new EndRanking();
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getTeam().getName()).to.equal('rank1');
-        expect(items[1].getPoulePlace().getTeam().getName()).to.equal('rank2');
-        expect(items[2].getPoulePlace().getTeam().getName()).to.equal('rank3');
-        expect(items[3].getPoulePlace().getTeam().getName()).to.equal('rank4');
+        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('rank1');
+        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('rank2');
+        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('rank3');
+        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('rank4');
     });
 });

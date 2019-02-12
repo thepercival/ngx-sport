@@ -514,7 +514,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21755,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4515,
                             'name': 'De Milka\u2019s'
                         }
@@ -523,7 +523,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21756,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4550,
                             'name': 'Klein Duimpje'
                         }
@@ -532,7 +532,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21757,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4516,
                             'name': 'Let\'s Play'
                         }
@@ -541,7 +541,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21758,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4551,
                             'name': 'Smashing Elven 1'
                         }
@@ -550,7 +550,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21759,
                         'number': 5,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4554,
                             'name': 'Lilian Dopp'
                         }
@@ -573,7 +573,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4515,
                                         'name': 'De Milka\u2019s'
                                     }
@@ -612,7 +612,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'Klein Duimpje'
                                     }
@@ -623,7 +623,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'Lilian Dopp'
                                     }
@@ -655,7 +655,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4516,
                                         'name': 'Let\'s Play'
                                     }
@@ -666,7 +666,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'Smashing Elven 1'
                                     }
@@ -698,7 +698,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4515,
                                         'name': 'De Milka\u2019s'
                                     }
@@ -709,7 +709,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'Klein Duimpje'
                                     }
@@ -741,7 +741,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4516,
                                         'name': 'Let\'s Play'
                                     }
@@ -780,7 +780,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'Smashing Elven 1'
                                     }
@@ -791,7 +791,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'Lilian Dopp'
                                     }
@@ -823,7 +823,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4516,
                                         'name': 'Let\'s Play'
                                     }
@@ -834,7 +834,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4515,
                                         'name': 'De Milka\u2019s'
                                     }
@@ -874,7 +874,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'Smashing Elven 1'
                                     }
@@ -885,7 +885,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'Klein Duimpje'
                                     }
@@ -917,7 +917,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'Lilian Dopp'
                                     }
@@ -956,7 +956,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4515,
                                         'name': 'De Milka\u2019s'
                                     }
@@ -967,7 +967,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'Smashing Elven 1'
                                     }
@@ -999,7 +999,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'Lilian Dopp'
                                     }
@@ -1010,7 +1010,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4516,
                                         'name': 'Let\'s Play'
                                     }
@@ -1049,7 +1049,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'Klein Duimpje'
                                     }
@@ -1081,7 +1081,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'Lilian Dopp'
                                     }
@@ -1092,7 +1092,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4515,
                                         'name': 'De Milka\u2019s'
                                     }
@@ -1131,7 +1131,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'Smashing Elven 1'
                                     }
@@ -1163,7 +1163,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'Klein Duimpje'
                                     }
@@ -1174,7 +1174,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4516,
                                         'name': 'Let\'s Play'
                                     }
@@ -1205,7 +1205,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21760,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4557,
                             'name': 'West!ern'
                         }
@@ -1214,7 +1214,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21761,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4556,
                             'name': 'Recredo'
                         }
@@ -1223,7 +1223,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21762,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4552,
                             'name': 'Smashing Elven 2'
                         }
@@ -1232,7 +1232,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21763,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4558,
                             'name': 'Set Up 2019'
                         }
@@ -1241,7 +1241,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21764,
                         'number': 5,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4514,
                             'name': 'Willem I'
                         }
@@ -1259,7 +1259,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'Recredo'
                                     }
@@ -1270,7 +1270,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4514,
                                         'name': 'Willem I'
                                     }
@@ -1302,7 +1302,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'Smashing Elven 2'
                                     }
@@ -1313,7 +1313,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4558,
                                         'name': 'Set Up 2019'
                                     }
@@ -1345,7 +1345,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4557,
                                         'name': 'West!ern'
                                     }
@@ -1356,7 +1356,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'Recredo'
                                     }
@@ -1388,7 +1388,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4558,
                                         'name': 'Set Up 2019'
                                     }
@@ -1399,7 +1399,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4514,
                                         'name': 'Willem I'
                                     }
@@ -1431,7 +1431,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'Smashing Elven 2'
                                     }
@@ -1442,7 +1442,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4557,
                                         'name': 'West!ern'
                                     }
@@ -1474,7 +1474,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4558,
                                         'name': 'Set Up 2019'
                                     }
@@ -1485,7 +1485,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'Recredo'
                                     }
@@ -1517,7 +1517,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4557,
                                         'name': 'West!ern'
                                     }
@@ -1529,7 +1529,7 @@ export const jsonStructure163poules: JsonStructure = {
                                     'id': 21763,
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4558,
                                         'name': 'Set Up 2019'
                                     }
@@ -1561,7 +1561,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4514,
                                         'name': 'Willem I'
                                     }
@@ -1572,7 +1572,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'Smashing Elven 2'
                                     }
@@ -1604,7 +1604,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4514,
                                         'name': 'Willem I'
                                     }
@@ -1615,7 +1615,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4557,
                                         'name': 'West!ern'
                                     }
@@ -1647,7 +1647,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'Recredo'
                                     }
@@ -1658,7 +1658,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'Smashing Elven 2'
                                     }
@@ -1689,7 +1689,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21765,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4555,
                             'name': 'VOLO'
                         }
@@ -1698,7 +1698,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21766,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4553,
                             'name': 'VCH Mala'
                         }
@@ -1707,7 +1707,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21767,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4512,
                             'name': 'It Giet Oan'
                         }
@@ -1716,7 +1716,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21768,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4513,
                             'name': 'Willem II'
                         }
@@ -1725,7 +1725,7 @@ export const jsonStructure163poules: JsonStructure = {
                         'id': 21769,
                         'number': 5,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4559,
                             'name': 'De Oranje Bitters'
                         }
@@ -1743,7 +1743,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'VCH Mala'
                                     }
@@ -1754,7 +1754,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4559,
                                         'name': 'De Oranje Bitters'
                                     }
@@ -1786,7 +1786,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4512,
                                         'name': 'It Giet Oan'
                                     }
@@ -1797,7 +1797,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4513,
                                         'name': 'Willem II'
                                     }
@@ -1829,7 +1829,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'VOLO'
                                     }
@@ -1840,7 +1840,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'VCH Mala'
                                     }
@@ -1872,7 +1872,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4513,
                                         'name': 'Willem II'
                                     }
@@ -1883,7 +1883,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4559,
                                         'name': 'De Oranje Bitters'
                                     }
@@ -1915,7 +1915,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4512,
                                         'name': 'It Giet Oan'
                                     }
@@ -1926,7 +1926,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'VOLO'
                                     }
@@ -1958,7 +1958,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4513,
                                         'name': 'Willem II'
                                     }
@@ -1969,7 +1969,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'VCH Mala'
                                     }
@@ -2001,7 +2001,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'VOLO'
                                     }
@@ -2012,7 +2012,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4513,
                                         'name': 'Willem II'
                                     }
@@ -2044,7 +2044,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4559,
                                         'name': 'De Oranje Bitters'
                                     }
@@ -2055,7 +2055,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4512,
                                         'name': 'It Giet Oan'
                                     }
@@ -2087,7 +2087,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 5,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4559,
                                         'name': 'De Oranje Bitters'
                                     }
@@ -2098,7 +2098,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'VOLO'
                                     }
@@ -2130,7 +2130,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'VCH Mala'
                                     }
@@ -2141,7 +2141,7 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4512,
                                         'name': 'It Giet Oan'
                                     }

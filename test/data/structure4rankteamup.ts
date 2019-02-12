@@ -47,7 +47,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "id": 29105,
                         "number": 1,
                         "penaltyPoints": 0,
-                        "team": {
+                        'competitor': {
                             "id": 5882,
                             "name": "rank4"
                         }
@@ -56,7 +56,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "id": 29106,
                         "number": 2,
                         "penaltyPoints": 0,
-                        "team": {
+                        'competitor': {
                             "id": 5884,
                             "name": "rank3"
                         }
@@ -65,7 +65,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "id": 29107,
                         "number": 3,
                         "penaltyPoints": 0,
-                        "team": {
+                        'competitor': {
                             "id": 5883,
                             "name": "rank2"
                         }
@@ -74,7 +74,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "id": 29108,
                         "number": 4,
                         "penaltyPoints": 0,
-                        "team": {
+                        'competitor': {
                             "id": 5885,
                             "name": "rank1"
                         }
@@ -87,11 +87,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 1,
                         "startDateTime": "2019-02-02T19:00:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -104,54 +100,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68687,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": true
                             },
                             {
                                 "id": 68689,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": false
                             },
                             {
                                 "id": 68690,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": false
                             },
                             {
                                 "id": 68688,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": true
                             }
                         ],
@@ -163,11 +127,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 2,
                         "startDateTime": "2019-02-02T19:25:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -180,54 +140,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68691,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": true
                             },
                             {
                                 "id": 68692,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": true
                             },
                             {
                                 "id": 68693,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": false
                             },
                             {
                                 "id": 68694,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": false
                             }
                         ],
@@ -239,11 +167,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 3,
                         "startDateTime": "2019-02-02T19:50:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -256,54 +180,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68695,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": true
                             },
                             {
                                 "id": 68697,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": false
                             },
                             {
                                 "id": 68696,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": true
                             },
                             {
                                 "id": 68698,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": false
                             }
                         ],
@@ -315,11 +207,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 4,
                         "startDateTime": "2019-02-02T20:15:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -332,54 +220,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68700,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": false
                             },
                             {
                                 "id": 68702,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": true
                             },
                             {
                                 "id": 68701,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": true
                             },
                             {
                                 "id": 68699,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": false
                             }
                         ],
@@ -391,11 +247,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 5,
                         "startDateTime": "2019-02-02T20:40:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -408,54 +260,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68704,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": false
                             },
                             {
                                 "id": 68703,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": false
                             },
                             {
                                 "id": 68706,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": true
                             },
                             {
                                 "id": 68705,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": true
                             }
                         ],
@@ -467,11 +287,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "subNumber": 1,
                         "resourceBatch": 6,
                         "startDateTime": "2019-02-02T21:05:00.000000Z",
-                        "field": {
-                            "id": 3127,
-                            "name": "1",
-                            "number": 1
-                        },
+                        "fieldNr": 1,
                         "state": 4,
                         "scores": [
                             {
@@ -484,54 +300,22 @@ export const jsonStructure4rankteamup: JsonStructure = {
                         "poulePlaces": [
                             {
                                 "id": 68708,
-                                "poulePlace": {
-                                    "id": 29105,
-                                    "number": 1,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5882,
-                                        "name": "rank4"
-                                    }
-                                },
+                                "poulePlaceNr": 1,
                                 "homeaway": false
                             },
                             {
                                 "id": 68710,
-                                "poulePlace": {
-                                    "id": 29106,
-                                    "number": 2,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5884,
-                                        "name": "rank3"
-                                    }
-                                },
+                                "poulePlaceNr": 2,
                                 "homeaway": true
                             },
                             {
                                 "id": 68707,
-                                "poulePlace": {
-                                    "id": 29107,
-                                    "number": 3,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5883,
-                                        "name": "rank2"
-                                    }
-                                },
+                                "poulePlaceNr": 3,
                                 "homeaway": false
                             },
                             {
                                 "id": 68709,
-                                "poulePlace": {
-                                    "id": 29108,
-                                    "number": 4,
-                                    "penaltyPoints": 0,
-                                    "team": {
-                                        "id": 5885,
-                                        "name": "rank1"
-                                    }
-                                },
+                                "poulePlaceNr": 4,
                                 "homeaway": true
                             }
                         ],

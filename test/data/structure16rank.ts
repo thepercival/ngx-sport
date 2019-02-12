@@ -107,7 +107,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21785,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4542,
                                             'name': 'tiem'
                                         }
@@ -116,7 +116,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21786,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4554,
                                             'name': 'kira'
                                         }
@@ -134,7 +134,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4542,
                                                         'name': 'tiem'
                                                     }
@@ -145,7 +145,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4554,
                                                         'name': 'kira'
                                                     }
@@ -179,7 +179,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21787,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4546,
                                             'name': 'bart'
                                         }
@@ -188,7 +188,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21788,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4549,
                                             'name': 'luuk'
                                         }
@@ -206,7 +206,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4546,
                                                         'name': 'bart'
                                                     }
@@ -218,7 +218,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                     'id': 21788,
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4549,
                                                         'name': 'luuk'
                                                     }
@@ -260,7 +260,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21789,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4548,
                                             'name': 'huub'
                                         }
@@ -269,7 +269,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21790,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4553,
                                             'name': 'mira'
                                         }
@@ -287,7 +287,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4548,
                                                         'name': 'huub'
                                                     }
@@ -299,7 +299,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                     'id': 21788,
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4553,
                                                         'name': 'mira'
                                                     }
@@ -333,7 +333,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21791,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4544,
                                             'name': 'nova'
                                         }
@@ -342,7 +342,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21792,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4551,
                                             'name': 'mats'
                                         }
@@ -360,7 +360,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4544,
                                                         'name': 'nova'
                                                     }
@@ -372,7 +372,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                     'id': 21788,
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4551,
                                                         'name': 'mats'
                                                     }
@@ -410,7 +410,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21777,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4542,
                                     'name': 'tiem'
                                 }
@@ -419,7 +419,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21778,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4546,
                                     'name': 'bart'
                                 }
@@ -437,7 +437,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4542,
                                                 'name': 'tiem'
                                             }
@@ -449,7 +449,7 @@ export const jsonStructure16rank: JsonStructure = {
                                             'id': 21788,
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4546,
                                                 'name': 'bart'
                                             }
@@ -483,7 +483,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21779,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4549,
                                     'name': 'luuk'
                                 }
@@ -492,7 +492,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21780,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4554,
                                     'name': 'kira'
                                 }
@@ -510,7 +510,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4549,
                                                 'name': 'luuk'
                                             }
@@ -522,7 +522,7 @@ export const jsonStructure16rank: JsonStructure = {
                                             'id': 21788,
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4554,
                                                 'name': 'kira'
                                             }
@@ -556,7 +556,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21781,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4544,
                                     'name': 'nova'
                                 }
@@ -565,7 +565,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21782,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4548,
                                     'name': 'huub'
                                 }
@@ -583,7 +583,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4544,
                                                 'name': 'nova'
                                             }
@@ -595,7 +595,7 @@ export const jsonStructure16rank: JsonStructure = {
                                             'id': 21788,
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4548,
                                                 'name': 'huub'
                                             }
@@ -629,7 +629,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21783,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4551,
                                     'name': 'mats'
                                 }
@@ -638,7 +638,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21784,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4553,
                                     'name': 'mira'
                                 }
@@ -656,7 +656,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4551,
                                                 'name': 'mats'
                                             }
@@ -668,7 +668,7 @@ export const jsonStructure16rank: JsonStructure = {
                                             'id': 21788,
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4553,
                                                 'name': 'mira'
                                             }
@@ -715,7 +715,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21801,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4547,
                                             'name': 'stan'
                                         }
@@ -724,7 +724,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21802,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4556,
                                             'name': 'bram'
                                         }
@@ -742,7 +742,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4547,
                                                         'name': 'stan'
                                                     }
@@ -753,7 +753,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4556,
                                                         'name': 'bram'
                                                     }
@@ -787,7 +787,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21803,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4541,
                                             'name': 'maan'
                                         }
@@ -796,7 +796,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21804,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4552,
                                             'name': 'mila'
                                         }
@@ -814,7 +814,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4541,
                                                         'name': 'maan'
                                                     }
@@ -825,7 +825,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4552,
                                                         'name': 'mila'
                                                     }
@@ -867,7 +867,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21805,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4543,
                                             'name': 'noud'
                                         }
@@ -876,7 +876,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21806,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4550,
                                             'name': 'mart'
                                         }
@@ -894,7 +894,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4543,
                                                         'name': 'noud'
                                                     }
@@ -905,7 +905,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4550,
                                                         'name': 'mart'
                                                     }
@@ -939,7 +939,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21807,
                                         'number': 1,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4545,
                                             'name': 'fred'
                                         }
@@ -948,7 +948,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'id': 21808,
                                         'number': 2,
                                         'penaltyPoints': 0,
-                                        'team': {
+                                        'competitor': {
                                             'id': 4555,
                                             'name': 'toon'
                                         }
@@ -966,7 +966,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 1,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4545,
                                                         'name': 'fred'
                                                     }
@@ -977,7 +977,7 @@ export const jsonStructure16rank: JsonStructure = {
                                                 'poulePlace': {
                                                     'number': 2,
                                                     'penaltyPoints': 0,
-                                                    'team': {
+                                                    'competitor': {
                                                         'id': 4555,
                                                         'name': 'toon'
                                                     }
@@ -1015,7 +1015,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21793,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4541,
                                     'name': 'maan'
                                 }
@@ -1024,7 +1024,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21794,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4547,
                                     'name': 'stan'
                                 }
@@ -1042,7 +1042,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4541,
                                                 'name': 'maan'
                                             }
@@ -1053,7 +1053,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4547,
                                                 'name': 'stan'
                                             }
@@ -1087,7 +1087,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21795,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4552,
                                     'name': 'mila'
                                 }
@@ -1096,7 +1096,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21796,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4556,
                                     'name': 'bram'
                                 }
@@ -1114,7 +1114,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4552,
                                                 'name': 'mila'
                                             }
@@ -1125,7 +1125,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4556,
                                                 'name': 'bram'
                                             }
@@ -1159,7 +1159,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21797,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4543,
                                     'name': 'noud'
                                 }
@@ -1168,7 +1168,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21798,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4545,
                                     'name': 'fred'
                                 }
@@ -1186,7 +1186,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4543,
                                                 'name': 'noud'
                                             }
@@ -1197,7 +1197,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4545,
                                                 'name': 'fred'
                                             }
@@ -1231,7 +1231,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21799,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4550,
                                     'name': 'mart'
                                 }
@@ -1240,7 +1240,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'id': 21800,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4555,
                                     'name': 'toon'
                                 }
@@ -1258,7 +1258,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4550,
                                                 'name': 'mart'
                                             }
@@ -1269,7 +1269,7 @@ export const jsonStructure16rank: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4555,
                                                 'name': 'toon'
                                             }
@@ -1307,7 +1307,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21761,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4541,
                             'name': 'maan'
                         }
@@ -1316,7 +1316,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21762,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4542,
                             'name': 'tiem'
                         }
@@ -1325,7 +1325,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21763,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4543,
                             'name': 'noud'
                         }
@@ -1334,7 +1334,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21764,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4544,
                             'name': 'nova'
                         }
@@ -1352,7 +1352,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4541,
                                         'name': 'maan'
                                     }
@@ -1363,7 +1363,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4544,
                                         'name': 'nova'
                                     }
@@ -1398,7 +1398,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4542,
                                         'name': 'tiem'
                                     }
@@ -1409,7 +1409,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4543,
                                         'name': 'noud'
                                     }
@@ -1444,7 +1444,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4541,
                                         'name': 'maan'
                                     }
@@ -1455,7 +1455,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4542,
                                         'name': 'tiem'
                                     }
@@ -1490,7 +1490,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4543,
                                         'name': 'noud'
                                     }
@@ -1501,7 +1501,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4544,
                                         'name': 'nova'
                                     }
@@ -1536,7 +1536,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4543,
                                         'name': 'noud'
                                     }
@@ -1547,7 +1547,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4541,
                                         'name': 'maan'
                                     }
@@ -1582,7 +1582,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4544,
                                         'name': 'nova'
                                     }
@@ -1593,7 +1593,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4542,
                                         'name': 'tiem'
                                     }
@@ -1627,7 +1627,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21765,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4545,
                             'name': 'fred'
                         }
@@ -1636,7 +1636,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21766,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4546,
                             'name': 'bart'
                         }
@@ -1645,7 +1645,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21767,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4547,
                             'name': 'stan'
                         }
@@ -1654,7 +1654,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21768,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4548,
                             'name': 'huub'
                         }
@@ -1672,7 +1672,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4545,
                                         'name': 'fred'
                                     }
@@ -1683,7 +1683,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4548,
                                         'name': 'huub'
                                     }
@@ -1718,7 +1718,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4546,
                                         'name': 'bart'
                                     }
@@ -1729,7 +1729,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4547,
                                         'name': 'stan'
                                     }
@@ -1764,7 +1764,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4545,
                                         'name': 'fred'
                                     }
@@ -1775,7 +1775,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4546,
                                         'name': 'bart'
                                     }
@@ -1810,7 +1810,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4547,
                                         'name': 'stan'
                                     }
@@ -1821,7 +1821,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4548,
                                         'name': 'huub'
                                     }
@@ -1856,7 +1856,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4547,
                                         'name': 'stan'
                                     }
@@ -1867,7 +1867,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4545,
                                         'name': 'fred'
                                     }
@@ -1902,7 +1902,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4548,
                                         'name': 'huub'
                                     }
@@ -1913,7 +1913,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4546,
                                         'name': 'bart'
                                     }
@@ -1947,7 +1947,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21769,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4549,
                             'name': 'luuk'
                         }
@@ -1956,7 +1956,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21770,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4550,
                             'name': 'mart'
                         }
@@ -1965,7 +1965,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21771,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4551,
                             'name': 'mats'
                         }
@@ -1974,7 +1974,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21772,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4552,
                             'name': 'mila'
                         }
@@ -1992,7 +1992,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4549,
                                         'name': 'luuk'
                                     }
@@ -2003,7 +2003,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'mila'
                                     }
@@ -2038,7 +2038,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'mart'
                                     }
@@ -2049,7 +2049,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'mats'
                                     }
@@ -2084,7 +2084,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4549,
                                         'name': 'luuk'
                                     }
@@ -2095,7 +2095,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'mart'
                                     }
@@ -2130,7 +2130,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'mats'
                                     }
@@ -2141,7 +2141,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'mila'
                                     }
@@ -2176,7 +2176,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4551,
                                         'name': 'mats'
                                     }
@@ -2187,7 +2187,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4549,
                                         'name': 'luuk'
                                     }
@@ -2222,7 +2222,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4552,
                                         'name': 'mila'
                                     }
@@ -2233,7 +2233,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4550,
                                         'name': 'mart'
                                     }
@@ -2267,7 +2267,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21773,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4553,
                             'name': 'mira'
                         }
@@ -2276,7 +2276,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21774,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4554,
                             'name': 'kira'
                         }
@@ -2285,7 +2285,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21775,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4555,
                             'name': 'toon'
                         }
@@ -2294,7 +2294,7 @@ export const jsonStructure16rank: JsonStructure = {
                         'id': 21776,
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4556,
                             'name': 'bram'
                         }
@@ -2312,7 +2312,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'mira'
                                     }
@@ -2323,7 +2323,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'bram'
                                     }
@@ -2358,7 +2358,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'kira'
                                     }
@@ -2369,7 +2369,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'toon'
                                     }
@@ -2404,7 +2404,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'mira'
                                     }
@@ -2415,7 +2415,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'kira'
                                     }
@@ -2450,7 +2450,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'toon'
                                     }
@@ -2461,7 +2461,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'bram'
                                     }
@@ -2496,7 +2496,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4555,
                                         'name': 'toon'
                                     }
@@ -2507,7 +2507,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4553,
                                         'name': 'mira'
                                     }
@@ -2542,7 +2542,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 4,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4556,
                                         'name': 'bram'
                                     }
@@ -2553,7 +2553,7 @@ export const jsonStructure16rank: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4554,
                                         'name': 'kira'
                                     }

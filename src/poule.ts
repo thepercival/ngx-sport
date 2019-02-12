@@ -1,8 +1,8 @@
 import { Competition } from './competition';
+import { Competitor } from './competitor';
 import { Game } from './game';
 import { PoulePlace } from './pouleplace';
 import { Round } from './round';
-import { Team } from './team';
 
 export class Poule {
     protected id: number;
@@ -71,15 +71,15 @@ export class Poule {
         return this.getPlaces().find(place => place.getNumber() === number);
     }
 
-    getTeams(): Team[] {
-        const teams: Team[] = [];
+    getCompetitors(): Competitor[] {
+        const competitors: Competitor[] = [];
         for (const pouleplace of this.getPlaces()) {
-            const team = pouleplace.getTeam();
-            if (team !== undefined) {
-                teams.push(team);
+            const competitor = pouleplace.getCompetitor();
+            if (competitor !== undefined) {
+                competitors.push(competitor);
             }
         }
-        return teams;
+        return competitors;
     }
 
     getGames(): Game[] {

@@ -1,5 +1,5 @@
 export class SportCache {
-    static teams = {};
+    static competitors = {};
     static associations = {};
     static seasons = {};
     static leagues = {};

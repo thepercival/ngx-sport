@@ -40,28 +40,28 @@ export const jsonStructureGameGenerator: JsonStructure = {
                     {
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'name': '01'
                         }
                     },
                     {
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'name': '02'
                         }
                     },
                     {
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'name': '03'
                         }
                     },
                     {
                         'number': 4,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'name': '04'
                         }
                     }

@@ -5,6 +5,8 @@ import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
 import { CompetitionMapper } from './competition/mapper';
 import { CompetitionRepository } from './competition/repository';
+import { Competitor } from './competitor';
+import { CompetitorRepository } from './competitor/repository';
 import { SportConfig } from './config';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
@@ -48,8 +50,6 @@ import { SeasonRepository } from './season/repository';
 import { Structure } from './structure';
 import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
-import { Team } from './team';
-import { TeamRepository } from './team/repository';
 
 @NgModule({
     imports: [
@@ -57,7 +57,7 @@ import { TeamRepository } from './team/repository';
         PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository,
         RoundRepository, RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
-        TeamRepository,
+        CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, RoundNumberConfigMapper
@@ -66,13 +66,13 @@ import { TeamRepository } from './team/repository';
         Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace,
         Poule, PoulePlace, QualifyRule, Ranking, RankingItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
-        Season, Team,
+        Season, Competitor,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
         RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService,
-        TeamRepository,
+        CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
         ExternalSystem, ExternalSystemMapper, ExternalSystemRepository, ExternalSystemBetFair

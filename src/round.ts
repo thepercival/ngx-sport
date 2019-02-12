@@ -1,10 +1,10 @@
 import { Competition } from './competition';
+import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { QualifyRule } from './qualify/rule';
 import { RoundNumber } from './round/number';
-import { Team } from './team';
 
 export class Round {
     static readonly WINNERS = 1;
@@ -244,15 +244,12 @@ export class Round {
         return poulePlacesPerNumber;
     }
 
-    getTeams(): Team[] {
-        const teams: Team[] = [];
+    getCompetitors(): Competitor[] {
+        let competitors: Competitor[] = [];
         for (const poule of this.getPoules()) {
-            const pouleTeams = poule.getTeams();
-            for (const pouleTeam of pouleTeams) {
-                teams.push(pouleTeam);
-            }
+            competitors = competitors.concat(poule.getCompetitors());
         }
-        return teams;
+        return competitors;
     }
 
     getGames(): Game[] {
@@ -319,7 +316,7 @@ export class Round {
 
     getNrOfPlaces(): number {
         let nrOfPlaces = 0;
-        this.getPoules().forEach( poule => nrOfPlaces += poule.getPlaces().length );
+        this.getPoules().forEach(poule => nrOfPlaces += poule.getPlaces().length);
         return nrOfPlaces;
     }
 

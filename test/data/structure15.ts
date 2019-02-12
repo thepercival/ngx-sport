@@ -74,7 +74,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23319,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4824,
                                     'name': 'a1'
                                 }
@@ -83,7 +83,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23320,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4836,
                                     'name': 'e1'
                                 }
@@ -101,7 +101,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4824,
                                                 'name': 'a1'
                                             }
@@ -112,7 +112,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4836,
                                                 'name': 'e1'
                                             }
@@ -138,7 +138,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23321,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4827,
                                     'name': 'b1'
                                 }
@@ -147,7 +147,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23322,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4831,
                                     'name': 'c2'
                                 }
@@ -165,7 +165,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4827,
                                                 'name': 'b1'
                                             }
@@ -176,7 +176,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4831,
                                                 'name': 'c2'
                                             }
@@ -202,7 +202,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23323,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4830,
                                     'name': 'c1'
                                 }
@@ -211,7 +211,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23324,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4834,
                                     'name': 'd2'
                                 }
@@ -229,7 +229,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4830,
                                                 'name': 'c1'
                                             }
@@ -240,7 +240,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4834,
                                                 'name': 'd2'
                                             }
@@ -266,7 +266,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23325,
                                 'number': 1,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4833,
                                     'name': 'd1'
                                 }
@@ -275,7 +275,7 @@ export const jsonStructure15: JsonStructure = {
                                 'id': 23326,
                                 'number': 2,
                                 'penaltyPoints': 0,
-                                'team': {
+                                'competitor': {
                                     'id': 4828,
                                     'name': 'b2'
                                 }
@@ -293,7 +293,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 1,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4833,
                                                 'name': 'd1'
                                             }
@@ -304,7 +304,7 @@ export const jsonStructure15: JsonStructure = {
                                         'poulePlace': {
                                             'number': 2,
                                             'penaltyPoints': 0,
-                                            'team': {
+                                            'competitor': {
                                                 'id': 4828,
                                                 'name': 'b2'
                                             }
@@ -334,7 +334,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23304,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4824,
                             'name': 'a1'
                         }
@@ -343,7 +343,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23307,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4825,
                             'name': 'a2'
                         }
@@ -352,7 +352,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23315,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4826,
                             'name': 'a3'
                         }
@@ -370,7 +370,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4825,
                                         'name': 'a2'
                                     }
@@ -381,7 +381,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4826,
                                         'name': 'a3'
                                     }
@@ -416,7 +416,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4824,
                                         'name': 'a1'
                                     }
@@ -427,7 +427,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4825,
                                         'name': 'a2'
                                     }
@@ -462,7 +462,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4826,
                                         'name': 'a3'
                                     }
@@ -473,7 +473,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4824,
                                         'name': 'a1'
                                     }
@@ -507,7 +507,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23308,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4827,
                             'name': 'b1'
                         }
@@ -516,7 +516,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23311,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4828,
                             'name': 'b2'
                         }
@@ -525,7 +525,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23313,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4829,
                             'name': 'b3'
                         }
@@ -543,7 +543,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4828,
                                         'name': 'b2'
                                     }
@@ -554,7 +554,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4829,
                                         'name': 'b3'
                                     }
@@ -589,7 +589,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4827,
                                         'name': 'b1'
                                     }
@@ -600,7 +600,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4828,
                                         'name': 'b2'
                                     }
@@ -635,7 +635,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4829,
                                         'name': 'b3'
                                     }
@@ -646,7 +646,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4827,
                                         'name': 'b1'
                                     }
@@ -680,7 +680,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23312,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4830,
                             'name': 'c1'
                         }
@@ -689,7 +689,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23314,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4831,
                             'name': 'c2'
                         }
@@ -698,7 +698,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23316,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4832,
                             'name': 'c3'
                         }
@@ -716,7 +716,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4831,
                                         'name': 'c2'
                                     }
@@ -727,7 +727,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4832,
                                         'name': 'c3'
                                     }
@@ -762,7 +762,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4830,
                                         'name': 'c1'
                                     }
@@ -773,7 +773,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4831,
                                         'name': 'c2'
                                     }
@@ -808,7 +808,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4832,
                                         'name': 'c3'
                                     }
@@ -819,7 +819,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4830,
                                         'name': 'c1'
                                     }
@@ -853,7 +853,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23305,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4833,
                             'name': 'd1'
                         }
@@ -862,7 +862,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23309,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4834,
                             'name': 'd2'
                         }
@@ -871,7 +871,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23317,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4835,
                             'name': 'd3'
                         }
@@ -889,7 +889,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4834,
                                         'name': 'd2'
                                     }
@@ -900,7 +900,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4835,
                                         'name': 'd3'
                                     }
@@ -935,7 +935,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4833,
                                         'name': 'd1'
                                     }
@@ -946,7 +946,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4834,
                                         'name': 'd2'
                                     }
@@ -981,7 +981,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4835,
                                         'name': 'd3'
                                     }
@@ -992,7 +992,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4833,
                                         'name': 'd1'
                                     }
@@ -1026,7 +1026,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23306,
                         'number': 1,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4836,
                             'name': 'e1'
                         }
@@ -1035,7 +1035,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23310,
                         'number': 2,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4837,
                             'name': 'e2'
                         }
@@ -1044,7 +1044,7 @@ export const jsonStructure15: JsonStructure = {
                         'id': 23318,
                         'number': 3,
                         'penaltyPoints': 0,
-                        'team': {
+                        'competitor': {
                             'id': 4838,
                             'name': 'e3'
                         }
@@ -1062,7 +1062,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4837,
                                         'name': 'e2'
                                     }
@@ -1073,7 +1073,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4838,
                                         'name': 'e3'
                                     }
@@ -1108,7 +1108,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4836,
                                         'name': 'e1'
                                     }
@@ -1119,7 +1119,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 2,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4837,
                                         'name': 'e2'
                                     }
@@ -1154,7 +1154,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 3,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4838,
                                         'name': 'e3'
                                     }
@@ -1165,7 +1165,7 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlace': {
                                     'number': 1,
                                     'penaltyPoints': 0,
-                                    'team': {
+                                    'competitor': {
                                         'id': 4836,
                                         'name': 'e1'
                                     }

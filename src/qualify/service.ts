@@ -1,10 +1,10 @@
+import { Competitor } from '../competitor';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { Ranking } from '../ranking';
 import { RankingItem } from '../ranking/item';
 import { Round } from '../round';
-import { Team } from '../team';
 import { PoulePlaceDivider } from './pouleplacedivider';
 import { QualifyReservationService } from './reservationservice';
 import { QualifyRule } from './rule';
@@ -217,12 +217,12 @@ export class QualifyService {
         if (!rule.isMultiple()) {
             rule.getFromPoulePlaces().forEach(fromPoulePlace => {
                 const fromPoule = fromPoulePlace.getPoule();
-                let qualifiedTeam;
+                let qualifiedCompetitor;
                 if (fromPoule.getState() === Game.STATE_PLAYED) {
                     const rank = fromPoulePlace.getNumber();
-                    qualifiedTeam = this.getQualifiedTeam(fromPoulePlace.getPoule(), rank);
+                    qualifiedCompetitor = this.getQualifiedCompetitor(fromPoulePlace.getPoule(), rank);
                 }
-                newQualifiers.push({ poulePlace: rule.getToEquivalent(fromPoulePlace), team: qualifiedTeam });
+                newQualifiers.push({ poulePlace: rule.getToEquivalent(fromPoulePlace), competitor: qualifiedCompetitor });
             });
             return newQualifiers;
         }
@@ -230,7 +230,7 @@ export class QualifyService {
         // multiple
         if (rule.getFromRound().getState() !== Game.STATE_PLAYED) {
             toPoulePlaces.forEach((toPoulePlace) => {
-                newQualifiers.push({ poulePlace: toPoulePlace, team: undefined });
+                newQualifiers.push({ poulePlace: toPoulePlace, competitor: undefined });
             });
             return newQualifiers;
         }
@@ -247,17 +247,17 @@ export class QualifyService {
             if (rankedPoulePlace === undefined) {
                 return;
             }
-            newQualifiers.push({ poulePlace: toPoulePlace, team: rankedPoulePlace.getTeam() });
+            newQualifiers.push({ poulePlace: toPoulePlace, competitor: rankedPoulePlace.getCompetitor() });
             roundRankingPoulePlaces.splice(roundRankingPoulePlaces.indexOf(rankedPoulePlace), 1);
         });
         return newQualifiers;
     }
 
-    getQualifiedTeam(poule: Poule, rank: number): Team {
+    getQualifiedCompetitor(poule: Poule, rank: number): Competitor {
         const rankingService = new Ranking(Ranking.RULESSET_WC);
         const pouleRankingItems: RankingItem[] = rankingService.getItems(poule.getPlaces(), poule.getGames());
         const poulePlace = rankingService.getItem(pouleRankingItems, rank).getPoulePlace();
-        return poulePlace ? poulePlace.getTeam() : undefined;
+        return poulePlace ? poulePlace.getCompetitor() : undefined;
     }
 
     // getRankedPoulePlacesForRound(round: Round, fromPoulePlaces: PoulePlace[]): PoulePlace[] {
@@ -273,18 +273,18 @@ export class QualifyService {
     // }
 
     protected getRankedPoulePlace(rankedPoulePlaces: PoulePlace[], toPoule: Poule): PoulePlace {
-        const toTeams = toPoule.getTeams();
+        const toCompetitors = toPoule.getCompetitors();
         return rankedPoulePlaces.find(rankedPoulePlace => {
-            return !this.hasTeam(toTeams, rankedPoulePlace.getPoule().getTeams());
+            return !this.hasCompetitor(toCompetitors, rankedPoulePlace.getPoule().getCompetitors());
         });
     }
 
-    protected hasTeam(allTeams: Team[], teamsToFind: Team[]) {
-        return allTeams.some(team => teamsToFind.some(teamToFind => teamToFind === team));
+    protected hasCompetitor(allCompetitors: Competitor[], competitorsToFind: Competitor[]) {
+        return allCompetitors.some(competitor => competitorsToFind.some(competitorToFind => competitorToFind === competitor));
     }
 }
 
 export interface INewQualifier {
-    team: Team;
+    competitor: Competitor;
     poulePlace: PoulePlace;
 }
