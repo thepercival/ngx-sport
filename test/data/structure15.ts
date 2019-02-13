@@ -98,33 +98,15 @@ export const jsonStructure15: JsonStructure = {
                                 'startDateTime': '2019-02-01T02:15:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        'poulePlace': {
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4824,
-                                                'name': 'a1'
-                                            }
-                                        },
+                                        'poulePlaceNr': 1,
                                         homeaway: true
                                     },
                                     {
-                                        'poulePlace': {
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4836,
-                                                'name': 'e1'
-                                            }
-                                        },
+                                        'poulePlaceNr': 2,
                                         homeaway: false
                                     }
                                 ],
-                                'field': {
-                                    'id': 2543,
-                                    'name': '1',
-                                    'number': 1
-                                },
+                                'fieldNr': 1,
                                 'state': 1,
                                 'scores': []
                             }
@@ -162,33 +144,15 @@ export const jsonStructure15: JsonStructure = {
                                 'startDateTime': '2019-02-01T01:50:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        'poulePlace': {
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4827,
-                                                'name': 'b1'
-                                            }
-                                        },
+                                        'poulePlaceNr': 1,
                                         homeaway: true
                                     },
                                     {
-                                        'poulePlace': {
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4831,
-                                                'name': 'c2'
-                                            }
-                                        },
+                                        'poulePlaceNr': 2,
                                         homeaway: false
                                     }
                                 ],
-                                'field': {
-                                    'id': 2543,
-                                    'name': '1',
-                                    'number': 1
-                                },
+                                'fieldNr': 1,
                                 'state': 1,
                                 'scores': []
                             }
@@ -226,33 +190,15 @@ export const jsonStructure15: JsonStructure = {
                                 'startDateTime': '2019-02-01T01:25:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        'poulePlace': {
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4830,
-                                                'name': 'c1'
-                                            }
-                                        },
+                                        'poulePlaceNr': 1,
                                         homeaway: true
                                     },
                                     {
-                                        'poulePlace': {
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4834,
-                                                'name': 'd2'
-                                            }
-                                        },
+                                        'poulePlaceNr': 2,
                                         homeaway: false
                                     }
                                 ],
-                                'field': {
-                                    'id': 2543,
-                                    'name': '1',
-                                    'number': 1
-                                },
+                                'fieldNr': 1,
                                 'state': 1,
                                 'scores': []
                             }
@@ -290,33 +236,15 @@ export const jsonStructure15: JsonStructure = {
                                 'startDateTime': '2019-02-01T01:00:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        'poulePlace': {
-                                            'number': 1,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4833,
-                                                'name': 'd1'
-                                            }
-                                        },
+                                        'poulePlaceNr': 1,
                                         homeaway: true
                                     },
                                     {
-                                        'poulePlace': {
-                                            'number': 2,
-                                            'penaltyPoints': 0,
-                                            'competitor': {
-                                                'id': 4828,
-                                                'name': 'b2'
-                                            }
-                                        },
+                                        'poulePlaceNr': 2,
                                         homeaway: false
                                     }
                                 ],
-                                'field': {
-                                    'id': 2543,
-                                    'name': '1',
-                                    'number': 1
-                                },
+                                'fieldNr': 1,
                                 'state': 1,
                                 'scores': []
                             }
@@ -367,33 +295,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T18:45:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4825,
-                                        'name': 'a2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4826,
-                                        'name': 'a3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -413,33 +323,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T20:50:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4824,
-                                        'name': 'a1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4825,
-                                        'name': 'a2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -459,33 +351,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T22:55:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4826,
-                                        'name': 'a3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4824,
-                                        'name': 'a1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -540,33 +414,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T19:10:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4828,
-                                        'name': 'b2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4829,
-                                        'name': 'b3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -586,33 +442,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T21:15:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4827,
-                                        'name': 'b1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4828,
-                                        'name': 'b2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -632,33 +470,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T23:20:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4829,
-                                        'name': 'b3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4827,
-                                        'name': 'b1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -713,33 +533,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T19:35:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4831,
-                                        'name': 'c2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4832,
-                                        'name': 'c3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -759,33 +561,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T21:40:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4830,
-                                        'name': 'c1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4831,
-                                        'name': 'c2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -805,33 +589,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T23:45:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4832,
-                                        'name': 'c3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4830,
-                                        'name': 'c1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -886,33 +652,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T20:00:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4834,
-                                        'name': 'd2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4835,
-                                        'name': 'd3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -932,33 +680,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T22:05:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4833,
-                                        'name': 'd1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4834,
-                                        'name': 'd2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -978,33 +708,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-02-01T00:10:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4835,
-                                        'name': 'd3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4833,
-                                        'name': 'd1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -1059,33 +771,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T20:25:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4837,
-                                        'name': 'e2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4838,
-                                        'name': 'e3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -1105,33 +799,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-01-31T22:30:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4836,
-                                        'name': 'e1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 2,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4837,
-                                        'name': 'e2'
-                                    }
-                                },
+                                'poulePlaceNr': 2,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
@@ -1151,33 +827,15 @@ export const jsonStructure15: JsonStructure = {
                         'startDateTime': '2019-02-01T00:35:00.000000Z',
                         'poulePlaces': [
                             {
-                                'poulePlace': {
-                                    'number': 3,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4838,
-                                        'name': 'e3'
-                                    }
-                                },
+                                'poulePlaceNr': 3,
                                 homeaway: true
                             },
                             {
-                                'poulePlace': {
-                                    'number': 1,
-                                    'penaltyPoints': 0,
-                                    'competitor': {
-                                        'id': 4836,
-                                        'name': 'e1'
-                                    }
-                                },
+                                'poulePlaceNr': 1,
                                 homeaway: false
                             }
                         ],
-                        'field': {
-                            'id': 2543,
-                            'name': '1',
-                            'number': 1
-                        },
+                        'fieldNr': 1,
                         'state': 4,
                         'scores': [
                             {
