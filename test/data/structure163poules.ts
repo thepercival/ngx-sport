@@ -103,11 +103,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'Dop',
@@ -142,11 +142,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'OB',
@@ -181,11 +181,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'Re',
@@ -220,11 +220,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'W1',
@@ -259,11 +259,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'Wes',
@@ -298,11 +298,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'Mil',
@@ -337,11 +337,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'LP',
@@ -376,11 +376,11 @@ export const jsonStructure163poules: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'refereeInitials': 'W2',
@@ -459,11 +459,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 6,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W2',
@@ -480,11 +480,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Wes',
@@ -501,11 +501,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'OB',
@@ -522,11 +522,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Dop',
@@ -543,11 +543,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 6,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Vol',
@@ -564,11 +564,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Set',
@@ -585,11 +585,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'KD',
@@ -614,11 +614,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Mil',
@@ -635,11 +635,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 6,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Re',
@@ -656,11 +656,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'OB',
@@ -677,11 +677,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'IGO',
@@ -698,11 +698,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 6,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'MAL',
@@ -719,11 +719,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Set',
@@ -740,11 +740,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 6,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'LP',
@@ -761,11 +761,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W1',
@@ -835,11 +835,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'LP',
@@ -856,11 +856,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W1',
@@ -877,11 +877,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'SE2',
@@ -898,11 +898,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'SE1',
@@ -919,11 +919,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W2',
@@ -940,11 +940,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Wes',
@@ -961,11 +961,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Dop',
@@ -982,11 +982,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Vol',
@@ -1003,11 +1003,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'KD',
@@ -1024,11 +1024,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Mil',
@@ -1098,11 +1098,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Mil',
@@ -1119,11 +1119,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Re',
@@ -1140,11 +1140,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'IGO',
@@ -1161,11 +1161,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'MAL',
@@ -1182,11 +1182,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'LP',
@@ -1203,11 +1203,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W1',
@@ -1224,11 +1224,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 4,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'SE2',
@@ -1245,11 +1245,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'SE1',
@@ -1266,11 +1266,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 5,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'W2',
@@ -1287,11 +1287,11 @@ export const jsonStructure163poules: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'refereeInitials': 'Wes',

@@ -99,11 +99,11 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -145,11 +145,11 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -191,11 +191,11 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -237,11 +237,11 @@ export const jsonStructure15: JsonStructure = {
                                 'poulePlaces': [
                                     {
                                         'poulePlaceNr': 1,
-                                        homeaway: true
+                                        'homeaway': true
                                     },
                                     {
                                         'poulePlaceNr': 2,
-                                        homeaway: false
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -296,11 +296,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -324,11 +324,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -352,11 +352,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -415,11 +415,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -443,11 +443,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -471,11 +471,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -534,11 +534,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -562,11 +562,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -590,11 +590,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -653,11 +653,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -681,11 +681,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -709,11 +709,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -772,11 +772,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -800,11 +800,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 2,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -828,11 +828,11 @@ export const jsonStructure15: JsonStructure = {
                         'poulePlaces': [
                             {
                                 'poulePlaceNr': 3,
-                                homeaway: true
+                                'homeaway': true
                             },
                             {
                                 'poulePlaceNr': 1,
-                                homeaway: false
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,

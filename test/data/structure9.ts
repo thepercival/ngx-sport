@@ -131,12 +131,12 @@ export const jsonStructure9: JsonStructure = {
                                         'startDateTime': '2018-12-17T17:25:00.000000Z',
                                         'poulePlaces': [
                                             {
-                                                poulePlaceNr: 1,
-                                                homeaway: true
+                                                'poulePlaceNr': 1,
+                                                'homeaway': true
                                             },
                                             {
-                                                poulePlaceNr: 2,
-                                                homeaway: false
+                                                'poulePlaceNr': 2,
+                                                'homeaway': false
                                             }
                                         ],
                                         'fieldNr': 1,
@@ -193,12 +193,12 @@ export const jsonStructure9: JsonStructure = {
                                         'startDateTime': '2018-12-17T17:50:00.000000Z',
                                         'poulePlaces': [
                                             {
-                                                poulePlaceNr: 1,
-                                                homeaway: true
+                                                'poulePlaceNr': 1,
+                                                'homeaway': true
                                             },
                                             {
-                                                poulePlaceNr: 2,
-                                                homeaway: false
+                                                'poulePlaceNr': 2,
+                                                'homeaway': false
                                             }
                                         ],
                                         'fieldNr': 1,
@@ -251,12 +251,12 @@ export const jsonStructure9: JsonStructure = {
                                 'startDateTime': '2018-12-17T16:35:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        poulePlaceNr: 1,
-                                        homeaway: true
+                                        'poulePlaceNr': 1,
+                                        'homeaway': true
                                     },
                                     {
-                                        poulePlaceNr: 2,
-                                        homeaway: false
+                                        'poulePlaceNr': 2,
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -305,12 +305,12 @@ export const jsonStructure9: JsonStructure = {
                                 'startDateTime': '2018-12-17T15:45:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        poulePlaceNr: 1,
-                                        homeaway: true
+                                        'poulePlaceNr': 1,
+                                        'homeaway': true
                                     },
                                     {
-                                        poulePlaceNr: 2,
-                                        homeaway: false
+                                        'poulePlaceNr': 2,
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -372,12 +372,12 @@ export const jsonStructure9: JsonStructure = {
                                         'startDateTime': '2018-12-17T18:15:00.000000Z',
                                         'poulePlaces': [
                                             {
-                                                poulePlaceNr: 1,
-                                                homeaway: true
+                                                'poulePlaceNr': 1,
+                                                'homeaway': true
                                             },
                                             {
-                                                poulePlaceNr: 2,
-                                                homeaway: false
+                                                'poulePlaceNr': 2,
+                                                'homeaway': false
                                             }
                                         ],
                                         'fieldNr': 1,
@@ -434,12 +434,12 @@ export const jsonStructure9: JsonStructure = {
                                         'startDateTime': '2018-12-17T18:40:00.000000Z',
                                         'poulePlaces': [
                                             {
-                                                poulePlaceNr: 1,
-                                                homeaway: true
+                                                'poulePlaceNr': 1,
+                                                'homeaway': true
                                             },
                                             {
-                                                poulePlaceNr: 2,
-                                                homeaway: false
+                                                'poulePlaceNr': 2,
+                                                'homeaway': false
                                             }
                                         ],
                                         'fieldNr': 1,
@@ -492,12 +492,12 @@ export const jsonStructure9: JsonStructure = {
                                 'startDateTime': '2018-12-17T17:00:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        poulePlaceNr: 1,
-                                        homeaway: true
+                                        'poulePlaceNr': 1,
+                                        'homeaway': true
                                     },
                                     {
-                                        poulePlaceNr: 2,
-                                        homeaway: false
+                                        'poulePlaceNr': 2,
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -546,12 +546,12 @@ export const jsonStructure9: JsonStructure = {
                                 'startDateTime': '2018-12-17T16:10:00.000000Z',
                                 'poulePlaces': [
                                     {
-                                        poulePlaceNr: 1,
-                                        homeaway: true
+                                        'poulePlaceNr': 1,
+                                        'homeaway': true
                                     },
                                     {
-                                        poulePlaceNr: 2,
-                                        homeaway: false
+                                        'poulePlaceNr': 2,
+                                        'homeaway': false
                                     }
                                 ],
                                 'fieldNr': 1,
@@ -613,12 +613,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T12:00:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 2,
-                                homeaway: true
+                                'poulePlaceNr': 2,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 3,
-                                homeaway: false
+                                'poulePlaceNr': 3,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -641,12 +641,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T13:15:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 1,
-                                homeaway: true
+                                'poulePlaceNr': 1,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 2,
-                                homeaway: false
+                                'poulePlaceNr': 2,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -669,12 +669,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T14:30:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 3,
-                                homeaway: true
+                                'poulePlaceNr': 3,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 1,
-                                homeaway: false
+                                'poulePlaceNr': 1,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -732,12 +732,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T12:25:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 2,
-                                homeaway: true
+                                'poulePlaceNr': 2,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 3,
-                                homeaway: false
+                                'poulePlaceNr': 3,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -760,12 +760,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T13:40:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 1,
-                                homeaway: true
+                                'poulePlaceNr': 1,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 2,
-                                homeaway: false
+                                'poulePlaceNr': 2,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -788,12 +788,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T14:55:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 3,
-                                homeaway: true
+                                'poulePlaceNr': 3,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 1,
-                                homeaway: false
+                                'poulePlaceNr': 1,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -851,12 +851,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T12:50:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 2,
-                                homeaway: true
+                                'poulePlaceNr': 2,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 3,
-                                homeaway: false
+                                'poulePlaceNr': 3,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -879,12 +879,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T14:05:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 1,
-                                homeaway: true
+                                'poulePlaceNr': 1,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 2,
-                                homeaway: false
+                                'poulePlaceNr': 2,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
@@ -907,12 +907,12 @@ export const jsonStructure9: JsonStructure = {
                         'startDateTime': '2018-12-17T15:20:00.000000Z',
                         'poulePlaces': [
                             {
-                                poulePlaceNr: 3,
-                                homeaway: true
+                                'poulePlaceNr': 3,
+                                'homeaway': true
                             },
                             {
-                                poulePlaceNr: 1,
-                                homeaway: false
+                                'poulePlaceNr': 1,
+                                'homeaway': false
                             }
                         ],
                         'fieldNr': 1,
