@@ -22,11 +22,8 @@ export class PlanningReferee {
     }
 
     assign(game: Game) {
-        if (this.referee !== undefined) {
-            game.setReferee(this.referee);
-        } else if (this.poulePlace !== undefined) {
-            game.setPoulePlaceReferee(this.poulePlace);
-        }
+        game.setReferee(this.referee ? this.referee : undefined);
+        game.setPoulePlaceReferee(this.poulePlace ? this.poulePlace : undefined);
     }
 }
 

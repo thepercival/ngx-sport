@@ -1,3 +1,4 @@
+import { Game } from './game';
 import { GamePoulePlace } from './game/pouleplace';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
@@ -118,6 +119,16 @@ export class NameService {
         }
         const name = this.getPouleName(poulePlace.getPoule(), false);
         return name + poulePlace.getNumber();
+    }
+
+    getRefereeName(game: Game, longName?: boolean): string {
+        if (game.getReferee() !== undefined) {
+            return longName ? game.getReferee().getName() : game.getReferee().getInitials();
+        }
+        if (game.getPoulePlaceReferee() !== undefined) {
+            return this.getPoulePlaceName(game.getPoulePlaceReferee(), true, longName);
+        }
+        return undefined;
     }
 
     private roundsHaveSameName(roundNumber: RoundNumber): boolean {

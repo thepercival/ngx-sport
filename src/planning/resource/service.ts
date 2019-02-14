@@ -1,24 +1,22 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
 import { PoulePlace } from '../../pouleplace';
+import { RoundNumberConfig } from '../../round/number/config';
 import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
 
 export class PlanningResourceService {
-    private poulePlaces: PoulePlace[] = [];
-    private fields: Field[] = [];
-    private referees: PlanningReferee[] = [];
-    private assignableFields: Field[] = [];
-    private areFieldsAssignable: boolean;
+    private assignedPoulePlaces: PoulePlace[] = [];
+    private availableReferees: PlanningReferee[] = [];
     private assignableReferees: PlanningReferee[] = [];
-    private areRefereesAssignable: boolean;
-    private resourceBatch = 0;
+    private availableFields: Field[] = [];
+    private assignableFields: Field[] = [];
+    private resourceBatch = 1;
     private blockedPeriod;
 
     constructor(
-        private dateTime: Date,
-        private maximalNrOfMinutesPerGame: number,
-        private nrOfMinutesBetweenGames: number
+        private roundNumberConfig: RoundNumberConfig,
+        private dateTime: Date
     ) {
     }
 
@@ -27,8 +25,7 @@ export class PlanningResourceService {
     }
 
     setFields(fields: Field[]) {
-        this.fields = fields;
-        this.areFieldsAssignable = fields.length > 0;
+        this.availableFields = fields;
         this.fillAssignableFields();
     }
 
@@ -39,89 +36,49 @@ export class PlanningResourceService {
     }*/
 
     setReferees(referees: PlanningReferee[]) {
-        this.referees = referees;
-        this.areRefereesAssignable = referees.length > 0;
+        this.availableReferees = referees;
         this.fillAssignableReferees();
     }
 
-    private fillAssignableFields() {
-        if (this.assignableFields.length >= this.fields.length) {
-            return;
-        }
-        if (this.assignableFields.length === 0) {
-            this.assignableFields = this.fields.slice(0);
-            return;
-        }
-        const lastAssignableField = this.assignableFields[this.assignableFields.length - 1];
-        const idxLastAssignableField = this.fields.indexOf(lastAssignableField);
-        const firstAssignableField = this.assignableFields[0];
-        const idxFirstAssignableField = this.fields.indexOf(firstAssignableField);
-        const endIndex = idxFirstAssignableField > idxLastAssignableField ? idxFirstAssignableField : this.fields.length;
-        for (let i = idxLastAssignableField + 1; i < endIndex; i++) {
-            this.assignableFields.push(this.fields[i]);
-        }
-        if (idxFirstAssignableField <= idxLastAssignableField) {
-            for (let j = 0; j < idxFirstAssignableField; j++) {
-                this.assignableFields.push(this.fields[j]);
-            }
-        }
-    }
-
-    private fillAssignableReferees() {
-        if (this.assignableReferees.length >= this.referees.length) {
-            return;
-        }
-        if (this.assignableReferees.length === 0) {
-            this.assignableReferees = this.referees.slice(0);
-            return;
-        }
-        const lastAssignableReferee = this.assignableReferees[this.assignableReferees.length - 1];
-        const idxLastAssignableReferee = this.referees.indexOf(lastAssignableReferee);
-        const firstAssignableReferee = this.assignableReferees[0];
-        const idxFirstAssignableReferee = this.referees.indexOf(firstAssignableReferee);
-        const endIndex = idxFirstAssignableReferee > idxLastAssignableReferee ? idxFirstAssignableReferee : this.referees.length;
-        for (let i = idxLastAssignableReferee + 1; i < endIndex; i++) {
-            this.assignableReferees.push(this.referees[i]);
-        }
-        if (idxFirstAssignableReferee <= idxLastAssignableReferee) {
-            for (let j = 0; j < idxFirstAssignableReferee; j++) {
-                this.assignableReferees.push(this.referees[j]);
-            }
-        }
-    }
-
     getAssignableGame(gamesToProcess: Game[]): Game {
-        return gamesToProcess.find(game => {
-            return this.isGameAssignable(game);
-        });
+        return gamesToProcess.find(game => this.isGameAssignable(game));
     }
 
-    assign(game: Game) {
-        if (this.fieldsOrRefereesNotAssignable()) {
-            this.nextResourceBatch();
+    assign(games: Game[]): Date {
+        while (games.length > 0) {
+            let game = this.getAssignableGame(games);
+            if (game === undefined) {
+                this.nextResourceBatch();
+                game = this.getAssignableGame(games);
+            }
+            this.assignGame(game);
+            games.splice(games.indexOf(game), 1);
+            if (!this.areFieldsAvailable() && !this.areRefereesAvailable()) {
+                this.nextResourceBatch();
+            }
         }
-        if (this.resourceBatch === 0) {
-            this.resourceBatch++;
-        }
+        return this.getEndDateTime();
+    }
+
+    protected assignGame(game: Game) {
+        // if (!this.fieldsAreAssignable() || !this.refereesAreAssignable()) {
+        //     this.nextResourceBatch();
+        // }
+        // if (this.resourceBatch === 0) {
+        //     this.resourceBatch = 1;
+        // }
         game.setStartDateTime(this.getDateTime());
         game.setResourceBatch(this.resourceBatch);
-        if (this.areFieldsAssignable) {
-            game.setField(this.assignableFields.shift());
+        if (this.areFieldsAvailable()) {
+            this.assignField(game);
         }
-        if (this.areRefereesAssignable) {
-            this.assignableReferees.shift().assign(game);
+        this.assignPoulePlaces(game);
+        if (this.areRefereesAvailable()) {
+            this.assignReferee(game);
         }
-        this.addPoulePlaces(game);
-
-        if (this.fieldsOrRefereesNotAssignable()) {
-            this.resetPoulePlaces();
-        }
-    }
-
-    fieldsOrRefereesNotAssignable() {
-        return ((this.areFieldsAssignable === false && this.areRefereesAssignable === false)
-            || (this.areFieldsAssignable && this.fields.length > 0 && this.assignableFields.length === 0)
-            || (this.areRefereesAssignable && this.referees.length > 0 && this.assignableReferees.length === 0));
+        // if (!this.fieldsAreAssignable() || !this.refereesAreAssignable()) {
+        //     this.resetPoulePlaces();
+        // }
     }
 
     nextResourceBatch() {
@@ -132,27 +89,124 @@ export class PlanningResourceService {
         this.resetPoulePlaces();
     }
 
-    getDateTime(): Date {
+    getEndDateTime(): Date {
+        if (this.dateTime === undefined) {
+            return undefined;
+        }
+        const endDateTime = new Date(this.dateTime.getTime());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMinutesBetweenGames());
+        return endDateTime;
+    }
+
+    private assignPoulePlaces(game: Game) {
+        game.getPoulePlaces().forEach(gamePoulePlace => this.assignedPoulePlaces.push(gamePoulePlace.getPoulePlace()));
+    }
+
+    protected assignReferee(game: Game) {
+        const referee = this.getAssignableReferee(game);
+        referee.assign(game);
+        if (referee.isSelf()) {
+            this.assignedPoulePlaces.push(referee.getPoulePlace());
+        }
+    }
+
+    protected assignField(game: Game) {
+        game.setField(this.assignableFields.shift());
+    }
+
+    private fillAssignableFields() {
+        if (this.assignableFields.length >= this.availableFields.length) {
+            return;
+        }
+        if (this.assignableFields.length === 0) {
+            this.assignableFields = this.availableFields.slice();
+            return;
+        }
+        const lastAssignableField = this.assignableFields[this.assignableFields.length - 1];
+        const idxLastAssignableField = this.availableFields.indexOf(lastAssignableField);
+        const firstAssignableField = this.assignableFields[0];
+        const idxFirstAssignableField = this.availableFields.indexOf(firstAssignableField);
+        const endIndex = idxFirstAssignableField > idxLastAssignableField ? idxFirstAssignableField : this.availableFields.length;
+        for (let i = idxLastAssignableField + 1; i < endIndex; i++) {
+            this.assignableFields.push(this.availableFields[i]);
+        }
+        if (idxFirstAssignableField <= idxLastAssignableField) {
+            for (let j = 0; j < idxFirstAssignableField; j++) {
+                this.assignableFields.push(this.availableFields[j]);
+            }
+        }
+    }
+
+    private fillAssignableReferees() {
+        if (this.assignableReferees.length >= this.availableReferees.length) {
+            return;
+        }
+        if (this.assignableReferees.length === 0) {
+            this.assignableReferees = this.availableReferees.slice();
+            return;
+        }
+        const lastAssignableReferee = this.assignableReferees[this.assignableReferees.length - 1];
+        const idxLastAssignableReferee = this.availableReferees.indexOf(lastAssignableReferee);
+        const firstAssignableReferee = this.assignableReferees[0];
+        const idxFirstAssignableReferee = this.availableReferees.indexOf(firstAssignableReferee);
+        const endIndex = idxFirstAssignableReferee > idxLastAssignableReferee ? idxFirstAssignableReferee : this.availableReferees.length;
+        for (let i = idxLastAssignableReferee + 1; i < endIndex; i++) {
+            this.assignableReferees.push(this.availableReferees[i]);
+        }
+        if (idxFirstAssignableReferee <= idxLastAssignableReferee) {
+            for (let j = 0; j < idxFirstAssignableReferee; j++) {
+                this.assignableReferees.push(this.availableReferees[j]);
+            }
+        }
+    }
+
+    private areFieldsAvailable(): boolean {
+        return this.availableFields.length > 0;
+    }
+
+    private isSomeFieldAssignable(): boolean {
+        return this.assignableFields.length > 0;
+    }
+
+    private areRefereesAvailable(): boolean {
+        return this.availableReferees.length > 0;
+    }
+
+    private isSomeRefereeAssignable(game: Game): boolean {
+        if (!this.roundNumberConfig.getSelfReferee()) {
+            return this.assignableReferees.length > 0;
+        }
+        return this.assignableReferees.some(assignableRef => {
+            return !game.isParticipating(assignableRef.getPoulePlace());
+        });
+    }
+
+    private getAssignableReferee(game: Game): PlanningReferee {
+        if (!this.roundNumberConfig.getSelfReferee()) {
+            return this.assignableReferees.shift();
+        }
+        const referee = this.assignableReferees.find(assignableRef => {
+            return !game.isParticipating(assignableRef.getPoulePlace());
+        });
+        if (referee !== undefined) {
+            this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
+        }
+        return referee;
+    }
+
+    private getDateTime(): Date {
         if (this.dateTime === undefined) {
             return undefined;
         }
         return new Date(this.dateTime.getTime());
     }
 
-    getEndDateTime(): Date {
-        if (this.dateTime === undefined) {
-            return undefined;
-        }
-        const endDateTime = new Date(this.dateTime.getTime());
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.maximalNrOfMinutesPerGame);
-        return endDateTime;
-    }
-
-    setNextDateTime() {
+    private setNextDateTime() {
         if (this.dateTime === undefined) {
             return;
         }
-        this.dateTime = this.addMinutes(this.dateTime, this.maximalNrOfMinutesPerGame + this.nrOfMinutesBetweenGames);
+        const add = this.roundNumberConfig.getMaximalNrOfMinutesPerGame() + this.roundNumberConfig.getMinutesBetweenGames();
+        this.dateTime = this.addMinutes(this.dateTime, add);
     }
 
     protected addMinutes(dateTime: Date, minutes: number): Date {
@@ -163,19 +217,33 @@ export class PlanningResourceService {
         return dateTime;
     }
 
-    private isGameAssignable(game: Game) {
-        return game.getPoulePlaces().every(gamePoulePlace => !this.isPoulePlaceAssigned(gamePoulePlace.getPoulePlace()));
+    private isGameAssignable(game: Game): boolean {
+        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
+            return false;
+        }
+        if (this.areRefereesAvailable() && !this.isSomeRefereeAssignable(game)) {
+            return false;
+        }
+        return this.areAllPoulePlacesAssignable(this.getPoulePlaces(game));
     }
 
-    protected isPoulePlaceAssigned(poulePlace: PoulePlace) {
-        return this.poulePlaces.find(poulePlaceIt => poulePlaceIt === poulePlace) !== undefined;
+    protected getPoulePlaces(game: Game): PoulePlace[] {
+        return game.getPoulePlaces().map(gamePoulePlace => gamePoulePlace.getPoulePlace());
+    }
+
+    protected areAllPoulePlacesAssignable(poulePlaces: PoulePlace[]): boolean {
+        return poulePlaces.every(poulePlace => this.isPoulePlacesAssignable(poulePlace));
+    }
+
+    protected isPoulePlacesAssignable(poulePlace: PoulePlace): boolean {
+        return !this.hasPoulePlace(this.assignedPoulePlaces, poulePlace);
+    }
+
+    protected hasPoulePlace(poulePlaces: PoulePlace[], poulePlaceToFind: PoulePlace): boolean {
+        return poulePlaces.find(poulePlaceIt => poulePlaceIt === poulePlaceToFind) !== undefined;
     }
 
     private resetPoulePlaces() {
-        this.poulePlaces = [];
-    }
-
-    private addPoulePlaces(game: Game) {
-        game.getPoulePlaces().forEach(gamePoulePlace => this.poulePlaces.push(gamePoulePlace.getPoulePlace()));
+        this.assignedPoulePlaces = [];
     }
 }

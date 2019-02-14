@@ -166,26 +166,12 @@ export class PlanningService {
         dateTime: Date,
         fields: Field[],
         referees: PlanningReferee[]): Date {
-        const gamesToProcess = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-        const resourceService = new PlanningResourceService(
-            dateTime, roundNumberConfig.getMaximalNrOfMinutesPerGame(), roundNumberConfig.getMinutesBetweenGames());
+        const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
+        const resourceService = new PlanningResourceService(roundNumberConfig, dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
-        while (gamesToProcess.length > 0) {
-            let gameToProcess = resourceService.getAssignableGame(gamesToProcess);
-            if (gameToProcess === undefined) {
-                resourceService.nextResourceBatch();
-                gameToProcess = resourceService.getAssignableGame(gamesToProcess);
-            }
-            resourceService.assign(gameToProcess);
-            const index = gamesToProcess.indexOf(gameToProcess);
-            if (index === -1) {
-                return;
-            }
-            gamesToProcess.splice(index, 1);
-        }
-        return resourceService.getEndDateTime();
+        return resourceService.assign(games);
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
