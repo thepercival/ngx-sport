@@ -29,7 +29,7 @@ export class PlanningResourceService {
         this.fillAssignableFields();
     }
 
-    /*setSelfReferees(poulePlaceReferees: PoulePlace[]) {
+    /*setSelfReferees(refereePoulePlaces: PoulePlace[]) {
         this.referees = referees;
         this.areRefereesAssignable = referees.length > 0;
         this.fillAssignableReferees();

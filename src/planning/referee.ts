@@ -23,7 +23,7 @@ export class PlanningReferee {
 
     assign(game: Game) {
         game.setReferee(this.referee ? this.referee : undefined);
-        game.setPoulePlaceReferee(this.poulePlace ? this.poulePlace : undefined);
+        game.setRefereePoulePlace(this.poulePlace ? this.poulePlace : undefined);
     }
 }
 

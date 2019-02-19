@@ -28,7 +28,7 @@ export class Game {
     protected resourceBatch: number;
     protected field: Field;
     protected referee: Referee;
-    protected poulePlaceReferee: PoulePlace;
+    protected refereePoulePlace: PoulePlace;
     protected startDateTime: Date;
     protected state: number;
     protected scoresMoment: number;
@@ -98,12 +98,12 @@ export class Game {
         return this.referee;
     }
 
-    setPoulePlaceReferee(poulePlaceReferee: PoulePlace): void {
-        this.poulePlaceReferee = poulePlaceReferee;
+    setRefereePoulePlace(refereePoulePlace: PoulePlace): void {
+        this.refereePoulePlace = refereePoulePlace;
     }
 
-    getPoulePlaceReferee(): PoulePlace {
-        return this.poulePlaceReferee;
+    getRefereePoulePlace(): PoulePlace {
+        return this.refereePoulePlace;
     }
 
     setReferee(referee: Referee): void {

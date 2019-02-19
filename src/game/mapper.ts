@@ -29,10 +29,7 @@ export class GameMapper {
         game.setScoresMoment(json.scoresMoment);
         game.setField(json.fieldNr !== undefined ? poule.getCompetition().getField(json.fieldNr) : undefined);
         game.setReferee(json.refereeInitials !== undefined ? poule.getCompetition().getReferee(json.refereeInitials) : undefined);
-        if (json.refereePoulePlaceNr !== undefined) {
-            const poulePlaceReferee = poule.getPlaces().find(pouleplaceIt => json.refereePoulePlaceNr === pouleplaceIt.getNumber());
-            game.setPoulePlaceReferee(poulePlaceReferee);
-        }
+
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         while (game.getScores().length > 0) {
             game.getScores().pop();
@@ -62,7 +59,7 @@ export class GameMapper {
             fieldNr: game.getField() ? game.getField().getNumber() : undefined,
             state: game.getState(),
             refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
-            refereePoulePlaceNr: game.getPoulePlaceReferee() ? game.getPoulePlaceReferee().getNumber() : undefined,
+            refereePoulePlaceId: game.getRefereePoulePlace() ? game.getRefereePoulePlace().getId() : undefined,
             startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
             scoresMoment: game.getScoresMoment(),
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
@@ -80,7 +77,7 @@ export interface JsonGame {
     state: number;
     startDateTime?: string;
     refereeInitials?: string;
-    refereePoulePlaceNr?: number;
+    refereePoulePlaceId?: number;
     scoresMoment?: number;
     scores?: JsonGameScore[];
 }

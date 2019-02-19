@@ -125,8 +125,8 @@ export class NameService {
         if (game.getReferee() !== undefined) {
             return longName ? game.getReferee().getName() : game.getReferee().getInitials();
         }
-        if (game.getPoulePlaceReferee() !== undefined) {
-            return this.getPoulePlaceName(game.getPoulePlaceReferee(), true, longName);
+        if (game.getRefereePoulePlace() !== undefined) {
+            return this.getPoulePlaceName(game.getRefereePoulePlace(), true, longName);
         }
         return undefined;
     }
