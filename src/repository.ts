@@ -6,9 +6,7 @@ import { SportConfig } from './config';
 
 export class SportRepository {
 
-    protected router: Router;
-    constructor(router: Router) {
-        this.router = router;
+    constructor(protected router: Router) {
     }
 
     getApiUrl(): string {

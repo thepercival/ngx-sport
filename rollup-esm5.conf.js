@@ -17,5 +17,9 @@ export default {
         '@angular/router',
         'rxjs',
         'rxjs/operators'
-    ]
+    ],
+    onwarn: function (warning) {
+        if (warning.code === 'this is undefined')
+            return;
+    }
 }

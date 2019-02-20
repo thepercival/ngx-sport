@@ -29,14 +29,11 @@ export class PlanningResourceService {
         this.fillAssignableFields();
     }
 
-    /*setSelfReferees(refereePoulePlaces: PoulePlace[]) {
-        this.referees = referees;
-        this.areRefereesAssignable = referees.length > 0;
-        this.fillAssignableReferees();
-    }*/
-
     setReferees(referees: PlanningReferee[]) {
         this.availableReferees = referees;
+        if (this.roundNumberConfig.getSelfReferee()) {
+            this.availableReferees.reverse();
+        }
         this.fillAssignableReferees();
     }
 
@@ -185,9 +182,15 @@ export class PlanningResourceService {
         if (!this.roundNumberConfig.getSelfReferee()) {
             return this.assignableReferees.shift();
         }
-        const referee = this.assignableReferees.find(assignableRef => {
+        const refereesNotParticipating = this.assignableReferees.filter(assignableRef => {
             return !game.isParticipating(assignableRef.getPoulePlace());
         });
+        let referee = refereesNotParticipating.find(assignableRef => {
+            return game.getPoule() !== assignableRef.getPoulePlace().getPoule();
+        });
+        if (referee === undefined) {
+            referee = refereesNotParticipating[0];
+        }
         if (referee !== undefined) {
             this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         }
