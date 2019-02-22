@@ -136,8 +136,6 @@ export class GameGenerator {
 
         let games = this.flattenGameRounds(gameRoundsTmp);
 
-
-
         const totalNrOfCombinations = this.getTotalNrOfCombinations(nrOfPoulePlaces);
         if (totalNrOfCombinations !== games.length) {
             console.error('not correct permu');

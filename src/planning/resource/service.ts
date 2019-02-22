@@ -13,11 +13,13 @@ export class PlanningResourceService {
     private assignableFields: Field[] = [];
     private resourceBatch = 1;
     private blockedPeriod;
+    private currentGameStartDate: Date;
 
     constructor(
         private roundNumberConfig: RoundNumberConfig,
-        private dateTime: Date
+        dateTime: Date
     ) {
+        this.currentGameStartDate = this.cloneDateTime(dateTime);
     }
 
     setBlockedPeriod(blockedPeriod: BlockedPeriod) {
@@ -50,21 +52,12 @@ export class PlanningResourceService {
             }
             this.assignGame(game);
             games.splice(games.indexOf(game), 1);
-            if (!this.areFieldsAvailable() && !this.areRefereesAvailable()) {
-                this.nextResourceBatch();
-            }
         }
         return this.getEndDateTime();
     }
 
     protected assignGame(game: Game) {
-        // if (!this.fieldsAreAssignable() || !this.refereesAreAssignable()) {
-        //     this.nextResourceBatch();
-        // }
-        // if (this.resourceBatch === 0) {
-        //     this.resourceBatch = 1;
-        // }
-        game.setStartDateTime(this.getDateTime());
+        game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
         game.setResourceBatch(this.resourceBatch);
         if (this.areFieldsAvailable()) {
             this.assignField(game);
@@ -73,25 +66,22 @@ export class PlanningResourceService {
         if (this.areRefereesAvailable()) {
             this.assignReferee(game);
         }
-        // if (!this.fieldsAreAssignable() || !this.refereesAreAssignable()) {
-        //     this.resetPoulePlaces();
-        // }
     }
 
     nextResourceBatch() {
         this.fillAssignableFields();
         this.fillAssignableReferees();
         this.resourceBatch++;
-        this.setNextDateTime();
+        this.setNextGameStartDateTime();
         this.resetPoulePlaces();
     }
 
-    getEndDateTime(): Date {
-        if (this.dateTime === undefined) {
+    private getEndDateTime(): Date {
+        if (this.currentGameStartDate === undefined) {
             return undefined;
         }
-        const endDateTime = new Date(this.dateTime.getTime());
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMinutesBetweenGames());
+        const endDateTime = new Date(this.currentGameStartDate.getTime());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMaximalNrOfMinutesPerGame());
         return endDateTime;
     }
 
@@ -166,7 +156,8 @@ export class PlanningResourceService {
     }
 
     private areRefereesAvailable(): boolean {
-        return this.availableReferees.length > 0;
+        return this.availableReferees.length > 0 &&
+            (!this.roundNumberConfig.getSelfReferee() || this.availableReferees.length > this.roundNumberConfig.getNrOfCompetitorsPerGame());
     }
 
     private isSomeRefereeAssignable(game: Game): boolean {
@@ -197,19 +188,19 @@ export class PlanningResourceService {
         return referee;
     }
 
-    private getDateTime(): Date {
-        if (this.dateTime === undefined) {
+    private cloneDateTime(dateTime: Date): Date {
+        if (dateTime === undefined) {
             return undefined;
         }
-        return new Date(this.dateTime.getTime());
+        return new Date(dateTime.getTime());
     }
 
-    private setNextDateTime() {
-        if (this.dateTime === undefined) {
+    private setNextGameStartDateTime() {
+        if (this.currentGameStartDate === undefined) {
             return;
         }
         const add = this.roundNumberConfig.getMaximalNrOfMinutesPerGame() + this.roundNumberConfig.getMinutesBetweenGames();
-        this.dateTime = this.addMinutes(this.dateTime, add);
+        this.currentGameStartDate = this.addMinutes(this.currentGameStartDate, add);
     }
 
     protected addMinutes(dateTime: Date, minutes: number): Date {
@@ -220,6 +211,7 @@ export class PlanningResourceService {
         return dateTime;
     }
 
+    /** bij echte scheidsrechters mag isGameAssignable wel van scheidsrechters afhangen  */
     private isGameAssignable(game: Game): boolean {
         if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
             return false;

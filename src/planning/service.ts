@@ -5,7 +5,6 @@ import { Poule } from '../poule';
 import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { RoundNumberConfig } from '../round/number/config';
 import { GameGenerator } from './gamegenerator';
 import { PlanningReferee } from './referee';
 import { PlanningResourceService } from './resource/service';
@@ -144,7 +143,7 @@ export class PlanningService {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
         const fields = this.competition.getFields();
         const referees = this.getReferees(roundNumber);
-        const nextDateTime = this.assignResourceBatchToGames(roundNumber, roundNumber.getConfig(), dateTime, fields, referees);
+        const nextDateTime = this.assignResourceBatchToGames(roundNumber, dateTime, fields, referees);
         if (nextDateTime !== undefined) {
             nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getConfig().getMinutesAfter());
         }
@@ -152,7 +151,6 @@ export class PlanningService {
     }
 
     protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
-        roundNumber
         if (roundNumber.getConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             return places.map(place => new PlanningReferee(undefined, place));
@@ -162,12 +160,11 @@ export class PlanningService {
 
     protected assignResourceBatchToGames(
         roundNumber: RoundNumber,
-        roundNumberConfig: RoundNumberConfig,
         dateTime: Date,
         fields: Field[],
         referees: PlanningReferee[]): Date {
         const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-        const resourceService = new PlanningResourceService(roundNumberConfig, dateTime);
+        const resourceService = new PlanningResourceService(roundNumber.getConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
