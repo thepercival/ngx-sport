@@ -101,35 +101,27 @@ export class RoundNumberConfigService {
 
         if (!roundNumber.isFirst()) {
             return this.copyScoreConfigFromPrevious(config, roundNumber.getPrevious().getConfig().getScore());
-        } else if (sport === SportConfig.Darts) {
-            return this.createScoreConfigFromRoundHelper(
-                config, 'legs', RoundNumberConfigScore.UPWARDS, 3, this.createScoreConfigFromRoundHelper(
-                    config, 'sets', RoundNumberConfigScore.UPWARDS, 0, undefined
-                )
-            );
+        }
+
+        let unitName = 'punten', parentUnitName;
+        if (sport === SportConfig.Darts) {
+            unitName = 'legs';
+            parentUnitName = 'sets';
         } else if (sport === SportConfig.Tennis) {
-            return this.createScoreConfigFromRoundHelper(
-                config, 'games', RoundNumberConfigScore.UPWARDS, 7, this.createScoreConfigFromRoundHelper(
-                    config, 'sets', RoundNumberConfigScore.UPWARDS, 0, undefined
-                )
-            );
+            unitName = 'games';
+            parentUnitName = 'sets';
         } else if (sport === SportConfig.Squash || sport === SportConfig.TableTennis
             || sport === SportConfig.Volleyball || sport === SportConfig.Badminton) {
-            return this.createScoreConfigFromRoundHelper(
-                config, 'punten', RoundNumberConfigScore.UPWARDS,
-                sport === SportConfig.TableTennis ? 21 : (sport === SportConfig.Volleyball ? 25 : 15),
-                this.createScoreConfigFromRoundHelper(
-                    config, 'sets', RoundNumberConfigScore.UPWARDS, 0, undefined
-                )
-            );
+            parentUnitName = 'sets';
+        } else if (sport === SportConfig.Football || sport === SportConfig.Hockey) {
+            unitName = 'goals';
         }
-        const configScore = this.createScoreConfigFromRoundHelper(
-            config, 'punten', RoundNumberConfigScore.UPWARDS, 0, undefined
-        );
-        if (sport === SportConfig.Football || sport === SportConfig.Hockey) {
-            configScore.setName('goals');
+
+        let parent;
+        if (parentUnitName !== undefined) {
+            parent = this.createScoreConfigFromRoundHelper(config, parentUnitName, RoundNumberConfigScore.UPWARDS, 0, undefined);
         }
-        return configScore;
+        return this.createScoreConfigFromRoundHelper(config, unitName, RoundNumberConfigScore.UPWARDS, 0, parent);
     }
 
     protected createScoreConfigFromRoundHelper(
@@ -147,7 +139,6 @@ export class RoundNumberConfigService {
     }
 
     protected copyScoreConfigFromPrevious(config: RoundNumberConfig, scoreConfig: RoundNumberConfigScore) {
-        // const roundNumber = config.getRoundNumber();
         const parent = scoreConfig.getParent() ? this.copyScoreConfigFromPrevious(config, scoreConfig.getParent()) : undefined;
         return this.createScoreConfigFromRoundHelper(
             config, scoreConfig.getName(), scoreConfig.getDirection(), scoreConfig.getMaximum(), parent);

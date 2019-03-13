@@ -10,6 +10,7 @@ export class Competitor {
     protected id: number;
     protected name: string;
     protected abbreviation: string;
+    protected registered: boolean;
     protected info: string;
     protected imageUrl: string;
     protected association: Association;
@@ -41,6 +42,14 @@ export class Competitor {
 
     setAbbreviation(abbreviation: string): void {
         this.abbreviation = abbreviation;
+    }
+
+    getRegistered(): boolean {
+        return this.registered;
+    }
+
+    setRegistered(registered: boolean): void {
+        this.registered = registered;
     }
 
     getInfo(): string {

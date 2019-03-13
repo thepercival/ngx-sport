@@ -14,12 +14,16 @@ export class PlanningResourceService {
     private resourceBatch = 1;
     private blockedPeriod;
     private currentGameStartDate: Date;
+    private nrOfPoules: number;
 
     constructor(
         private roundNumberConfig: RoundNumberConfig,
         dateTime: Date
     ) {
         this.currentGameStartDate = this.cloneDateTime(dateTime);
+        if (this.roundNumberConfig.getSelfReferee()) {
+            this.nrOfPoules = this.roundNumberConfig.getRoundNumber().getPoules().length;
+        }
     }
 
     setBlockedPeriod(blockedPeriod: BlockedPeriod) {
@@ -165,7 +169,8 @@ export class PlanningResourceService {
             return this.assignableReferees.length > 0;
         }
         return this.assignableReferees.some(assignableRef => {
-            return !game.isParticipating(assignableRef.getPoulePlace());
+            return !game.isParticipating(assignableRef.getPoulePlace()) && this.isPoulePlaceAssignable(assignableRef.getPoulePlace())
+                && (this.nrOfPoules === 1 || assignableRef.getPoulePlace().getPoule() !== game.getPoule());
         });
     }
 
@@ -173,15 +178,10 @@ export class PlanningResourceService {
         if (!this.roundNumberConfig.getSelfReferee()) {
             return this.assignableReferees.shift();
         }
-        const refereesNotParticipating = this.assignableReferees.filter(assignableRef => {
-            return !game.isParticipating(assignableRef.getPoulePlace());
+        const referee = this.assignableReferees.find(assignableRef => {
+            return !game.isParticipating(assignableRef.getPoulePlace()) && this.isPoulePlaceAssignable(assignableRef.getPoulePlace())
+                && (this.nrOfPoules === 1 || assignableRef.getPoulePlace().getPoule() !== game.getPoule());
         });
-        let referee = refereesNotParticipating.find(assignableRef => {
-            return game.getPoule() !== assignableRef.getPoulePlace().getPoule();
-        });
-        if (referee === undefined) {
-            referee = refereesNotParticipating[0];
-        }
         if (referee !== undefined) {
             this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         }
@@ -227,10 +227,10 @@ export class PlanningResourceService {
     }
 
     protected areAllPoulePlacesAssignable(poulePlaces: PoulePlace[]): boolean {
-        return poulePlaces.every(poulePlace => this.isPoulePlacesAssignable(poulePlace));
+        return poulePlaces.every(poulePlace => this.isPoulePlaceAssignable(poulePlace));
     }
 
-    protected isPoulePlacesAssignable(poulePlace: PoulePlace): boolean {
+    protected isPoulePlaceAssignable(poulePlace: PoulePlace): boolean {
         return !this.hasPoulePlace(this.assignedPoulePlaces, poulePlace);
     }
 

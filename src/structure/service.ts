@@ -8,9 +8,9 @@ import { RoundNumber } from '../round/number';
 import { RoundNumberConfigService } from '../round/number/config/service';
 import { Structure } from '../structure';
 
-export interface IRoundStructure {
+export interface RoundStructureConfig {
+    nrofcompetitors: number;
     nrofpoules: number;
-    nrofwinners: number;
 }
 
 export interface ICompetitorRange {
@@ -20,47 +20,47 @@ export interface ICompetitorRange {
 
 export class StructureService {
 
-    static readonly DEFAULTS: IRoundStructure[] = [
-        undefined, undefined,
-        { nrofpoules: 1, nrofwinners: 1 }, // 2
-        { nrofpoules: 1, nrofwinners: 1 },
-        { nrofpoules: 1, nrofwinners: 1 },
-        { nrofpoules: 1, nrofwinners: 2 },
-        { nrofpoules: 2, nrofwinners: 2 }, // 6
-        { nrofpoules: 1, nrofwinners: 1 },
-        { nrofpoules: 2, nrofwinners: 2 },
-        { nrofpoules: 3, nrofwinners: 4 },
-        { nrofpoules: 2, nrofwinners: 2 }, // 10
-        { nrofpoules: 2, nrofwinners: 2 },
-        { nrofpoules: 3, nrofwinners: 4 },
-        { nrofpoules: 3, nrofwinners: 4 },
-        { nrofpoules: 3, nrofwinners: 4 },
-        { nrofpoules: 3, nrofwinners: 4 },
-        { nrofpoules: 4, nrofwinners: 4 },
-        { nrofpoules: 4, nrofwinners: 4 },
-        { nrofpoules: 4, nrofwinners: 8 }, // 18
-        { nrofpoules: 4, nrofwinners: 8 },
-        { nrofpoules: 5, nrofwinners: 8 },
-        { nrofpoules: 5, nrofwinners: 8 },
-        { nrofpoules: 5, nrofwinners: 8 },
-        { nrofpoules: 5, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 }, // 24
-        { nrofpoules: 5, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 9, nrofwinners: 8 }, // 27
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 8, nrofwinners: 16 }, // 32
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 6, nrofwinners: 8 },
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 7, nrofwinners: 8 },
-        { nrofpoules: 8, nrofwinners: 8 }
+    static readonly DEFAULTS: number[] = [
+        undefined, undefined, /* 2 */
+        1, // 2
+        1,
+        1,
+        1,
+        2, // 6
+        1,
+        2,
+        3,
+        2, // 10
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4, // 18
+        4,
+        5,
+        5,
+        5,
+        5,
+        6, // 24
+        5,
+        6,
+        9, // 27
+        7,
+        6,
+        6,
+        7,
+        8, // 32
+        6,
+        6,
+        7,
+        6,
+        7,
+        7,
+        7,
+        8
     ];
 
     private configService: RoundNumberConfigService;
@@ -98,11 +98,7 @@ export class StructureService {
         if (nrOfPlaces <= 0) {
             return;
         }
-        const roundStructure = this.getDefaultRoundStructure(round.getNumberAsValue(), nrOfPlaces);
-        if (roundStructure === undefined) {
-            return;
-        }
-        let nrOfPoulesToAdd = roundStructure.nrofpoules;
+        let nrOfPoulesToAdd = this.getDefaultNrOfPoules(nrOfPlaces);
         while (nrOfPlaces > 0) {
             const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoulesToAdd);
             const poule = new Poule(round);
@@ -416,21 +412,11 @@ export class StructureService {
         }
     }
 
-    getDefaultRoundStructure(roundNr, nrOfPlaces): IRoundStructure {
-        if (nrOfPlaces < 1) {
+    getDefaultNrOfPoules(nrOfPlaces): number {
+        if (nrOfPlaces < this.competitorRange.min || nrOfPlaces > this.competitorRange.max) {
             return undefined;
-        } else if (nrOfPlaces === 1) {
-            return { nrofpoules: 1, nrofwinners: 0 };
         }
-        if (roundNr > 1 && (nrOfPlaces % 2) === 0) {
-            return { nrofpoules: nrOfPlaces / 2, nrofwinners: nrOfPlaces / 2 };
-        }
-        const roundStructure = StructureService.DEFAULTS[nrOfPlaces];
-        if (roundStructure === undefined) {
-            throw new Error('het aantal deelnemers moet minimaal ' + (this.competitorRange.min - 1) +
-                ' zijn en mag maximaal ' + this.competitorRange.max + ' zijn');
-        }
-        return roundStructure;
+        return StructureService.DEFAULTS[nrOfPlaces];
     }
 
     getNrOfPlacesPerPoule(nrOfPlaces: number, nrOfPoules: number): number {

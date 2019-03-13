@@ -18,7 +18,8 @@ export class CompetitorMapper {
             SportCache.competitors[competitor.getId()] = competitor;
         }
         competitor.setAbbreviation(json.abbreviation);
-        competitor.setInfo(json.info);
+        competitor.setRegistered(json.registered),
+            competitor.setInfo(json.info);
         competitor.setImageUrl(json.imageUrl);
         return competitor;
     }
@@ -28,6 +29,7 @@ export class CompetitorMapper {
             id: competitor.getId(),
             name: competitor.getName(),
             abbreviation: competitor.getAbbreviation(),
+            registered: competitor.getRegistered(),
             info: competitor.getInfo(),
             imageUrl: competitor.getImageUrl()
         };
@@ -38,6 +40,7 @@ export interface JsonCompetitor {
     id?: number;
     name?: string;
     abbreviation?: string;
+    registered?: boolean;
     info?: string;
     imageUrl?: string;
 }
