@@ -3,7 +3,7 @@ import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { RankingItem } from '../ranking/item';
-import { Ranking } from '../ranking/service';
+import { RankingService } from '../ranking/service';
 import { Round } from '../round';
 import { PoulePlaceDivider } from './pouleplacedivider';
 import { QualifyReservationService } from './reservationservice';
@@ -234,7 +234,7 @@ export class QualifyService {
             });
             return newQualifiers;
         }
-        const rankingService = new Ranking(Ranking.RULESSET_WC);
+        const rankingService = new RankingService(rule.getFromRound(), RankingService.RULESSET_WC);
         const roundRankingItems: RankingItem[] = rankingService.getItemsForMultipleRule(rule);
         const roundRankingPoulePlaces: PoulePlace[] = rankingService.getPoulePlaces(roundRankingItems, toWinnersLosers);
         while (roundRankingPoulePlaces.length > toPoulePlaces.length) {
@@ -254,9 +254,9 @@ export class QualifyService {
     }
 
     getQualifiedCompetitor(poule: Poule, rank: number): Competitor {
-        const rankingService = new Ranking(Ranking.RULESSET_WC);
-        const pouleRankingItems: RankingItem[] = rankingService.getItems(poule.getPlaces(), poule.getGames());
-        const poulePlace = rankingService.getItem(pouleRankingItems, rank).getPoulePlace();
+        const rankingService = new RankingService(poule.getRound(), RankingService.RULESSET_WC);
+        const pouleRankingItems: RankingItem[] = rankingService.getItemsForPoule(poule);
+        const poulePlace = rankingService.getItemByRank(pouleRankingItems, rank).getPoulePlace();
         return poulePlace ? poulePlace.getCompetitor() : undefined;
     }
 

@@ -3,17 +3,15 @@ import { PoulePlace } from '../pouleplace';
 import { QualifyRule } from '../qualify/rule';
 import { Round } from '../round';
 import { RankingItem } from './item';
-import { Ranking } from './service';
+import { RankingService } from './service';
 
 /* tslint:disable:no-bitwise */
 
 export class EndRanking {
-    private rankingService: Ranking;
-
     constructor(
-        private ruleSet: number = Ranking.RULESSET_WC
+        private ruleSet: number = RankingService.RULESSET_WC
     ) {
-        this.rankingService = new Ranking(ruleSet);
+
     }
 
     getItems(rootRound: Round): RankingItem[] {
@@ -88,11 +86,12 @@ export class EndRanking {
         const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
         const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.WINNERS);
         const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
+        const rankingService = new RankingService(round, this.ruleSet);
 
         let nrOfUniqueFromPlacesMultiple = this.getUniqueFromPlaces(multipleRules).length;
         if (multipleWinnersRule !== undefined) {
             const qualifyAmount = multipleWinnersRule.getToPoulePlaces().length;
-            const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(multipleWinnersRule);
+            const rankingItems: RankingItem[] = rankingService.getItemsForMultipleRule(multipleWinnersRule);
             for (let i = 0; i < qualifyAmount; i++) {
                 nrOfUniqueFromPlacesMultiple--;
                 rankingItems.shift();
@@ -115,7 +114,7 @@ export class EndRanking {
         });
         if (multipleLosersRule !== undefined) {
             const qualifyAmount = multipleLosersRule.getToPoulePlaces().length;
-            const rankingItems: RankingItem[] = this.getRankingItemsForMultipleRule(multipleLosersRule);
+            const rankingItems: RankingItem[] = rankingService.getItemsForMultipleRule(multipleLosersRule);
             for (let i = 0; i < qualifyAmount; i++) {
                 nrOfUniqueFromPlacesMultiple--;
                 rankingItems.pop(); // or shift()???
@@ -135,31 +134,20 @@ export class EndRanking {
         return round.getPoulePlacesPerPoule();
     }
 
-    protected getRankingItemsForMultipleRule(toRule: QualifyRule): RankingItem[] {
-        const poulePlacesToCompare: PoulePlace[] = [];
-        toRule.getFromPoulePlaces().forEach(fromPoulePlace => {
-            poulePlacesToCompare.push(this.getRankedEquivalent(fromPoulePlace));
-        });
-        return this.rankingService.getItems(poulePlacesToCompare, toRule.getFromRound().getGames());
-    }
-
-    protected getRankedEquivalent(poulePlace: PoulePlace): PoulePlace {
-        const rankingItems = this.rankingService.getItems(poulePlace.getPoule().getPlaces(), poulePlace.getPoule().getGames());
-        return this.rankingService.getItem(rankingItems, poulePlace.getNumber()).getPoulePlace();
-    }
-
     protected getDeadPlacesFromPlaceNumber(poulePlaces: PoulePlace[], round: Round): PoulePlace[] {
         let rankingItems: RankingItem[];
+        const rankingService = new RankingService(round, this.ruleSet);
         {
             const poulePlacesToCompare: PoulePlace[] = [];
             poulePlaces.forEach(poulePlace => {
-                rankingItems = this.rankingService.getItems(poulePlace.getPoule().getPlaces(), poulePlace.getPoule().getGames());
-                const rankingItem = this.rankingService.getItem(rankingItems, poulePlace.getNumber());
+                rankingItems = rankingService.getItemsForPoule(poulePlace.getPoule());
+                const rankingItem = rankingService.getItemByRank(rankingItems, poulePlace.getNumber());
                 if (rankingItem.isSpecified()) {
                     poulePlacesToCompare.push(rankingItem.getPoulePlace());
                 }
             });
-            rankingItems = this.rankingService.getItems(poulePlacesToCompare, round.getGames());
+
+            rankingItems = rankingService.getItems(poulePlacesToCompare, round.getGames());
         }
         return rankingItems.map(rankingItem => rankingItem.getPoulePlace());
     }
