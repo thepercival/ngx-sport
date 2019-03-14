@@ -1,9 +1,9 @@
 import { Game } from '../game';
 import { PoulePlace } from '../pouleplace';
 import { QualifyRule } from '../qualify/rule';
-import { Ranking } from '../ranking';
 import { Round } from '../round';
 import { RankingItem } from './item';
+import { Ranking } from './service';
 
 /* tslint:disable:no-bitwise */
 
@@ -129,7 +129,7 @@ export class EndRanking {
     }
 
     protected getPoulePlacesPer(round: Round): PoulePlace[][] {
-        if ( round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK ) {
+        if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
             return round.getPoulePlacesPerNumber(Round.WINNERS);
         }
         return round.getPoulePlacesPerPoule();
