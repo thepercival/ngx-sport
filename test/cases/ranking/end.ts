@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
 
 import { EndRanking } from '../../../src/ranking/end';
 import { getMapper } from '../../createmapper';
@@ -15,17 +16,17 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure9, competition);
 
-        const endRanking = new EndRanking();
+        const endRanking = new EndRanking(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('jil');
-        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('max');
-        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('zed');
-        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('jip');
-        expect(items[4].getPoulePlace().getCompetitor().getName()).to.equal('jan');
-        expect(items[5].getPoulePlace().getCompetitor().getName()).to.equal('jos');
-        expect(items[6].getPoulePlace().getCompetitor().getName()).to.equal('wim');
-        expect(items[7].getPoulePlace().getCompetitor().getName()).to.equal('cor');
-        expect(items[8].getPoulePlace().getCompetitor().getName()).to.equal('pim');
+        expect(items[0].getName()).to.equal('jil');
+        expect(items[1].getName()).to.equal('max');
+        expect(items[2].getName()).to.equal('zed');
+        expect(items[3].getName()).to.equal('jip');
+        expect(items[4].getName()).to.equal('jan');
+        expect(items[5].getName()).to.equal('jos');
+        expect(items[6].getName()).to.equal('wim');
+        expect(items[7].getName()).to.equal('cor');
+        expect(items[8].getName()).to.equal('pim');
     });
 
     it('structure16rank', () => {
@@ -35,24 +36,24 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure16rank, competition);
 
-        const endRanking = new EndRanking();
+        const endRanking = new EndRanking(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('tiem');
-        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('kira');
-        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('luuk');
-        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('bart');
-        expect(items[4].getPoulePlace().getCompetitor().getName()).to.equal('mira');
-        expect(items[5].getPoulePlace().getCompetitor().getName()).to.equal('huub');
-        expect(items[6].getPoulePlace().getCompetitor().getName()).to.equal('nova');
-        expect(items[7].getPoulePlace().getCompetitor().getName()).to.equal('mats');
-        expect(items[8].getPoulePlace().getCompetitor().getName()).to.equal('bram');
-        expect(items[9].getPoulePlace().getCompetitor().getName()).to.equal('stan');
-        expect(items[10].getPoulePlace().getCompetitor().getName()).to.equal('maan');
-        expect(items[11].getPoulePlace().getCompetitor().getName()).to.equal('mila');
-        expect(items[12].getPoulePlace().getCompetitor().getName()).to.equal('noud');
-        expect(items[13].getPoulePlace().getCompetitor().getName()).to.equal('mart');
-        expect(items[14].getPoulePlace().getCompetitor().getName()).to.equal('fred');
-        expect(items[15].getPoulePlace().getCompetitor().getName()).to.equal('toon');
+        expect(items[0].getName()).to.equal('tiem');
+        expect(items[1].getName()).to.equal('kira');
+        expect(items[2].getName()).to.equal('luuk');
+        expect(items[3].getName()).to.equal('bart');
+        expect(items[4].getName()).to.equal('mira');
+        expect(items[5].getName()).to.equal('huub');
+        expect(items[6].getName()).to.equal('nova');
+        expect(items[7].getName()).to.equal('mats');
+        expect(items[8].getName()).to.equal('bram');
+        expect(items[9].getName()).to.equal('stan');
+        expect(items[10].getName()).to.equal('maan');
+        expect(items[11].getName()).to.equal('mila');
+        expect(items[12].getName()).to.equal('noud');
+        expect(items[13].getName()).to.equal('mart');
+        expect(items[14].getName()).to.equal('fred');
+        expect(items[15].getName()).to.equal('toon');
     });
 
     it('structure4rankteamup', () => {
@@ -62,11 +63,11 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure4rankteamup, competition);
 
-        const endRanking = new EndRanking();
+        const endRanking = new EndRanking(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound());
-        expect(items[0].getPoulePlace().getCompetitor().getName()).to.equal('rank1');
-        expect(items[1].getPoulePlace().getCompetitor().getName()).to.equal('rank2');
-        expect(items[2].getPoulePlace().getCompetitor().getName()).to.equal('rank3');
-        expect(items[3].getPoulePlace().getCompetitor().getName()).to.equal('rank4');
+        expect(items[0].getName()).to.equal('rank1');
+        expect(items[1].getName()).to.equal('rank2');
+        expect(items[2].getName()).to.equal('rank3');
+        expect(items[3].getName()).to.equal('rank4');
     });
 });

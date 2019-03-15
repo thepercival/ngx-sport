@@ -10,6 +10,7 @@ export class Competition {
     protected id: number;
     protected league: League;
     protected season: Season;
+    protected ruleSet: number;
     protected startDateTime: Date;
     protected state: number;
     protected referees: Referee[] = [];
@@ -43,6 +44,14 @@ export class Competition {
 
     setSeason(season: Season): void {
         this.season = season;
+    }
+
+    getRuleSet(): number {
+        return this.ruleSet;
+    }
+
+    setRuleSet(ruleSet: number): void {
+        this.ruleSet = ruleSet;
     }
 
     getStartDateTime(): Date {

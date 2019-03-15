@@ -2,7 +2,8 @@ import { Game } from '../game';
 import { GameScoreHomeAway } from './score/homeaway';
 
 export class GameScore extends GameScoreHomeAway {
-
+    static readonly SCORED = 1;
+    static readonly RECEIVED = 2;
     protected id: number;
     protected game: Game;
     protected number: number;

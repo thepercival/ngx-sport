@@ -15,13 +15,12 @@
                 "${workspaceFolder}/test/hook.js",
                 "--colors",
                 "--recursive",
-                "${workspaceFolder}/test/cases/**/*.ts"
+                "${workspaceFolder}/test/cases/ranking/end.ts"
             ],
             "env": {
                 "NODE_ENV": "development",
             },
-            "internalConsoleOptions": "openOnSessionStart",
-            "mo"
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }

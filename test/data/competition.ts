@@ -1,4 +1,5 @@
 import { JsonCompetition } from '../../src/competition/mapper';
+import { RankingService } from '../../src/ranking/service';
 
 export const jsonCompetition: JsonCompetition = {
     'league': {
@@ -21,5 +22,6 @@ export const jsonCompetition: JsonCompetition = {
     ],
     'referees': [],
     'startDateTime': '2018-12-17T12:00:00.000Z',
-    'state': 1
+    'state': 1,
+    'ruleSet': RankingService.RULESSET_WC
 };

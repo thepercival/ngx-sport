@@ -3,6 +3,7 @@ import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
+import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyRule } from './qualify/rule';
 import { RoundNumber } from './round/number';
 
@@ -192,12 +193,6 @@ export class Round {
         return poulePlaces;
     }
 
-    getPoulePlacesPerPoule(): PoulePlace[][] {
-        const poulePlacesPerPoule = [];
-        this.getPoules().forEach(poule => poulePlacesPerPoule.push(poule.getPlaces()));
-        return poulePlacesPerPoule;
-    }
-
     /**
      * winnerslosers = Round.WINNERS
      *  [ A1 B1 C1 ]
@@ -242,6 +237,10 @@ export class Round {
         }, poulePlacesPerNumber);
 
         return poulePlacesPerNumber;
+    }
+
+    getPoulePlace(poulePlaceLocation: PoulePlaceLocation): PoulePlace {
+        return this.getPoule(poulePlaceLocation.getPouleNr()).getPlace(poulePlaceLocation.getPlaceNr());
     }
 
     getCompetitors(): Competitor[] {

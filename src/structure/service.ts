@@ -2,7 +2,7 @@ import { Competition } from '../competition';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { QualifyService } from '../qualify/service';
+import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { RoundNumberConfigService } from '../round/number/config/service';
@@ -109,7 +109,7 @@ export class StructureService {
             nrOfPoulesToAdd--;
         }
         if (!round.isRoot()) {
-            const qualifyService = new QualifyService(round.getParent(), round);
+            const qualifyService = new QualifyRuleService(round.getParent(), round);
             qualifyService.removeRules();
             qualifyService.createRules();
         }
@@ -136,7 +136,7 @@ export class StructureService {
 
         // console.log('removeRound from parent, number: ' + childRound.getNumberAsValue());
         parentRound.getChildRounds().splice(index, 1);
-        const qualifyService = new QualifyService(parentRound, childRound);
+        const qualifyService = new QualifyRuleService(parentRound, childRound);
         qualifyService.removeRules();
         return childRound;
     }
@@ -231,13 +231,13 @@ export class StructureService {
 
     recalculateQualifyRulesForRound(round: Round, recalculateChildRounds: boolean = true) {
         if (!round.isRoot()) {
-            const qualifyService = new QualifyService(round.getParent(), round);
+            const qualifyService = new QualifyRuleService(round.getParent(), round);
             qualifyService.removeRules();
             qualifyService.createRules();
         }
         if (recalculateChildRounds) {
             round.getChildRounds().forEach(function (childRound) {
-                const qualifyService = new QualifyService(childRound.getParent(), childRound);
+                const qualifyService = new QualifyRuleService(childRound.getParent(), childRound);
                 qualifyService.removeRules();
                 qualifyService.createRules();
             });
@@ -355,7 +355,7 @@ export class StructureService {
         let childRound = parentRound.getChildRound(winnersOrLosers);
         let addRound = (childRound === undefined && nrOfChildPlacesNew > 0);
         if (childRound !== undefined && childRound.getPoulePlaces().length > 0 && nrOfChildPlacesNew === 2) {
-            // const qualifyServiceIn = new QualifyService(childRound.getParent(), childRound);
+            // const qualifyServiceIn = new QualifyRuleService(childRound.getParent(), childRound);
             // qualifyServiceIn.removeRules();
             this.removeChildRound(parentRound, winnersOrLosers);
             childRound = undefined;

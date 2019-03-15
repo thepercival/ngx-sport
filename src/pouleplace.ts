@@ -1,6 +1,7 @@
 import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
+import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyRule } from './qualify/rule';
 
 export class PoulePlace {
@@ -85,6 +86,10 @@ export class PoulePlace {
         return this.toQualifyRules.find(function (qualifyRuleIt) {
             return (qualifyRuleIt.getWinnersOrLosers() === winnersOrLosers);
         });
+    }
+
+    getLocation(): PoulePlaceLocation {
+        return new PoulePlaceLocation(this.getPoule().getNumber(), this.getNumber());
     }
 
     setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {

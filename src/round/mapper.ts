@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { JsonPoule, PouleMapper } from '../poule/mapper';
-import { QualifyService } from '../qualify/service';
+import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from './number';
 
@@ -15,7 +15,7 @@ export class RoundMapper {
         round.setQualifyOrder(json.qualifyOrder);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
         if (parentRound !== undefined) {
-            const qualifyService = new QualifyService(round.getParent(), round);
+            const qualifyService = new QualifyRuleService(round.getParent(), round);
             qualifyService.createRules();
         }
         json.childRounds.forEach((jsonChildRound) => {

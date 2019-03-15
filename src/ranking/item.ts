@@ -1,13 +1,13 @@
+import { PoulePlaceLocation } from '../pouleplace/location';
+import { Round } from '../round';
+
 export class RankingItem {
     private uniqueRank: number;
     private rank: number;
 
-    // constructor(
-    //     private uniqueRank: number,
-    //     private rank: number,
-    //     private poulePlace?: PoulePlace
-    // ) {
-    // }
+    constructor(
+    ) {
+    }
 
     getUniqueRank(): number {
         return this.uniqueRank;
@@ -24,19 +24,21 @@ export class RankingItem {
     setRank(rank: number) {
         this.rank = rank;
     }
+}
 
-    // getPoulePlace(): PoulePlace {
-    //     return this.poulePlace;
-    // }
+export class EndRankingItem extends RankingItem {
+    constructor(uniqueRank: number, rank: number, private name: string) {
+        super();
+        this.setUniqueRank(uniqueRank);
+        this.setRank(rank);
+    }
 
-    // getPoulePlaceForRank(): PoulePlace {
-    //     return this.poulePlace.getPoule().getPlace(this.getUniqueRank());
-    // }
+    getName(): string {
+        return this.name;
+    }
+}
 
-    // isSpecified(): boolean {
-    //     return this.poulePlace !== undefined;
-    // }
-
+export class RoundRankingItem extends RankingItem {
     private games: number = 0;
     private points: number = 0;
     private scored: number = 0;
@@ -44,18 +46,29 @@ export class RankingItem {
     private subReceived: number = 0;
     private subScored: number = 0;
 
-    constructor(private pouleNumber: number, private placeNumber: number, penaltyPoints?: number) {
+    // @TODO penaltyPoints naar competitor!!!!! CDK
+
+    constructor(private round: Round, private poulePlaceLocation: PoulePlaceLocation, penaltyPoints?: number) {
+        super();
         if (penaltyPoints !== undefined) {
             this.addPoints(-penaltyPoints);
         }
+    }
+
+    getRound(): Round {
+        return this.round;
+    }
+
+    getPoulePlaceLocation(): PoulePlaceLocation {
+        return this.poulePlaceLocation;
     }
 
     getGames(): number {
         return this.games;
     }
 
-    addGames(games: number) {
-        this.games += games;
+    addGame() {
+        this.games++;
     }
 
     getPoints(): number {

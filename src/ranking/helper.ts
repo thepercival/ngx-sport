@@ -1,15 +1,15 @@
 import { Game } from '../game';
+import { GameScore } from '../game/score';
 import { GameScoreHomeAway } from '../game/score/homeaway';
 import { PoulePlace } from '../pouleplace';
-import { RoundNumberConfig } from '../round/number/config';
-import { RankingItem } from './item';
-import { RankingService } from './service';
+import { Round } from '../round';
+import { RoundRankingItem } from './item';
 
 /* tslint:disable:no-bitwise */
 
 export class RankingItemsGetter {
     constructor(
-        private config: RoundNumberConfig,
+        private round: Round,
         private gameStates: number
     ) {
     }
@@ -18,9 +18,9 @@ export class RankingItemsGetter {
         return poulePlace.getPoule().getNumber() + '-' + poulePlace.getNumber();
     }
 
-    getFormattedItems(poulePlaces: PoulePlace[], games: Game[]): RankingItem[] {
+    getFormattedItems(poulePlaces: PoulePlace[], games: Game[]): RoundRankingItem[] {
         const items = poulePlaces.map(poulePlace => {
-            return new RankingItem(poulePlace.getPoule().getNumber(), poulePlace.getNumber(), poulePlace.getPenaltyPoints());
+            return new RoundRankingItem(this.round, poulePlace.getLocation(), poulePlace.getPenaltyPoints());
         });
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
@@ -29,14 +29,14 @@ export class RankingItemsGetter {
             const finalScore = game.getFinalScore();
             [Game.HOME, Game.AWAY].forEach(homeAway => {
                 const points = this.getNrOfPoints(finalScore, game.getScoresMoment(), homeAway);
-                const scored = this.getNrOfUnits(finalScore, homeAway, RankingService.SCORED, false);
-                const received = this.getNrOfUnits(finalScore, homeAway, RankingService.RECEIVED, false);
-                const subScored = this.getNrOfUnits(finalScore, homeAway, RankingService.SCORED, true);
-                const subReceived = this.getNrOfUnits(finalScore, homeAway, RankingService.RECEIVED, true);
-                const gamePoulePlaces = game.getPoulePlaces(homeAway);
-                const homeAwayItems = gamePoulePlaces.map(gamePoulePlace => items[RankingItemsGetter.getIndex(gamePoulePlace.getPoulePlace())]);
-                homeAwayItems.forEach(item => {
-                    item.addPlayed(1)
+                const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, false);
+                const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, false);
+                const subScored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, true);
+                const subReceived = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, true);
+                game.getPoulePlaces(homeAway).forEach(gamePoulePlace => {
+                    const item = items.find(item => item.getPoulePlaceLocation().getPlaceNr() === gamePoulePlace.getPoulePlace().getLocation().getPlaceNr()
+                        && item.getPoulePlaceLocation().getPouleNr() === gamePoulePlace.getPoulePlace().getLocation().getPouleNr());
+                    item.addGame();
                     item.addPoints(points);
                     item.addScored(scored);
                     item.addReceived(received);
@@ -53,17 +53,18 @@ export class RankingItemsGetter {
         if (finalScore === undefined) {
             return points;
         }
+        const config = this.round.getNumber().getConfig();
         if (this.getGameScorePart(finalScore, homeAway) > this.getGameScorePart(finalScore, !homeAway)) {
             if (scoresMoment === Game.MOMENT_EXTRATIME) {
-                points += this.config.getWinPointsExt();
+                points += config.getWinPointsExt();
             } else {
-                points += this.config.getWinPoints();
+                points += config.getWinPoints();
             }
         } else if (this.getGameScorePart(finalScore, homeAway) === this.getGameScorePart(finalScore, !homeAway)) {
             if (scoresMoment === Game.MOMENT_EXTRATIME) {
-                points += this.config.getDrawPointsExt();
+                points += config.getDrawPointsExt();
             } else {
-                points += this.config.getDrawPoints();
+                points += config.getDrawPoints();
             }
         }
     }
@@ -72,7 +73,7 @@ export class RankingItemsGetter {
         if (finalScore === undefined) {
             return 0;
         }
-        return this.getGameScorePart(finalScore, scoredReceived === RankingService.SCORED ? homeAway : !homeAway);
+        return this.getGameScorePart(finalScore, scoredReceived === GameScore.SCORED ? homeAway : !homeAway);
     }
 
     private getGameScorePart(gameScoreHomeAway: GameScoreHomeAway, homeAway: boolean): number {
