@@ -127,9 +127,6 @@ export class EndRanking {
         const rankingService = new RankingService(this.ruleSet);
         if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
             const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
-            if (round.getWinnersOrLosers() === Round.LOSERS) {
-                poulePlacesPerNumber.reverse();
-            }
             poulePlacesPerNumber.forEach(poulePlaces => {
                 const deadPlaceLocations = poulePlaces
                     .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
@@ -149,9 +146,6 @@ export class EndRanking {
                     .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
                     .map(poulePlace => poulePlace.getNumber());
 
-                if (round.getWinnersOrLosers() === Round.LOSERS) {
-                    deadRanks.reverse();
-                }
                 deadRanks.forEach(deadRank => {
                     const rankingItem = rankingService.getItemByRank(rankingItems, deadRank);
                     const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());

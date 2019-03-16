@@ -67,6 +67,7 @@ export class RankingItemsGetter {
                 points += config.getDrawPoints();
             }
         }
+        return points;
     }
 
     private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number, sub: boolean): number {

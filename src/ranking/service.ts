@@ -51,7 +51,7 @@ export class RankingService {
         const round: Round = poule.getRound();
         const getter = new RankingItemsGetter(round, this.gameStates);
         const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poule.getPlaces(), poule.getGames());
-        return this.rankItems(round, unrankedItems, true);
+        return this.rankItems(unrankedItems, true);
     }
 
     getItemsForMultipleRule(multipleRule: QualifyRule): RoundRankingItem[] {
@@ -66,14 +66,14 @@ export class RankingService {
             const fromRankNr = placeLocation.getPlaceNr();
             roundItems.push(this.getItemByRank(pouleItems, fromRankNr));
         });
-        return this.rankItems(round, roundItems, false);
+        return this.rankItems(roundItems, false);
     }
 
     getItemByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem {
         return rankingItems.find(rankingItemIt => rankingItemIt.getUniqueRank() === rank);
     }
 
-    private rankItems(round: Round, unrankedItems: RoundRankingItem[], againstEachOther: boolean): RoundRankingItem[] {
+    private rankItems(unrankedItems: RoundRankingItem[], againstEachOther: boolean): RoundRankingItem[] {
         const rankedItems: RoundRankingItem[] = [];
         const rankFunctions = this.getRankFunctions(againstEachOther);
         let nrOfIterations = 0;
@@ -94,9 +94,12 @@ export class RankingService {
         return rankedItems;
     }
 
-    private findBestItems(p_items: RoundRankingItem[], rankFunctions: Function[]): RoundRankingItem[] {
-        let bestItems: RoundRankingItem[] = p_items.slice(0);
+    private findBestItems(orgItems: RoundRankingItem[], rankFunctions: Function[]): RoundRankingItem[] {
+        let bestItems: RoundRankingItem[] = orgItems.slice();
         rankFunctions.some(rankFunction => {
+            if (rankFunction === this.filterBestAgainstEachOther && orgItems.length === bestItems.length) {
+                return false;
+            }
             bestItems = rankFunction(bestItems);
             return (bestItems.length < 2);
         });
@@ -175,7 +178,7 @@ export class RankingService {
         const games = this.getGamesBetweenEachOther(poulePlaces, poule.getGames());
         const getter = new RankingItemsGetter(round, this.gameStates);
         const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poulePlaces, games);
-        return this.rankItems(round, unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
+        return this.rankItems(unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
     }
 
     private filterBestUnitDifference = (items: RoundRankingItem[]): RoundRankingItem[] => {
