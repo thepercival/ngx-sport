@@ -83,7 +83,10 @@ export class RankingService {
             bestItems.forEach(bestItem => {
                 bestItem.setUniqueRank(++nrOfIterations);
                 bestItem.setRank(rank);
-                unrankedItems.splice(unrankedItems.indexOf(bestItem), 1);
+                const idx = unrankedItems.indexOf(bestItem);
+                if (idx > -1) {
+                    unrankedItems.splice(idx, 1);
+                }
                 rankedItems.push(bestItem);
             });
             if (nrOfIterations > this.maxPoulePlaces) {
@@ -176,9 +179,19 @@ export class RankingService {
         const poule = poulePlaces[0].getPoule();
         const round: Round = poule.getRound();
         const games = this.getGamesBetweenEachOther(poulePlaces, poule.getGames());
+        if (games.length === 0) {
+            return items;
+        }
         const getter = new RankingItemsGetter(round, this.gameStates);
         const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poulePlaces, games);
-        return this.rankItems(unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
+        const rankedItems = this.rankItems(unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
+        if (rankedItems.length === items.length) {
+            return items;
+        }
+        return rankedItems.map(rankedItem => {
+            return items.find(item => item.getPoulePlaceLocation().getPouleNr() === rankedItem.getPoulePlaceLocation().getPouleNr()
+                && item.getPoulePlaceLocation().getPlaceNr() === rankedItem.getPoulePlaceLocation().getPlaceNr())
+        });
     }
 
     private filterBestUnitDifference = (items: RoundRankingItem[]): RoundRankingItem[] => {
