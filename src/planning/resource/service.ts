@@ -15,6 +15,7 @@ export class PlanningResourceService {
     private blockedPeriod;
     private currentGameStartDate: Date;
     private nrOfPoules: number;
+    // private assignedPoulePlacesPerField = {};
 
     constructor(
         private roundNumberConfig: RoundNumberConfig,
@@ -33,6 +34,10 @@ export class PlanningResourceService {
     setFields(fields: Field[]) {
         this.availableFields = fields;
         this.fillAssignableFields();
+        // fields.forEach(field => {
+        //     this.assignedPoulePlacesPerField[field.getId()] = [];
+        // });
+
     }
 
     setReferees(referees: PlanningReferee[]) {
@@ -90,11 +95,21 @@ export class PlanningResourceService {
     }
 
     private assignPoulePlaces(game: Game) {
-        game.getPoulePlaces().forEach(gamePoulePlace => this.assignedPoulePlaces.push(gamePoulePlace.getPoulePlace()));
+        game.getPoulePlaces().forEach(gamePoulePlace => {
+            const poulePlace = gamePoulePlace.getPoulePlace();
+            this.assignedPoulePlaces.push(poulePlace);
+            // if (game.getField() !== undefined) {
+            //     this.assignedPoulePlacesPerField[game.getField().getId()].push(poulePlace);
+            // }
+        });
     }
 
     protected assignReferee(game: Game) {
         const referee = this.getAssignableReferee(game);
+        if (referee === undefined) {
+            return;
+        }
+        this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         referee.assign(game);
         if (referee.isSelf()) {
             this.assignedPoulePlaces.push(referee.getPoulePlace());
@@ -102,7 +117,9 @@ export class PlanningResourceService {
     }
 
     protected assignField(game: Game) {
-        game.setField(this.assignableFields.shift());
+        const field = this.getAssignableField();
+        this.assignableFields.splice(this.assignableFields.indexOf(field), 1);
+        game.setField(field);
     }
 
     private fillAssignableFields() {
@@ -155,8 +172,17 @@ export class PlanningResourceService {
         return this.availableFields.length > 0;
     }
 
-    private isSomeFieldAssignable(): boolean {
-        return this.assignableFields.length > 0;
+    private isSomeFieldAssignable(game: Game): boolean {
+        return this.assignableFields.length > 0 /*&& this.getAssignableField(game) !== undefined*/;
+    }
+
+    private getAssignableField(): Field {
+        return this.assignableFields[0];
+        // return this.assignableFields.find(field => {
+        //     return game.getPoulePlaces().every(gamePoulePlace => {
+        //         return this.assignedPoulePlacesPerField[field.getId()].find(poulePlace => poulePlace === gamePoulePlace.getPoulePlace()) === undefined;
+        //     })
+        // });
     }
 
     private areRefereesAvailable(): boolean {
@@ -168,24 +194,17 @@ export class PlanningResourceService {
         if (!this.roundNumberConfig.getSelfReferee()) {
             return this.assignableReferees.length > 0;
         }
-        return this.assignableReferees.some(assignableRef => {
-            return !game.isParticipating(assignableRef.getPoulePlace()) && this.isPoulePlaceAssignable(assignableRef.getPoulePlace())
-                && (this.nrOfPoules === 1 || assignableRef.getPoulePlace().getPoule() !== game.getPoule());
-        });
+        return this.getAssignableReferee(game) !== undefined;
     }
 
     private getAssignableReferee(game: Game): PlanningReferee {
         if (!this.roundNumberConfig.getSelfReferee()) {
-            return this.assignableReferees.shift();
+            return this.assignableReferees[0];
         }
-        const referee = this.assignableReferees.find(assignableRef => {
+        return this.assignableReferees.find(assignableRef => {
             return !game.isParticipating(assignableRef.getPoulePlace()) && this.isPoulePlaceAssignable(assignableRef.getPoulePlace())
                 && (this.nrOfPoules === 1 || assignableRef.getPoulePlace().getPoule() !== game.getPoule());
         });
-        if (referee !== undefined) {
-            this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
-        }
-        return referee;
     }
 
     private cloneDateTime(dateTime: Date): Date {
@@ -213,12 +232,13 @@ export class PlanningResourceService {
 
     /** bij echte scheidsrechters mag isGameAssignable wel van scheidsrechters afhangen  */
     private isGameAssignable(game: Game): boolean {
-        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
+        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable(game)) {
             return false;
         }
         if (this.areRefereesAvailable() && !this.isSomeRefereeAssignable(game)) {
             return false;
         }
+
         return this.areAllPoulePlacesAssignable(this.getPoulePlaces(game));
     }
 
