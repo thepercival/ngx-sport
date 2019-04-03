@@ -1,17 +1,39 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Game, PlanningService, PoulePlace } from '../../../public_api';
+import { Competitor, Game, PlanningService, PoulePlace } from '../../../public_api';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
+import { jsonCompetition3Fields } from '../../data/competition3fields';
 import { jsonStructureGameGenerator } from '../../data/structure-gamegenerator';
 import { jsonStructureGameGeneratorFive } from '../../data/structure-gamegenerator-five';
+import { jsonStructureCompetitorAsReferee } from '../../data/structure2x7-3fields';
 
 export function assertSameGame(game: Game, roundNr: number, subNr: number, home: PoulePlace[], away: PoulePlace[]) {
     expect(game.getRoundNumber()).to.equal(roundNr);
     expect(game.getSubNumber()).to.equal(subNr);
     expect(game.getPoulePlaces(Game.HOME).map(gamePoulePlace => gamePoulePlace.getPoulePlace().getNumber())).to.deep.equal(home);
     expect(game.getPoulePlaces(Game.AWAY).map(gamePoulePlace => gamePoulePlace.getPoulePlace().getNumber())).to.deep.equal(away);
+}
+
+export function assertCompetitorPlaysAndIsReferee(games: Game[]) {
+    const competitorsAsReferee: Competitor[] = [];
+    games.forEach(game => {
+        if (game.getRefereePoulePlace() !== undefined && game.getRefereePoulePlace().getCompetitor() !== undefined) {
+            competitorsAsReferee.push(game.getRefereePoulePlace().getCompetitor());
+        }
+    });
+
+    expect(competitorsAsReferee.length).to.greaterThan(0);
+
+    games.forEach(game => game.getPoulePlaces().forEach(gamePoulePlace => {
+        const competitorFound = competitorsAsReferee.find(competitorAsReferee => competitorAsReferee === gamePoulePlace.getPoulePlace().getCompetitor());
+        if (competitorFound !== undefined) {
+            const x = 'competitorFound should be undefined: breakpoints should be set here ';
+        }
+        expect(competitorFound).to.equal(undefined);
+    })
+    );
 }
 
 describe('Planning/Service', () => {
@@ -100,4 +122,27 @@ describe('Planning/Service', () => {
         this.assertSameGame(games[13], roundNr, subNr, [2, 5], [1, 4]); roundNr++;
         this.assertSameGame(games[14], roundNr, subNr, [4, 2], [1, 5]); roundNr++;
     });
+
+    it('2Poules14Places3FieldsCompetitorAsReferee', () => {
+
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition3Fields);
+
+        const structureMapper = getMapper('structure');
+        const structure = structureMapper.toObject(jsonStructureCompetitorAsReferee, competition);
+
+        const planningService = new PlanningService(competition);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        planningService.create(firstRoundNumber, competition.getStartDateTime());
+
+        const games = firstRoundNumber.getGames();
+        let resourceBatch = 1;
+        let gamesForResourceBatch = games.filter(game => game.getResourceBatch() === resourceBatch);
+        while (gamesForResourceBatch.length > 0) {
+            this.assertCompetitorPlaysAndIsReferee(gamesForResourceBatch);
+            resourceBatch++;
+            gamesForResourceBatch = games.filter(game => game.getResourceBatch() === resourceBatch);
+        }
+    });
+
 });

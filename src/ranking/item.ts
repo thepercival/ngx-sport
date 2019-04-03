@@ -46,8 +46,6 @@ export class RoundRankingItem extends RankingItem {
     private subReceived: number = 0;
     private subScored: number = 0;
 
-    // @TODO penaltyPoints naar competitor!!!!! CDK
-
     constructor(private round: Round, private poulePlaceLocation: PoulePlaceLocation, penaltyPoints?: number) {
         super();
         if (penaltyPoints !== undefined) {
