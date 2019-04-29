@@ -19,9 +19,6 @@ export class Round {
     static readonly QUALIFYORDER_CUSTOM1 = 4;
     static readonly QUALIFYORDER_CUSTOM2 = 5;
 
-    static readonly RANK_NUMBER_POULE = 6;
-    static readonly RANK_POULE_NUMBER = 7;
-
     protected id: number;
     protected number: RoundNumber;
     protected parentRound: Round;

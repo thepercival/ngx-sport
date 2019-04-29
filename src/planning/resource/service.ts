@@ -153,6 +153,10 @@ export class PlanningResourceService {
             this.assignableReferees = this.availableReferees.slice();
             return;
         }
+        if (this.roundNumberConfig.getSelfReferee()) {
+            this.assignableReferees = this.assignableReferees.concat(this.availableReferees);
+            return;
+        }
         const lastAssignableReferee = this.assignableReferees[this.assignableReferees.length - 1];
         const idxLastAssignableReferee = this.availableReferees.indexOf(lastAssignableReferee);
         const firstAssignableReferee = this.assignableReferees[0];

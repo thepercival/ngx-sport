@@ -117,8 +117,6 @@ export class GameGenerator {
             teams.push(combination.get());
         }));
 
-
-
         const gameRoundsTmp: PlanningGameRound[] = [];
         // teams are all possible combinations of two pouleplaces
         teams.forEach(team => {
@@ -146,14 +144,14 @@ export class GameGenerator {
         const gameRounds: PlanningGameRound[] = [];
         let gameRound = new PlanningGameRound(1, []);
         gameRounds.push(gameRound);
-        let nrOfGames = 0;
+
         while (uniqueGames.length > 0) {
             const game = uniqueGames.shift();
             if (this.isPoulePlaceInRoundGame(gameRound.getCombinations(), game)) {
                 uniqueGames.push(game);
                 continue;
             }
-            gameRound.getCombinations().push(game); nrOfGames++;
+            gameRound.getCombinations().push(game);
             if (((gameRound.getCombinations().length * 4) + 4) > nrOfPoulePlaces) {
                 gameRound = new PlanningGameRound(gameRound.getNumber() + 1, []);
                 gameRounds.push(gameRound);
@@ -239,6 +237,7 @@ export class GameGenerator {
         if (nrOfPlaces === 0) {
             return [];
         }
+        const nrOfHomeGames = {}; places.forEach(place => nrOfHomeGames[place.getNumber()] = 0);
 
         // add a placeholder if the count is odd
         if ((nrOfPlaces % 2) !== 0) {
@@ -253,6 +252,7 @@ export class GameGenerator {
 
         // generate each set
         for (let roundNumber = 1; roundNumber <= nrOfRoundNumbers; roundNumber++) {
+            const evenRoundNumber = (roundNumber % 2) === 0;
             const combinations: PoulePlaceCombination[] = [];
             const halves = this.chunk(places, 2);
             const firstHalf = halves.shift();
@@ -262,7 +262,15 @@ export class GameGenerator {
                 if (firstHalf[i] === undefined || secondHalf[i] === undefined) {
                     continue;
                 }
-                combinations.push(new PoulePlaceCombination([firstHalf[i]], [secondHalf[i]]));
+                let homePlace = evenRoundNumber ? secondHalf[i] : firstHalf[i];
+                let awayPlace = evenRoundNumber ? firstHalf[i] : secondHalf[i];
+                if (nrOfHomeGames[awayPlace.getNumber()] < nrOfHomeGames[homePlace.getNumber()]) {
+                    const tmpPlace = homePlace;
+                    homePlace = awayPlace;
+                    awayPlace = tmpPlace;
+                }
+                combinations.push(new PoulePlaceCombination([homePlace], [awayPlace]));
+                nrOfHomeGames[homePlace.getNumber()]++;
             }
             gameRounds.push(new PlanningGameRound(roundNumber, combinations));
             // remove the first player and store
@@ -275,14 +283,14 @@ export class GameGenerator {
         return gameRounds;
     }
 
-    private chunk(arr: any[], pieces: number): any[][] {
-        const chunkSize = Math.round(arr.length / pieces);
+    private chunk(places: PoulePlace[], parts: number): any[][] {
+        const chunkSize = Math.round(places.length / parts);
         const result = [];
-        for (let i = 0; i < arr.length; i += chunkSize) {
-            if (result.length < pieces - 1) {
-                result.push(arr.slice(i, i + chunkSize).map(a => a));
+        for (let i = 0; i < places.length; i += chunkSize) {
+            if (result.length < parts - 1) {
+                result.push(places.slice(i, i + chunkSize).map(a => a));
             } else {
-                result.push(arr.slice(i).map(a => a));
+                result.push(places.slice(i).map(a => a));
                 break;
             }
         }
