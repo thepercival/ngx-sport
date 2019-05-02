@@ -30,9 +30,9 @@ describe('Planning/GameGenerator', () => {
         let roundNr = 1; let subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [1], [4]); subNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [2], [3]); roundNr++; subNr = 1;
-        this.assertSameGame(gameRounds, roundNr, subNr, [1], [2]); subNr++;
-        this.assertSameGame(gameRounds, roundNr, subNr, [3], [4]); roundNr++; subNr = 1;
-        this.assertSameGame(gameRounds, roundNr, subNr, [1], [3]); subNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [2], [1]); subNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [4], [3]); roundNr++; subNr = 1;
+        this.assertSameGame(gameRounds, roundNr, subNr, [3], [1]); subNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [4], [2]);
     });
 
@@ -49,7 +49,7 @@ describe('Planning/GameGenerator', () => {
 
         let roundNr = 1; let subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [1, 4], [2, 3]); roundNr++;
-        this.assertSameGame(gameRounds, roundNr, subNr, [1, 2], [3, 4]); roundNr++;
-        this.assertSameGame(gameRounds, roundNr, subNr, [1, 3], [2, 4]);
+        this.assertSameGame(gameRounds, roundNr, subNr, [2, 1], [3, 4]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [3, 1], [2, 4]);
     });
 });
