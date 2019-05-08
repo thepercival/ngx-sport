@@ -1,4 +1,5 @@
 import { Competition } from '../competition';
+import { Competitor } from '../competitor';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
@@ -94,12 +95,44 @@ export class RoundNumber {
         return games;
     }
 
+    getNrOfGames(): number {
+        let nrOfGames = 0;
+        this.getRounds().forEach(round => {
+            nrOfGames += round.getNrOfGames();
+        });
+        return nrOfGames;
+    }
+
     getPlaces(): PoulePlace[] {
         let places = [];
         this.getPoules().forEach(poule => {
             places = places.concat(poule.getPlaces());
         });
         return places;
+    }
+
+    getNrOfPlaces(): number {
+        let nrOfPlaces = 0;
+        this.getPoules().forEach(poule => {
+            nrOfPlaces += poule.getPlaces().length;
+        });
+        return nrOfPlaces;
+    }
+
+    getCompetitors(): Competitor[] {
+        let competitors = [];
+        this.getRounds().forEach( round => {
+            competitors = competitors.concat(round.getCompetitors());
+        });
+        return competitors;
+    }
+
+    getNrOfCompetitors(): number {
+        let nrOfPlaces = 0;
+        this.getPoules().forEach(poule => {
+            nrOfPlaces += poule.getPlaces().length;
+        });
+        return nrOfPlaces;
     }
 
     getARound(): Round {

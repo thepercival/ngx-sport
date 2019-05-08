@@ -5,11 +5,15 @@ import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyRule } from './qualify/rule';
+import { QualifyPoule } from './qualify/poule';
 import { RoundNumber } from './round/number';
+import { compileInjectable } from '@angular/core/src/render3/jit/injectable';
 
 export class Round {
     static readonly WINNERS = 1;
-    static readonly LOSERS = 2;
+    static readonly DROPOUTS = 2;
+    static readonly NEUTRAL = 2;
+    static readonly LOSERS = 3;
 
     static readonly ORDER_NUMBER_POULE = 1;
     static readonly ORDER_POULE_NUMBER = 2;
@@ -21,26 +25,17 @@ export class Round {
 
     protected id: number;
     protected number: RoundNumber;
-    protected parentRound: Round;
-    protected childRounds: Round[] = [];
-    protected winnersOrLosers: number;
-    protected qualifyOrder: number;
+    protected parentQualifyPoule: QualifyPoule;
     protected name: string;
     protected poules: Poule[] = [];
+    protected qualifyPoules: QualifyPoule[] = [];
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
 
-    constructor(roundNumber: RoundNumber, parentRound: Round, winnersOrLosers: number) {
+    constructor(roundNumber: RoundNumber, parentQualifyPoule?: QualifyPoule) {
         this.number = roundNumber;
-        this.winnersOrLosers = winnersOrLosers;
-        this.setParentRound(parentRound);
-        this.qualifyOrder = (parentRound !== undefined) ? parentRound.getQualifyOrder() : Round.QUALIFYORDER_CROSS;
+        this.setParentQualifyPoule(parentQualifyPoule);
         this.number.getRounds().push(this);
-    }
-
-    static getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
-        const description = winnersOrLosers === Round.WINNERS ? 'winnaar' : (winnersOrLosers === Round.LOSERS ? 'verliezer' : '');
-        return ((multiple && (description !== '')) ? description + 's' : description);
     }
 
     static getOpposing(winnersOrLosers: number) {
@@ -60,19 +55,15 @@ export class Round {
     }
 
     getParent(): Round {
-        return this.parentRound;
+        return this.getParentQualifyPoule() ? this.getParentQualifyPoule().getRound() : undefined;
     }
 
-    protected setParentRound(round: Round) {
-        this.parentRound = round;
-        if (this.parentRound !== undefined) {
-            const childRounds = this.parentRound.getChildRounds();
-            if (childRounds.length === 1 && this.getWinnersOrLosers() === Round.WINNERS) {
-                childRounds.unshift(this);
-            } else {
-                childRounds.push(this);
-            }
-        }
+    getParentQualifyPoule(): QualifyPoule {
+        return this.parentQualifyPoule;
+    }
+
+    protected setParentQualifyPoule(parentQualifyPoule: QualifyPoule) {
+        this.parentQualifyPoule = parentQualifyPoule;
     }
 
     getNumber(): RoundNumber {
@@ -83,39 +74,39 @@ export class Round {
         return this.number.getNumber();
     }
 
-    getChildRounds(): Round[] {
-        return this.childRounds;
+    getQualifyPoules(): QualifyPoule[] {
+        return this.qualifyPoules;
     }
 
-    getChildRound(winnersOrLosers: number): Round {
-        return this.childRounds.find(roundIt => roundIt.getWinnersOrLosers() === winnersOrLosers);
+    getQualifyPoule(winnersOrLosers: number, qualifyPouleNumber: number): QualifyPoule {
+        return this.qualifyPoules.find( qualifyPoule => {
+            return qualifyPoule.getWinnersOrLosers() === winnersOrLosers
+            && qualifyPoule.getNumber() === qualifyPouleNumber;
+         });
     }
 
-    isRoot() {
-        return (this.getParent() === undefined);
+    getChildren(): Round[] {
+        return this.getQualifyPoules().map( qualifyPoule => qualifyPoule.getChildRound() );
     }
 
-    getRoot() {
-        if (!this.isRoot()) {
-            return this.getParent().getRoot();
-        }
-        return this;
+    getChild(winnersOrLosers: number, qualifyPouleNumber: number ): Round {
+        const qualifyPoule = this.getQualifyPoule(winnersOrLosers, qualifyPouleNumber);
+        return qualifyPoule ? qualifyPoule.getChildRound() : undefined;
     }
+
+    isRoot(): boolean {
+        return this.getParent() === undefined;
+    }
+
+    // getRoot() {
+    //     if (!this.isRoot()) {
+    //         return this.getParent().getRoot();
+    //     }
+    //     return this;
+    // }
 
     getWinnersOrLosers(): number {
-        return this.winnersOrLosers;
-    }
-
-    getQualifyOrder(): number {
-        return this.qualifyOrder;
-    }
-
-    setQualifyOrder(qualifyOrder: number) {
-        this.qualifyOrder = qualifyOrder;
-    }
-
-    hasCustomQualifyOrder(): boolean {
-        return !(this.getQualifyOrder() === Round.QUALIFYORDER_CROSS || this.getQualifyOrder() === Round.QUALIFYORDER_RANK);
+        return this.getParentQualifyPoule() ? this.getParentQualifyPoule().getWinnersOrLosers() : Round.NEUTRAL;
     }
 
     getName(): string {
@@ -132,15 +123,6 @@ export class Round {
 
     getPoule(number: number): Poule {
         return this.getPoules().find(poule => poule.getNumber() === number);
-    }
-
-    getPath(): number[] {
-        if (this.isRoot()) {
-            return [];
-        }
-        const path = this.getParent().getPath();
-        path.push(this.getWinnersOrLosers());
-        return path;
     }
 
     getPoulePlaces(order?: number, reversed: boolean = false): PoulePlace[] {
@@ -248,12 +230,26 @@ export class Round {
         return competitors;
     }
 
+    getNrOfCompetitors(): number {
+        let nrOfCompetitors = 0;
+        this.getPoules().forEach(poule => nrOfCompetitors += poule.getCompetitors().length);
+        return nrOfCompetitors;
+    }
+
     getGames(): Game[] {
         const games = [];
         this.getPoules().forEach(poule => {
             poule.getGames().forEach(game => games.push(game));
         });
         return games;
+    }
+
+    getNrOfGames(): number {
+        let nrOfGames = 0;
+        this.getPoules().forEach(poule => {
+            nrOfGames += poule.getGames().length;
+        });
+        return nrOfGames;
     }
 
     getGamesWithState(state: number): Game[] {
@@ -316,44 +312,18 @@ export class Round {
         return nrOfPlaces;
     }
 
-    getNrOfPlacesChildRounds(): number {
+    getNrOfPlacesChildren(): number {
         let nrOfPlacesChildRounds = 0;
-        this.getChildRounds().forEach(function (childRound) {
-            nrOfPlacesChildRounds += this.getNrOfPlacesChildRound(childRound.getWinnersOrLosers());
+        this.getChildren().forEach(function (child) {
+            nrOfPlacesChildRounds += child.getNrOfPlaces();
         }, this);
         return nrOfPlacesChildRounds;
     }
 
-    getNrOfPlacesChildRound(winnersOrLosers: number): number {
-        const childRound = this.getChildRound(winnersOrLosers);
-        return childRound !== undefined ? childRound.getPoulePlaces().length : 0;
-    }
-
-    getNrOfRoundsToGo() {
-        let nrOfRoundsToGoWinners = 0;
-        {
-            const childRoundWinners = this.getChildRound(Round.WINNERS);
-            if (childRoundWinners !== undefined) {
-                nrOfRoundsToGoWinners = childRoundWinners.getNrOfRoundsToGo() + 1;
-            }
-        }
-        let nrOfRoundsToGoLosers = 0;
-        {
-            const childRoundLosers = this.getChildRound(Round.LOSERS);
-            if (childRoundLosers !== undefined) {
-                nrOfRoundsToGoLosers = childRoundLosers.getNrOfRoundsToGo() + 1;
-            }
-        }
-        if (nrOfRoundsToGoWinners > nrOfRoundsToGoLosers) {
-            return nrOfRoundsToGoWinners;
-        }
-        return nrOfRoundsToGoLosers;
-    }
-
-    getOpposing() {
-        if (this.isRoot() === undefined) {
-            return undefined;
-        }
-        return this.getParent().getChildRound(Round.getOpposing(this.getWinnersOrLosers()));
-    }
+    // getOpposing() {
+    //     if (this.isRoot() === undefined) {
+    //         return undefined;
+    //     }
+    //     return this.getParent().getChild(Round.getOpposing(this.getWinnersOrLosers()));
+    // }
 }

@@ -192,14 +192,34 @@ export class PlanningService {
     }
 
     protected getRoundPathAsNumber(round: Round): number {
-        let value = 0;
-        const path = round.getPath();
-        let pow = path.length;
-        path.forEach(winnersOrLosers => {
-            value += winnersOrLosers === Round.WINNERS ? Math.pow(2, pow) : 0;
-            pow--;
-        });
-        return value;
+
+        // getPath(): number[] {
+    //     if (this.isRoot()) {
+    //         return [];
+    //     }
+    //     const path = this.getParent().getPath();
+    //     path.push(this.getWinnersOrLosers());
+    //     return path;
+    // }
+
+        console.error('getRoundPathAsNumber');
+        return 0;
+
+        // let roundPath = 100;
+        // if( !round.isRoot() ) {
+        //     return roundPath + round.getNumber().getRounds().indexOf(round);
+        // }
+        // roundPath = round.getNumberAsValue() * 100;
+        // roundPath += round.getParentQualifyPoule().get
+        // const parentQualifyPoule = round.get
+        // let value = 0;
+        // const path = round.getPath();
+        // let pow = path.length;
+        // path.forEach(winnersOrLosers => {
+        //     value += winnersOrLosers === Round.WINNERS ? Math.pow(2, pow) : 0;
+        //     pow--;
+        // });
+        // return value;
     }
 
     protected orderGames(games: Game[], order: number): Game[] {

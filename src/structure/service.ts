@@ -77,21 +77,25 @@ export class StructureService {
     }
 
     create(competition: Competition, nrOfPlaces: number): Structure {
-        const firstRoundNumber = new RoundNumber(competition);
-        this.configService.createDefault(firstRoundNumber);
-        const rootRound = new Round(firstRoundNumber, undefined, 0);
-        this.fillRound(rootRound, nrOfPlaces);
-        return new Structure(firstRoundNumber, rootRound);
+        console.error('create');
+        return undefined;
+        // const firstRoundNumber = new RoundNumber(competition);
+        // this.configService.createDefault(firstRoundNumber);
+        // const rootRound = new Round(firstRoundNumber, undefined, 0);
+        // this.fillRound(rootRound, nrOfPlaces);
+        // return new Structure(firstRoundNumber, rootRound);
     }
 
     private addChildRound(parentRound: Round, winnersOrLosers: number, nrOfPlaces: number): Round {
-        let nextRoundNumber = parentRound.getNumber().getNext();
-        if (nextRoundNumber === undefined) {
-            nextRoundNumber = parentRound.getNumber().createNext();
-            this.configService.createFromPrevious(nextRoundNumber);
-        }
-        const round = new Round(nextRoundNumber, parentRound, winnersOrLosers);
-        return this.fillRound(round, nrOfPlaces);
+        console.error('addChildRound');
+        return undefined;
+        // let nextRoundNumber = parentRound.getNumber().getNext();
+        // if (nextRoundNumber === undefined) {
+        //     nextRoundNumber = parentRound.getNumber().createNext();
+        //     this.configService.createFromPrevious(nextRoundNumber);
+        // }
+        // const round = new Round(nextRoundNumber, parentRound, winnersOrLosers);
+        // return this.fillRound(round, nrOfPlaces);
     }
 
     private fillRound(round: Round, nrOfPlaces: number/*, opposing: number*/): Round {
@@ -117,28 +121,30 @@ export class StructureService {
     }
 
     removeChildRound(parentRound: Round, winnersOrLosers: number): Round {
-        const childRound = parentRound.getChildRound(winnersOrLosers);
-        if (childRound === undefined) {
-            return undefined;
-        }
-        const roundNumber = childRound.getNumber();
-        const numberRounds = roundNumber.getRounds();
-        const indexNumber = numberRounds.indexOf(childRound);
-        if (indexNumber > -1) {
-            // console.log('removeRound from number, number: ' + childRound.getNumberAsValue());
-            numberRounds.splice(indexNumber, 1);
-            if (numberRounds.length === 0) {
-                parentRound.getNumber().removeNext();
-                // console.log('removeRoundNumber, number: ' + childRound.getNumberAsValue());
-            }
-        }
-        const index = parentRound.getChildRounds().indexOf(childRound);
+        console.error('removeChildRound');
+        return undefined;
+        // const childRound = parentRound.getChildRound(winnersOrLosers);
+        // if (childRound === undefined) {
+        //     return undefined;
+        // }
+        // const roundNumber = childRound.getNumber();
+        // const numberRounds = roundNumber.getRounds();
+        // const indexNumber = numberRounds.indexOf(childRound);
+        // if (indexNumber > -1) {
+        //     // console.log('removeRound from number, number: ' + childRound.getNumberAsValue());
+        //     numberRounds.splice(indexNumber, 1);
+        //     if (numberRounds.length === 0) {
+        //         parentRound.getNumber().removeNext();
+        //         // console.log('removeRoundNumber, number: ' + childRound.getNumberAsValue());
+        //     }
+        // }
+        // const index = parentRound.getChildRounds().indexOf(childRound);
 
-        // console.log('removeRound from parent, number: ' + childRound.getNumberAsValue());
-        parentRound.getChildRounds().splice(index, 1);
-        const qualifyService = new QualifyRuleService(parentRound, childRound);
-        qualifyService.removeRules();
-        return childRound;
+        // // console.log('removeRound from parent, number: ' + childRound.getNumberAsValue());
+        // parentRound.getChildRounds().splice(index, 1);
+        // const qualifyService = new QualifyRuleService(parentRound, childRound);
+        // qualifyService.removeRules();
+        // return childRound;
     }
 
     addPoule(round: Round, fillPouleTo: number = 2): number {
@@ -230,18 +236,19 @@ export class StructureService {
     }
 
     recalculateQualifyRulesForRound(round: Round, recalculateChildRounds: boolean = true) {
-        if (!round.isRoot()) {
-            const qualifyService = new QualifyRuleService(round.getParent(), round);
-            qualifyService.removeRules();
-            qualifyService.createRules();
-        }
-        if (recalculateChildRounds) {
-            round.getChildRounds().forEach(function (childRound) {
-                const qualifyService = new QualifyRuleService(childRound.getParent(), childRound);
-                qualifyService.removeRules();
-                qualifyService.createRules();
-            });
-        }
+        console.error('recalculateQualifyRulesForRound');
+        // if (!round.isRoot()) {
+        //     const qualifyService = new QualifyRuleService(round.getParent(), round);
+        //     qualifyService.removeRules();
+        //     qualifyService.createRules();
+        // }
+        // if (recalculateChildRounds) {
+        //     round.getChildRounds().forEach(function (childRound) {
+        //         const qualifyService = new QualifyRuleService(childRound.getParent(), childRound);
+        //         qualifyService.removeRules();
+        //         qualifyService.createRules();
+        //     });
+        // }
     }
 
     removePoulePlace(round, recalcQualify: boolean = true): number {
@@ -280,7 +287,7 @@ export class StructureService {
         const tooMuchChildRoundPlaces = round.getNrOfPlacesChildRounds() > round.getPoulePlaces().length;
         if (recalcQualify === true) {
             // do parent, because opposing can be changed too!
-            this.recalculateQualifyRulesForRound(round.isRoot ? round : round.getParent());
+            this.recalculateQualifyRulesForRound(round.isRoot() ? round : round.getParent());
         }
 
         if (tooMuchChildRoundPlaces) {
@@ -350,43 +357,44 @@ export class StructureService {
     }
 
     changeNrOfPlacesChildRound(nrOfChildPlacesNew: number, parentRound: Round, winnersOrLosers: number) {
-        // console.log('changeNrOfPlacesChildRound(' + nrOfChildPlacesNew + ', parentRound: ' + parentRound.getNumber()
-        //     + ', winnersOrLosers: ' + winnersOrLosers + ')');
-        let childRound = parentRound.getChildRound(winnersOrLosers);
-        let addRound = (childRound === undefined && nrOfChildPlacesNew > 0);
-        if (childRound !== undefined && childRound.getPoulePlaces().length > 0 && nrOfChildPlacesNew === 2) {
-            // const qualifyServiceIn = new QualifyRuleService(childRound.getParent(), childRound);
-            // qualifyServiceIn.removeRules();
-            this.removeChildRound(parentRound, winnersOrLosers);
-            childRound = undefined;
-            addRound = true;
-        }
+        console.error('changeNrOfPlacesChildRound');
+        // // console.log('changeNrOfPlacesChildRound(' + nrOfChildPlacesNew + ', parentRound: ' + parentRound.getNumber()
+        // //     + ', winnersOrLosers: ' + winnersOrLosers + ')');
+        // let childRound = parentRound.getChildRound(winnersOrLosers);
+        // let addRound = (childRound === undefined && nrOfChildPlacesNew > 0);
+        // if (childRound !== undefined && childRound.getPoulePlaces().length > 0 && nrOfChildPlacesNew === 2) {
+        //     // const qualifyServiceIn = new QualifyRuleService(childRound.getParent(), childRound);
+        //     // qualifyServiceIn.removeRules();
+        //     this.removeChildRound(parentRound, winnersOrLosers);
+        //     childRound = undefined;
+        //     addRound = true;
+        // }
 
-        if (addRound) {
-            childRound = this.addChildRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
-            this.recalculateQualifyRulesForRound(childRound, false);
-            return;
-        }
-        if (childRound === undefined) {
-            return;
-        }
+        // if (addRound) {
+        //     childRound = this.addChildRound(parentRound, winnersOrLosers, nrOfChildPlacesNew);
+        //     this.recalculateQualifyRulesForRound(childRound, false);
+        //     return;
+        // }
+        // if (childRound === undefined) {
+        //     return;
+        // }
 
-        const nrOfPlacesChildRound = childRound.getPoulePlaces().length;
-        let nrOfPlacesDifference = nrOfChildPlacesNew - nrOfPlacesChildRound;
-        if (nrOfPlacesDifference === 0) {
-            return;
-        }
-        if (nrOfPlacesDifference < 0) {
-            while (nrOfPlacesDifference < 0) {
-                nrOfPlacesDifference += this.removePoulePlace(childRound);
-            }
-        } else {
-            for (let nI = 0; nI < nrOfPlacesDifference; nI++) {
-                this.addPoulePlace(childRound, false);
-            }
-            this.checkMaxNrOfPoulePlacesForChildRound(childRound);
-            this.recalculateQualifyRulesForRound(childRound);
-        }
+        // const nrOfPlacesChildRound = childRound.getPoulePlaces().length;
+        // let nrOfPlacesDifference = nrOfChildPlacesNew - nrOfPlacesChildRound;
+        // if (nrOfPlacesDifference === 0) {
+        //     return;
+        // }
+        // if (nrOfPlacesDifference < 0) {
+        //     while (nrOfPlacesDifference < 0) {
+        //         nrOfPlacesDifference += this.removePoulePlace(childRound);
+        //     }
+        // } else {
+        //     for (let nI = 0; nI < nrOfPlacesDifference; nI++) {
+        //         this.addPoulePlace(childRound, false);
+        //     }
+        //     this.checkMaxNrOfPoulePlacesForChildRound(childRound);
+        //     this.recalculateQualifyRulesForRound(childRound);
+        // }
     }
 
     private checkMaxNrOfPoulePlacesForChildRound(childRound: Round) {

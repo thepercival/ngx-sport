@@ -2,9 +2,6 @@ import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 
 export class QualifyRule {
-    static readonly SOCCERWORLDCUP = 1;
-    static readonly SOCCEREUROPEANCUP = 2;
-
     protected fromRound: Round;
     protected toRound: Round;
     protected configNr: number;

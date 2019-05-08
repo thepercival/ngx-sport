@@ -25,13 +25,14 @@ export class EndRanking {
         if (round === undefined) {
             return;
         }
-        this.addRound(round.getChildRound(Round.WINNERS));
-        if (round.getState() === Game.STATE_PLAYED) {
-            this.addDead(round);
-        } else {
-            this.addDeadNotPlayed(round);
-        }
-        this.addRound(round.getChildRound(Round.LOSERS));
+        console.error('addRound');
+        // this.addRound(round.getChildRound(Round.WINNERS));
+        // if (round.getState() === Game.STATE_PLAYED) {
+        //     this.addDead(round);
+        // } else {
+        //     this.addDeadNotPlayed(round);
+        // }
+        // this.addRound(round.getChildRound(Round.LOSERS));
     }
 
     protected addDeadNotPlayed(round: Round) {
@@ -125,34 +126,35 @@ export class EndRanking {
 
     protected addDeadPlaces(round: Round) {
         const rankingService = new RankingService(this.ruleSet);
-        if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
-            const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
-            poulePlacesPerNumber.forEach(poulePlaces => {
-                const deadPlaceLocations = poulePlaces
-                    .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
-                    .map(poulePlace => poulePlace.getLocation());
-                const rankingItems = rankingService.getItemsForPlaceLocations(round, deadPlaceLocations)
+        console.error('addDeadPlaces');
+        // if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
+        //     const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
+        //     poulePlacesPerNumber.forEach(poulePlaces => {
+        //         const deadPlaceLocations = poulePlaces
+        //             .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
+        //             .map(poulePlace => poulePlace.getLocation());
+        //         const rankingItems = rankingService.getItemsForPlaceLocations(round, deadPlaceLocations)
 
-                rankingItems.forEach(rankingItem => {
-                    const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
-                    const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
-                    this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
-                });
-            });
-        } else {
-            round.getPoules().forEach(poule => {
-                const rankingItems: RoundRankingItem[] = rankingService.getItemsForPoule(poule);
-                const deadRanks: number[] = poule.getPlaces()
-                    .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
-                    .map(poulePlace => poulePlace.getNumber());
+        //         rankingItems.forEach(rankingItem => {
+        //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
+        //             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
+        //             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
+        //         });
+        //     });
+        // } else {
+        //     round.getPoules().forEach(poule => {
+        //         const rankingItems: RoundRankingItem[] = rankingService.getItemsForPoule(poule);
+        //         const deadRanks: number[] = poule.getPlaces()
+        //             .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
+        //             .map(poulePlace => poulePlace.getNumber());
 
-                deadRanks.forEach(deadRank => {
-                    const rankingItem = rankingService.getItemByRank(rankingItems, deadRank);
-                    const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
-                    const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
-                    this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
-                });
-            });
-        }
+        //         deadRanks.forEach(deadRank => {
+        //             const rankingItem = rankingService.getItemByRank(rankingItems, deadRank);
+        //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
+        //             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
+        //             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
+        //         });
+        //     });
+        // }
     }
 }

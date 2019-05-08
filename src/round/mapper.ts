@@ -1,46 +1,54 @@
 import { Injectable } from '@angular/core';
 
 import { JsonPoule, PouleMapper } from '../poule/mapper';
-import { QualifyRuleService } from '../qualify/rule/service';
+import { QualifyPoule } from '../qualify/poule';
+import { QualifyPouleMapper } from '../qualify/poule/mapper';
 import { Round } from '../round';
 import { RoundNumber } from './number';
+import { JsonQualifyPoule } from '../qualify/poule/mapper';
 
 @Injectable()
 export class RoundMapper {
-    constructor(private pouleMapper: PouleMapper) { }
+    // private qualifyPouleMapper: QualifyPouleMapper;
 
-    toObject(json: JsonRound, roundNumber: RoundNumber, parentRound?: Round, round?: Round): Round {
-        round = new Round(roundNumber, parentRound, json.winnersOrLosers);
-        round.setId(json.id);
-        round.setQualifyOrder(json.qualifyOrder);
+    constructor(private pouleMapper: PouleMapper) { 
+        
+    }
+
+    toObject(json: JsonRound, roundNumber: RoundNumber, parentQualifyPoule?: QualifyPoule, round?: Round): Round {
+        round = new Round(roundNumber, parentQualifyPoule);
+        round.setId(json.id);        
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
-        if (parentRound !== undefined) {
-            const qualifyService = new QualifyRuleService(round.getParent(), round);
-            qualifyService.createRules();
-        }
-        json.childRounds.forEach((jsonChildRound) => {
-            this.toObject(jsonChildRound, roundNumber.getNext(), round, round.getChildRound(jsonChildRound.winnersOrLosers));
+        // if (parentRound !== undefined) {
+        //     const qualifyService = new QualifyRuleService(round.getParent(), round);
+        //     qualifyService.createRules();
+        // }
+        
+        const qualifyPouleMapper = new QualifyPouleMapper(this);
+        json.qualifyPoules.forEach((jsonQualifyPoule) => {
+            qualifyPouleMapper.toObject(jsonQualifyPoule,round);
+            // this.toObject(jsonQualifyPoule.childRound, roundNumber.getNext(), round, round.getChildRound(jsonChildRound.winnersOrLosers));
         });
+
         return round;
     }
 
     toJson(round: Round): JsonRound {
+        const qualifyPouleMapper = new QualifyPouleMapper(this);
         return {
             id: round.getId(),
-            winnersOrLosers: round.getWinnersOrLosers(),
-            qualifyOrder: round.getQualifyOrder(),
             name: round.getName(),
             poules: round.getPoules().map(poule => this.pouleMapper.toJson(poule)),
-            childRounds: round.getChildRounds().map(roundIt => this.toJson(roundIt))
+            qualifyPoules: round.getQualifyPoules().map(qualifyPouleIt => qualifyPouleMapper.toJson(qualifyPouleIt))
+
+            
         };
     }
 }
 
 export interface JsonRound {
     id?: number;
-    winnersOrLosers: number;
-    qualifyOrder: number;
     name?: string;
     poules: JsonPoule[];
-    childRounds: JsonRound[];
+    qualifyPoules: JsonQualifyPoule[];
 }

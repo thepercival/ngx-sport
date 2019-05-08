@@ -1,5 +1,5 @@
 import { SportConfig } from '../../../config';
-import { QualifyRule } from '../../../qualify/rule';
+import { RankingService } from '../../../ranking/service';
 import { RoundNumber } from '../../../round/number';
 import { RoundNumberConfig } from '../config';
 import { RoundNumberConfigScore } from './score';
@@ -31,7 +31,7 @@ export class RoundNumberConfigService {
     createDefault(roundNumber: RoundNumber): RoundNumberConfig {
         const sport = roundNumber.getCompetition().getLeague().getSport();
         const config = new RoundNumberConfig(roundNumber);
-        config.setQualifyRule(QualifyRule.SOCCERWORLDCUP);
+        config.setQualifyRule(RankingService.RULESSET_WC);
         config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));

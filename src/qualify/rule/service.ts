@@ -9,7 +9,10 @@ export class QualifyRuleService {
 
     createRules() {
         // console.log('createRules started: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
-        const order = this.childRound.getQualifyOrder() === Round.QUALIFYORDER_RANK ? Round.ORDER_POULE_NUMBER : Round.ORDER_NUMBER_POULE;
+        // const order = this.childRound.getQualifyOrder() === Round.QUALIFYORDER_RANK ? Round.ORDER_POULE_NUMBER : Round.ORDER_NUMBER_POULE;
+        console.error('createRules()');
+        const order = Round.ORDER_NUMBER_POULE;
+
         const childRoundPoulePlaces = this.childRound.getPoulePlaces(order);
 
         const parentRoundPoulePlacesPer: PoulePlace[][] = this.getParentPoulePlacesPer();
@@ -67,9 +70,10 @@ export class QualifyRuleService {
     }
 
     protected getParentPoulePlacesPer(): PoulePlace[][] {
-        if (this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
-            return this.getParentPoulePlacesPerNumber();
-        }
+        console.error('getParentPoulePlacesPer');
+        // if (this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
+        //     return this.getParentPoulePlacesPerNumber();
+        // }
         return this.getParentPoulePlacesPerQualifyRule();
     }
 

@@ -36,7 +36,7 @@ export class Structure {
     }
 
     getRoundNumber(roundNumberAsValue: number): RoundNumber {
-        return this.getRoundNumberHelper(roundNumberAsValue, this.rootRound.getNumber());
+        return this.getRoundNumberHelper(roundNumberAsValue, this.getFirstRoundNumber());
     }
 
     private getRoundNumberHelper(roundNumberAsValue: number, roundNumber: RoundNumber): RoundNumber {
@@ -49,12 +49,20 @@ export class Structure {
         }
         return this.getRoundNumberHelper(roundNumberAsValue, roundNumber.getNext());
     }
-
-    getRound( winnersOrLosersPath: number[] ): Round {
-        let round = this.getRootRound();
-        winnersOrLosersPath.forEach( winnersOrLosers => {
-            round = round.getChildRound(winnersOrLosers);
-        });
-        return round;
-    }
+    
+    // getRound( winnersOrLosersPath: number[] ): Round {
+    //     let round = this.getRootRound();
+    //     winnersOrLosersPath.forEach( winnersOrLosers => {
+    //         round = round.getChildRound(winnersOrLosers);
+    //     });
+    //     return round;
+    // }
+    
+    // getRound( winnersOrLosersPath: number[] ): Round {
+    //     let round = this.getRootRound();
+    //     winnersOrLosersPath.forEach( winnersOrLosers => {
+    //         round = round.getChildRound(winnersOrLosers);
+    //     });
+    //     return round;
+    // }
 }

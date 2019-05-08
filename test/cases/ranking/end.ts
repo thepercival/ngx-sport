@@ -17,7 +17,7 @@ describe('Ranking/End', () => {
         const structure = structureMapper.toObject(jsonStructure9, competition);
 
         const endRanking = new EndRanking(competition.getRuleSet());
-        const items = endRanking.getItems(structure.getRootRound());
+        const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('jil');
         expect(items[1].getName()).to.equal('max');
         expect(items[2].getName()).to.equal('zed');
@@ -37,7 +37,7 @@ describe('Ranking/End', () => {
         const structure = structureMapper.toObject(jsonStructure16rank, competition);
 
         const endRanking = new EndRanking(competition.getRuleSet());
-        const items = endRanking.getItems(structure.getRootRound());
+        const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('tiem');
         expect(items[1].getName()).to.equal('kira');
         expect(items[2].getName()).to.equal('luuk');
@@ -64,7 +64,7 @@ describe('Ranking/End', () => {
         const structure = structureMapper.toObject(jsonStructure4rankteamup, competition);
 
         const endRanking = new EndRanking(competition.getRuleSet());
-        const items = endRanking.getItems(structure.getRootRound());
+        const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('rank1');
         expect(items[1].getName()).to.equal('rank2');
         expect(items[2].getName()).to.equal('rank3');
