@@ -1,6 +1,7 @@
 import { Round } from './round';
 import { RoundNumber } from './round/number';
 
+
 export class Structure {
     constructor(
         protected firstRoundNumber: RoundNumber,
@@ -16,8 +17,8 @@ export class Structure {
         return this.getLastRoundNumberHelper(this.getFirstRoundNumber());
     }
 
-    private getLastRoundNumberHelper( roundNumber: RoundNumber ): RoundNumber {
-        if( !roundNumber.hasNext() ) {
+    private getLastRoundNumberHelper(roundNumber: RoundNumber): RoundNumber {
+        if (!roundNumber.hasNext()) {
             return roundNumber;
         }
         return this.getLastRoundNumberHelper(roundNumber.getNext());
@@ -49,7 +50,18 @@ export class Structure {
         }
         return this.getRoundNumberHelper(roundNumberAsValue, roundNumber.getNext());
     }
-    
+
+    setPouleStructureNumbers() {
+        const setPouleStructureNumbers = (round: Round, pouleStructureNumber: number) => {
+            round.getPoules().forEach(poule => poule.setStructureNumber(pouleStructureNumber++));
+            round.getChildren().forEach(childRound => {
+                pouleStructureNumber = setPouleStructureNumbers(childRound, pouleStructureNumber);
+            });
+            return pouleStructureNumber;
+        }
+        setPouleStructureNumbers(this.rootRound, 1);
+    }
+
     // getRound( winnersOrLosersPath: number[] ): Round {
     //     let round = this.getRootRound();
     //     winnersOrLosersPath.forEach( winnersOrLosers => {
@@ -57,7 +69,7 @@ export class Structure {
     //     });
     //     return round;
     // }
-    
+
     // getRound( winnersOrLosersPath: number[] ): Round {
     //     let round = this.getRootRound();
     //     winnersOrLosersPath.forEach( winnersOrLosers => {

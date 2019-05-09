@@ -4,10 +4,9 @@ import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceLocation } from './pouleplace/location';
-import { QualifyRule } from './qualify/rule';
 import { QualifyPoule } from './qualify/poule';
+import { QualifyRule } from './qualify/rule';
 import { RoundNumber } from './round/number';
-import { compileInjectable } from '@angular/core/src/render3/jit/injectable';
 
 export class Round {
     static readonly WINNERS = 1;
@@ -31,11 +30,13 @@ export class Round {
     protected qualifyPoules: QualifyPoule[] = [];
     protected fromQualifyRules: QualifyRule[] = [];
     protected toQualifyRules: QualifyRule[] = [];
+    protected value: number;
 
     constructor(roundNumber: RoundNumber, parentQualifyPoule?: QualifyPoule) {
         this.number = roundNumber;
         this.setParentQualifyPoule(parentQualifyPoule);
         this.number.getRounds().push(this);
+        //this.setValue();
     }
 
     static getOpposing(winnersOrLosers: number) {
@@ -74,22 +75,39 @@ export class Round {
         return this.number.getNumber();
     }
 
-    getQualifyPoules(): QualifyPoule[] {
-        return this.qualifyPoules;
+    // getValue(): number {
+    //     return this.value;
+    // }
+
+    // protected setValue(): void {
+    //     const parentQualifyPoule = this.getParentQualifyPoule(); 
+    //     if (parentQualifyPoule === undefined) {
+    //         this.value = 0;
+    //     } else {
+    //         this.value = parentQualifyPoule.getRound().getValue() +  
+    //     }
+    //     this.value = value;
+    // }
+
+    getQualifyPoules(winnersOrLosers?: number): QualifyPoule[] {
+        if (winnersOrLosers === undefined) {
+            return this.qualifyPoules;
+        }
+        return this.qualifyPoules.filter(qualifyPoule => qualifyPoule.getWinnersOrLosers() === winnersOrLosers);
     }
 
     getQualifyPoule(winnersOrLosers: number, qualifyPouleNumber: number): QualifyPoule {
-        return this.qualifyPoules.find( qualifyPoule => {
+        return this.qualifyPoules.find(qualifyPoule => {
             return qualifyPoule.getWinnersOrLosers() === winnersOrLosers
-            && qualifyPoule.getNumber() === qualifyPouleNumber;
-         });
+                && qualifyPoule.getNumber() === qualifyPouleNumber;
+        });
     }
 
     getChildren(): Round[] {
-        return this.getQualifyPoules().map( qualifyPoule => qualifyPoule.getChildRound() );
+        return this.getQualifyPoules().map(qualifyPoule => qualifyPoule.getChildRound());
     }
 
-    getChild(winnersOrLosers: number, qualifyPouleNumber: number ): Round {
+    getChild(winnersOrLosers: number, qualifyPouleNumber: number): Round {
         const qualifyPoule = this.getQualifyPoule(winnersOrLosers, qualifyPouleNumber);
         return qualifyPoule ? qualifyPoule.getChildRound() : undefined;
     }
@@ -279,22 +297,7 @@ export class Round {
         });
     }
 
-    movePoulePlace(poulePlace: PoulePlace, toPoule: Poule, toNumber?: number) {
-        const removed = poulePlace.getPoule().removePlace(poulePlace);
-        if (!removed) {
-            return false;
-        }
-
-        // zet poule and position
-        poulePlace.setNumber(toPoule.getPlaces().length + 1);
-        toPoule.addPlace(poulePlace);
-
-        if (toNumber === undefined) {
-            return true;
-        }
-        return toPoule.movePlace(poulePlace, toNumber);
-    }
-
+    // @TODO REMOVE
     getFromQualifyRules(): QualifyRule[] {
         return this.fromQualifyRules;
     }
@@ -312,11 +315,11 @@ export class Round {
         return nrOfPlaces;
     }
 
-    getNrOfPlacesChildren(): number {
+    getNrOfPlacesChildren(winnersOrLosers?: number): number {
         let nrOfPlacesChildRounds = 0;
-        this.getChildren().forEach(function (child) {
-            nrOfPlacesChildRounds += child.getNrOfPlaces();
-        }, this);
+        this.getQualifyPoules(winnersOrLosers).forEach(qualifyPoule => {
+            nrOfPlacesChildRounds += qualifyPoule.getChildRound().getNrOfPlaces();
+        });
         return nrOfPlacesChildRounds;
     }
 

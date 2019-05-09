@@ -14,7 +14,9 @@ export class StructureMapper {
         const firstRoundNumber = this.roundNumberMapper.toObject(json.firstRoundNumber, competition);
         const rootRound = this.roundMapper.toObject(json.rootRound, firstRoundNumber);
         this.setRefereePoulePlaces(json.rootRound, firstRoundNumber);
-        return new Structure(firstRoundNumber, rootRound);
+        const structure = new Structure(firstRoundNumber, rootRound);
+        structure.setPouleStructureNumbers();
+        return structure;
     }
 
     protected setRefereePoulePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {

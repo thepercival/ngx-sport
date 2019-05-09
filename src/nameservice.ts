@@ -23,11 +23,11 @@ export class NameService {
         if (this.roundsHaveSameName(roundNumber)) {
             return this.getRoundName(roundNumber.getARound(), true);
         }
-        return this.getHtmlNumber(roundNumber) + ' ronde';
+        return this.getHtmlNumber(roundNumber.getNumber()) + ' ronde';
     }
 
     getRoundName(round: Round, sameName: boolean = false) {
-        if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round) ) {
+        if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {
             return this.getHtmlNumber(round.getNumberAsValue()) + ' ronde';
         }
 
@@ -49,15 +49,14 @@ export class NameService {
     }
 
     getPouleName(poule: Poule, withPrefix: boolean) {
-        const round = poule.getRound();
-        const previousNrOfPoules = this.getNrOfPreviousPoules(round.getNumberAsValue(), round, poule);
         let pouleName = '';
         if (withPrefix === true) {
             pouleName = poule.needsRanking() ? 'poule ' : 'wed. ';
         }
-        const secondLetter = previousNrOfPoules % 26;
-        if (previousNrOfPoules >= 26) {
-            const firstLetter = (previousNrOfPoules - secondLetter) / 26;
+        const pouleStructureNumber = poule.getStructureNumber() - 1;
+        const secondLetter = pouleStructureNumber % 26;
+        if (pouleStructureNumber >= 26) {
+            const firstLetter = (pouleStructureNumber - secondLetter) / 26;
             pouleName += (String.fromCharCode('A'.charCodeAt(0) + (firstLetter - 1)));
         }
         pouleName += (String.fromCharCode('A'.charCodeAt(0) + secondLetter));
@@ -103,17 +102,17 @@ export class NameService {
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {
-        if( round.getQualifyPoules().length < 2 ) {
+        if (round.getQualifyPoules().length < 2) {
             return false;
         }
         let maxDepth = undefined;
-        return round.getQualifyPoules().some( qualifyPoule => {
+        return round.getQualifyPoules().some(qualifyPoule => {
             const qualifyPouleMaxDepth = this.getMaxDepth(qualifyPoule.getChildRound());
-            if( maxDepth === undefined ) {
+            if (maxDepth === undefined) {
                 maxDepth = qualifyPouleMaxDepth;
             }
             return maxDepth === qualifyPouleMaxDepth;
-        } );
+        });
     }
 
     protected getNumberFromQualifyRule(qualifyRule: QualifyRule): number {
@@ -207,69 +206,20 @@ export class NameService {
         });
     }
 
-    private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {
-        let nrOfPoules = poule.getNumber() - 1;
-        nrOfPoules += this.getNrOfPoulesParentRounds(round);
-        nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, round);
-        return nrOfPoules;
-    }
+    // private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {
+    //     let nrOfPoules = poule.getNumber() - 1;
+    //     nrOfPoules += this.getNrOfPoulesParentRounds(round);
+    //     nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, round);
+    //     return nrOfPoules;
+    // }
 
-    private getNrOfPoulesParentRounds(round: Round): number {
-        console.error('getNrOfPoulesParentRounds');
-        return -1;
-        // return this.getNrOfPoulesParentRoundsHelper(round.getNumberAsValue() - 1, round.getRoot());
-    }
-
-    private getNrOfPoulesParentRoundsHelper(maxRoundNumber: number, round: Round): number {
-        if (round.getNumberAsValue() > maxRoundNumber) {
-            return 0;
-        }
-        let nrOfPoules = round.getPoules().length;
-        round.getChildren().forEach((childRound) => {
-            nrOfPoules += this.getNrOfPoulesParentRoundsHelper(maxRoundNumber, childRound);
-        });
-        return nrOfPoules;
-    }
-
-    private getNrOfPoulesSiblingRounds(roundNumber: number, round: Round): number {
-        let nrOfPoules = 0;
-
-        const parentRound = round.getParent();
-        if (parentRound !== undefined) {
-            nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, parentRound/* round */);
-        }
-
-        if (round.getWinnersOrLosers() === Round.LOSERS) {
-            console.error('opposing');
-            // const winningSibling = round.getOpposing();
-            // if (winningSibling !== undefined) {
-            //     nrOfPoules += this.getNrOfPoulesForChildRounds(winningSibling, roundNumber);
-            // }
-        }
-        return nrOfPoules;
-    }
-
-    private getNrOfPoulesForChildRounds(round: Round, roundNumber: number): number {
-        let nrOfChildPoules = 0;
-        if (round.getNumberAsValue() > roundNumber) {
-            return nrOfChildPoules;
-        } else if (round.getNumberAsValue() === roundNumber) {
-            return round.getPoules().length;
-        }
-
-        round.getChildren().forEach((childRound) => {
-            nrOfChildPoules += this.getNrOfPoulesForChildRounds(childRound, roundNumber);
-        });
-        return nrOfChildPoules;
-    }
-
-     /* maak hier een aparte functie van, buiten ROUND? */
-     getMaxDepth(round: Round): number {
-        if( round.getQualifyPoules().length === 0 ) {
+    /* maak hier een aparte functie van, buiten ROUND? */
+    getMaxDepth(round: Round): number {
+        if (round.getQualifyPoules().length === 0) {
             return 0;
         }
         let biggestMaxDepth = 1;
-        round.getChildren().forEach( child => {
+        round.getChildren().forEach(child => {
             const maxDepth = this.getMaxDepth(child);
             if (maxDepth > biggestMaxDepth) {
                 biggestMaxDepth = maxDepth;

@@ -25,25 +25,31 @@ export class EndRanking {
         if (round === undefined) {
             return;
         }
-        console.error('addRound');
-        // this.addRound(round.getChildRound(Round.WINNERS));
-        // if (round.getState() === Game.STATE_PLAYED) {
-        //     this.addDead(round);
-        // } else {
-        //     this.addDeadNotPlayed(round);
-        // }
-        // this.addRound(round.getChildRound(Round.LOSERS));
+
+        round.getQualifyPoules(Round.WINNERS).forEach(qualifyPoule => {
+            this.addRound(qualifyPoule.getChildRound());
+        });
+
+        if (round.getState() === Game.STATE_PLAYED) {
+            this.addDropouts(round);
+        } else {
+            this.addDropoutsNotPlayed(round);
+        }
+
+        round.getQualifyPoules(Round.LOSERS).reverse().forEach(qualifyPoule => {
+            this.addRound(qualifyPoule.getChildRound());
+        });
     }
 
-    protected addDeadNotPlayed(round: Round) {
-        let nrOfDead: number = this.getNrOfDeadFromRules(round, round.getToQualifyRules());
-        nrOfDead += round.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length === 0).length;
-        for (let i = 0; i < nrOfDead; i++) {
+    protected addDropoutsNotPlayed(round: Round) {
+        let nrOfDropouts: number = this.getNrOfDropoutsFromRules(round, round.getToQualifyRules());
+        nrOfDropouts += round.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length === 0).length;
+        for (let i = 0; i < nrOfDropouts; i++) {
             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, 'nog onbekend'));
         }
     }
 
-    protected getNrOfDeadFromRules(fromRound: Round, toRules: QualifyRule[]): number {
+    protected getNrOfDropoutsFromRules(fromRound: Round, toRules: QualifyRule[]): number {
         const fromPlaces = this.getUniqueFromPlaces(toRules);
         let nrOfToPlaces = 0;
         toRules.forEach(toRule => { nrOfToPlaces += toRule.getToPoulePlaces().length; });
@@ -68,17 +74,17 @@ export class EndRanking {
      * 2 bepaal wie er doorgaan van de winnaars en haal deze eraf
      * 3 doe de plekken zonder to - regels
      * 4 bepaal wie er doorgaan van de verliezers en haal deze eraf
-     * 5 voeg de overgebleven plekken toe aan de deadplaces
+     * 5 voeg de overgebleven plekken toe aan de dropouts places
      *
      * @param round
      */
-    protected addDead(round: Round) {
-        const nrOfUniqueFromPlacesMultiple = this.addDeadMultipleRuleWinners(round);
-        this.addDeadPlaces(round);
-        this.addDeadMultipleRuleLosers(round, nrOfUniqueFromPlacesMultiple);
+    protected addDropouts(round: Round) {
+        const nrOfUniqueFromPlacesMultiple = this.addDropoutsMultipleRuleWinners(round);
+        this.addDropoutPlaces(round);
+        this.addDropoutsMultipleRuleLosers(round, nrOfUniqueFromPlacesMultiple);
     }
 
-    protected addDeadMultipleRuleWinners(round: Round): number {
+    protected addDropoutsMultipleRuleWinners(round: Round): number {
         const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
         const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.WINNERS);
 
@@ -103,7 +109,7 @@ export class EndRanking {
         return nrOfUniqueFromPlacesMultiple;
     }
 
-    protected addDeadMultipleRuleLosers(round: Round, nrOfUniqueFromPlacesMultiple: number) {
+    protected addDropoutsMultipleRuleLosers(round: Round, nrOfUniqueFromPlacesMultiple: number) {
         const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
         const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
 
@@ -124,16 +130,16 @@ export class EndRanking {
         }
     }
 
-    protected addDeadPlaces(round: Round) {
+    protected addDropoutPlaces(round: Round) {
         const rankingService = new RankingService(this.ruleSet);
-        console.error('addDeadPlaces');
+        console.error('addDropoutPlaces');
         // if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
         //     const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
         //     poulePlacesPerNumber.forEach(poulePlaces => {
-        //         const deadPlaceLocations = poulePlaces
+        //         const dropoutPlaceLocations = poulePlaces
         //             .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
         //             .map(poulePlace => poulePlace.getLocation());
-        //         const rankingItems = rankingService.getItemsForPlaceLocations(round, deadPlaceLocations)
+        //         const rankingItems = rankingService.getItemsForPlaceLocations(round,dropoutPlaceLocations)
 
         //         rankingItems.forEach(rankingItem => {
         //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
@@ -144,12 +150,12 @@ export class EndRanking {
         // } else {
         //     round.getPoules().forEach(poule => {
         //         const rankingItems: RoundRankingItem[] = rankingService.getItemsForPoule(poule);
-        //         const deadRanks: number[] = poule.getPlaces()
+        //         const dropoutRanks: number[] = poule.getPlaces()
         //             .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)
         //             .map(poulePlace => poulePlace.getNumber());
 
-        //         deadRanks.forEach(deadRank => {
-        //             const rankingItem = rankingService.getItemByRank(rankingItems, deadRank);
+        //         dropoutRanks.forEach(dropoutRank => {
+        //             const rankingItem = rankingService.getItemByRank(rankingItems, dropoutRank);
         //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
         //             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
         //             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));

@@ -8,6 +8,7 @@ export class Poule {
     protected id: number;
     protected round: Round;
     protected number: number;
+    protected structureNumber: number;
     protected name: string;
     protected places: PoulePlace[] = [];
     protected games: Game[] = [];
@@ -53,6 +54,14 @@ export class Poule {
 
     setNumber(number: number): void {
         this.number = number;
+    }
+
+    getStructureNumber(): number {
+        return this.structureNumber;
+    }
+
+    setStructureNumber(structureNumber: number): void {
+        this.structureNumber = structureNumber;
     }
 
     getName(): string {

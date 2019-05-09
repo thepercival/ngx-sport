@@ -1,10 +1,10 @@
 import { Competition } from '../competition';
 import { Game } from '../game';
 import { Poule } from '../poule';
+import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
-import { RoundNumber } from '../round/number';
 import { RoundNumberConfigService } from '../round/number/config/service';
 import { Structure } from '../structure';
 
@@ -162,13 +162,14 @@ export class StructureService {
         }
 
         const poulePlacesOrderedByPlace = round.getPoulePlaces(Round.ORDER_NUMBER_POULE);
+        const structureService = this;
         while (placesToAddToNewPoule > 0) {
 
-            poulePlacesOrderedByPlace.forEach(function (poulePlaceIt) {
+            poulePlacesOrderedByPlace.forEach(poulePlaceIt => {
                 if (poulePlaceIt.getNumber() === 1 || placesToAddToNewPoule === 0) {
                     return;
                 }
-                round.movePoulePlace(poulePlaceIt, newPoule);
+                structureService.movePoulePlace(round, poulePlaceIt, newPoule);
                 placesToAddToNewPoule--;
             });
         }
@@ -179,7 +180,7 @@ export class StructureService {
         let pouleIt = round.getPoules()[0];
         lastPoulePlaces.forEach(function (lastPoulePlaceIt) {
             if (lastPoulePlaceIt.getPoule() !== pouleIt) {
-                round.movePoulePlace(lastPoulePlaceIt, pouleIt);
+                this.movePoulePlace(round, lastPoulePlaceIt, pouleIt);
             }
             pouleIt = pouleIt.next();
         });
@@ -205,7 +206,7 @@ export class StructureService {
             const place = places[places.length - 1];
             const nrOfPlacesNotEven = ((roundPlaces.length - lastPoule.getPlaces().length) % (poules.length - 1)) + 1;
             const poule = poules.find(pouleIt => nrOfPlacesNotEven === pouleIt.getNumber());
-            if (!round.movePoulePlace(place, poule)) {
+            if (!this.movePoulePlace(round, place, poule)) {
                 throw new Error('de pouleplek kan niet verplaatst worden');
             }
         }
@@ -411,12 +412,12 @@ export class StructureService {
         const poulePlaces = childRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
         while (newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1)) {
             const poulePlace = poulePlaces.pop();
-            childRound.movePoulePlace(poulePlace, newPoule);
+            this.movePoulePlace(childRound, poulePlace, newPoule);
         }
         const poulePlaceTmp = poulePlaces.pop();
         if (newPoule.getPlaces().length === (this.maxNrOfPoulePlacesForChildRound - 1)
             && poulePlaceTmp.getNumber() > this.maxNrOfPoulePlacesForChildRound) {
-            childRound.movePoulePlace(poulePlaceTmp, newPoule);
+            this.movePoulePlace(childRound, poulePlaceTmp, newPoule);
         }
     }
 
@@ -433,5 +434,27 @@ export class StructureService {
             return nrOfPlaces / nrOfPoules;
         }
         return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules) + 1;
+    }
+
+    getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
+        const horizontalPoules: HorizontalPoule[] = [];
+
+        return horizontalPoules;
+    }
+
+    movePoulePlace(round: Round, poulePlace: PoulePlace, toPoule: Poule, toNumber?: number) {
+        const removed = poulePlace.getPoule().removePlace(poulePlace);
+        if (!removed) {
+            return false;
+        }
+
+        // zet poule and position
+        poulePlace.setNumber(toPoule.getPlaces().length + 1);
+        toPoule.addPlace(poulePlace);
+
+        if (toNumber === undefined) {
+            return true;
+        }
+        return toPoule.movePlace(poulePlace, toNumber);
     }
 }
