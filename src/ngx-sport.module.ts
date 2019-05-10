@@ -28,8 +28,9 @@ import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceRepository } from './pouleplace/repository';
-import { QualifyRuleRepository } from './qualify/repository';
+import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
+import { QualifyRuleMapper } from './qualify/rule/mapper';
 import { QualifyService } from './qualify/service';
 import { EndRanking } from './ranking/end';
 import { RankingItem } from './ranking/item';
@@ -54,7 +55,7 @@ import { StructureService } from './structure/service';
 @NgModule({
     imports: [
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository,
+        PlanningService, PoulePlaceRepository, QualifyRuleMapper, QualifyService, RefereeRepository,
         RoundRepository, RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
         CompetitorRepository,
@@ -64,12 +65,12 @@ import { StructureService } from './structure/service';
     ],
     exports: [
         Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace,
-        Poule, PoulePlace, QualifyRule, RankingService, RankingItem, EndRanking, Referee, SportRepository,
+        Poule, PoulePlace, QualifyRule, QualifyGroup, RankingService, RankingItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
         Season, Competitor,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PoulePlaceRepository, QualifyRuleRepository, QualifyService, RefereeRepository, RoundRepository,
+        PlanningService, PoulePlaceRepository, QualifyRuleMapper, QualifyService, RefereeRepository, RoundRepository,
         RoundNumberConfigRepository, RoundNumberConfigService,
         SeasonRepository, StructureRepository, StructureService,
         CompetitorRepository,

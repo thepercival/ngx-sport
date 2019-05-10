@@ -49,6 +49,10 @@ export class HorizontalPoule {
         return this.places;
     }
 
+    hasPlace(place: PoulePlace): boolean {
+        return this.getPlaces().find(placeIt => placeIt === place) !== undefined;
+    }
+
     // next(): Poule {
     //     const poules = this.getRound().getPoules();
     //     return poules[this.getNumber()];

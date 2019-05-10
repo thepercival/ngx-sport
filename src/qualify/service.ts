@@ -5,6 +5,7 @@ import { PoulePlace } from '../pouleplace';
 import { RoundRankingItem } from '../ranking/item';
 import { RankingService } from '../ranking/service';
 import { Round } from '../round';
+import { QualifyGroup } from './group';
 import { QualifyReservationService } from './reservationservice';
 import { QualifyRule } from './rule';
 
@@ -71,7 +72,7 @@ export class QualifyService {
         const rankingPoulePlaces: PoulePlace[] = rankingItems.map(rankingItem => {
             return rankingItem.getRound().getPoulePlace(rankingItem.getPoulePlaceLocation());
         });
-        if (winnersLosers === Round.LOSERS) {
+        if (winnersLosers === QualifyGroup.LOSERS) {
             rankingPoulePlaces.reverse();
         }
         return rankingPoulePlaces;

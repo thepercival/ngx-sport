@@ -1,7 +1,13 @@
+import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 
-export class QualifyPoule {
+export class QualifyGroup {
+    static readonly NEUTRAL = 0;
+    static readonly WINNERS = 1;
+    static readonly DROPOUTS = 2;
+    static readonly LOSERS = 3;
+
     protected round: Round;
 
     protected id: number;
@@ -34,7 +40,7 @@ export class QualifyPoule {
         //     }
         // }
         // if (round !== undefined) {
-            round.getQualifyPoules().push(this);
+        round.getQualifyGroups().push(this);
         // }
         this.round = round;
     }
@@ -79,5 +85,46 @@ export class QualifyPoule {
         // }
         this.childRound = childRound;
     }
+
+    getHorizontalPoules(): HorizontalPoule[] {
+        return [];
+    }
+
+    isBorderGroup(): boolean {
+        const qualifyGroups = this.getRound().getQualifyGroups(this.getWinnersOrLosers());
+        return this === qualifyGroups[qualifyGroups.length - 1];
+    }
+
+    isBorderPoule(poule: HorizontalPoule): boolean {
+        if (!this.isBorderGroup()) {
+            return false;
+        }
+        return this.getNrOfHorizontalPoules() === poule.getPlaceNumber();
+    }
+
+    isInBorderHoritontalPoule(place: PoulePlace): boolean {
+        const horizontalPoules = this.getHorizontalPoules();
+        const borderHorizontalPoule = horizontalPoules[horizontalPoules.length - 1];
+        return borderHorizontalPoule.hasPlace(place);
+    }
+
+    // de horizontale poules moeten kunnen herberekend kunnen worden
+    // net zoals welke place welke qualifiers heeft  
+
+    // fromround get places by horiontalpoules
+    // toround -> getplaces by horizontal
+    // als laatste fromround.horiontalpoule meer plaatsen bevat als aantal toroundplaces dan is het incomplete
+
+    // incomplete
+
+    // 1 horizontale poule is gekoppeld aan een aantal plekken uit de volgende ronde!!!!!!!!
+
+    // SNEL kunnen achter welke pouleplace aan welke qualificationgroups hangen
+
+    // ik moet weten: 
+    // a is in incomplete rule
+    // b wat welke fromPlace hoort erbij
+
+
 }
 

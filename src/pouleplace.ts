@@ -3,6 +3,7 @@ import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyRule } from './qualify/rule';
+import { Round } from './round';
 
 export class PoulePlace {
     protected id: number;
@@ -36,6 +37,10 @@ export class PoulePlace {
 
     setPoule(poule: Poule) {
         this.poule = poule;
+    }
+
+    getRound(): Round {
+        return this.getPoule().getRound();
     }
 
     getNumber(): number {

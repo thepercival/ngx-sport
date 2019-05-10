@@ -4,19 +4,14 @@ import { Game } from './game';
 import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceLocation } from './pouleplace/location';
-import { QualifyPoule } from './qualify/poule';
-import { QualifyRule } from './qualify/rule';
+import { QualifyGroup } from './qualify/group';
 import { RoundNumber } from './round/number';
 
 export class Round {
-    static readonly WINNERS = 1;
-    static readonly DROPOUTS = 2;
-    static readonly NEUTRAL = 2;
-    static readonly LOSERS = 3;
-
     static readonly ORDER_NUMBER_POULE = 1;
     static readonly ORDER_POULE_NUMBER = 2;
 
+    // there are some patterns here, cross, inside-outside and custom
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
     static readonly QUALIFYORDER_CUSTOM1 = 4;
@@ -24,24 +19,23 @@ export class Round {
 
     protected id: number;
     protected number: RoundNumber;
-    protected parentQualifyPoule: QualifyPoule;
+    protected parentQualifyGroup: QualifyGroup;
     protected name: string;
     protected poules: Poule[] = [];
-    protected qualifyPoules: QualifyPoule[] = [];
-    protected fromQualifyRules: QualifyRule[] = [];
-    protected toQualifyRules: QualifyRule[] = [];
+    protected losersQualifyGroups: QualifyGroup[] = [];
+    protected winnersQualifyGroups: QualifyGroup[] = [];
     protected value: number;
 
-    constructor(roundNumber: RoundNumber, parentQualifyPoule?: QualifyPoule) {
+    constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {
         this.number = roundNumber;
-        this.setParentQualifyPoule(parentQualifyPoule);
+        this.setParentQualifyGroup(parentQualifyGroup);
         this.number.getRounds().push(this);
         //this.setValue();
     }
 
-    static getOpposing(winnersOrLosers: number) {
-        return winnersOrLosers === Round.WINNERS ? Round.LOSERS : Round.WINNERS;
-    }
+    // static getOpposing(winnersOrLosers: number) {
+    //     return winnersOrLosers === Round.WINNERS ? QualifyGroup.LOSERS : QualifyGroup.WINNERS;
+    // }
 
     getId(): number {
         return this.id;
@@ -56,15 +50,15 @@ export class Round {
     }
 
     getParent(): Round {
-        return this.getParentQualifyPoule() ? this.getParentQualifyPoule().getRound() : undefined;
+        return this.getParentQualifyGroup() ? this.getParentQualifyGroup().getRound() : undefined;
     }
 
-    getParentQualifyPoule(): QualifyPoule {
-        return this.parentQualifyPoule;
+    getParentQualifyGroup(): QualifyGroup {
+        return this.parentQualifyGroup;
     }
 
-    protected setParentQualifyPoule(parentQualifyPoule: QualifyPoule) {
-        this.parentQualifyPoule = parentQualifyPoule;
+    protected setParentQualifyGroup(parentQualifyGroup: QualifyGroup) {
+        this.parentQualifyGroup = parentQualifyGroup;
     }
 
     getNumber(): RoundNumber {
@@ -75,41 +69,24 @@ export class Round {
         return this.number.getNumber();
     }
 
-    // getValue(): number {
-    //     return this.value;
-    // }
-
-    // protected setValue(): void {
-    //     const parentQualifyPoule = this.getParentQualifyPoule(); 
-    //     if (parentQualifyPoule === undefined) {
-    //         this.value = 0;
-    //     } else {
-    //         this.value = parentQualifyPoule.getRound().getValue() +  
-    //     }
-    //     this.value = value;
-    // }
-
-    getQualifyPoules(winnersOrLosers?: number): QualifyPoule[] {
+    getQualifyGroups(winnersOrLosers?: number): QualifyGroup[] {
         if (winnersOrLosers === undefined) {
-            return this.qualifyPoules;
+            return this.winnersQualifyGroups.concat(this.losersQualifyGroups);
         }
-        return this.qualifyPoules.filter(qualifyPoule => qualifyPoule.getWinnersOrLosers() === winnersOrLosers);
+        return (winnersOrLosers === QualifyGroup.WINNERS) ? this.winnersQualifyGroups : this.losersQualifyGroups;
     }
 
-    getQualifyPoule(winnersOrLosers: number, qualifyPouleNumber: number): QualifyPoule {
-        return this.qualifyPoules.find(qualifyPoule => {
-            return qualifyPoule.getWinnersOrLosers() === winnersOrLosers
-                && qualifyPoule.getNumber() === qualifyPouleNumber;
-        });
+    getQualifyGroup(winnersOrLosers: number, qualifyGroupNumber: number): QualifyGroup {
+        return this.getQualifyGroups(winnersOrLosers).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
     }
 
     getChildren(): Round[] {
-        return this.getQualifyPoules().map(qualifyPoule => qualifyPoule.getChildRound());
+        return this.getQualifyGroups().map(qualifyGroup => qualifyGroup.getChildRound());
     }
 
-    getChild(winnersOrLosers: number, qualifyPouleNumber: number): Round {
-        const qualifyPoule = this.getQualifyPoule(winnersOrLosers, qualifyPouleNumber);
-        return qualifyPoule ? qualifyPoule.getChildRound() : undefined;
+    getChild(winnersOrLosers: number, qualifyGroupNumber: number): Round {
+        const qualifyGroup = this.getQualifyGroup(winnersOrLosers, qualifyGroupNumber);
+        return qualifyGroup ? qualifyGroup.getChildRound() : undefined;
     }
 
     isRoot(): boolean {
@@ -123,8 +100,9 @@ export class Round {
     //     return this;
     // }
 
+    // DEPRECATED , REMOVE QualifyGroup.NEUTRAL and this function
     getWinnersOrLosers(): number {
-        return this.getParentQualifyPoule() ? this.getParentQualifyPoule().getWinnersOrLosers() : Round.NEUTRAL;
+        return this.getParentQualifyGroup() ? this.getParentQualifyGroup().getWinnersOrLosers() : QualifyGroup.NEUTRAL;
     }
 
     getName(): string {
@@ -191,11 +169,11 @@ export class Round {
     }
 
     /**
-     * winnerslosers = Round.WINNERS
+     * winnerslosers = QualifyGroup.WINNERS
      *  [ A1 B1 C1 ]
      *  [ A2 B2 C2 ]
      *  [ A3 B3 C3 ]
-     * winnerslosers = Round.LOSERS
+     * winnerslosers = QualifyGroup.LOSERS
      *  [ C3 B3 A3 ]
      *  [ C2 B2 A2 ]
      *  [ C1 B1 A1 ]
@@ -207,7 +185,7 @@ export class Round {
         const poulePlacesPerNumber = [];
 
         const poulePlacesOrderedByPlace = this.getPoulePlaces(Round.ORDER_NUMBER_POULE);
-        if (winnersOrLosers === Round.LOSERS) {
+        if (winnersOrLosers === QualifyGroup.LOSERS) {
             poulePlacesOrderedByPlace.reverse();
         }
 
@@ -215,11 +193,11 @@ export class Round {
             let poulePlaces = this.find(function (poulePlacesIt) {
                 return poulePlacesIt.some(function (poulePlaceIt) {
                     let poulePlaceNrIt = poulePlaceIt.getNumber();
-                    if (winnersOrLosers === Round.LOSERS) {
+                    if (winnersOrLosers === QualifyGroup.LOSERS) {
                         poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;
                     }
                     let placeNrIt = placeIt.getNumber();
-                    if (winnersOrLosers === Round.LOSERS) {
+                    if (winnersOrLosers === QualifyGroup.LOSERS) {
                         placeNrIt = (placeIt.getPoule().getPlaces().length + 1) - placeNrIt;
                     }
                     return poulePlaceNrIt === placeNrIt;
@@ -297,18 +275,6 @@ export class Round {
         });
     }
 
-    // @TODO REMOVE
-    getFromQualifyRules(): QualifyRule[] {
-        return this.fromQualifyRules;
-    }
-
-    getToQualifyRules(winnersOrLosers?: number): QualifyRule[] {
-        if (winnersOrLosers !== undefined) {
-            return this.toQualifyRules.filter(toQualifyRule => toQualifyRule.getToRound().getWinnersOrLosers() === winnersOrLosers);
-        }
-        return this.toQualifyRules;
-    }
-
     getNrOfPlaces(): number {
         let nrOfPlaces = 0;
         this.getPoules().forEach(poule => nrOfPlaces += poule.getPlaces().length);
@@ -317,8 +283,8 @@ export class Round {
 
     getNrOfPlacesChildren(winnersOrLosers?: number): number {
         let nrOfPlacesChildRounds = 0;
-        this.getQualifyPoules(winnersOrLosers).forEach(qualifyPoule => {
-            nrOfPlacesChildRounds += qualifyPoule.getChildRound().getNrOfPlaces();
+        this.getQualifyGroups(winnersOrLosers).forEach(qualifyGroup => {
+            nrOfPlacesChildRounds += qualifyGroup.getChildRound().getNrOfPlaces();
         });
         return nrOfPlacesChildRounds;
     }

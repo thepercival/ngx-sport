@@ -1,8 +1,9 @@
 import { Game } from '../game';
 import { PoulePlace } from '../pouleplace';
+import { QualifyGroup } from '../qualify/group';
 import { QualifyRule } from '../qualify/rule';
 import { Round } from '../round';
-import { EndRankingItem, RoundRankingItem } from './item';
+import { EndRankingItem } from './item';
 import { RankingService } from './service';
 
 /* tslint:disable:no-bitwise */
@@ -26,8 +27,8 @@ export class EndRanking {
             return;
         }
 
-        round.getQualifyPoules(Round.WINNERS).forEach(qualifyPoule => {
-            this.addRound(qualifyPoule.getChildRound());
+        round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
+            this.addRound(qualifyGroup.getChildRound());
         });
 
         if (round.getState() === Game.STATE_PLAYED) {
@@ -36,17 +37,18 @@ export class EndRanking {
             this.addDropoutsNotPlayed(round);
         }
 
-        round.getQualifyPoules(Round.LOSERS).reverse().forEach(qualifyPoule => {
-            this.addRound(qualifyPoule.getChildRound());
+        round.getQualifyGroups(QualifyGroup.LOSERS).reverse().forEach(qualifyGroup => {
+            this.addRound(qualifyGroup.getChildRound());
         });
     }
 
     protected addDropoutsNotPlayed(round: Round) {
-        let nrOfDropouts: number = this.getNrOfDropoutsFromRules(round, round.getToQualifyRules());
-        nrOfDropouts += round.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length === 0).length;
-        for (let i = 0; i < nrOfDropouts; i++) {
-            this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, 'nog onbekend'));
-        }
+        console.error('addDropoutsNotPlayed');
+        // let nrOfDropouts: number = this.getNrOfDropoutsFromRules(round, round.getToQualifyRules());
+        // nrOfDropouts += round.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length === 0).length;
+        // for (let i = 0; i < nrOfDropouts; i++) {
+        //     this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, 'nog onbekend'));
+        // }
     }
 
     protected getNrOfDropoutsFromRules(fromRound: Round, toRules: QualifyRule[]): number {
@@ -85,56 +87,60 @@ export class EndRanking {
     }
 
     protected addDropoutsMultipleRuleWinners(round: Round): number {
-        const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
-        const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.WINNERS);
+        console.error('addDropoutsMultipleRuleWinners');
+        return 0;
+        // const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
+        // const multipleWinnersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === QualifyGroup.WINNERS);
 
-        let nrOfUniqueFromPlacesMultiple = this.getUniqueFromPlaces(multipleRules).length;
-        if (multipleWinnersRule !== undefined) {
-            const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
-            const rankingService = new RankingService(this.ruleSet);
-            const qualifyAmount = multipleWinnersRule.getToPoulePlaces().length;
-            const rankingItems: RoundRankingItem[] = rankingService.getItemsForMultipleRule(multipleWinnersRule);
-            for (let i = 0; i < qualifyAmount; i++) {
-                nrOfUniqueFromPlacesMultiple--;
-                rankingItems.shift();
-            }
-            const amountQualifyLosers = multipleLosersRule !== undefined ? multipleLosersRule.getToPoulePlaces().length : 0;
-            while (nrOfUniqueFromPlacesMultiple - amountQualifyLosers > 0) {
-                nrOfUniqueFromPlacesMultiple--;
-                const poulePlace = round.getPoulePlace(rankingItems.shift().getPoulePlaceLocation());
-                const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
-                this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
-            }
-        }
-        return nrOfUniqueFromPlacesMultiple;
+        // let nrOfUniqueFromPlacesMultiple = this.getUniqueFromPlaces(multipleRules).length;
+        // if (multipleWinnersRule !== undefined) {
+        //     const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === QualifyGroup.LOSERS);
+        //     const rankingService = new RankingService(this.ruleSet);
+        //     const qualifyAmount = multipleWinnersRule.getToPoulePlaces().length;
+        //     const rankingItems: RoundRankingItem[] = rankingService.getItemsForMultipleRule(multipleWinnersRule);
+        //     for (let i = 0; i < qualifyAmount; i++) {
+        //         nrOfUniqueFromPlacesMultiple--;
+        //         rankingItems.shift();
+        //     }
+        //     const amountQualifyLosers = multipleLosersRule !== undefined ? multipleLosersRule.getToPoulePlaces().length : 0;
+        //     while (nrOfUniqueFromPlacesMultiple - amountQualifyLosers > 0) {
+        //         nrOfUniqueFromPlacesMultiple--;
+        //         const poulePlace = round.getPoulePlace(rankingItems.shift().getPoulePlaceLocation());
+        //         const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
+        //         this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
+        //     }
+        // }
+        // return nrOfUniqueFromPlacesMultiple;
     }
 
     protected addDropoutsMultipleRuleLosers(round: Round, nrOfUniqueFromPlacesMultiple: number) {
-        const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
-        const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === Round.LOSERS);
+        console.error('addDropoutsMultipleRuleLosers');
+        return 0;
+        // const multipleRules = round.getToQualifyRules().filter(toRule => toRule.isMultiple());
+        // const multipleLosersRule = multipleRules.find(toRule => toRule.getWinnersOrLosers() === QualifyGroup.LOSERS);
 
-        if (multipleLosersRule !== undefined) {
-            const rankingService = new RankingService(this.ruleSet);
-            const qualifyAmount = multipleLosersRule.getToPoulePlaces().length;
-            const rankingItems: RoundRankingItem[] = rankingService.getItemsForMultipleRule(multipleLosersRule);
-            for (let i = 0; i < qualifyAmount; i++) {
-                nrOfUniqueFromPlacesMultiple--;
-                rankingItems.pop();
-            }
-            while (nrOfUniqueFromPlacesMultiple) {
-                nrOfUniqueFromPlacesMultiple--;
-                const poulePlace = round.getPoulePlace(rankingItems.pop().getPoulePlaceLocation());
-                const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
-                this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
-            }
-        }
+        // if (multipleLosersRule !== undefined) {
+        //     const rankingService = new RankingService(this.ruleSet);
+        //     const qualifyAmount = multipleLosersRule.getToPoulePlaces().length;
+        //     const rankingItems: RoundRankingItem[] = rankingService.getItemsForMultipleRule(multipleLosersRule);
+        //     for (let i = 0; i < qualifyAmount; i++) {
+        //         nrOfUniqueFromPlacesMultiple--;
+        //         rankingItems.pop();
+        //     }
+        //     while (nrOfUniqueFromPlacesMultiple) {
+        //         nrOfUniqueFromPlacesMultiple--;
+        //         const poulePlace = round.getPoulePlace(rankingItems.pop().getPoulePlaceLocation());
+        //         const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
+        //         this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
+        //     }
+        // }
     }
 
     protected addDropoutPlaces(round: Round) {
         const rankingService = new RankingService(this.ruleSet);
         console.error('addDropoutPlaces');
         // if (round.isRoot() || round.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
-        //     const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
+        //     const poulePlacesPerNumber = round.getPoulePlacesPerNumber(QualifyGroup.WINNERS);
         //     poulePlacesPerNumber.forEach(poulePlaces => {
         //         const dropoutPlaceLocations = poulePlaces
         //             .filter(poulePlace => poulePlace.getToQualifyRules().length === 0)

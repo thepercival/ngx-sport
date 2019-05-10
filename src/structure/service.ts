@@ -1,9 +1,9 @@
+import { QualifyGroup } from '../../src/qualify/group';
 import { Competition } from '../competition';
 import { Game } from '../game';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
-import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumberConfigService } from '../round/number/config/service';
 import { Structure } from '../structure';
@@ -112,11 +112,12 @@ export class StructureService {
             nrOfPlaces -= nrOfPlacesToAdd;
             nrOfPoulesToAdd--;
         }
-        if (!round.isRoot()) {
-            const qualifyService = new QualifyRuleService(round.getParent(), round);
-            qualifyService.removeRules();
-            qualifyService.createRules();
-        }
+        console.error('fillRound');
+        // if (!round.isRoot()) {
+        //     const qualifyService = new QualifyRuleService(round.getParent(), round);
+        //     qualifyService.removeRules();
+        //     qualifyService.createRules();
+        // }
         return round;
     }
 
@@ -175,7 +176,7 @@ export class StructureService {
         }
 
         // there could be a place left in the last placenumber which does not start at the first poule
-        const poulePlacesPerNumberParentRound = round.getPoulePlacesPerNumber(Round.WINNERS);
+        const poulePlacesPerNumberParentRound = round.getPoulePlacesPerNumber(QualifyGroup.WINNERS);
         const lastPoulePlaces = poulePlacesPerNumberParentRound.pop();
         let pouleIt = round.getPoules()[0];
         lastPoulePlaces.forEach(function (lastPoulePlaceIt) {
@@ -292,9 +293,9 @@ export class StructureService {
         }
 
         if (tooMuchChildRoundPlaces) {
-            let childRoundToRemovePlace = round.getChildRound(Round.LOSERS);
+            let childRoundToRemovePlace = round.getChildRound(QualifyGroup.LOSERS);
             if (childRoundToRemovePlace === undefined) {
-                childRoundToRemovePlace = round.getChildRound(Round.WINNERS);
+                childRoundToRemovePlace = round.getChildRound(QualifyGroup.WINNERS);
             }
             if (childRoundToRemovePlace !== undefined) {
                 this.removePoulePlace(childRoundToRemovePlace, recalcQualify);
@@ -321,15 +322,16 @@ export class StructureService {
      */
     protected removePoulePlaceHelper(round: Round, childRound: Round) {
         const poulePlacesToRound = childRound.getPoulePlaces();
-        round.getToQualifyRules(childRound.getWinnersOrLosers()).forEach(toQualifyRule => {
-            const toPoulePlaces = toQualifyRule.getToPoulePlaces();
-            toPoulePlaces.forEach(toPoulePlace => {
-                const index = poulePlacesToRound.indexOf(toPoulePlace);
-                if (index === -1) {
-                    toPoulePlaces.splice(index, 1);
-                }
-            });
-        });
+        console.error('removePoulePlaceHelper()');
+        // round.getToQualifyRules(childRound.getWinnersOrLosers()).forEach(toQualifyRule => {
+        //     const toPoulePlaces = toQualifyRule.getToPoulePlaces();
+        //     toPoulePlaces.forEach(toPoulePlace => {
+        //         const index = poulePlacesToRound.indexOf(toPoulePlace);
+        //         if (index === -1) {
+        //             toPoulePlaces.splice(index, 1);
+        //         }
+        //     });
+        // });
     }
 
     addPoulePlace(round, recalcQualify: boolean = true): PoulePlace {

@@ -9,6 +9,9 @@ import { Round } from './round';
 import { RoundNumberConfig } from './round/number/config';
 
 export class Game {
+    static readonly WINNERS = 1;
+    static readonly DRAW = 2;
+    static readonly LOSERS = 3;
     static readonly HOME = true;
     static readonly AWAY = false;
     static readonly STATE_CREATED = 1;

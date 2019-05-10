@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
+import { QualifyGroup } from '../../../public_api';
 import { NameService } from '../../../src/nameservice';
-import { Round } from '../../../src/round';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { jsonStructure15 } from '../../data/structure15';
@@ -49,7 +49,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceName(poulePlace, true)).to.equal('pim');
             }
         });
-        structure.getRound([Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('D1');
@@ -69,7 +69,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('jil');
             }
         });
-        structure.getRound([Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 3 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('F1');
@@ -89,7 +89,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('pim');
             }
         });
-        structure.getRound([Round.WINNERS, Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS, QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('H1');
@@ -101,7 +101,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('jil');
             }
         });
-        structure.getRound([Round.WINNERS, Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS, QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('I1');
@@ -113,7 +113,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('jip');
             }
         });
-        structure.getRound([Round.LOSERS, Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS, QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('J1');
@@ -125,7 +125,7 @@ describe('Structure/NameService', () => {
                 expect(nameService.getPoulePlaceFromName(poulePlace, true)).to.equal('wim');
             }
         });
-        structure.getRound([Round.LOSERS, Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS, QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('K1');
@@ -199,7 +199,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('E1');
@@ -236,7 +236,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('I1');
@@ -273,7 +273,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.WINNERS, Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS, QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('M1');
@@ -294,7 +294,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.WINNERS, Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS, QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('O1');
@@ -315,7 +315,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.LOSERS, Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS, QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('Q1');
@@ -336,7 +336,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.LOSERS, Round.LOSERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.LOSERS, QualifyGroup.LOSERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('S1');
@@ -402,7 +402,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('D1');
@@ -498,7 +498,7 @@ describe('Structure/NameService', () => {
             }
         });
 
-        structure.getRound([Round.WINNERS]).getPoulePlaces().forEach(poulePlace => {
+        structure.getRound([QualifyGroup.WINNERS]).getPoulePlaces().forEach(poulePlace => {
             const nameService = new NameService();
             /*  */ if (poulePlace.getPoule().getNumber() === 1 && poulePlace.getNumber() === 1) {
                 expect(nameService.getPoulePlaceName(poulePlace)).to.equal('F1');

@@ -32,8 +32,8 @@ export class StructureMapper {
                 game.setRefereePoulePlace(refereePoulePlace);
             }));
         }
-        jsonRound.qualifyPoules.forEach(qualifyPoule => {
-            this.setRefereePoulePlaces(qualifyPoule.childRound, roundNumber.getNext());
+        jsonRound.qualifyGroups.forEach(qualifyGroup => {
+            this.setRefereePoulePlaces(qualifyGroup.childRound, roundNumber.getNext());
         });
     }
 
