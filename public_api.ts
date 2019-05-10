@@ -41,6 +41,8 @@ export * from './src/pouleplace';
 export * from './src/pouleplace/repository';
 export * from './src/pouleplace/mapper';
 export * from './src/qualify/rule';
+export * from './src/qualify/rule/multiple';
+export * from './src/qualify/rule/single';
 export * from './src/qualify/rule/mapper';
 export * from './src/qualify/service';
 export * from './src/qualify/group';

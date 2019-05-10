@@ -2,6 +2,7 @@ import { Competition } from './competition';
 import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
+import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyGroup } from './qualify/group';
@@ -121,14 +122,14 @@ export class Round {
         return this.getPoules().find(poule => poule.getNumber() === number);
     }
 
-    getPoulePlaces(order?: number, reversed: boolean = false): PoulePlace[] {
+    getPlaces(order?: number): PoulePlace[] {
         const poulePlaces: PoulePlace[] = [];
         for (const poule of this.getPoules()) {
             for (const place of poule.getPlaces()) {
                 poulePlaces.push(place);
             }
         }
-        if (order === Round.ORDER_NUMBER_POULE || order === 4) {
+        if (order === Round.ORDER_NUMBER_POULE) {
             poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
                     return 1;
@@ -145,7 +146,7 @@ export class Round {
                 return 0;
             });
         }
-        if (order === Round.ORDER_POULE_NUMBER || order === 5) {
+        if (order === Round.ORDER_POULE_NUMBER) {
             poulePlaces.sort((poulePlaceA, poulePlaceB) => {
                 if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
                     return 1;
@@ -161,9 +162,6 @@ export class Round {
                 }
                 return 0;
             });
-        }
-        if (reversed === true) {
-            poulePlaces.reverse();
         }
         return poulePlaces;
     }
@@ -181,17 +179,17 @@ export class Round {
      * @param winnersOrLosers
      *
      **/
-    getPoulePlacesPerNumber(winnersOrLosers: number): PoulePlace[][] {
-        const poulePlacesPerNumber = [];
+    getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
+        const horizontalPoules: HorizontalPoule[] = [];
 
-        const poulePlacesOrderedByPlace = this.getPoulePlaces(Round.ORDER_NUMBER_POULE);
+        const poulePlacesOrderedByPlace = this.getPlaces(Round.ORDER_NUMBER_POULE);
         if (winnersOrLosers === QualifyGroup.LOSERS) {
             poulePlacesOrderedByPlace.reverse();
         }
 
-        poulePlacesOrderedByPlace.forEach(function (placeIt) {
-            let poulePlaces = this.find(function (poulePlacesIt) {
-                return poulePlacesIt.some(function (poulePlaceIt) {
+        poulePlacesOrderedByPlace.forEach(placeIt => {
+            let horizontalPoule = horizontalPoules.find(horizontalPoule => {
+                return horizontalPoule.getPlaces().some(poulePlaceIt => {
                     let poulePlaceNrIt = poulePlaceIt.getNumber();
                     if (winnersOrLosers === QualifyGroup.LOSERS) {
                         poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;
@@ -204,14 +202,14 @@ export class Round {
                 });
             });
 
-            if (poulePlaces === undefined) {
-                poulePlaces = [];
-                this.push(poulePlaces);
+            if (horizontalPoule === undefined) {
+                horizontalPoule = new HorizontalPoule(this, placeIt.getNumber());
+                horizontalPoules.push(horizontalPoule);
             }
-            poulePlaces.push(placeIt);
-        }, poulePlacesPerNumber);
+            horizontalPoule.getPlaces().push(placeIt);
+        });
 
-        return poulePlacesPerNumber;
+        return horizontalPoules;
     }
 
     getPoulePlace(poulePlaceLocation: PoulePlaceLocation): PoulePlace {

@@ -2,7 +2,7 @@ import { Game } from '../game';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
 import { PoulePlaceLocation } from '../pouleplace/location';
-import { QualifyRule } from '../qualify/rule';
+import { QualifyRuleMultiple } from '../qualify/rule/multiple';
 import { Round } from '../round';
 import { RankingItemsGetter } from './helper';
 import { RoundRankingItem } from './item';
@@ -54,8 +54,8 @@ export class RankingService {
         return this.rankItems(unrankedItems, true);
     }
 
-    getItemsForMultipleRule(multipleRule: QualifyRule): RoundRankingItem[] {
-        const placeLocations = multipleRule.getFromPoulePlaces().map(poulePlace => poulePlace.getLocation());
+    getItemsForMultipleRule(multipleRule: QualifyRuleMultiple): RoundRankingItem[] {
+        const placeLocations = multipleRule.getFromHorizontalPoule().getPlaces().map(poulePlace => poulePlace.getLocation());
         return this.getItemsForPlaceLocations(multipleRule.getFromRound(), placeLocations);
     }
 

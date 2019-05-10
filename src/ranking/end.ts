@@ -52,23 +52,27 @@ export class EndRanking {
     }
 
     protected getNrOfDropoutsFromRules(fromRound: Round, toRules: QualifyRule[]): number {
-        const fromPlaces = this.getUniqueFromPlaces(toRules);
-        let nrOfToPlaces = 0;
-        toRules.forEach(toRule => { nrOfToPlaces += toRule.getToPoulePlaces().length; });
-        return fromPlaces.length - nrOfToPlaces;
+        console.error("getNrOfDropoutsFromRules");
+        return 0;
+        // const fromPlaces = this.getUniqueFromPlaces(toRules);
+        // let nrOfToPlaces = 0;
+        // toRules.forEach(toRule => { nrOfToPlaces += toRule.getToPoulePlaces().length; });
+        // return fromPlaces.length - nrOfToPlaces;
     }
 
     protected getUniqueFromPlaces(toRules: QualifyRule[]): PoulePlace[] {
-        const fromPlaces: PoulePlace[] = [];
-        toRules.forEach(toRule => {
-            const ruleFromPlaces = toRule.getFromPoulePlaces();
-            ruleFromPlaces.forEach(ruleFromPlace => {
-                if (fromPlaces.find(fromPlace => fromPlace === ruleFromPlace) === undefined) {
-                    fromPlaces.push(ruleFromPlace);
-                }
-            });
-        });
-        return fromPlaces;
+        console.error("getUniqueFromPlaces");
+        return [];
+        // const fromPlaces: PoulePlace[] = [];
+        // toRules.forEach(toRule => {
+        //     const ruleFromPlaces = toRule.getFromPoulePlaces();
+        //     ruleFromPlaces.forEach(ruleFromPlace => {
+        //         if (fromPlaces.find(fromPlace => fromPlace === ruleFromPlace) === undefined) {
+        //             fromPlaces.push(ruleFromPlace);
+        //         }
+        //     });
+        // });
+        // return fromPlaces;
     }
 
     /**

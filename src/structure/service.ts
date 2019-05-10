@@ -151,18 +151,18 @@ export class StructureService {
     addPoule(round: Round, fillPouleTo: number = 2): number {
         // console.log('addPoule for round ' + round.getNumberAsValue());
         const poules = round.getPoules();
-        const places = round.getPoulePlaces();
-        const nrOfPlacesNotEvenOld = places.length % poules.length;
-        const placesPerPouleOld = (places.length - nrOfPlacesNotEvenOld) / poules.length;
+        const poulePlacesOrderedByPlace = round.getPlaces(Round.ORDER_NUMBER_POULE);
+        const nrOfPlacesNotEvenOld = poulePlacesOrderedByPlace.length % poules.length;
+        const placesPerPouleOld = (poulePlacesOrderedByPlace.length - nrOfPlacesNotEvenOld) / poules.length;
         const newPoule = new Poule(round);
-        const nrOfPlacesNotEven = places.length % poules.length;
-        let placesToAddToNewPoule = (places.length - nrOfPlacesNotEven) / poules.length;
+        const nrOfPlacesNotEven = poulePlacesOrderedByPlace.length % poules.length;
+        let placesToAddToNewPoule = (poulePlacesOrderedByPlace.length - nrOfPlacesNotEven) / poules.length;
 
         if (placesPerPouleOld === 2 && nrOfPlacesNotEvenOld < 2) {
             placesToAddToNewPoule = nrOfPlacesNotEvenOld;
         }
 
-        const poulePlacesOrderedByPlace = round.getPoulePlaces(Round.ORDER_NUMBER_POULE);
+
         const structureService = this;
         while (placesToAddToNewPoule > 0) {
 
@@ -176,10 +176,10 @@ export class StructureService {
         }
 
         // there could be a place left in the last placenumber which does not start at the first poule
-        const poulePlacesPerNumberParentRound = round.getPoulePlacesPerNumber(QualifyGroup.WINNERS);
-        const lastPoulePlaces = poulePlacesPerNumberParentRound.pop();
+        const horizontalPoulesParentRound = round.getHorizontalPoules(QualifyGroup.WINNERS);
+        const lastHorizontalPoule = horizontalPoulesParentRound.pop();
         let pouleIt = round.getPoules()[0];
-        lastPoulePlaces.forEach(function (lastPoulePlaceIt) {
+        lastHorizontalPoule.getPlaces().forEach(function (lastPoulePlaceIt) {
             if (lastPoulePlaceIt.getPoule() !== pouleIt) {
                 this.movePoulePlace(round, lastPoulePlaceIt, pouleIt);
             }
@@ -197,7 +197,7 @@ export class StructureService {
     removePoule(round: Round, recalcQualify: boolean = true): boolean {
         // console.log('removePoule for round ' + round.getNumberAsValue());
         const poules = round.getPoules();
-        const roundPlaces = round.getPoulePlaces();
+        const roundPlaces = round.getPlaces();
         if (poules.length === 1) {
             throw new Error('er moet minimaal 1 poule zijn');
         }
@@ -321,7 +321,7 @@ export class StructureService {
      * @param childRound Round
      */
     protected removePoulePlaceHelper(round: Round, childRound: Round) {
-        const poulePlacesToRound = childRound.getPoulePlaces();
+        const poulePlacesToRound = childRound.getPlaces();
         console.error('removePoulePlaceHelper()');
         // round.getToQualifyRules(childRound.getWinnersOrLosers()).forEach(toQualifyRule => {
         //     const toPoulePlaces = toQualifyRule.getToPoulePlaces();
@@ -402,7 +402,7 @@ export class StructureService {
 
     private checkMaxNrOfPoulePlacesForChildRound(childRound: Round) {
         const nrOfPoules = childRound.getPoules().length;
-        const nrOfPlaces = childRound.getPoulePlaces().length;
+        const nrOfPlaces = childRound.getNrOfPlaces();
         const onePouleTwoOrThreePlaces = nrOfPoules === 1 && (nrOfPlaces === 2 || nrOfPlaces === 3);
         if (onePouleTwoOrThreePlaces) {
             return;
@@ -411,7 +411,7 @@ export class StructureService {
             return;
         }
         const newPoule = new Poule(childRound);
-        const poulePlaces = childRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
+        const poulePlaces = childRound.getPlaces(Round.ORDER_NUMBER_POULE);
         while (newPoule.getPlaces().length < (this.maxNrOfPoulePlacesForChildRound - 1)) {
             const poulePlace = poulePlaces.pop();
             this.movePoulePlace(childRound, poulePlace, newPoule);

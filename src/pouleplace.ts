@@ -88,9 +88,11 @@ export class PoulePlace {
     }
 
     getToQualifyRule(winnersOrLosers: number): QualifyRule {
-        return this.toQualifyRules.find(function (qualifyRuleIt) {
-            return (qualifyRuleIt.getWinnersOrLosers() === winnersOrLosers);
-        });
+        console.error("getToQualifyRule");
+        return undefined;
+        // return this.toQualifyRules.find(function (qualifyRuleIt) {
+        //     return (qualifyRuleIt.getWinnersOrLosers() === winnersOrLosers);
+        // });
     }
 
     getLocation(): PoulePlaceLocation {

@@ -108,6 +108,11 @@ export class QualifyGroup {
         return borderHorizontalPoule.hasPlace(place);
     }
 
+    getNrOfToPlacesShort(): number {
+        const nrOfPlaces = this.getHorizontalPoules().length * this.getRound().getPoules().length;
+        return nrOfPlaces - this.getChildRound().getNrOfPlaces();
+    }
+
     // de horizontale poules moeten kunnen herberekend kunnen worden
     // net zoals welke place welke qualifiers heeft  
 

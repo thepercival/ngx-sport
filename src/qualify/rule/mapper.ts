@@ -26,18 +26,18 @@ export class QualifyRuleMapper {
         return undefined;
     }
 
-    private getPoulePlaceByIdAndRound(poulePlaceId: number, round: Round) {
-        return round.getPoulePlaces().find(function (placeIt) {
-            return (placeIt.getId() === poulePlaceId);
-        });
-    }
+    // private getPoulePlaceByIdAndRound(poulePlaceId: number, round: Round) {
+    //     return round.getPoulePlaces().find(function (placeIt) {
+    //         return (placeIt.getId() === poulePlaceId);
+    //     });
+    // }
 
-    toJson(qualifyRule: QualifyRule): any {
-        return {
-            fromPoulePlaces: qualifyRule.getFromPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace)),
-            toPoulePlaces: qualifyRule.getToPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace))
-        };
-    }
+    // toJson(qualifyRule: QualifyRule): any {
+    //     return {
+    //         fromPoulePlaces: qualifyRule.getFromPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace)),
+    //         toPoulePlaces: qualifyRule.getToPoulePlaces().map(poulePlace => this.poulePlaceMapper.toJson(poulePlace))
+    //     };
+    // }
 }
 
 export interface JsonQualifyRule {

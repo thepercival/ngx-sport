@@ -1,12 +1,14 @@
+import { PoulePlace } from '../../pouleplace';
+import { QualifyRule } from '../../qualify/rule';
+import { QualifyRuleMultiple } from '../../qualify/rule/multiple';
+import { QualifyRuleSingle } from '../../qualify/rule/single';
 import { Round } from '../../round';
-import { PoulePlaceDivider } from '../pouleplacedivider';
-import { QualifyGroup } from './../group';
-import { QualifyRule } from './../rule';
-import { QualifyRuleMultiple } from './multiple';
-import { QualifyRuleSingle } from './single';
+import { QualifyGroup } from '../group';
+import { QualifyReservationService } from '../reservationservice';
 
 export class QualifyRuleService {
-
+    private static readonly START = 1;
+    private static readonly END = 2;
 
     constructor(private round: Round) {
     }
@@ -34,12 +36,17 @@ export class QualifyRuleService {
 
         this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 
+            const childRound = qualifyGroup.getChildRound();
+            const qualifyReservationService = new QualifyReservationService(childRound);
+
+            console.log('PoulePlaceDivider::divide');
+
             const qualifyRules: QualifyRule[] = [];
             {
                 qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-                    const placesnotequal = false;
-                    if (qualifyGroup.isBorderPoule(horizontalPoule) && placesnotequal) {
-                        qualifyRules.push(new QualifyRuleMultiple(horizontalPoule, qualifyGroup.getChildRound()));
+                    if (qualifyGroup.isBorderPoule(horizontalPoule) && qualifyGroup.getNrOfToPlacesShort() > 0) {
+                        const nrOfToPlacesBorderPoule = qualifyGroup.getChildRound().getNrOfPlaces() % this.round.getPoules().length;
+                        qualifyRules.push(new QualifyRuleMultiple(horizontalPoule, qualifyGroup.getChildRound(), nrOfToPlacesBorderPoule));
                     } else {
                         horizontalPoule.getPlaces().forEach(place => {
                             qualifyRules.push(new QualifyRuleSingle(place, qualifyGroup.getChildRound()));
@@ -47,40 +54,52 @@ export class QualifyRuleService {
                     }
                 });
             }
-            const poulePlaceDivider = new PoulePlaceDivider(qualifyGroup.getChildRound());
-            poulePlaceDivider.divide(qualifyRules);
+
+            const toHorPoules = childRound.getHorizontalPoules(QualifyGroup.WINNERS);
+            let startEnd = QualifyRuleService.START;
+            while (toHorPoules.length > 0) {
+                const toHorPoule = startEnd === QualifyRuleService.START ? toHorPoules.shift() : toHorPoules.pop();
+                toHorPoule.getPlaces().forEach(place => {
+                    this.connectPlaceWithRule(place, qualifyRules, startEnd, qualifyReservationService);
+                });
+                startEnd = startEnd === QualifyRuleService.START ? QualifyRuleService.END : QualifyRuleService.START;
+            }
         });
-
-
-        // console.log('createRules started: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
-        console.error('createRules()');
-        // const order = Round.ORDER_NUMBER_POULE;
-
-        // const childRoundPoulePlaces = this.childRound.getPoulePlaces(order);
-
-        // const parentRoundPoulePlacesPer: PoulePlace[][] = this.getParentPoulePlacesPer();
-
-
-
-        // while (childRoundPoulePlaces.length > 0 && parentRoundPoulePlacesPer.length > 0) {
-        //     const qualifyRule = new QualifyRule(this.parentRound, this.childRound);
-
-        //     const poulePlaces: PoulePlace[] = parentRoundPoulePlacesPer.shift();
-        //     const nrOfPlacesToAdd = this.getNrOfToPlacesToAdd(parentRoundPoulePlacesPer);
-        //     const nrOfToPoulePlaces = this.getNrOfToPoulePlaces(childRoundPoulePlaces.length, poulePlaces.length, nrOfPlacesToAdd);
-        //     // to places
-        //     for (let nI = 0; nI < nrOfToPoulePlaces; nI++) {
-        //         if (childRoundPoulePlaces.length === 0) {
-        //             break;
-        //         }
-        //         qualifyRule.addToPoulePlace(childRoundPoulePlaces.shift());
-        //     }
-        //     // from places (needs toplaces)
-        //     poulePlaceDivider.divide(qualifyRule, poulePlaces);
-        // }
-        // this.repairOverlappingRules();
-        // console.log('createRules ended: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
     }
+
+    private connectPlaceWithRule(childPlace: PoulePlace, qualifyRules: QualifyRule[], startEnd: number, reservationService: QualifyReservationService) {
+
+        const unfreeQualifyRules = [];
+        let oneQualifyRuleConnected = false;
+        while (!oneQualifyRuleConnected && qualifyRules.length > 0) {
+            const qualifyRule = startEnd === QualifyRuleService.START ? qualifyRules.shift() : qualifyRules.pop();
+            if (!qualifyRule.isMultiple() && !reservationService.isFree(childPlace.getPoule().getNumber(), (<QualifyRuleSingle>qualifyRule).getFromPoule())) {
+                unfreeQualifyRules.push(qualifyRule);
+                continue;
+            }
+            if (qualifyRule.isSingle()) {
+                reservationService.reserve(childPlace.getPoule().getNumber(), (<QualifyRuleSingle>qualifyRule).getFromPoule());
+                (<QualifyRuleSingle>qualifyRule).setToPlace(childPlace);
+            } else {
+                (<QualifyRuleMultiple>qualifyRule).addToPlace(childPlace);
+                if (!(<QualifyRuleMultiple>qualifyRule).toPlacesComplete()) {
+                    if (startEnd === QualifyRuleService.START) {
+                        qualifyRules.unshift(qualifyRule);
+                    } else {
+                        qualifyRules.push(qualifyRule);
+                    }
+                }
+            }
+            if (startEnd === QualifyRuleService.START) {
+                qualifyRules = unfreeQualifyRules.concat(qualifyRules);
+            } else {
+                qualifyRules = qualifyRules.concat(unfreeQualifyRules.reverse());
+            }
+            oneQualifyRuleConnected = true;
+        }
+    }
+
+
 
     // protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
     //     let nrOfPlacesToAdd = 0;

@@ -4,7 +4,7 @@ import { Poule } from './poule';
 import { PoulePlace } from './pouleplace';
 import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
-import { QualifyRuleService } from './qualify/rule/service';
+import { QualifyRuleSingle } from './qualify/rule/single';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
 
@@ -38,8 +38,8 @@ export class NameService {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 && this.aChildRoundHasMultiplePlacesPerPoule(round)) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
-        } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getPoulePlaces().length > 1)) {
-            if (round.getPoulePlaces().length === 2 && sameName === false) {
+        } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getNrOfPlaces() > 1)) {
+            if (round.getNrOfPlaces() === 2 && sameName === false) {
                 const rankedPlace = this.getRankedPlace(round);
                 return this.getHtmlNumber(rankedPlace) + '/' + this.getHtmlNumber(rankedPlace + 1) + ' plaats';
             }
@@ -65,22 +65,22 @@ export class NameService {
         return pouleName;
     }
 
-    getPoulePlaceFromName(pouleplace: PoulePlace, competitorName = false, longName = false) {
-        if (competitorName === true && pouleplace.getCompetitor() !== undefined) {
-            return pouleplace.getCompetitor().getName();
+    getPoulePlaceFromName(place: PoulePlace, competitorName = false, longName = false) {
+        if (competitorName === true && place.getCompetitor() !== undefined) {
+            return place.getCompetitor().getName();
         }
 
-        const parentQualifyGroup = pouleplace.getRound().getParentQualifyGroup();
+        const parentQualifyGroup = place.getRound().getParentQualifyGroup();
         if (parentQualifyGroup === undefined) {
-            return this.getPoulePlaceName(pouleplace, false, longName);
+            return this.getPoulePlaceName(place, false, longName);
         }
 
-        const qualifyService = new QualifyRuleService(parentQualifyGroup.getRound());
-        if (!qualifyService.hasOneQualifier(pouleplace)) {
+        const fromQualifyRule = place.getFromQualifyRule();
+        if (fromQualifyRule.isMultiple()) {
             return (longName ? 'poule ? nr. ' : '?') + this.getNumberFromQualifyRule(fromQualifyRule);
         }
 
-        const fromPoulePlace = qualifyService.getQualifier(pouleplace);
+        const fromPoulePlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
         if (longName !== true || fromPoulePlace.getPoule().needsRanking()) {
             return this.getPoulePlaceName(fromPoulePlace, false, longName);
         }
@@ -90,19 +90,22 @@ export class NameService {
     }
 
     getQualifyRuleName(qualifyRule: QualifyRule): string {
-        if (qualifyRule.isSingle()) {
-            return 'nummers ' + this.getNumberFromQualifyRule(qualifyRule);
-        }
-        if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-            return qualifyRule.getToPoulePlaces().length + ' beste nummers ' + this.getNumberFromQualifyRule(qualifyRule);
-        }
-        const firstFromPoulePlace = qualifyRule.getFromPoulePlaces()[0];
-        let nr = firstFromPoulePlace.getPoule().getPlaces().length - firstFromPoulePlace.getNumber();
-        const start = qualifyRule.getToPoulePlaces().length + ' slechtste ';
-        if (nr === 0) {
-            return start + 'nummers laatst';
-        }
-        return start + 'nummers ' + nr + ' na laatst';
+        console.error("getQualifyRuleName");
+        return "0";
+
+        // if (qualifyRule.isSingle()) {
+        //     return 'nummers ' + this.getNumberFromQualifyRule(qualifyRule);
+        // }
+        // if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+        //     return qualifyRule.getToPoulePlaces().length + ' beste nummers ' + this.getNumberFromQualifyRule(qualifyRule);
+        // }
+        // const firstFromPoulePlace = qualifyRule.getFromPoulePlaces()[0];
+        // let nr = firstFromPoulePlace.getPoule().getPlaces().length - firstFromPoulePlace.getNumber();
+        // const start = qualifyRule.getToPoulePlaces().length + ' slechtste ';
+        // if (nr === 0) {
+        //     return start + 'nummers laatst';
+        // }
+        // return start + 'nummers ' + nr + ' na laatst';
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {
@@ -120,11 +123,13 @@ export class NameService {
     }
 
     protected getNumberFromQualifyRule(qualifyRule: QualifyRule): number {
-        const poulePlaces = qualifyRule.getFromPoulePlaces();
-        if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-            return poulePlaces[0].getNumber();
-        }
-        return poulePlaces[poulePlaces.length - 1].getNumber();
+        console.error("getNumberFromQualifyRule");
+        return 0;
+        // const poulePlaces = qualifyRule.getFromPoulePlaces();
+        // if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+        //     return poulePlaces[0].getNumber();
+        // }
+        // return poulePlaces[poulePlaces.length - 1].getNumber();
     }
 
     getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false) {
@@ -188,7 +193,7 @@ export class NameService {
             return rankedPlace;
         }
         if (round.getWinnersOrLosers() === QualifyGroup.LOSERS) {
-            rankedPlace += parentRound.getPoulePlaces().length - round.getPoulePlaces().length;
+            rankedPlace += parentRound.getNrOfPlaces() - round.getNrOfPlaces();
         }
         return this.getRankedPlace(parentRound, rankedPlace);
     }
