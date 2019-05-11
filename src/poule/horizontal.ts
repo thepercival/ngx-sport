@@ -1,9 +1,10 @@
 import { PoulePlace } from '../pouleplace';
+import { QualifyGroup } from '../qualify/group';
 import { Round } from '../round';
 
 export class HorizontalPoule {
     protected round: Round;
-    protected winnersOrLosers: number;
+    protected qualifyGroup: QualifyGroup;
     protected placeNumber: number;
     protected places: PoulePlace[] = [];
 
@@ -28,11 +29,7 @@ export class HorizontalPoule {
     }
 
     getWinnersOrLosers(): number {
-        return this.winnersOrLosers;
-    }
-
-    setWinnersOrLosers(winnersOrLosers: number): void {
-        this.winnersOrLosers = winnersOrLosers;
+        return this.getQualifyGroup().getWinnersOrLosers();
     }
 
     getPlaceNumber(): number {
@@ -43,7 +40,13 @@ export class HorizontalPoule {
         this.placeNumber = placeNumber;
     }
 
+    getQualifyGroup(): QualifyGroup {
+        return this.qualifyGroup;
+    }
 
+    setQualifyGroup(qualifyGroup: QualifyGroup) {
+        this.qualifyGroup = qualifyGroup;
+    }
 
     getPlaces(): PoulePlace[] {
         return this.places;

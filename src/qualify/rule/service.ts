@@ -13,33 +13,12 @@ export class QualifyRuleService {
     constructor(private round: Round) {
     }
 
-    // elke pouleplace krijgt een qualifyrule
-    // hasOneQualifier(toPlace: PoulePlace): boolean {
-    //     const parentQualifyGroup = toPlace.getRound().getParentQualifyGroup();
-    //     return !parentQualifyGroup.isBorderGroup() ||
-    //         (parentQualifyGroup.isInBorderHoritontalPoule(toPlace)
-    //             && parentQualifyGroup.getRound().getPoules().length > toPlace.getRound().getNrOfPlaces());
-    // }
-
-    // getQualifier(toPlace: PoulePlace): PoulePlace {
-
-    //     pak de qualifygroup erbij, pak de horizontalpoules van de group
-
-    //     kijk welke plaats toPlace staat in de ronde!! hierbij werd pouleplacedevider gebruikt!!
-
-
-    //     erdoorheen om te kijken wie waaraan gekoppeld is
-    //     this.qualifiers[] !== undefined
-    // }
-
     createRules() {
 
         this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 
             const childRound = qualifyGroup.getChildRound();
             const qualifyReservationService = new QualifyReservationService(childRound);
-
-            console.log('PoulePlaceDivider::divide');
 
             const qualifyRules: QualifyRule[] = [];
             {

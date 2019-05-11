@@ -16,7 +16,8 @@ export class QualifyGroup {
     protected nrOfHorizontalPoules: number;
     protected childRound: Round;
 
-    constructor(round: Round) {
+    constructor(round: Round, winnersOrLosers: number) {
+        this.setWinnersOrLosers(winnersOrLosers);
         this.setRound(round);
     }
 
@@ -40,7 +41,7 @@ export class QualifyGroup {
         //     }
         // }
         // if (round !== undefined) {
-        round.getQualifyGroups().push(this);
+        round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
         // }
         this.round = round;
     }
@@ -87,7 +88,11 @@ export class QualifyGroup {
     }
 
     getHorizontalPoules(): HorizontalPoule[] {
-        return [];
+        const start = this.getNumber();
+        const end = start + this.getNrOfHorizontalPoules();
+        return this.getRound().getHorizontalPoules(this.getWinnersOrLosers()).filter(horizontalPoule => {
+            return horizontalPoule.getPlaceNumber() >= start && horizontalPoule.getPlaceNumber() <= end
+        });
     }
 
     isBorderGroup(): boolean {

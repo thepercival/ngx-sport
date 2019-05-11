@@ -6,9 +6,8 @@ export class QualifyGroupMapper {
     constructor(private roundMapper: RoundMapper) { }
 
     toObject(json: JsonQualifyGroup, round: Round): QualifyGroup {
-        const qualifyGroup = new QualifyGroup(round);
+        const qualifyGroup = new QualifyGroup(round, json.winnersOrLosers);
         qualifyGroup.setId(json.id);
-        qualifyGroup.setWinnersOrLosers(json.winnersOrLosers);
         qualifyGroup.setNumber(json.number);
         qualifyGroup.setNrOfHorizontalPoules(json.nrOfHorizontalPoules);
         qualifyGroup.setChildRound(

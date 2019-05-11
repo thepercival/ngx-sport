@@ -1,7 +1,9 @@
 import { Competitor } from './competitor';
 import { Game } from './game';
 import { Poule } from './poule';
+import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlaceLocation } from './pouleplace/location';
+import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
 import { Round } from './round';
 
@@ -14,6 +16,8 @@ export class PoulePlace {
     protected competitor: Competitor;
     protected fromQualifyRule: QualifyRule;
     protected toQualifyRules: QualifyRule[] = [];
+    protected horizontalPouleWinners: HorizontalPoule;
+    protected horizontalPouleLosers: HorizontalPoule;
 
     constructor(poule: Poule, number?: number) {
         if (number === undefined) {
@@ -111,6 +115,19 @@ export class PoulePlace {
         if (qualifyRule) {
             this.toQualifyRules.push(qualifyRule);
         }
+    }
+
+    getHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
+        return (winnersOrLosers === QualifyGroup.WINNERS) ? this.horizontalPouleWinners : this.horizontalPouleLosers;
+    }
+
+    setHorizontalPoule(winnersOrLosers: number, horizontalPoule: HorizontalPoule) {
+        if (winnersOrLosers === QualifyGroup.WINNERS) {
+            this.horizontalPouleWinners = horizontalPoule;
+        } else {
+            this.horizontalPouleLosers = horizontalPoule;
+        }
+        horizontalPoule.getPlaces().push(this);
     }
 
     getGames(): Game[] {
