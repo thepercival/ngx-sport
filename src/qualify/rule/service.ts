@@ -13,7 +13,33 @@ export class QualifyRuleService {
     constructor(private round: Round) {
     }
 
-    createRules() {
+    recreate() {
+        this.remove();
+        // this.create();
+    }
+
+    protected remove() {
+        this.round.getParent().getPlaces().forEach(place => {
+            place.setFromQualifyRule(undefined);
+            const toQualifyRules = place.getToQualifyRules();
+            toQualifyRules.splice(0, toQualifyRules.length);
+        });
+        // console.log('removeRules: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
+        // let fromQualifyRules = this.childRound.getFromQualifyRules().slice();
+        // fromQualifyRules.forEach(function (qualifyRuleIt) {
+        //     while (qualifyRuleIt.getFromPoulePlaces().length > 0) {
+        //         qualifyRuleIt.removeFromPoulePlace();
+        //     }
+        //     while (qualifyRuleIt.getToPoulePlaces().length > 0) {
+        //         qualifyRuleIt.removeToPoulePlace();
+        //     }
+        //     qualifyRuleIt.setFromRound(undefined);
+        //     qualifyRuleIt.setToRound(undefined);
+        // });
+        // fromQualifyRules = undefined;
+    }
+
+    protected create() {
 
         this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 
@@ -23,7 +49,7 @@ export class QualifyRuleService {
             const qualifyRules: QualifyRule[] = [];
             {
                 qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-                    if (qualifyGroup.isBorderPoule(horizontalPoule) && qualifyGroup.getNrOfToPlacesShort() > 0) {
+                    if (horizontalPoule.isBorderPoule() && qualifyGroup.getNrOfToPlacesShort() > 0) {
                         const nrOfToPlacesBorderPoule = qualifyGroup.getChildRound().getNrOfPlaces() % this.round.getPoules().length;
                         qualifyRules.push(new QualifyRuleMultiple(horizontalPoule, qualifyGroup.getChildRound(), nrOfToPlacesBorderPoule));
                     } else {

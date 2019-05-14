@@ -2,6 +2,17 @@ import { PoulePlace } from '../pouleplace';
 import { QualifyGroup } from '../qualify/group';
 import { Round } from '../round';
 
+/**
+ * QualifyGroup.WINNERS
+ *  [ A1 B1 C1 ]
+ *  [ A2 B2 C2 ]
+ *  [ A3 B3 C3 ]
+ * QualifyGroup.LOSERS
+ *  [ C3 B3 A3 ]
+ *  [ C2 B2 A2 ]
+ *  [ C1 B1 A1 ]
+ *
+ **/
 export class HorizontalPoule {
     protected round: Round;
     protected qualifyGroup: QualifyGroup;
@@ -45,11 +56,24 @@ export class HorizontalPoule {
     }
 
     setQualifyGroup(qualifyGroup: QualifyGroup) {
+
+        // this is done in horizontalpouleservice
+        // if( this.qualifyGroup != undefined ){ // remove from old round
+        //     var index = this.qualifyGroup.getHorizontalPoules().indexOf(this);
+        //     if (index > -1) {
+        //         this.round.getHorizontalPoules().splice(index, 1);
+        //     }
+        // }
         this.qualifyGroup = qualifyGroup;
+        this.qualifyGroup.getHorizontalPoules().push(this);
     }
 
     getPlaces(): PoulePlace[] {
         return this.places;
+    }
+
+    getFirstPlace(): PoulePlace {
+        return this.places[0];
     }
 
     hasPlace(place: PoulePlace): boolean {
@@ -60,6 +84,13 @@ export class HorizontalPoule {
     //     const poules = this.getRound().getPoules();
     //     return poules[this.getNumber()];
     // }
+
+    isBorderPoule(): boolean {
+        if (!this.getQualifyGroup().isBorderGroup()) {
+            return false;
+        }
+        return this.getQualifyGroup().getHorizontalPoules().length === this.getPlaceNumber();
+    }
 
 
 }

@@ -9,7 +9,6 @@ export class QualifyGroupMapper {
         const qualifyGroup = new QualifyGroup(round, json.winnersOrLosers);
         qualifyGroup.setId(json.id);
         qualifyGroup.setNumber(json.number);
-        qualifyGroup.setNrOfHorizontalPoules(json.nrOfHorizontalPoules);
         qualifyGroup.setChildRound(
             this.roundMapper.toObject(
                 json.childRound,
@@ -26,7 +25,6 @@ export class QualifyGroupMapper {
             id: qualifyGroup.getId(),
             winnersOrLosers: qualifyGroup.getWinnersOrLosers(),
             number: qualifyGroup.getNumber(),
-            nrOfHorizontalPoules: qualifyGroup.getNrOfHorizontalPoules(),
             childRound: this.roundMapper.toJson(qualifyGroup.getChildRound())
         };
     }
@@ -36,6 +34,5 @@ export interface JsonQualifyGroup {
     id?: number;
     winnersOrLosers: number;
     number: number;
-    nrOfHorizontalPoules: number;
     childRound: JsonRound;
 }

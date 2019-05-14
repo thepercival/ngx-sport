@@ -13,8 +13,9 @@ export class QualifyGroup {
     protected id: number;
     protected winnersOrLosers: number;
     protected number: number;
-    protected nrOfHorizontalPoules: number;
     protected childRound: Round;
+
+    protected horizontalPoules: HorizontalPoule[];
 
     constructor(round: Round, winnersOrLosers: number) {
         this.setWinnersOrLosers(winnersOrLosers);
@@ -62,13 +63,13 @@ export class QualifyGroup {
         this.number = number;
     }
 
-    getNrOfHorizontalPoules(): number {
-        return this.nrOfHorizontalPoules;
-    }
+    // getNrOfHorizontalPoules(): number {
+    //     return this.nrOfHorizontalPoules;
+    // }
 
-    setNrOfHorizontalPoules(nrOfHorizontalPoules: number): void {
-        this.nrOfHorizontalPoules = nrOfHorizontalPoules;
-    }
+    // setNrOfHorizontalPoules(nrOfHorizontalPoules: number): void {
+    //     this.nrOfHorizontalPoules = nrOfHorizontalPoules;
+    // }
 
     getChildRound(): Round {
         return this.childRound;
@@ -88,23 +89,12 @@ export class QualifyGroup {
     }
 
     getHorizontalPoules(): HorizontalPoule[] {
-        const start = this.getNumber();
-        const end = start + this.getNrOfHorizontalPoules();
-        return this.getRound().getHorizontalPoules(this.getWinnersOrLosers()).filter(horizontalPoule => {
-            return horizontalPoule.getPlaceNumber() >= start && horizontalPoule.getPlaceNumber() <= end
-        });
+        return this.horizontalPoules;
     }
 
     isBorderGroup(): boolean {
         const qualifyGroups = this.getRound().getQualifyGroups(this.getWinnersOrLosers());
         return this === qualifyGroups[qualifyGroups.length - 1];
-    }
-
-    isBorderPoule(poule: HorizontalPoule): boolean {
-        if (!this.isBorderGroup()) {
-            return false;
-        }
-        return this.getNrOfHorizontalPoules() === poule.getPlaceNumber();
     }
 
     isInBorderHoritontalPoule(place: PoulePlace): boolean {

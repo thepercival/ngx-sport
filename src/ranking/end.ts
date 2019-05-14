@@ -43,21 +43,10 @@ export class EndRanking {
     }
 
     protected addDropoutsNotPlayed(round: Round) {
-        console.error('addDropoutsNotPlayed');
-        // let nrOfDropouts: number = this.getNrOfDropoutsFromRules(round, round.getToQualifyRules());
-        // nrOfDropouts += round.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length === 0).length;
-        // for (let i = 0; i < nrOfDropouts; i++) {
-        //     this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, 'nog onbekend'));
-        // }
-    }
-
-    protected getNrOfDropoutsFromRules(fromRound: Round, toRules: QualifyRule[]): number {
-        console.error("getNrOfDropoutsFromRules");
-        return 0;
-        // const fromPlaces = this.getUniqueFromPlaces(toRules);
-        // let nrOfToPlaces = 0;
-        // toRules.forEach(toRule => { nrOfToPlaces += toRule.getToPoulePlaces().length; });
-        // return fromPlaces.length - nrOfToPlaces;
+        const nrOfDropouts: number = round.getNrOfPlaces() - round.getNrOfPlacesChildren();
+        for (let i = 0; i < nrOfDropouts; i++) {
+            this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, 'nog onbekend'));
+        }
     }
 
     protected getUniqueFromPlaces(toRules: QualifyRule[]): PoulePlace[] {

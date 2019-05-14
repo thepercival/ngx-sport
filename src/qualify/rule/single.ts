@@ -15,11 +15,11 @@ export class QualifyRuleSingle extends QualifyRule {
     }
 
     isMultiple(): boolean {
-        return true;
+        return false;
     }
 
     isSingle(): boolean {
-        return false;
+        return true;
     }
 
     getFromPlace(): PoulePlace {
@@ -36,52 +36,7 @@ export class QualifyRuleSingle extends QualifyRule {
 
     setToPlace(toPlace: PoulePlace) {
         this.toPlace = toPlace;
+        toPlace.setFromQualifyRule(this);
     }
-
-    // getFromPoulePlaces(): PoulePlace[] {
-    //     return this.fromHorizontalPoule.getPlaces();
-    // }
-
-
-
-    // getToPoulePlaces(): PoulePlace[] {
-    //     return this.toPoulePlaces;
-    // }
-
-    // addToPoulePlace(poulePlace: PoulePlace): void {
-    //     if (poulePlace === undefined) { return; }
-    //     poulePlace.setFromQualifyRule(this);
-    //     this.toPoulePlaces.push(poulePlace);
-    // }
-
-
-
-
-
-    // getToEquivalent(fromPoulePlace: PoulePlace): PoulePlace {
-    //     if (this.isMultiple()) {
-    //         return undefined;
-    //     }
-    //     const index = this.getFromPoulePlaces().indexOf(fromPoulePlace);
-    //     if (index < 0) {
-    //         return undefined;
-    //     }
-    //     return this.getToPoulePlaces()[index];
-    // }
-
-    // getFromEquivalent(toPoulePlace: PoulePlace): PoulePlace {
-    //     if (this.isMultiple()) {
-    //         return undefined;
-    //     }
-    //     const index = this.getToPoulePlaces().indexOf(toPoulePlace);
-    //     if (index < 0) {
-    //         return undefined;
-    //     }
-    //     return this.getFromPoulePlaces()[index];
-    // }
-
-    // getWinnersOrLosers(): number {
-    //     return this.qualifyGroup.getWinnersOrLosers();
-    // }
 }
 

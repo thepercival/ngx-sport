@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { HorizontalPouleService } from '../poule/horizontal/service';
 import { JsonPoule, PouleMapper } from '../poule/mapper';
 import { QualifyGroup } from '../qualify/group';
 import { JsonQualifyGroup, QualifyGroupMapper } from '../qualify/group/mapper';
@@ -19,13 +20,21 @@ export class RoundMapper {
         round = new Round(roundNumber, parentQualifyGroup);
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
+
         const qualifyGroupMapper = new QualifyGroupMapper(this);
         json.qualifyGroups.forEach((jsonQualifyGroup) => {
             qualifyGroupMapper.toObject(jsonQualifyGroup, round);
             // this.toObject(jsonQualifyGroup.childRound, roundNumber.getNext(), round, round.getChildRound(jsonChildRound.winnersOrLosers));
         });
-        const qualifyService = new QualifyRuleService(round);
-        qualifyService.createRules();
+
+        // lines between should be moved to StructureService
+        const horizontalPouleService = new HorizontalPouleService(round);
+        horizontalPouleService.recreate();
+
+        const qualifyRuleService = new QualifyRuleService(round);
+        qualifyRuleService.recreate();
+        // lines between should be moved to StructureService
+
         return round;
     }
 

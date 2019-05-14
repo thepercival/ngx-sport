@@ -27,7 +27,7 @@ export class Round {
     protected winnersQualifyGroups: QualifyGroup[] = [];
     protected losersHorizontalPoules: HorizontalPoule[];
     protected winnersHorizontalPoules: HorizontalPoule[];
-    protected value: number;
+    // protected value: number;
 
     constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {
         this.number = roundNumber;
@@ -124,20 +124,6 @@ export class Round {
         return this.getPoules().find(poule => poule.getNumber() === number);
     }
 
-    getPlaces(order?: number): PoulePlace[] {
-        let places: PoulePlace[] = [];
-        if (order === Round.ORDER_NUMBER_POULE) {
-            this.getPoules().forEach((poule) => {
-                places = places.concat(poule.getPlaces());
-            });
-        } else {
-            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
-                places = places.concat(poule.getPlaces());
-            });
-        }
-        return places;
-    }
-
     /**
      * winnerslosers = QualifyGroup.WINNERS
      *  [ A1 B1 C1 ]
@@ -153,47 +139,27 @@ export class Round {
      **/
     getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
         if (winnersOrLosers === QualifyGroup.WINNERS) {
-            if (this.winnersHorizontalPoules === undefined) {
-                this.initHorizontalPoules(QualifyGroup.WINNERS);
-            }
             return this.winnersHorizontalPoules;
-        }
-        if (this.losersHorizontalPoules === undefined) {
-            this.initHorizontalPoules(QualifyGroup.LOSERS);
         }
         return this.losersHorizontalPoules;
     }
 
-    protected initHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
-        const horizontalPoules: HorizontalPoule[] = [];
+    getFirstHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
+        return this.getHorizontalPoules(winnersOrLosers)[0];
+    }
 
-        const poulePlacesOrderedByPlace = this.getPlaces(Round.ORDER_NUMBER_POULE);
-        if (winnersOrLosers === QualifyGroup.LOSERS) {
-            poulePlacesOrderedByPlace.reverse();
-        }
-
-        poulePlacesOrderedByPlace.forEach(placeIt => {
-            let horizontalPoule = horizontalPoules.find(horizontalPoule => {
-                return horizontalPoule.getPlaces().some(poulePlaceIt => {
-                    let poulePlaceNrIt = poulePlaceIt.getNumber();
-                    if (winnersOrLosers === QualifyGroup.LOSERS) {
-                        poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;
-                    }
-                    let placeNrIt = placeIt.getNumber();
-                    if (winnersOrLosers === QualifyGroup.LOSERS) {
-                        placeNrIt = (placeIt.getPoule().getPlaces().length + 1) - placeNrIt;
-                    }
-                    return poulePlaceNrIt === placeNrIt;
-                });
+    getPlaces(order?: number): PoulePlace[] {
+        let places: PoulePlace[] = [];
+        if (order === Round.ORDER_NUMBER_POULE) {
+            this.getPoules().forEach((poule) => {
+                places = places.concat(poule.getPlaces());
             });
-
-            if (horizontalPoule === undefined) {
-                horizontalPoule = new HorizontalPoule(this, placeIt.getNumber());
-                horizontalPoules.push(horizontalPoule);
-            }
-            placeIt.setHorizontalPoule(winnersOrLosers, horizontalPoule);
-        });
-        return horizontalPoules;
+        } else {
+            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
+                places = places.concat(poule.getPlaces());
+            });
+        }
+        return places;
     }
 
     getPoulePlace(poulePlaceLocation: PoulePlaceLocation): PoulePlace {
