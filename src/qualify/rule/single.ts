@@ -36,7 +36,9 @@ export class QualifyRuleSingle extends QualifyRule {
 
     setToPlace(toPlace: PoulePlace) {
         this.toPlace = toPlace;
-        toPlace.setFromQualifyRule(this);
+        if (toPlace !== undefined) {
+            toPlace.setFromQualifyRule(this);
+        }
     }
 }
 

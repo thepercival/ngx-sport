@@ -25,8 +25,8 @@ export class Round {
     protected poules: Poule[] = [];
     protected losersQualifyGroups: QualifyGroup[] = [];
     protected winnersQualifyGroups: QualifyGroup[] = [];
-    protected losersHorizontalPoules: HorizontalPoule[];
-    protected winnersHorizontalPoules: HorizontalPoule[];
+    protected losersHorizontalPoules: HorizontalPoule[] = [];
+    protected winnersHorizontalPoules: HorizontalPoule[] = [];
     // protected value: number;
 
     constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {

@@ -127,7 +127,9 @@ export class PoulePlace {
         } else {
             this.horizontalPouleLosers = horizontalPoule;
         }
-        horizontalPoule.getPlaces().push(this);
+        if (horizontalPoule !== undefined) {
+            horizontalPoule.getPlaces().push(this);
+        }
     }
 
     getGames(): Game[] {

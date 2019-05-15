@@ -97,6 +97,9 @@ export class StructureService {
 
         this.updateRound(round, round.getNrOfPlaces() + 1, round.getPoules().length)
 
+        const structure = new Structure(round.getNumber(), round);
+        structure.setPouleStructureNumbers();
+
         return round.getFirstHorizontalPoule(QualifyGroup.LOSERS).getFirstPlace();
 
         // const nrOfPlacesNotEven = places.length % poules.length;
@@ -178,13 +181,12 @@ export class StructureService {
         const horizontalPouleService = new HorizontalPouleService(round);
         horizontalPouleService.recreate();
 
-        const qualifyRuleService = new QualifyRuleService(round);
-        qualifyRuleService.recreate();
-
         [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
             this.updateQualifyGroups(round, winnersOrLosers, round.getNrOfPlacesChildren(winnersOrLosers));
         });
 
+        const qualifyRuleService = new QualifyRuleService(round);
+        qualifyRuleService.recreateTo();
     }
 
     protected updateQualifyGroups(round: Round, winnersOrLosers: number, nrOfPlaces: number) {

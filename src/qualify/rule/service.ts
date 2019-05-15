@@ -13,15 +13,23 @@ export class QualifyRuleService {
     constructor(private round: Round) {
     }
 
-    recreate() {
-        this.remove();
-        // this.create();
+    recreateTo() {
+        this.removeTo();
+        this.createTo();
     }
 
-    protected remove() {
-        this.round.getParent().getPlaces().forEach(place => {
-            place.setFromQualifyRule(undefined);
+    protected removeTo() {
+        this.round.getPlaces().forEach(place => {
             const toQualifyRules = place.getToQualifyRules();
+            toQualifyRules.forEach(toQualifyRule => {
+                let toPlaces: PoulePlace[] = [];
+                if (toQualifyRule.isMultiple()) {
+                    toPlaces = toPlaces.concat((<QualifyRuleMultiple>toQualifyRule).getToPlaces());
+                } else {
+                    toPlaces.push((<QualifyRuleSingle>toQualifyRule).getToPlace());
+                }
+                toPlaces.forEach(toPlace => toPlace.setFromQualifyRule(undefined));
+            });
             toQualifyRules.splice(0, toQualifyRules.length);
         });
         // console.log('removeRules: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
@@ -39,7 +47,7 @@ export class QualifyRuleService {
         // fromQualifyRules = undefined;
     }
 
-    protected create() {
+    protected createTo() {
 
         this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 

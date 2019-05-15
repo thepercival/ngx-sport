@@ -31,8 +31,10 @@ export class RoundMapper {
         const horizontalPouleService = new HorizontalPouleService(round);
         horizontalPouleService.recreate();
 
-        const qualifyRuleService = new QualifyRuleService(round);
-        qualifyRuleService.recreate();
+        if (parentQualifyGroup !== undefined) {
+            const qualifyRuleService = new QualifyRuleService(parentQualifyGroup.getRound());
+            qualifyRuleService.recreateTo();
+        }
         // lines between should be moved to StructureService
 
         return round;
