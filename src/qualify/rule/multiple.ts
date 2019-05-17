@@ -1,5 +1,6 @@
 import { HorizontalPoule } from '../../poule/horizontal';
 import { PoulePlace } from '../../pouleplace';
+import { QualifyGroup } from '../../qualify/group';
 import { Round } from '../../round';
 import { QualifyRule } from '../rule';
 
@@ -8,8 +9,8 @@ export class QualifyRuleMultiple extends QualifyRule {
     private fromHorizontalPoule: HorizontalPoule;
     private nrOfToPlaces: number;
 
-    constructor(fromHorizontalPoule: HorizontalPoule, toRound: Round, nrOfToPlaces: number) {
-        super(toRound);
+    constructor(fromHorizontalPoule: HorizontalPoule, nrOfToPlaces: number) {
+        super();
         this.fromHorizontalPoule = fromHorizontalPoule;
         this.nrOfToPlaces = nrOfToPlaces;
     }
@@ -30,6 +31,10 @@ export class QualifyRuleMultiple extends QualifyRule {
         return false;
     }
 
+    getWinnersOrLosers(): number {
+        return this.fromHorizontalPoule.getQualifyGroup().getWinnersOrLosers();
+    }
+
     addToPlace(toPlace: PoulePlace) {
         this.toPlaces.push(toPlace);
         toPlace.setFromQualifyRule(this);
@@ -41,6 +46,14 @@ export class QualifyRuleMultiple extends QualifyRule {
 
     getToPlaces(): PoulePlace[] {
         return this.toPlaces;
+    }
+
+    getFromPlaceNumber(absolute?: boolean): number {
+        if (absolute || this.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+            return this.getFromHorizontalPoule().getPlaceNumber();
+        }
+        // for short numbers this is necessary but function not completely correct
+        return this.getFromHorizontalPoule().getFirstPlace().getNumber();
     }
 }
 

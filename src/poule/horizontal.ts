@@ -92,5 +92,10 @@ export class HorizontalPoule {
         return this.getQualifyGroup().getHorizontalPoules().length === this.getPlaceNumber();
     }
 
-
+    getNrOfQualifiers() {
+        if (!this.isBorderPoule()) {
+            return this.getPlaces().length;
+        }
+        return this.getPlaces().length - (this.getQualifyGroup().getNrOfToPlacesShort());
+    }
 }

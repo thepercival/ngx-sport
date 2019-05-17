@@ -1,13 +1,16 @@
 import { Poule } from '../../poule';
 import { PoulePlace } from '../../pouleplace';
+import { QualifyGroup } from '../../qualify/group';
 import { Round } from '../../round';
 import { QualifyRule } from '../rule';
 
 export class QualifyRuleSingle extends QualifyRule {
     private toPlace: PoulePlace;
+    private winnersOrLosers: number;
 
-    constructor(private fromPlace: PoulePlace, toRound: Round) {
-        super(toRound);
+    constructor(private fromPlace: PoulePlace, toQualifyGroup: QualifyGroup) {
+        super();
+        this.winnersOrLosers = toQualifyGroup.getWinnersOrLosers();
     }
 
     getFromRound(): Round {
@@ -20,6 +23,10 @@ export class QualifyRuleSingle extends QualifyRule {
 
     isSingle(): boolean {
         return true;
+    }
+
+    getWinnersOrLosers(): number {
+        return this.winnersOrLosers;
     }
 
     getFromPlace(): PoulePlace {
@@ -39,6 +46,13 @@ export class QualifyRuleSingle extends QualifyRule {
         if (toPlace !== undefined) {
             toPlace.setFromQualifyRule(this);
         }
+    }
+
+    getFromPlaceNumber(absolute?: boolean): number {
+        if (absolute || this.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+            return this.getFromPlace().getNumber();
+        }
+        return (this.getFromPlace().getPoule().getPlaces().length - this.getFromPlace().getNumber()) + 1;
     }
 }
 

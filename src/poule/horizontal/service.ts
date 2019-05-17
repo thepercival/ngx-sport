@@ -4,11 +4,17 @@ import { Round } from '../../round';
 import { HorizontalPoule } from '../horizontal';
 
 export class HorizontalPouleService {
+    private winnersAndLosers: number[];
 
     constructor(
-        private round: Round
+        private round: Round,
+        private winnersOrLosers: number = undefined
     ) {
-
+        if (winnersOrLosers === undefined) {
+            this.winnersAndLosers = [QualifyGroup.WINNERS, QualifyGroup.LOSERS];
+        } else {
+            this.winnersAndLosers = [winnersOrLosers];
+        }
     }
 
     recreate() {
@@ -17,7 +23,7 @@ export class HorizontalPouleService {
     }
 
     protected remove() {
-        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
+        this.winnersAndLosers.forEach(winnersOrLosers => {
             const horizontalPoules = this.round.getHorizontalPoules(winnersOrLosers);
             while (horizontalPoules.length > 0) {
                 const horizontalPoule = horizontalPoules.pop();
@@ -32,7 +38,7 @@ export class HorizontalPouleService {
     }
 
     protected create() {
-        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
+        this.winnersAndLosers.forEach(winnersOrLosers => {
             this.createRoundHorizontalPoules(winnersOrLosers);
 
             // s.round.getQualifyGroups(winnersOrLosers).forEach(qualifyGroup => {

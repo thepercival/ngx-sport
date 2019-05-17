@@ -15,7 +15,7 @@ export class QualifyGroup {
     protected number: number;
     protected childRound: Round;
 
-    protected horizontalPoules: HorizontalPoule[];
+    protected horizontalPoules: HorizontalPoule[] = [];
 
     constructor(round: Round, winnersOrLosers: number) {
         this.setWinnersOrLosers(winnersOrLosers);

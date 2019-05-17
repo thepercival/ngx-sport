@@ -1,17 +1,14 @@
 import { Round } from '../round';
 
 export abstract class QualifyRule {
-    constructor(private toRound: Round) { }
-
-
-
-    getToRound(): Round {
-        return this.toRound;
-    }
+    constructor() { }
 
     abstract getFromRound(): Round;
     abstract isMultiple(): boolean;
     abstract isSingle(): boolean;
+    abstract getWinnersOrLosers(): number;
+
+    abstract getFromPlaceNumber(absolute?: boolean): number;
 
     // getFromPoulePlaces(): PoulePlace[] {
     //     return this.fromHorizontalPoule.getPlaces();

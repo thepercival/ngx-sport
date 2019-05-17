@@ -14,12 +14,21 @@ export class QualifyRuleService {
     }
 
     recreateTo() {
-        this.removeTo();
-        this.createTo();
+        this.removeTo(this.round);
+        this.createTo(this.round);
     }
 
-    protected removeTo() {
-        this.round.getPlaces().forEach(place => {
+    recreateFrom() {
+        const parentRound = this.round.getParent();
+        if (parentRound === undefined) {
+            return;
+        }
+        this.removeTo(parentRound);
+        this.createTo(parentRound);
+    }
+
+    protected removeTo(round: Round) {
+        round.getPlaces().forEach(place => {
             const toQualifyRules = place.getToQualifyRules();
             toQualifyRules.forEach(toQualifyRule => {
                 let toPlaces: PoulePlace[] = [];
@@ -47,9 +56,9 @@ export class QualifyRuleService {
         // fromQualifyRules = undefined;
     }
 
-    protected createTo() {
+    protected createTo(round: Round) {
 
-        this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
+        round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 
             const childRound = qualifyGroup.getChildRound();
             const qualifyReservationService = new QualifyReservationService(childRound);
@@ -58,11 +67,11 @@ export class QualifyRuleService {
             {
                 qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
                     if (horizontalPoule.isBorderPoule() && qualifyGroup.getNrOfToPlacesShort() > 0) {
-                        const nrOfToPlacesBorderPoule = qualifyGroup.getChildRound().getNrOfPlaces() % this.round.getPoules().length;
-                        qualifyRules.push(new QualifyRuleMultiple(horizontalPoule, qualifyGroup.getChildRound(), nrOfToPlacesBorderPoule));
+                        const nrOfToPlacesBorderPoule = qualifyGroup.getChildRound().getNrOfPlaces() % round.getPoules().length;
+                        qualifyRules.push(new QualifyRuleMultiple(horizontalPoule, nrOfToPlacesBorderPoule));
                     } else {
                         horizontalPoule.getPlaces().forEach(place => {
-                            qualifyRules.push(new QualifyRuleSingle(place, qualifyGroup.getChildRound()));
+                            qualifyRules.push(new QualifyRuleSingle(place, qualifyGroup));
                         });
                     }
                 });
@@ -103,16 +112,14 @@ export class QualifyRuleService {
                     }
                 }
             }
-            if (startEnd === QualifyRuleService.START) {
-                qualifyRules = unfreeQualifyRules.concat(qualifyRules);
-            } else {
-                qualifyRules = qualifyRules.concat(unfreeQualifyRules.reverse());
-            }
             oneQualifyRuleConnected = true;
         }
+        if (startEnd === QualifyRuleService.START) {
+            qualifyRules = unfreeQualifyRules.concat(qualifyRules);
+        } else {
+            qualifyRules = qualifyRules.concat(unfreeQualifyRules.reverse());
+        }
     }
-
-
 
     // protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
     //     let nrOfPlacesToAdd = 0;

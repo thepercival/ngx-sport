@@ -1,9 +1,11 @@
 import { Game } from './game';
 import { GamePoulePlace } from './game/pouleplace';
 import { Poule } from './poule';
+import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlace } from './pouleplace';
 import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
+import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
@@ -77,7 +79,10 @@ export class NameService {
 
         const fromQualifyRule = place.getFromQualifyRule();
         if (fromQualifyRule.isMultiple()) {
-            return (longName ? 'poule ? nr. ' : '?') + this.getNumberFromQualifyRule(fromQualifyRule);
+            if (longName) {
+                return this.getHorizontalPouleName((<QualifyRuleMultiple>fromQualifyRule).getFromHorizontalPoule());
+            }
+            return '?' + fromQualifyRule.getFromPlaceNumber(true);
         }
 
         const fromPoulePlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
@@ -86,39 +91,44 @@ export class NameService {
         }
         const name = this.getWinnersLosersDescription(fromPoulePlace.getNumber() === 1 ? QualifyGroup.WINNERS : QualifyGroup.LOSERS);
         return name + ' ' + this.getPouleName(fromPoulePlace.getPoule(), false);
-
     }
 
-    getQualifyRuleName(qualifyRule: QualifyRule): string {
-        console.error("getQualifyRuleName");
-        return "0";
-
-        // if (qualifyRule.isSingle()) {
-        //     return 'nummers ' + this.getNumberFromQualifyRule(qualifyRule);
-        // }
-        // if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-        //     return qualifyRule.getToPoulePlaces().length + ' beste nummers ' + this.getNumberFromQualifyRule(qualifyRule);
-        // }
-        // const firstFromPoulePlace = qualifyRule.getFromPoulePlaces()[0];
-        // let nr = firstFromPoulePlace.getPoule().getPlaces().length - firstFromPoulePlace.getNumber();
-        // const start = qualifyRule.getToPoulePlaces().length + ' slechtste ';
-        // if (nr === 0) {
-        //     return start + 'nummers laatst';
-        // }
-        // return start + 'nummers ' + nr + ' na laatst';
+    /**
+     * 
+     * "nummers 2" voor winners complete
+     * "3 beste nummers 2" voor winners incomplete
+     * 
+     * "nummers 2 na laast" voor losers complete
+     * "3 slechtste nummers 2 na laast" voor losers incomplete
+     * 
+     * @param horizontalPoule 
+     */
+    getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
+        const nrOfQualifiers = horizontalPoule.getNrOfQualifiers();
+        let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getPlaceNumber();
+        if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+            if (horizontalPoule.isBorderPoule()) {
+                return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + name;
+            }
+            return name;
+        }
+        if (horizontalPoule.isBorderPoule()) {
+            return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'slechtste ' + name;
+        }
+        return name + ' na laatst';
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {
         if (round.getQualifyGroups().length < 2) {
-            return false;
+            return true;
         }
-        let maxDepth = undefined;
-        return round.getQualifyGroups().some(qualifyGroup => {
+        let depthAll = undefined;
+        return round.getQualifyGroups().every(qualifyGroup => {
             const qualifyGroupMaxDepth = this.getMaxDepth(qualifyGroup.getChildRound());
-            if (maxDepth === undefined) {
-                maxDepth = qualifyGroupMaxDepth;
+            if (depthAll === undefined) {
+                depthAll = qualifyGroupMaxDepth;
             }
-            return maxDepth === qualifyGroupMaxDepth;
+            return depthAll === qualifyGroupMaxDepth;
         });
     }
 

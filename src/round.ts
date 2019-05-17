@@ -96,13 +96,6 @@ export class Round {
         return this.getParent() === undefined;
     }
 
-    // getRoot() {
-    //     if (!this.isRoot()) {
-    //         return this.getParent().getRoot();
-    //     }
-    //     return this;
-    // }
-
     // DEPRECATED , REMOVE QualifyGroup.NEUTRAL and this function
     getWinnersOrLosers(): number {
         return this.getParentQualifyGroup() ? this.getParentQualifyGroup().getWinnersOrLosers() : QualifyGroup.NEUTRAL;
