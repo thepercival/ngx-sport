@@ -1,5 +1,4 @@
 import { HorizontalPoule } from '../poule/horizontal';
-import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 
 export class QualifyGroup {
@@ -97,11 +96,11 @@ export class QualifyGroup {
         return this === qualifyGroups[qualifyGroups.length - 1];
     }
 
-    isInBorderHoritontalPoule(place: PoulePlace): boolean {
-        const horizontalPoules = this.getHorizontalPoules();
-        const borderHorizontalPoule = horizontalPoules[horizontalPoules.length - 1];
-        return borderHorizontalPoule.hasPlace(place);
-    }
+    // isInBorderHoritontalPoule(place: PoulePlace): boolean {
+    //     const horizontalPoules = this.getHorizontalPoules();
+    //     const borderHorizontalPoule = horizontalPoules[horizontalPoules.length - 1];
+    //     return borderHorizontalPoule.hasPlace(place);
+    // }
 
     getNrOfToPlacesShort(): number {
         const nrOfPlaces = this.getHorizontalPoules().length * this.getRound().getPoules().length;

@@ -76,7 +76,7 @@ export class HorizontalPouleService {
             });
 
             if (horizontalPoule === undefined) {
-                horizontalPoule = new HorizontalPoule(this.round, placeIt.getNumber());
+                horizontalPoule = new HorizontalPoule(this.round, horizontalPoules.length + 1);
                 horizontalPoules.push(horizontalPoule);
             }
             placeIt.setHorizontalPoule(winnersOrLosers, horizontalPoule);

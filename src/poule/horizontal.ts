@@ -65,7 +65,9 @@ export class HorizontalPoule {
         //     }
         // }
         this.qualifyGroup = qualifyGroup;
-        this.qualifyGroup.getHorizontalPoules().push(this);
+        if (qualifyGroup !== undefined) {
+            this.qualifyGroup.getHorizontalPoules().push(this);
+        }
     }
 
     getPlaces(): PoulePlace[] {

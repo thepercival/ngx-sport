@@ -103,19 +103,19 @@ export class PoulePlace {
         return new PoulePlaceLocation(this.getPoule().getNumber(), this.getNumber());
     }
 
-    setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {
-        const toQualifyRuleOld = this.getToQualifyRule(winnersOrLosers);
-        if (toQualifyRuleOld !== undefined) {
-            // toQualifyRuleOld.removeFromPoulePlace( this );
-            const index = this.toQualifyRules.indexOf(toQualifyRuleOld);
-            if (index > -1) {
-                this.toQualifyRules.splice(index, 1);
-            }
-        }
-        if (qualifyRule) {
-            this.toQualifyRules.push(qualifyRule);
-        }
-    }
+    // setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {
+    //     const toQualifyRuleOld = this.getToQualifyRule(winnersOrLosers);
+    //     if (toQualifyRuleOld !== undefined) {
+    //         // toQualifyRuleOld.removeFromPoulePlace( this );
+    //         const index = this.toQualifyRules.indexOf(toQualifyRuleOld);
+    //         if (index > -1) {
+    //             this.toQualifyRules.splice(index, 1);
+    //         }
+    //     }
+    //     if (qualifyRule) {
+    //         this.toQualifyRules.push(qualifyRule);
+    //     }
+    // }
 
     getHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
         return (winnersOrLosers === QualifyGroup.WINNERS) ? this.horizontalPouleWinners : this.horizontalPouleLosers;

@@ -3,7 +3,6 @@ import { QualifyRule } from '../../qualify/rule';
 import { QualifyRuleMultiple } from '../../qualify/rule/multiple';
 import { QualifyRuleSingle } from '../../qualify/rule/single';
 import { Round } from '../../round';
-import { QualifyGroup } from '../group';
 import { QualifyReservationService } from '../reservationservice';
 import { QualifyRuleQueue } from './queue';
 
@@ -56,10 +55,10 @@ export class QualifyRuleService {
     }
 
     protected createTo(round: Round) {
-        const queue = new QualifyRuleQueue();
 
-        round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
 
+        round.getQualifyGroups().forEach(qualifyGroup => {
+            const queue = new QualifyRuleQueue();
             const childRound = qualifyGroup.getChildRound();
             const qualifyReservationService = new QualifyReservationService(childRound);
 
@@ -75,11 +74,11 @@ export class QualifyRuleService {
                         });
                     }
                 });
-            }            
+            }
             queue.shuffleIfUnevenAndNoMultiple(childRound.getPoules().length);
 
             // update rules with to places
-            const toHorPoules = childRound.getHorizontalPoules(QualifyGroup.WINNERS);            
+            const toHorPoules = childRound.getHorizontalPoules(qualifyGroup.getWinnersOrLosers());
             let startEnd = QualifyRuleQueue.START;
             while (toHorPoules.length > 0) {
                 const toHorPoule = startEnd === QualifyRuleQueue.START ? toHorPoules.shift() : toHorPoules.pop();
@@ -100,7 +99,7 @@ export class QualifyRuleService {
             } else {
                 (<QualifyRuleMultiple>qualifyRule).addToPlace(childPlace);
                 if (!(<QualifyRuleMultiple>qualifyRule).toPlacesComplete()) {
-                    queue.add(QualifyRuleQueue.START, qualifyRule);                    
+                    queue.add(QualifyRuleQueue.START, qualifyRule);
                 }
             }
         };
@@ -119,14 +118,14 @@ export class QualifyRuleService {
         if (startEnd === QualifyRuleQueue.END) {
             unfreeQualifyRules.reverse();
         }
-        if( !oneQualifyRuleConnected ) {
-            setToPlacesAndReserve(unfreeQualifyRules.shift());                    
+        if (!oneQualifyRuleConnected) {
+            setToPlacesAndReserve(unfreeQualifyRules.shift());
         }
-        
+
         while (unfreeQualifyRules.length > 0) {
-            queue.add( startEnd, unfreeQualifyRules.shift() );
+            queue.add(startEnd, unfreeQualifyRules.shift());
         }
-    }    
+    }
 
     // protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
     //     let nrOfPlacesToAdd = 0;
