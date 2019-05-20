@@ -228,7 +228,12 @@ export class PlanningResourceService {
 
     protected addMinutes(dateTime: Date, minutes: number): Date {
         dateTime.setMinutes(dateTime.getMinutes() + minutes);
-        if (this.blockedPeriod !== undefined && dateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
+        if (this.blockedPeriod === undefined) {
+            return dateTime;
+        }
+        const endDateTime = this.cloneDateTime(dateTime);
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMaximalNrOfMinutesPerGame());
+        if (endDateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
             dateTime = new Date(this.blockedPeriod.end.getTime());
         }
         return dateTime;
