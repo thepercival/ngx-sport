@@ -98,7 +98,7 @@ export class EndRanking {
         //     const amountQualifyLosers = multipleLosersRule !== undefined ? multipleLosersRule.getToPoulePlaces().length : 0;
         //     while (nrOfUniqueFromPlacesMultiple - amountQualifyLosers > 0) {
         //         nrOfUniqueFromPlacesMultiple--;
-        //         const poulePlace = round.getPoulePlace(rankingItems.shift().getPoulePlaceLocation());
+        //         const poulePlace = round.getPoulePlace(rankingItems.shift().getPlaceLocation());
         //         const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
         //         this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
         //     }
@@ -122,7 +122,7 @@ export class EndRanking {
         //     }
         //     while (nrOfUniqueFromPlacesMultiple) {
         //         nrOfUniqueFromPlacesMultiple--;
-        //         const poulePlace = round.getPoulePlace(rankingItems.pop().getPoulePlaceLocation());
+        //         const poulePlace = round.getPoulePlace(rankingItems.pop().getPlaceLocation());
         //         const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
         //         this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
         //     }
@@ -141,7 +141,7 @@ export class EndRanking {
         //         const rankingItems = rankingService.getItemsForPlaceLocations(round,dropoutPlaceLocations)
 
         //         rankingItems.forEach(rankingItem => {
-        //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
+        //             const poulePlace = round.getPoulePlace(rankingItem.getPPlaceLocation());
         //             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
         //             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
         //         });
@@ -155,7 +155,7 @@ export class EndRanking {
 
         //         dropoutRanks.forEach(dropoutRank => {
         //             const rankingItem = rankingService.getItemByRank(rankingItems, dropoutRank);
-        //             const poulePlace = round.getPoulePlace(rankingItem.getPoulePlaceLocation());
+        //             const poulePlace = round.getPoulePlace(rankingItem.getPlaceLocation());
         //             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
         //             this.items.push(new EndRankingItem(this.items.length + 1, this.items.length + 1, name));
         //         });

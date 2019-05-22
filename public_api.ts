@@ -37,6 +37,7 @@ export * from './src/planning/service';
 export * from './src/planning/repository';
 export * from './src/poule';
 export * from './src/poule/mapper';
+export * from './src/poule/horizontal';
 export * from './src/pouleplace';
 export * from './src/pouleplace/repository';
 export * from './src/pouleplace/mapper';

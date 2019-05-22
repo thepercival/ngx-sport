@@ -1,4 +1,4 @@
-export class PoulePlaceLocation {
+export class PlaceLocation {
     public constructor(
         private pouleNr: number, private placeNr: number
     ) { }

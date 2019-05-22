@@ -82,7 +82,7 @@ export class NameService {
             if (longName) {
                 return this.getHorizontalPouleName((<QualifyRuleMultiple>fromQualifyRule).getFromHorizontalPoule());
             }
-            return '?' + fromQualifyRule.getFromPlaceNumber(true);
+            return '?' + fromQualifyRule.getFromPlaceNumber();
         }
 
         const fromPoulePlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
@@ -105,7 +105,7 @@ export class NameService {
      */
     getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
         const nrOfQualifiers = horizontalPoule.getNrOfQualifiers();
-        let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getPlaceNumber();
+        let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
         if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
             if (horizontalPoule.isBorderPoule()) {
                 return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + name;

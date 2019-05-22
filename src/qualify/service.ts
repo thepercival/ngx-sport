@@ -73,7 +73,7 @@ export class QualifyService {
 
     getPoulePlaces(rankingItems: RoundRankingItem[], winnersLosers: number): PoulePlace[] {
         const rankingPoulePlaces: PoulePlace[] = rankingItems.map(rankingItem => {
-            return rankingItem.getRound().getPoulePlace(rankingItem.getPoulePlaceLocation());
+            return rankingItem.getRound().getPoulePlace(rankingItem.getPlaceLocation());
         });
         if (winnersLosers === QualifyGroup.LOSERS) {
             rankingPoulePlaces.reverse();
@@ -85,7 +85,7 @@ export class QualifyService {
         const rankingService = new RankingService(this.ruleSet);
         const pouleRankingItems: RoundRankingItem[] = rankingService.getItemsForPoule(poule);
         const rankingItem = rankingService.getItemByRank(pouleRankingItems, rank);
-        const poulePlace = poule.getPlace(rankingItem.getPoulePlaceLocation().getPlaceNr());
+        const poulePlace = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
         return poulePlace ? poulePlace.getCompetitor() : undefined;
     }
 

@@ -16,9 +16,14 @@ export class QualifyGroup {
 
     protected horizontalPoules: HorizontalPoule[] = [];
 
-    constructor(round: Round, winnersOrLosers: number) {
+    constructor(round: Round, winnersOrLosers: number, number?: number) {
         this.setWinnersOrLosers(winnersOrLosers);
-        this.setRound(round);
+        if (number === undefined) {
+            this.setRound(round);
+        } else {
+            this.insertRoundAt(round, number);
+        }
+
     }
 
     getId(): number {
@@ -33,7 +38,8 @@ export class QualifyGroup {
         return this.round;
     }
 
-    setRound(round: Round) {
+    protected insertRoundAt(round: Round, insertAt: number) {
+
         // if (this.round !== undefined && this.round !== round) {
         //     const index = this.fromRound.getToQualifyRules().indexOf(this);
         //     if (index > -1) {
@@ -41,8 +47,13 @@ export class QualifyGroup {
         //     }
         // }
         // if (round !== undefined) {
-        round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
+        round.getQualifyGroups(this.getWinnersOrLosers()).splice(insertAt, 0, this);
         // }
+        this.round = round;
+    }
+
+    setRound(round: Round) {
+        round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
         this.round = round;
     }
 
@@ -102,28 +113,13 @@ export class QualifyGroup {
     //     return borderHorizontalPoule.hasPlace(place);
     // }
 
+    getBorderPoule(): HorizontalPoule {
+        return this.horizontalPoules[this.horizontalPoules.length - 1];
+    }
+
     getNrOfToPlacesShort(): number {
         const nrOfPlaces = this.getHorizontalPoules().length * this.getRound().getPoules().length;
         return nrOfPlaces - this.getChildRound().getNrOfPlaces();
     }
-
-    // de horizontale poules moeten kunnen herberekend kunnen worden
-    // net zoals welke place welke qualifiers heeft  
-
-    // fromround get places by horiontalpoules
-    // toround -> getplaces by horizontal
-    // als laatste fromround.horiontalpoule meer plaatsen bevat als aantal toroundplaces dan is het incomplete
-
-    // incomplete
-
-    // 1 horizontale poule is gekoppeld aan een aantal plekken uit de volgende ronde!!!!!!!!
-
-    // SNEL kunnen achter welke pouleplace aan welke qualificationgroups hangen
-
-    // ik moet weten: 
-    // a is in incomplete rule
-    // b wat welke fromPlace hoort erbij
-
-
 }
 

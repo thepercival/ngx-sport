@@ -1,4 +1,4 @@
-import { PoulePlaceLocation } from '../pouleplace/location';
+import { PlaceLocation } from '../place/location';
 import { Round } from '../round';
 
 export class RankingItem {
@@ -46,7 +46,7 @@ export class RoundRankingItem extends RankingItem {
     private subReceived: number = 0;
     private subScored: number = 0;
 
-    constructor(private round: Round, private poulePlaceLocation: PoulePlaceLocation, penaltyPoints?: number) {
+    constructor(private round: Round, private placeLocation: PlaceLocation, penaltyPoints?: number) {
         super();
         if (penaltyPoints !== undefined) {
             this.addPoints(-penaltyPoints);
@@ -57,8 +57,8 @@ export class RoundRankingItem extends RankingItem {
         return this.round;
     }
 
-    getPoulePlaceLocation(): PoulePlaceLocation {
-        return this.poulePlaceLocation;
+    getPlaceLocation(): PlaceLocation {
+        return this.placeLocation;
     }
 
     getGames(): number {

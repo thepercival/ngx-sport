@@ -1,6 +1,5 @@
 import { HorizontalPoule } from '../../poule/horizontal';
 import { PoulePlace } from '../../pouleplace';
-import { QualifyGroup } from '../../qualify/group';
 import { Round } from '../../round';
 import { QualifyRule } from '../rule';
 
@@ -48,12 +47,8 @@ export class QualifyRuleMultiple extends QualifyRule {
         return this.toPlaces;
     }
 
-    getFromPlaceNumber(absolute?: boolean): number {
-        if (absolute || this.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-            return this.getFromHorizontalPoule().getPlaceNumber();
-        }
-        // for short numbers this is necessary but function not completely correct
-        return this.getFromHorizontalPoule().getFirstPlace().getNumber();
+    getFromPlaceNumber(): number {
+        return this.getFromHorizontalPoule().getPlaceNumber();
     }
 }
 

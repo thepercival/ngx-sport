@@ -1,8 +1,8 @@
 import { Competitor } from './competitor';
 import { Game } from './game';
+import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
 import { Round } from './round';
@@ -99,8 +99,8 @@ export class PoulePlace {
         // });
     }
 
-    getLocation(): PoulePlaceLocation {
-        return new PoulePlaceLocation(this.getPoule().getNumber(), this.getNumber());
+    getLocation(): PlaceLocation {
+        return new PlaceLocation(this.getPoule().getNumber(), this.getNumber());
     }
 
     // setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {

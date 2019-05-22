@@ -1,7 +1,7 @@
 import { Game } from '../game';
+import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { PoulePlace } from '../pouleplace';
-import { PoulePlaceLocation } from '../pouleplace/location';
 import { QualifyRuleMultiple } from '../qualify/rule/multiple';
 import { Round } from '../round';
 import { RankingItemsGetter } from './helper';
@@ -59,7 +59,7 @@ export class RankingService {
         return this.getItemsForPlaceLocations(multipleRule.getFromRound(), placeLocations);
     }
 
-    getItemsForPlaceLocations(round: Round, placeLocations: PoulePlaceLocation[]): RoundRankingItem[] {
+    getItemsForPlaceLocations(round: Round, placeLocations: PlaceLocation[]): RoundRankingItem[] {
         const roundItems: RoundRankingItem[] = [];
         placeLocations.forEach(placeLocation => {
             const pouleItems: RoundRankingItem[] = this.getItemsForPoule(round.getPoule(placeLocation.getPouleNr()));
@@ -171,7 +171,7 @@ export class RankingService {
             return [];
         }
         const poulePlaces = items.map(item => {
-            return item.getRound().getPoulePlace(item.getPoulePlaceLocation());
+            return item.getRound().getPoulePlace(item.getPlaceLocation());
         });
         if (poulePlaces.length === 0) {
             return [];
@@ -189,8 +189,8 @@ export class RankingService {
             return items;
         }
         return rankedItems.map(rankedItem => {
-            return items.find(item => item.getPoulePlaceLocation().getPouleNr() === rankedItem.getPoulePlaceLocation().getPouleNr()
-                && item.getPoulePlaceLocation().getPlaceNr() === rankedItem.getPoulePlaceLocation().getPlaceNr())
+            return items.find(item => item.getPlaceLocation().getPouleNr() === rankedItem.getPlaceLocation().getPouleNr()
+                && item.getPlaceLocation().getPlaceNr() === rankedItem.getPlaceLocation().getPlaceNr())
         });
     }
 

@@ -26,6 +26,7 @@ import { NameService } from './nameservice';
 import { PlanningRepository } from './planning/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
+import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlace } from './pouleplace';
 import { PoulePlaceRepository } from './pouleplace/repository';
 import { QualifyGroup } from './qualify/group';
@@ -65,7 +66,7 @@ import { StructureService } from './structure/service';
         ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, RoundNumberConfigMapper
     ],
     exports: [
-        Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace,
+        Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace, HorizontalPoule,
         Poule, PoulePlace, QualifyGroup, RankingService, RankingItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,

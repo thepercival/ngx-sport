@@ -1,10 +1,10 @@
 import { Competition } from './competition';
 import { Competitor } from './competitor';
 import { Game } from './game';
+import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlace } from './pouleplace';
-import { PoulePlaceLocation } from './pouleplace/location';
 import { QualifyGroup } from './qualify/group';
 import { RoundNumber } from './round/number';
 
@@ -35,10 +35,6 @@ export class Round {
         this.number.getRounds().push(this);
         //this.setValue();
     }
-
-    // static getOpposing(winnersOrLosers: number) {
-    //     return winnersOrLosers === Round.WINNERS ? QualifyGroup.LOSERS : QualifyGroup.WINNERS;
-    // }
 
     getId(): number {
         return this.id;
@@ -156,8 +152,8 @@ export class Round {
         return places;
     }
 
-    getPoulePlace(poulePlaceLocation: PoulePlaceLocation): PoulePlace {
-        return this.getPoule(poulePlaceLocation.getPouleNr()).getPlace(poulePlaceLocation.getPlaceNr());
+    getPoulePlace(placeLocation: PlaceLocation): PoulePlace {
+        return this.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
     }
 
     getCompetitors(): Competitor[] {
@@ -230,11 +226,4 @@ export class Round {
         });
         return nrOfPlacesChildRounds;
     }
-
-    // getOpposing() {
-    //     if (this.isRoot() === undefined) {
-    //         return undefined;
-    //     }
-    //     return this.getParent().getChild(Round.getOpposing(this.getWinnersOrLosers()));
-    // }
 }

@@ -4,6 +4,7 @@ import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { HorizontalPouleService } from '../poule/horizontal/service';
 import { PoulePlace } from '../pouleplace';
+import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
@@ -188,7 +189,26 @@ export class StructureService {
         structure.setPouleStructureNumbers();
     }
 
-    protected updateRound(round: Round, nrOfPlaces: number, nrOfPoules: number) {
+    splitQualifyGroup(qualifyGroup: QualifyGroup, pouleOne: HorizontalPoule, pouleTwo: HorizontalPoule) {
+        const round = qualifyGroup.getRound();
+
+        const firstHorPoule = pouleOne.getNumber() <= pouleTwo.getNumber() ? pouleOne : pouleTwo;
+        const secondHorPoule = (firstHorPoule === pouleOne) ? pouleTwo : pouleOne;
+
+        const qualifyGroupService = new QualifyGroupService(this);
+        qualifyGroupService.splitFrom(secondHorPoule);
+
+        this.updateQualifyGroups(round, qualifyGroup.getWinnersOrLosers(), round.getNrOfPlacesChildren());
+
+        const qualifyRuleService = new QualifyRuleService(round);
+        qualifyRuleService.recreateTo();
+
+        const rootRound = this.getRoot(round);
+        const structure = new Structure(rootRound.getNumber(), rootRound);
+        structure.setPouleStructureNumbers();
+    }
+
+    updateRound(round: Round, nrOfPlaces: number, nrOfPoules: number) {
         if (round.getNrOfPlaces() === nrOfPlaces && nrOfPoules === round.getPoules().length) {
             return;
         }
@@ -218,10 +238,8 @@ export class StructureService {
             let nrOfQualifiers;
             if (qualifyGroup === undefined) {
                 qualifyGroup = new QualifyGroup(round, winnersOrLosers);
-                if (!round.getNumber().hasNext()) {
-                    this.configService.createFromPrevious(round.getNumber().createNext());
-                }
-                qualifyGroup.setChildRound(new Round(round.getNumber().getNext(), qualifyGroup));
+                const nextRoundNumber = round.getNumber().hasNext() ? round.getNumber().getNext() : this.createRoundNumber(round);
+                qualifyGroup.setChildRound(new Round(nextRoundNumber, qualifyGroup));
                 nrOfQualifiers = nrOfPlaces;
             } else {
                 round.getQualifyGroups(winnersOrLosers).push(qualifyGroup);
@@ -309,6 +327,12 @@ export class StructureService {
             return oldNrOfPoules - 1;
         }
         return oldNrOfPoules;
+    }
+
+    createRoundNumber(parentRound: Round): RoundNumber {
+        const roundNumber = parentRound.getNumber().createNext();
+        this.configService.createFromPrevious(roundNumber);
+        return roundNumber;
     }
 
     //    @TODO mergeQualifyGroups(qualifyGroupA, qualifyGroupB) vanaf round naar beneden opnieuw genereren

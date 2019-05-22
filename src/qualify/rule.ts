@@ -8,7 +8,7 @@ export abstract class QualifyRule {
     abstract isSingle(): boolean;
     abstract getWinnersOrLosers(): number;
 
-    abstract getFromPlaceNumber(absolute?: boolean): number;
+    abstract getFromPlaceNumber(): number;
 
     // getFromPoulePlaces(): PoulePlace[] {
     //     return this.fromHorizontalPoule.getPlaces();

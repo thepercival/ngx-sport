@@ -78,7 +78,7 @@ export class QualifyRuleService {
             queue.shuffleIfUnevenAndNoMultiple(childRound.getPoules().length);
 
             // update rules with to places
-            const toHorPoules = childRound.getHorizontalPoules(qualifyGroup.getWinnersOrLosers());
+            const toHorPoules = childRound.getHorizontalPoules(qualifyGroup.getWinnersOrLosers()).slice();
             let startEnd = QualifyRuleQueue.START;
             while (toHorPoules.length > 0) {
                 const toHorPoule = startEnd === QualifyRuleQueue.START ? toHorPoules.shift() : toHorPoules.pop();

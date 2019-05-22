@@ -16,12 +16,12 @@ import { Round } from '../round';
 export class HorizontalPoule {
     protected round: Round;
     protected qualifyGroup: QualifyGroup;
-    protected placeNumber: number;
+    protected number: number;
     protected places: PoulePlace[] = [];
 
-    constructor(round: Round, placeNumber: number) {
+    constructor(round: Round, number: number) {
         this.setRound(round);
-        this.setPlaceNumber(placeNumber);
+        this.setNumber(number);
     }
 
     getRound(): Round {
@@ -40,15 +40,23 @@ export class HorizontalPoule {
     }
 
     getWinnersOrLosers(): number {
-        return this.getQualifyGroup().getWinnersOrLosers();
+        return this.getQualifyGroup() ? this.getQualifyGroup().getWinnersOrLosers() : QualifyGroup.DROPOUTS;
+    }
+
+    getNumber(): number {
+        return this.number;
+    }
+
+    setNumber(number: number): void {
+        this.number = number;
     }
 
     getPlaceNumber(): number {
-        return this.placeNumber;
-    }
-
-    setPlaceNumber(placeNumber: number): void {
-        this.placeNumber = placeNumber;
+        if (this.getWinnersOrLosers() !== QualifyGroup.LOSERS) {
+            return this.number;
+        }
+        const nrOfPlaceNubers = this.getQualifyGroup().getRound().getHorizontalPoules(QualifyGroup.WINNERS).length;
+        return nrOfPlaceNubers - (this.number - 1);
     }
 
     getQualifyGroup(): QualifyGroup {
@@ -91,7 +99,7 @@ export class HorizontalPoule {
         if (!this.getQualifyGroup().isBorderGroup()) {
             return false;
         }
-        return this.getQualifyGroup().getHorizontalPoules().length === this.getPlaceNumber();
+        return this.getQualifyGroup().getHorizontalPoules().length === this.getNumber();
     }
 
     getNrOfQualifiers() {

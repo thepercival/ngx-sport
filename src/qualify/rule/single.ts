@@ -48,8 +48,8 @@ export class QualifyRuleSingle extends QualifyRule {
         }
     }
 
-    getFromPlaceNumber(absolute?: boolean): number {
-        if (absolute || this.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+    getFromPlaceNumber(): number {
+        if (this.getWinnersOrLosers() === QualifyGroup.WINNERS) {
             return this.getFromPlace().getNumber();
         }
         return (this.getFromPlace().getPoule().getPlaces().length - this.getFromPlace().getNumber()) + 1;
