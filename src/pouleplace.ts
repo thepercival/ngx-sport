@@ -11,6 +11,7 @@ export class PoulePlace {
     protected id: number;
     protected poule: Poule;
     protected number: number;
+    protected structureNumber: number;
     protected penaltyPoints = 0;
     protected name: string;
     protected competitor: Competitor;
@@ -53,6 +54,14 @@ export class PoulePlace {
 
     setNumber(number: number): void {
         this.number = number;
+    }
+
+    getStructureNumber(): number {
+        return this.structureNumber;
+    }
+
+    setStructureNumber(structureNumber: number): void {
+        this.structureNumber = structureNumber;
     }
 
     getName(): string {

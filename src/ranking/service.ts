@@ -1,8 +1,7 @@
 import { Game } from '../game';
-import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
+import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
-import { QualifyRuleMultiple } from '../qualify/rule/multiple';
 import { Round } from '../round';
 import { RankingItemsGetter } from './helper';
 import { RoundRankingItem } from './item';
@@ -54,17 +53,11 @@ export class RankingService {
         return this.rankItems(unrankedItems, true);
     }
 
-    getItemsForMultipleRule(multipleRule: QualifyRuleMultiple): RoundRankingItem[] {
-        const placeLocations = multipleRule.getFromHorizontalPoule().getPlaces().map(poulePlace => poulePlace.getLocation());
-        return this.getItemsForPlaceLocations(multipleRule.getFromRound(), placeLocations);
-    }
-
-    getItemsForPlaceLocations(round: Round, placeLocations: PlaceLocation[]): RoundRankingItem[] {
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
         const roundItems: RoundRankingItem[] = [];
-        placeLocations.forEach(placeLocation => {
-            const pouleItems: RoundRankingItem[] = this.getItemsForPoule(round.getPoule(placeLocation.getPouleNr()));
-            const fromRankNr = placeLocation.getPlaceNr();
-            roundItems.push(this.getItemByRank(pouleItems, fromRankNr));
+        horizontalPoule.getPlaces().forEach(place => {
+            const pouleRankingItems: RoundRankingItem[] = this.getItemsForPoule(place.getPoule());
+            roundItems.push(this.getItemByRank(pouleRankingItems, horizontalPoule.getPlaceNumber()));
         });
         return this.rankItems(roundItems, false);
     }

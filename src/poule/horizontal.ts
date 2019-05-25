@@ -99,13 +99,14 @@ export class HorizontalPoule {
         if (!this.getQualifyGroup().isBorderGroup()) {
             return false;
         }
-        return this.getQualifyGroup().getHorizontalPoules().length === this.getNumber();
+        const horPoules = this.getQualifyGroup().getHorizontalPoules();
+        return horPoules[horPoules.length - 1] === this;
     }
 
     getNrOfQualifiers() {
         if (!this.isBorderPoule()) {
             return this.getPlaces().length;
         }
-        return this.getPlaces().length - (this.getQualifyGroup().getNrOfToPlacesShort());
+        return this.getPlaces().length - (this.getQualifyGroup().getNrOfToPlacesTooMuch());
     }
 }

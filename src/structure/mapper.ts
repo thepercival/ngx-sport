@@ -15,7 +15,7 @@ export class StructureMapper {
         const rootRound = this.roundMapper.toObject(json.rootRound, firstRoundNumber);
         this.setRefereePoulePlaces(json.rootRound, firstRoundNumber);
         const structure = new Structure(firstRoundNumber, rootRound);
-        structure.setPouleStructureNumbers();
+        structure.setStructureNumbers();
         return structure;
     }
 

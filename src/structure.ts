@@ -1,3 +1,4 @@
+import { QualifyGroup } from './qualify/group';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
 
@@ -51,15 +52,22 @@ export class Structure {
         return this.getRoundNumberHelper(roundNumberAsValue, roundNumber.getNext());
     }
 
-    setPouleStructureNumbers() {
-        const setPouleStructureNumbers = (round: Round, pouleStructureNumber: number) => {
-            round.getPoules().forEach(poule => poule.setStructureNumber(pouleStructureNumber++));
-            round.getChildren().forEach(childRound => {
-                pouleStructureNumber = setPouleStructureNumbers(childRound, pouleStructureNumber);
+    setStructureNumbers() {
+        const structureNumber = { poule: 1, nrOfDropoutPlaces: 0 };
+        const setStructureNumbers = (round: Round) => {
+            round.getPoules().forEach(poule => {
+                poule.setStructureNumber(structureNumber.poule++);
             });
-            return pouleStructureNumber;
+            round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
+                setStructureNumbers(qualifyGroup.getChildRound());
+            });
+            round.setStructureNumber(structureNumber.nrOfDropoutPlaces);
+            structureNumber.nrOfDropoutPlaces += round.getNrOfDropoutPlaces();
+            round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
+                setStructureNumbers(qualifyGroup.getChildRound());
+            });
         }
-        setPouleStructureNumbers(this.rootRound, 1);
+        setStructureNumbers(this.rootRound);
     }
 
     // getRound( winnersOrLosersPath: number[] ): Round {

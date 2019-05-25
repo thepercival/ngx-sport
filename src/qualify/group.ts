@@ -13,7 +13,6 @@ export class QualifyGroup {
     protected winnersOrLosers: number;
     protected number: number;
     protected childRound: Round;
-
     protected horizontalPoules: HorizontalPoule[] = [];
 
     constructor(round: Round, winnersOrLosers: number, number?: number) {
@@ -117,9 +116,18 @@ export class QualifyGroup {
         return this.horizontalPoules[this.horizontalPoules.length - 1];
     }
 
-    getNrOfToPlacesShort(): number {
-        const nrOfPlaces = this.getHorizontalPoules().length * this.getRound().getPoules().length;
-        return nrOfPlaces - this.getChildRound().getNrOfPlaces();
+    getNrOfPlaces() {
+        return this.getHorizontalPoules().length * this.getRound().getPoules().length;
+    }
+
+    getNrOfToPlacesTooMuch(): number {
+        return this.getNrOfPlaces() - this.getChildRound().getNrOfPlaces();
+    }
+
+    getNrOfQualifiers(): number {
+        let nrOfQualifiers = 0;
+        this.getHorizontalPoules().forEach(horizontalPoule => nrOfQualifiers += horizontalPoule.getNrOfQualifiers());
+        return nrOfQualifiers;
     }
 }
 

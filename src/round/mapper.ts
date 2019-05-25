@@ -6,6 +6,7 @@ import { QualifyGroup } from '../qualify/group';
 import { JsonQualifyGroup, QualifyGroupMapper } from '../qualify/group/mapper';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
+import { StructureService } from '../structure/service';
 import { RoundNumber } from './number';
 
 @Injectable()
@@ -21,20 +22,37 @@ export class RoundMapper {
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round));
 
-        const qualifyGroupMapper = new QualifyGroupMapper(this);
-        json.qualifyGroups.forEach((jsonQualifyGroup) => {
-            qualifyGroupMapper.toObject(jsonQualifyGroup, round);
-            // this.toObject(jsonQualifyGroup.childRound, roundNumber.getNext(), round, round.getChildRound(jsonChildRound.winnersOrLosers));
-        });
-
-        // lines between should be moved to StructureService
         const horizontalPouleService = new HorizontalPouleService(round);
         horizontalPouleService.recreate();
 
-        if (parentQualifyGroup !== undefined) {
-            const qualifyRuleService = new QualifyRuleService(parentQualifyGroup.getRound());
-            qualifyRuleService.recreateTo();
-        }
+        const qualifyGroupMapper = new QualifyGroupMapper(this);
+        json.qualifyGroups.forEach((jsonQualifyGroup) => {
+            qualifyGroupMapper.toObject(jsonQualifyGroup, round);
+        });
+
+        const structureService = new StructureService({ min: 2, max: 40 });
+        [QualifyGroup.WINNERS].forEach(winnersOrLosers => {
+            structureService.updateQualifyGroupsHorizontalPoules(
+                round.getHorizontalPoules(winnersOrLosers).slice(),
+                round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
+                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: round.getNrOfPlacesChildren() };
+                })
+            );
+        });
+
+        [QualifyGroup.LOSERS].forEach(winnersOrLosers => {
+            structureService.updateQualifyGroupsHorizontalPoules(
+                round.getHorizontalPoules(winnersOrLosers).slice(),
+                round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
+                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: round.getNrOfPlacesChildren() };
+                })
+            );
+        });
+
+        // if (parentQualifyGroup !== undefined) {
+        const qualifyRuleService = new QualifyRuleService(round);
+        qualifyRuleService.recreateTo();
+        // }
         // lines between should be moved to StructureService
 
         return round;

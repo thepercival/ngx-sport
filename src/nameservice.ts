@@ -42,8 +42,8 @@ export class NameService {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getNrOfPlaces() > 1)) {
             if (round.getNrOfPlaces() === 2 && sameName === false) {
-                const rankedPlace = this.getRankedPlace(round);
-                return this.getHtmlNumber(rankedPlace) + '/' + this.getHtmlNumber(rankedPlace + 1) + ' plaats';
+                const rank = round.getStructureNumber() + 1;
+                return this.getHtmlNumber(rank) + '/' + this.getHtmlNumber(rank + 1) + ' plaats';
             }
             return 'finale';
         } else if (nrOfRoundsToGo === 0) {
@@ -191,21 +191,6 @@ export class NameService {
             return this.roundAndParentsNeedsRanking(round.getParent());
         }
         return true;
-    }
-
-    /**
-     * determine number of pouleplaces on left side
-     * @param round
-     */
-    private getRankedPlace(round: Round, rankedPlace: number = 1) {
-        const parentRound = round.getParent();
-        if (parentRound === undefined) {
-            return rankedPlace;
-        }
-        if (round.getWinnersOrLosers() === QualifyGroup.LOSERS) {
-            rankedPlace += parentRound.getNrOfPlaces() - round.getNrOfPlaces();
-        }
-        return this.getRankedPlace(parentRound, rankedPlace);
     }
 
     private getHtmlFractalNumber(number) {

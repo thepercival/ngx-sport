@@ -27,7 +27,8 @@ export class Round {
     protected winnersQualifyGroups: QualifyGroup[] = [];
     protected losersHorizontalPoules: HorizontalPoule[] = [];
     protected winnersHorizontalPoules: HorizontalPoule[] = [];
-    // protected value: number;
+    // protected nrOfDropoutPlaces: number;
+    protected structureNumber: number;
 
     constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {
         this.number = roundNumber;
@@ -57,6 +58,9 @@ export class Round {
     }
 
     protected setParentQualifyGroup(parentQualifyGroup: QualifyGroup) {
+        if (parentQualifyGroup !== undefined) {
+            parentQualifyGroup.setChildRound(this);
+        }
         this.parentQualifyGroup = parentQualifyGroup;
     }
 
@@ -68,6 +72,14 @@ export class Round {
         return this.number.getNumber();
     }
 
+    getStructureNumber(): number {
+        return this.structureNumber;
+    }
+
+    setStructureNumber(structureNumber: number): void {
+        this.structureNumber = structureNumber;
+    }
+
     getQualifyGroups(winnersOrLosers?: number): QualifyGroup[] {
         if (winnersOrLosers === undefined) {
             return this.winnersQualifyGroups.concat(this.losersQualifyGroups);
@@ -75,9 +87,25 @@ export class Round {
         return (winnersOrLosers === QualifyGroup.WINNERS) ? this.winnersQualifyGroups : this.losersQualifyGroups;
     }
 
+    getQualifyGroupsLosersReversed() {
+        return this.winnersQualifyGroups.concat(this.losersQualifyGroups.slice().reverse());
+    }
+
     getQualifyGroup(winnersOrLosers: number, qualifyGroupNumber: number): QualifyGroup {
         return this.getQualifyGroups(winnersOrLosers).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
     }
+
+    getNrOfDropoutPlaces(): number {
+        // if (this.nrOfDropoutPlaces === undefined) {
+        // @TODO performance check
+        return this.getNrOfPlaces() - this.getNrOfPlacesChildren();
+        // }
+        // return this.nrOfDropoutPlaces;
+    }
+
+    // setNrOfDropoutPlaces(nrOfDropoutPlaces: number): void {
+    //     this.nrOfDropoutPlaces = nrOfDropoutPlaces;
+    // }
 
     getChildren(): Round[] {
         return this.getQualifyGroups().map(qualifyGroup => qualifyGroup.getChildRound());
@@ -134,8 +162,12 @@ export class Round {
         return this.losersHorizontalPoules;
     }
 
-    getFirstHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
+    protected getFirstHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
         return this.getHorizontalPoules(winnersOrLosers)[0];
+    }
+
+    getFirstPlace(winnersOrLosers: number): PoulePlace {
+        return this.getFirstHorizontalPoule(winnersOrLosers).getFirstPlace();
     }
 
     getPlaces(order?: number): PoulePlace[] {

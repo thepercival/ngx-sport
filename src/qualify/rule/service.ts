@@ -54,9 +54,11 @@ export class QualifyRuleService {
         // fromQualifyRules = undefined;
     }
 
+
+
+    // zo kun je elke ronde makkelijk een structurenumber geven
+
     protected createTo(round: Round) {
-
-
         round.getQualifyGroups().forEach(qualifyGroup => {
             const queue = new QualifyRuleQueue();
             const childRound = qualifyGroup.getChildRound();
@@ -65,7 +67,7 @@ export class QualifyRuleService {
             // add rules and set from places
             {
                 qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-                    if (horizontalPoule.isBorderPoule() && qualifyGroup.getNrOfToPlacesShort() > 0) {
+                    if (horizontalPoule.isBorderPoule() && qualifyGroup.getNrOfToPlacesTooMuch() > 0) {
                         const nrOfToPlacesBorderPoule = qualifyGroup.getChildRound().getNrOfPlaces() % round.getPoules().length;
                         queue.add(QualifyRuleQueue.START, new QualifyRuleMultiple(horizontalPoule, nrOfToPlacesBorderPoule));
                     } else {
@@ -118,7 +120,7 @@ export class QualifyRuleService {
         if (startEnd === QualifyRuleQueue.END) {
             unfreeQualifyRules.reverse();
         }
-        if (!oneQualifyRuleConnected) {
+        if (!oneQualifyRuleConnected && unfreeQualifyRules.length > 0) {
             setToPlacesAndReserve(unfreeQualifyRules.shift());
         }
 
@@ -155,36 +157,6 @@ export class QualifyRuleService {
     //             winnersRule.removeFromPoulePlace(poulePlace);
     //         }
     //     });
-    // }
-
-    // protected getParentPoulePlacesPer(): PoulePlace[][] {
-    //     console.error('getParentPoulePlacesPer');
-    //     // if (this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_RANK) {
-    //     //     return this.getParentPoulePlacesPerNumber();
-    //     // }
-    //     return this.getParentPoulePlacesPerQualifyRule();
-    // }
-
-    // protected getParentPoulePlacesPerNumber(): PoulePlace[][] {
-    //     if (this.childRound.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-    //         return this.parentRound.getPoulePlacesPerNumber(QualifyGroup.WINNERS);
-    //     }
-    //     const poulePlacesPerNumber: PoulePlace[][] = [];
-    //     const nrOfPoules = this.parentRound.getPoules().length;
-    //     const reversedPoulePlaces = this.parentRound.getPoulePlaces(Round.ORDER_NUMBER_POULE, true);
-    //     let nrOfChildRoundPlaces = this.childRound.getPoulePlaces().length;
-    //     while (nrOfChildRoundPlaces > 0) {
-    //         let tmp = reversedPoulePlaces.splice(0, nrOfPoules).reverse().filter(poulePlace => {
-    //             const toQualifyRule = poulePlace.getToQualifyRule(QualifyGroup.WINNERS);
-    //             return toQualifyRule === undefined || toQualifyRule.isMultiple();
-    //         });
-    //         // if( tmp.length > nrOfChildRoundPlaces ) {
-    //         //     tmp = tmp.splice(0,nrOfChildRoundPlaces);
-    //         // }
-    //         poulePlacesPerNumber.unshift(tmp);
-    //         nrOfChildRoundPlaces -= nrOfPoules;
-    //     }
-    //     return poulePlacesPerNumber;
     // }
 
     // protected getParentPoulePlacesPerQualifyRule(): PoulePlace[][] {
@@ -232,22 +204,5 @@ export class QualifyRuleService {
     //     //     poulePlaces = poulePlaces.concat(parentPoulePlaces);
     //     // });
     //     return poulePlaces;
-    // }
-
-    // removeRules() {
-    //     console.error('removeRules()');
-    //     // console.log('removeRules: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
-    //     // let fromQualifyRules = this.childRound.getFromQualifyRules().slice();
-    //     // fromQualifyRules.forEach(function (qualifyRuleIt) {
-    //     //     while (qualifyRuleIt.getFromPoulePlaces().length > 0) {
-    //     //         qualifyRuleIt.removeFromPoulePlace();
-    //     //     }
-    //     //     while (qualifyRuleIt.getToPoulePlaces().length > 0) {
-    //     //         qualifyRuleIt.removeToPoulePlace();
-    //     //     }
-    //     //     qualifyRuleIt.setFromRound(undefined);
-    //     //     qualifyRuleIt.setToRound(undefined);
-    //     // });
-    //     // fromQualifyRules = undefined;
     // }
 }
