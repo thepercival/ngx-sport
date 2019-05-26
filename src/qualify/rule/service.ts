@@ -39,24 +39,7 @@ export class QualifyRuleService {
             });
             toQualifyRules.splice(0, toQualifyRules.length);
         });
-        // console.log('removeRules: ' + this.parentRound.getNumberAsValue() + ' < -> ' + this.childRound.getNumberAsValue());
-        // let fromQualifyRules = this.childRound.getFromQualifyRules().slice();
-        // fromQualifyRules.forEach(function (qualifyRuleIt) {
-        //     while (qualifyRuleIt.getFromPoulePlaces().length > 0) {
-        //         qualifyRuleIt.removeFromPoulePlace();
-        //     }
-        //     while (qualifyRuleIt.getToPoulePlaces().length > 0) {
-        //         qualifyRuleIt.removeToPoulePlace();
-        //     }
-        //     qualifyRuleIt.setFromRound(undefined);
-        //     qualifyRuleIt.setToRound(undefined);
-        // });
-        // fromQualifyRules = undefined;
     }
-
-
-
-    // zo kun je elke ronde makkelijk een structurenumber geven
 
     protected createTo(round: Round) {
         round.getQualifyGroups().forEach(qualifyGroup => {
@@ -128,81 +111,4 @@ export class QualifyRuleService {
             queue.add(startEnd, unfreeQualifyRules.shift());
         }
     }
-
-    // protected getNrOfToPlacesToAdd(parentRoundPoulePlacesPer: PoulePlace[][]): number {
-    //     let nrOfPlacesToAdd = 0;
-    //     parentRoundPoulePlacesPer.forEach(poulePlaces => nrOfPlacesToAdd += poulePlaces.length);
-    //     return nrOfPlacesToAdd;
-    // }
-
-    // protected getNrOfToPoulePlaces(childRoundPoulePlaces: number, nrOfPlacesAdding: number, nrOfPlacesToAdd: number): number {
-    //     if (this.childRound.getWinnersOrLosers() === QualifyGroup.WINNERS
-    //        /* || this.childRound.getQualifyOrder() !== Round.QUALIFYORDER_CROSS */) {
-    //         return nrOfPlacesAdding;
-    //     }
-    //     const nrOfPlacesTooMuch = (nrOfPlacesAdding + nrOfPlacesToAdd) - childRoundPoulePlaces;
-    //     if (nrOfPlacesTooMuch > 0) {
-    //         return (childRoundPoulePlaces % this.parentRound.getPoules().length);
-    //     }
-    //     return nrOfPlacesAdding;
-    // }
-
-    // protected repairOverlappingRules() {
-    //     this.parentRound.getPoulePlaces().filter(poulePlace => poulePlace.getToQualifyRules().length > 1).forEach(poulePlace => {
-    //         const winnersRule = poulePlace.getToQualifyRule(QualifyGroup.WINNERS);
-    //         const losersRule = poulePlace.getToQualifyRule(QualifyGroup.LOSERS);
-    //         if (winnersRule.isSingle() && losersRule.isMultiple()) {
-    //             losersRule.removeFromPoulePlace(poulePlace);
-    //         } else if (winnersRule.isMultiple() && losersRule.isSingle()) {
-    //             winnersRule.removeFromPoulePlace(poulePlace);
-    //         }
-    //     });
-    // }
-
-    // protected getParentPoulePlacesPerQualifyRule(): PoulePlace[][] {
-    //     const nrOfChildRoundPlaces = this.childRound.getPoulePlaces().length;
-
-    //     const poulePlacesToAdd = this.getPoulePlacesPerParentFromQualifyRule();
-    //     if (this.childRound.getWinnersOrLosers() === QualifyGroup.LOSERS) {
-    //         poulePlacesToAdd.splice(0, poulePlacesToAdd.length - nrOfChildRoundPlaces);
-    //     }
-
-    //     const poulePlacesPerQualifyRule = [];
-    //     let placeNumber = 0;
-    //     const poulePlacesPerNumberRank = this.parentRound.getPoulePlacesPerNumber(this.childRound.getWinnersOrLosers());
-    //     while (poulePlacesToAdd.length > 0) {
-    //         const tmp = poulePlacesToAdd.splice(0, poulePlacesPerNumberRank[placeNumber++].length);
-    //         poulePlacesPerQualifyRule.push(tmp);
-    //     }
-    //     return poulePlacesPerQualifyRule;
-    // }
-
-    // protected getPoulePlacesPerParentFromQualifyRule(): PoulePlace[] {
-
-    //     if (this.parentRound.isRoot()) {
-    //         return this.parentRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
-    //     }
-    //     console.error('getPoulePlacesPerParentFromQualifyRule');
-    //     let poulePlaces = [];
-    //     // this.parentRound.getFromQualifyRules().forEach(parentFromQualifyRule => {
-    //     //     const parentPoulePlaces = parentFromQualifyRule.getToPoulePlaces().slice();
-    //     //     parentPoulePlaces.sort((pPoulePlaceA, pPoulePlaceB) => {
-    //     //         if (pPoulePlaceA.getNumber() > pPoulePlaceB.getNumber()) {
-    //     //             return 1;
-    //     //         }
-    //     //         if (pPoulePlaceA.getNumber() < pPoulePlaceB.getNumber()) {
-    //     //             return -1;
-    //     //         }
-    //     //         if (pPoulePlaceA.getPoule().getNumber() > pPoulePlaceB.getPoule().getNumber()) {
-    //     //             return 1;
-    //     //         }
-    //     //         if (pPoulePlaceA.getPoule().getNumber() < pPoulePlaceB.getPoule().getNumber()) {
-    //     //             return -1;
-    //     //         }
-    //     //         return 0;
-    //     //     });
-    //     //     poulePlaces = poulePlaces.concat(parentPoulePlaces);
-    //     // });
-    //     return poulePlaces;
-    // }
 }

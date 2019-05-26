@@ -4,7 +4,6 @@ import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { PoulePlace } from './pouleplace';
 import { QualifyGroup } from './qualify/group';
-import { QualifyRule } from './qualify/rule';
 import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { Round } from './round';
@@ -23,14 +22,14 @@ export class NameService {
     *  als allemaal dezelfde naam dan geef die naam
     * als verschillde namen geef dan xde ronde met tooltip van de namen
     */
-    getRoundNumberName(roundNumber: RoundNumber) {
+    getRoundNumberName(roundNumber: RoundNumber): string {
         if (this.roundsHaveSameName(roundNumber)) {
             return this.getRoundName(roundNumber.getARound(), true);
         }
         return this.getHtmlNumber(roundNumber.getNumber()) + ' ronde';
     }
 
-    getRoundName(round: Round, sameName: boolean = false) {
+    getRoundName(round: Round, sameName: boolean = false): string {
         if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {
             return this.getHtmlNumber(round.getNumberAsValue()) + ' ronde';
         }
@@ -38,7 +37,7 @@ export class NameService {
         const nrOfRoundsToGo = this.getMaxDepth(round);
         if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
-        } else if (nrOfRoundsToGo === 1 && this.aChildRoundHasMultiplePlacesPerPoule(round)) {
+        } else if (nrOfRoundsToGo === 1) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getNrOfPlaces() > 1)) {
             if (round.getNrOfPlaces() === 2 && sameName === false) {
@@ -47,12 +46,12 @@ export class NameService {
             }
             return 'finale';
         } else if (nrOfRoundsToGo === 0) {
-            return this.getWinnersLosersDescription(round.getWinnersOrLosers());
+            return round.getParentQualifyGroup() ? this.getWinnersLosersDescription(round.getParentQualifyGroup().getWinnersOrLosers()) : '';
         }
         return '?';
     }
 
-    getPouleName(poule: Poule, withPrefix: boolean) {
+    getPouleName(poule: Poule, withPrefix: boolean): string {
         let pouleName = '';
         if (withPrefix === true) {
             pouleName = poule.needsRanking() ? 'poule ' : 'wed. ';
@@ -67,7 +66,7 @@ export class NameService {
         return pouleName;
     }
 
-    getPoulePlaceFromName(place: PoulePlace, competitorName = false, longName = false) {
+    getPoulePlaceFromName(place: PoulePlace, competitorName = false, longName = false): string {
         if (competitorName === true && place.getCompetitor() !== undefined) {
             return place.getCompetitor().getName();
         }
@@ -132,21 +131,11 @@ export class NameService {
         });
     }
 
-    protected getNumberFromQualifyRule(qualifyRule: QualifyRule): number {
-        console.error("getNumberFromQualifyRule");
-        return 0;
-        // const poulePlaces = qualifyRule.getFromPoulePlaces();
-        // if (qualifyRule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-        //     return poulePlaces[0].getNumber();
-        // }
-        // return poulePlaces[poulePlaces.length - 1].getNumber();
-    }
-
-    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false) {
+    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false): string {
         return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
     }
 
-    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false) {
+    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false): string {
         if (competitorName === true && poulePlace.getCompetitor() !== undefined) {
             return poulePlace.getCompetitor().getName();
         }
@@ -182,7 +171,7 @@ export class NameService {
         });
     }
 
-    private roundAndParentsNeedsRanking(round: Round) {
+    private roundAndParentsNeedsRanking(round: Round): boolean {
 
         if (!round.needsRanking()) {
             return false;
@@ -193,21 +182,15 @@ export class NameService {
         return true;
     }
 
-    private getHtmlFractalNumber(number) {
+    private getHtmlFractalNumber(number): string {
         if (number === 2 || number === 4) {
             return '&frac1' + number + ';';
         }
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
     }
 
-    private getHtmlNumber(number) {
+    private getHtmlNumber(number): string {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
-    }
-
-    private aChildRoundHasMultiplePlacesPerPoule(round: Round) {
-        return round.getChildren().some(childRound => {
-            return childRound.getPoules().some(poule => poule.getPlaces().length > 1);
-        });
     }
 
     // private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {

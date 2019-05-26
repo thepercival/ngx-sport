@@ -11,6 +11,7 @@ export class QualifyRuleMultiple extends QualifyRule {
     constructor(fromHorizontalPoule: HorizontalPoule, nrOfToPlaces: number) {
         super();
         this.fromHorizontalPoule = fromHorizontalPoule;
+        this.fromHorizontalPoule.setQualifyRuleMultiple(this);
         this.nrOfToPlaces = nrOfToPlaces;
     }
 

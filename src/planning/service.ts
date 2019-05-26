@@ -174,8 +174,7 @@ export class PlanningService {
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
         const rounds = roundNumber.getRounds().slice();
         if (!roundNumber.isFirst()) {
-            console.error("getRoundPathAsNumber(), call parent getchildren, this is sorted");
-            // rounds.sort((r1, r2) => this.getRoundPathAsNumber(r1) - this.getRoundPathAsNumber(r2));
+            rounds.sort((r1, r2) => r1.getStructureNumber() - r2.getStructureNumber());
         }
         let games = [];
         rounds.forEach(round => {

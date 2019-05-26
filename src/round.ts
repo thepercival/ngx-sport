@@ -120,12 +120,6 @@ export class Round {
         return this.getParent() === undefined;
     }
 
-    // DEPRECATED , REMOVE QualifyGroup.NEUTRAL and this function
-    // FIRST ALL console.error s
-    getWinnersOrLosers(): number {
-        return this.getParentQualifyGroup() ? this.getParentQualifyGroup().getWinnersOrLosers() : QualifyGroup.NEUTRAL;
-    }
-
     getName(): string {
         return this.name;
     }

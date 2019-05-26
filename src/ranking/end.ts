@@ -13,20 +13,18 @@ export class EndRanking {
     private currentRank: number;
 
     constructor(private ruleSet: number) {
-
     }
 
     getItems(round: Round): EndRankingItem[] {
-        this.currentRank = 0;
+        this.currentRank = 1;
         const getItems = (round: Round): EndRankingItem[] => {
             if (round === undefined) {
                 return;
             }
             let items: EndRankingItem[] = [];
             round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
-                items = items.concat(this.getItems(qualifyGroup.getChildRound()));
+                items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
-
             if (round.getState() === Game.STATE_PLAYED) {
                 items = items.concat(this.getDropouts(round));
             } else {
@@ -34,7 +32,7 @@ export class EndRanking {
             }
 
             round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
-                items = items.concat(this.getItems(qualifyGroup.getChildRound()));
+                items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
             return items;
         }
@@ -51,6 +49,7 @@ export class EndRanking {
     }
 
     protected getDropouts(round: Round): EndRankingItem[] {
+        const rankingService = new RankingService(round, this.ruleSet);
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {
@@ -59,7 +58,7 @@ export class EndRanking {
                     if (horizontalPoule.getQualifyGroup() && horizontalPoule.getQualifyGroup().getNrOfToPlacesTooMuch() === 0) {
                         return nrOfDropouts > 0;
                     }
-                    const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule);
+                    const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule, rankingService);
                     dropouts = dropouts.concat(dropoutsHorizontalPoule);
                     nrOfDropouts -= dropoutsHorizontalPoule.length;
                     return nrOfDropouts > 0;
@@ -70,12 +69,9 @@ export class EndRanking {
         return dropouts;
     }
 
-    // @TODO let op : ga niet elke keer poulestand opnieuw berekenen
-    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule): EndRankingItem[] {
-        const rankingService = new RankingService(this.ruleSet);
+    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingService: RankingService): EndRankingItem[] {
         const roundRankingItems: RoundRankingItem[] = rankingService.getItemsForHorizontalPoule(horizontalPoule);
         roundRankingItems.splice(0, horizontalPoule.getNrOfQualifiers())
-        let rank = 1;
         return roundRankingItems.map(roundRankingItem => {
             const poulePlace = horizontalPoule.getRound().getPoulePlace(roundRankingItem.getPlaceLocation());
             const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';

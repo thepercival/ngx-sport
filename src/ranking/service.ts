@@ -11,19 +11,16 @@ import { RoundRankingItem } from './item';
 export class RankingService {
     static readonly RULESSET_WC = 1;
     static readonly RULESSET_EC = 2;
-    private rulesSet: number;
     private maxPoulePlaces = 64;
     private gameStates: number;
+    private cache: {} = {};
 
     constructor(
-        rulesSet: number,
+        private round: Round, /* because cache-id is poulenumber */
+        private rulesSet: number,
         gameStates?: number
     ) {
-        this.rulesSet = rulesSet;
-        if (gameStates === undefined) {
-            gameStates = Game.STATE_PLAYED;
-        }
-        this.gameStates = gameStates;
+        this.gameStates = (gameStates !== undefined) ? gameStates : Game.STATE_PLAYED;
     }
 
     getRuleDescriptions() {
@@ -47,10 +44,14 @@ export class RankingService {
     }
 
     getItemsForPoule(poule: Poule): RoundRankingItem[] {
-        const round: Round = poule.getRound();
-        const getter = new RankingItemsGetter(round, this.gameStates);
-        const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poule.getPlaces(), poule.getGames());
-        return this.rankItems(unrankedItems, true);
+        if (this.cache[poule.getNumber()] === undefined) {
+            const round: Round = poule.getRound();
+            const getter = new RankingItemsGetter(round, this.gameStates);
+            const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poule.getPlaces(), poule.getGames());
+            const rankedItems = this.rankItems(unrankedItems, true);
+            this.cache[poule.getNumber()] = rankedItems;
+        }
+        return this.cache[poule.getNumber()];
     }
 
     getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {

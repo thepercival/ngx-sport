@@ -35,7 +35,7 @@ export class RoundMapper {
             structureService.updateQualifyGroupsHorizontalPoules(
                 round.getHorizontalPoules(winnersOrLosers).slice(),
                 round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
-                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: round.getNrOfPlacesChildren() };
+                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: qualifyGroup.getChildRound().getNrOfPlaces() };
                 })
             );
         });
@@ -44,7 +44,7 @@ export class RoundMapper {
             structureService.updateQualifyGroupsHorizontalPoules(
                 round.getHorizontalPoules(winnersOrLosers).slice(),
                 round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
-                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: round.getNrOfPlacesChildren() };
+                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: qualifyGroup.getChildRound().getNrOfPlaces() };
                 })
             );
         });
