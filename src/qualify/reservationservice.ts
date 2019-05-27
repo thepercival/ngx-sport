@@ -1,5 +1,5 @@
+import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 
 export class QualifyReservationService {
@@ -35,25 +35,26 @@ export class QualifyReservationService {
     }
 
     /**
-     * first free and than least times available
      * 
-     * @param fromPoulePlaces 
+     * @param toPouleNumber 
+     * @param fromRound 
+     * @param fromPlaceLocations 
      */
-    getFreeAndLeastAvailabe(toPouleNumber: number, fromPoulePlaces: PoulePlace[]): PoulePlace {
-        let retPoulePlace;
+    getFreeAndLeastAvailabe(toPouleNumber: number, fromRound: Round, fromPlaceLocations: PlaceLocation[]): PlaceLocation {
+        let retPlaceLocation: PlaceLocation;
         let leastNrOfPoulesAvailable;
-        fromPoulePlaces.forEach(fromPoulePlace => {
-            const fromPoule = fromPoulePlace.getPoule();
-            if (this.isFree(toPouleNumber, fromPoule)) {
-                const nrOfPoulesAvailable = this.getNrOfPoulesAvailable(fromPoule, toPouleNumber + 1);
-                if (leastNrOfPoulesAvailable === undefined || nrOfPoulesAvailable < leastNrOfPoulesAvailable) {
-                    retPoulePlace = fromPoulePlace;
-                    leastNrOfPoulesAvailable = nrOfPoulesAvailable;
-                }
+        fromPlaceLocations.forEach(fromPlaceLocation => {
+            const fromPoule = fromRound.getPoule(fromPlaceLocation.getPouleNr());
+            if (!this.isFree(toPouleNumber, fromPoule)) {
+                return;
             }
-
+            const nrOfPoulesAvailable = this.getNrOfPoulesAvailable(fromPoule, toPouleNumber + 1);
+            if (leastNrOfPoulesAvailable === undefined || nrOfPoulesAvailable < leastNrOfPoulesAvailable) {
+                retPlaceLocation = fromPlaceLocation;
+                leastNrOfPoulesAvailable = nrOfPoulesAvailable;
+            }
         })
-        return retPoulePlace;
+        return retPlaceLocation;
     }
 
     protected getNrOfPoulesAvailable(fromPoule: Poule, toPouleNumber?: number): number {

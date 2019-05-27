@@ -23,6 +23,7 @@ import { GameScore } from './game/score';
 import { League } from './league';
 import { LeagueRepository } from './league/repository';
 import { NameService } from './nameservice';
+import { PlaceLocation } from './place/location';
 import { PlanningRepository } from './planning/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
@@ -35,7 +36,7 @@ import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { QualifyService } from './qualify/service';
 import { EndRanking } from './ranking/end';
-import { RankingItem } from './ranking/item';
+import { RankedRoundItem } from './ranking/item';
 import { RankingService } from './ranking/service';
 import { Referee } from './referee';
 import { RefereeRepository } from './referee/repository';
@@ -67,7 +68,7 @@ import { StructureService } from './structure/service';
     ],
     exports: [
         Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace, HorizontalPoule,
-        Poule, PoulePlace, QualifyGroup, RankingService, RankingItem, EndRanking, Referee, SportRepository,
+        Poule, PoulePlace, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRanking, Referee, SportRepository,
         Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,

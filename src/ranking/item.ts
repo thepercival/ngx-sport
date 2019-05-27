@@ -1,11 +1,9 @@
 import { PlaceLocation } from '../place/location';
+import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 
-export class RankingItem {
-    private uniqueRank: number;
-    private rank: number;
-
-    constructor(
+export class RankedRoundItem {
+    constructor(private unrankedRoundItem: UnrankedRoundItem, private uniqueRank: number, private rank: number
     ) {
     }
 
@@ -13,32 +11,24 @@ export class RankingItem {
         return this.uniqueRank;
     }
 
-    setUniqueRank(uniqueRank: number) {
-        this.uniqueRank = uniqueRank;
-    }
-
     getRank(): number {
         return this.rank;
     }
 
-    setRank(rank: number) {
-        this.rank = rank;
+    getPlaceLocation(): PlaceLocation {
+        return this.unrankedRoundItem.getPlaceLocation();
+    }
+
+    getUnranked(): UnrankedRoundItem {
+        return this.unrankedRoundItem;
+    }
+
+    getPlace(): PoulePlace {
+        return this.unrankedRoundItem.getRound().getPoulePlace(this.unrankedRoundItem.getPlaceLocation());
     }
 }
 
-export class EndRankingItem extends RankingItem {
-    constructor(uniqueRank: number, rank: number, private name: string) {
-        super();
-        this.setUniqueRank(uniqueRank);
-        this.setRank(rank);
-    }
-
-    getName(): string {
-        return this.name;
-    }
-}
-
-export class RoundRankingItem extends RankingItem {
+export class UnrankedRoundItem {
     private games: number = 0;
     private points: number = 0;
     private scored: number = 0;
@@ -47,7 +37,6 @@ export class RoundRankingItem extends RankingItem {
     private subScored: number = 0;
 
     constructor(private round: Round, private placeLocation: PlaceLocation, penaltyPoints?: number) {
-        super();
         if (penaltyPoints !== undefined) {
             this.addPoints(-penaltyPoints);
         }
@@ -115,5 +104,22 @@ export class RoundRankingItem extends RankingItem {
 
     getSubDiff(): number {
         return this.getSubScored() - this.getSubReceived();
+    }
+}
+
+export class EndRankingItem {
+    constructor(private uniqueRank: number, private rank: number, private name: string) {
+    }
+
+    getUniqueRank(): number {
+        return this.uniqueRank;
+    }
+
+    getRank(): number {
+        return this.rank;
+    }
+
+    getName(): string {
+        return this.name;
     }
 }

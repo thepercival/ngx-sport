@@ -35,6 +35,7 @@ export * from './src/game/score/mapper';
 export * from './src/game/score/homeaway';
 export * from './src/planning/service';
 export * from './src/planning/repository';
+export * from './src/place/location';
 export * from './src/poule';
 export * from './src/poule/mapper';
 export * from './src/poule/horizontal';

@@ -1,7 +1,7 @@
 import { Game } from '../game';
+import { PlaceLocation } from '../place/location';
 import { HorizontalPoule } from '../poule/horizontal';
 import { QualifyGroup } from '../qualify/group';
-import { RoundRankingItem } from '../ranking/item';
 import { Round } from '../round';
 import { EndRankingItem } from './item';
 import { RankingService } from './service';
@@ -53,8 +53,8 @@ export class EndRanking {
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {
-            [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
-                round.getHorizontalPoules(winnersOrLosers).some(horizontalPoule => {
+            [QualifyGroup.WINNERS, QualifyGroup.LOSERS].every(winnersOrLosers => {
+                round.getHorizontalPoules(winnersOrLosers).every(horizontalPoule => {
                     if (horizontalPoule.getQualifyGroup() && horizontalPoule.getQualifyGroup().getNrOfToPlacesTooMuch() === 0) {
                         return nrOfDropouts > 0;
                     }
@@ -70,11 +70,11 @@ export class EndRanking {
     }
 
     protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingService: RankingService): EndRankingItem[] {
-        const roundRankingItems: RoundRankingItem[] = rankingService.getItemsForHorizontalPoule(horizontalPoule);
-        roundRankingItems.splice(0, horizontalPoule.getNrOfQualifiers())
-        return roundRankingItems.map(roundRankingItem => {
-            const poulePlace = horizontalPoule.getRound().getPoulePlace(roundRankingItem.getPlaceLocation());
-            const name = poulePlace.getCompetitor() ? poulePlace.getCompetitor().getName() : 'onbekend';
+        const rankedPlaceLocations: PlaceLocation[] = rankingService.getPlaceLocationsForHorizontalPoule(horizontalPoule);
+        rankedPlaceLocations.splice(0, horizontalPoule.getNrOfQualifiers())
+        return rankedPlaceLocations.map(rankedPlaceLocation => {
+            const competitor = rankingService.getCompetitor(rankedPlaceLocation);
+            const name = competitor ? competitor.getName() : 'onbekend';
             return new EndRankingItem(this.currentRank, this.currentRank++, name);
         });
     }

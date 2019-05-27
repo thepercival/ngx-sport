@@ -1,10 +1,12 @@
+import { Competitor } from '../competitor';
 import { Game } from '../game';
+import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
 import { RankingItemsGetter } from './helper';
-import { RoundRankingItem } from './item';
+import { RankedRoundItem, UnrankedRoundItem } from './item';
 
 /* tslint:disable:no-bitwise */
 
@@ -43,45 +45,55 @@ export class RankingService {
         });
     }
 
-    getItemsForPoule(poule: Poule): RoundRankingItem[] {
+    getItemsForPoule(poule: Poule): RankedRoundItem[] {
         if (this.cache[poule.getNumber()] === undefined) {
             const round: Round = poule.getRound();
             const getter = new RankingItemsGetter(round, this.gameStates);
-            const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poule.getPlaces(), poule.getGames());
+            const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poule.getPlaces(), poule.getGames());
             const rankedItems = this.rankItems(unrankedItems, true);
             this.cache[poule.getNumber()] = rankedItems;
         }
         return this.cache[poule.getNumber()];
     }
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
-        const roundItems: RoundRankingItem[] = [];
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RankedRoundItem[] {
+        const unrankedRoundItems: UnrankedRoundItem[] = [];
         horizontalPoule.getPlaces().forEach(place => {
-            const pouleRankingItems: RoundRankingItem[] = this.getItemsForPoule(place.getPoule());
-            roundItems.push(this.getItemByRank(pouleRankingItems, place.getNumber()));
+            const pouleRankingItems: RankedRoundItem[] = this.getItemsForPoule(place.getPoule());
+            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getNumber());
+            unrankedRoundItems.push(pouleRankingItem.getUnranked());
         });
-        return this.rankItems(roundItems, false);
+        return this.rankItems(unrankedRoundItems, false);
     }
 
-    getItemByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem {
+    getPlaceLocationsForHorizontalPoule(horizontalPoule: HorizontalPoule): PlaceLocation[] {
+        return this.getItemsForHorizontalPoule(horizontalPoule).map(rankingItem => {
+            return rankingItem.getPlaceLocation();
+        });
+    }
+
+    getItemByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem {
         return rankingItems.find(rankingItemIt => rankingItemIt.getUniqueRank() === rank);
     }
 
-    private rankItems(unrankedItems: RoundRankingItem[], againstEachOther: boolean): RoundRankingItem[] {
-        const rankedItems: RoundRankingItem[] = [];
+    getCompetitor(placeLocation: PlaceLocation): Competitor {
+        const poulePlace = this.round.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
+        return poulePlace ? poulePlace.getCompetitor() : undefined;
+    }
+
+    private rankItems(unrankedItems: UnrankedRoundItem[], againstEachOther: boolean): RankedRoundItem[] {
+        const rankedItems: RankedRoundItem[] = [];
         const rankFunctions = this.getRankFunctions(againstEachOther);
         let nrOfIterations = 0;
         while (unrankedItems.length > 0) {
-            const bestItems = this.findBestItems(unrankedItems, rankFunctions);
+            const bestItems: UnrankedRoundItem[] = this.findBestItems(unrankedItems, rankFunctions);
             const rank = nrOfIterations + 1;
             bestItems.forEach(bestItem => {
-                bestItem.setUniqueRank(++nrOfIterations);
-                bestItem.setRank(rank);
                 const idx = unrankedItems.indexOf(bestItem);
                 if (idx > -1) {
                     unrankedItems.splice(idx, 1);
                 }
-                rankedItems.push(bestItem);
+                rankedItems.push(new RankedRoundItem(bestItem, ++nrOfIterations, rank));
             });
             if (nrOfIterations > this.maxPoulePlaces) {
                 console.error('should not be happening for ranking calc');
@@ -91,8 +103,8 @@ export class RankingService {
         return rankedItems;
     }
 
-    private findBestItems(orgItems: RoundRankingItem[], rankFunctions: Function[]): RoundRankingItem[] {
-        let bestItems: RoundRankingItem[] = orgItems.slice();
+    private findBestItems(orgItems: UnrankedRoundItem[], rankFunctions: Function[]): UnrankedRoundItem[] {
+        let bestItems: UnrankedRoundItem[] = orgItems.slice();
         rankFunctions.some(rankFunction => {
             if (rankFunction === this.filterBestAgainstEachOther && orgItems.length === bestItems.length) {
                 return false;
@@ -127,9 +139,9 @@ export class RankingService {
         return rankFunctions;
     }
 
-    private filterMostPoints = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterMostPoints = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         let mostPoints;
-        let bestItems: RoundRankingItem[] = [];
+        let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
             let points = item.getPoints();
             if (mostPoints === undefined || points === mostPoints) {
@@ -144,9 +156,9 @@ export class RankingService {
         return bestItems;
     }
 
-    private filterFewestGames = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterFewestGames = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         let fewestGames;
-        let bestItems: RoundRankingItem[] = [];
+        let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
             let nrOfGames = item.getGames();
             if (fewestGames === undefined || nrOfGames === fewestGames) {
@@ -160,7 +172,7 @@ export class RankingService {
         return bestItems;
     }
 
-    private filterBestAgainstEachOther = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterBestAgainstEachOther = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         if (items.length === 0) {
             return [];
         }
@@ -177,7 +189,7 @@ export class RankingService {
             return items;
         }
         const getter = new RankingItemsGetter(round, this.gameStates);
-        const unrankedItems: RoundRankingItem[] = getter.getFormattedItems(poulePlaces, games);
+        const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poulePlaces, games);
         const rankedItems = this.rankItems(unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
         if (rankedItems.length === items.length) {
             return items;
@@ -188,17 +200,17 @@ export class RankingService {
         });
     }
 
-    private filterBestUnitDifference = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterBestUnitDifference = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         return this.filterBestDifference(items, false);
     }
 
-    private filterBestSubUnitDifference = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterBestSubUnitDifference = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         return this.filterBestDifference(items, true);
     }
 
-    private filterBestDifference = (items: RoundRankingItem[], sub: boolean): RoundRankingItem[] => {
+    private filterBestDifference = (items: UnrankedRoundItem[], sub: boolean): UnrankedRoundItem[] => {
         let bestDiff;
-        let bestItems: RoundRankingItem[] = [];
+        let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
             let diff = sub ? item.getSubDiff() : item.getDiff();
             if (bestDiff === undefined || diff === bestDiff) {
@@ -212,17 +224,17 @@ export class RankingService {
         return bestItems;
     }
 
-    private filterMostUnitsScored = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterMostUnitsScored = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         return this.filterMostScored(items, false);
     }
 
-    private filterMostSubUnitsScored = (items: RoundRankingItem[]): RoundRankingItem[] => {
+    private filterMostSubUnitsScored = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
         return this.filterMostScored(items, true);
     }
 
-    private filterMostScored = (items: RoundRankingItem[], sub: boolean): RoundRankingItem[] => {
+    private filterMostScored = (items: UnrankedRoundItem[], sub: boolean): UnrankedRoundItem[] => {
         let mostScored;
-        let bestItems: RoundRankingItem[] = [];
+        let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
             let scored = sub ? item.getSubScored() : item.getScored();
             if (mostScored === undefined || scored === mostScored) {

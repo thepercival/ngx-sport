@@ -1,9 +1,10 @@
 import { Competitor } from '../competitor';
 import { Game } from '../game';
+import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { PoulePlace } from '../pouleplace';
-import { RoundRankingItem } from '../ranking/item';
+import { RankedRoundItem } from '../ranking/item';
 import { RankingService } from '../ranking/service';
 import { Round } from '../round';
 import { QualifyGroup } from './group';
@@ -68,19 +69,18 @@ export class QualifyService {
             });
             return changedPoulePlaces;
         }
-        const rankingItems: RoundRankingItem[] = this.rankingService.getItemsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
-        const rankedPoulePlaces: PoulePlace[] = rankingItems.map(rankingItem => {
-            return rankingItem.getRound().getPoulePlace(rankingItem.getPlaceLocation());
-        });
-        while (rankedPoulePlaces.length > toPlaces.length) {
-            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPoulePlaces.pop() : rankedPoulePlaces.unshift();
+        const round = ruleMultiple.getFromRound();
+        const rankedPlaceLocations: PlaceLocation[] = this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
+
+        while (rankedPlaceLocations.length > toPlaces.length) {
+            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.unshift();
         }
         toPlaces.forEach(toPlace => {
             const toPouleNumber = toPlace.getPoule().getNumber();
-            const rankedPoulePlace = this.reservationService.getFreeAndLeastAvailabe(toPouleNumber, rankedPoulePlaces);
-            toPlace.setCompetitor(rankedPoulePlace.getCompetitor());
+            const rankedPlaceLocation = this.reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankedPlaceLocations);
+            toPlace.setCompetitor(this.rankingService.getCompetitor(rankedPlaceLocation));
             changedPoulePlaces.push(toPlace);
-            rankedPoulePlaces.splice(rankedPoulePlaces.indexOf(rankedPoulePlace), 1);
+            rankedPlaceLocations.splice(rankedPlaceLocations.indexOf(rankedPlaceLocation), 1);
         });
         return changedPoulePlaces;
     }
@@ -89,7 +89,7 @@ export class QualifyService {
         if (!this.isPoulePlayed(poule)) {
             return undefined;
         }
-        const pouleRankingItems: RoundRankingItem[] = this.rankingService.getItemsForPoule(poule);
+        const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
         const rankingItem = this.rankingService.getItemByRank(pouleRankingItems, rank);
         const poulePlace = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
         return poulePlace ? poulePlace.getCompetitor() : undefined;

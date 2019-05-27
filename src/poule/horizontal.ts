@@ -107,7 +107,7 @@ export class HorizontalPoule {
     // }
 
     isBorderPoule(): boolean {
-        if (!this.getQualifyGroup().isBorderGroup()) {
+        if (!this.getQualifyGroup() || !this.getQualifyGroup().isBorderGroup()) {
             return false;
         }
         const horPoules = this.getQualifyGroup().getHorizontalPoules();
@@ -115,6 +115,9 @@ export class HorizontalPoule {
     }
 
     getNrOfQualifiers() {
+        if (this.getQualifyGroup() === undefined) {
+            return 0;
+        }
         if (!this.isBorderPoule()) {
             return this.getPlaces().length;
         }

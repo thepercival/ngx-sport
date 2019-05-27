@@ -3,7 +3,7 @@ import { GameScore } from '../game/score';
 import { GameScoreHomeAway } from '../game/score/homeaway';
 import { PoulePlace } from '../pouleplace';
 import { Round } from '../round';
-import { RoundRankingItem } from './item';
+import { UnrankedRoundItem } from './item';
 
 /* tslint:disable:no-bitwise */
 
@@ -18,9 +18,9 @@ export class RankingItemsGetter {
         return poulePlace.getPoule().getNumber() + '-' + poulePlace.getNumber();
     }
 
-    getFormattedItems(poulePlaces: PoulePlace[], games: Game[]): RoundRankingItem[] {
+    getUnrankedItems(poulePlaces: PoulePlace[], games: Game[]): UnrankedRoundItem[] {
         const items = poulePlaces.map(poulePlace => {
-            return new RoundRankingItem(this.round, poulePlace.getLocation(), poulePlace.getPenaltyPoints());
+            return new UnrankedRoundItem(this.round, poulePlace.getLocation(), poulePlace.getPenaltyPoints());
         });
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
