@@ -11,6 +11,7 @@ export class QualifyRuleSingle extends QualifyRule {
     constructor(private fromPlace: PoulePlace, toQualifyGroup: QualifyGroup) {
         super();
         this.winnersOrLosers = toQualifyGroup.getWinnersOrLosers();
+        this.fromPlace.setToQualifyRule(toQualifyGroup.getWinnersOrLosers(), this);
     }
 
     getFromRound(): Round {

@@ -167,11 +167,11 @@ export class Round {
     getPlaces(order?: number): PoulePlace[] {
         let places: PoulePlace[] = [];
         if (order === Round.ORDER_NUMBER_POULE) {
-            this.getPoules().forEach((poule) => {
+            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
                 places = places.concat(poule.getPlaces());
             });
         } else {
-            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
+            this.getPoules().forEach((poule) => {
                 places = places.concat(poule.getPlaces());
             });
         }

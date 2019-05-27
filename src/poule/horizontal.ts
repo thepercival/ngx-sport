@@ -85,6 +85,7 @@ export class HorizontalPoule {
     }
 
     setQualifyRuleMultiple(multipleRule: QualifyRuleMultiple) {
+        this.getPlaces().forEach(place => place.setToQualifyRule(this.getWinnersOrLosers(), multipleRule));
         this.multipleRule = multipleRule;
     }
 

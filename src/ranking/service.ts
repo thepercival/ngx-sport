@@ -58,7 +58,7 @@ export class RankingService {
         const roundItems: RoundRankingItem[] = [];
         horizontalPoule.getPlaces().forEach(place => {
             const pouleRankingItems: RoundRankingItem[] = this.getItemsForPoule(place.getPoule());
-            roundItems.push(this.getItemByRank(pouleRankingItems, horizontalPoule.getPlaceNumber()));
+            roundItems.push(this.getItemByRank(pouleRankingItems, place.getNumber()));
         });
         return this.rankItems(roundItems, false);
     }
