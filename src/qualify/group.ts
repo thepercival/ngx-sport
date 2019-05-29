@@ -2,7 +2,6 @@ import { HorizontalPoule } from '../poule/horizontal';
 import { Round } from '../round';
 
 export class QualifyGroup {
-    static readonly NEUTRAL = 0;
     static readonly WINNERS = 1;
     static readonly DROPOUTS = 2;
     static readonly LOSERS = 3;

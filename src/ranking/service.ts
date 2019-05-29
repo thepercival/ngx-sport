@@ -56,9 +56,18 @@ export class RankingService {
         return this.cache[poule.getNumber()];
     }
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RankedRoundItem[] {
+    getPlaceLocationsForHorizontalPoule(horizontalPoule: HorizontalPoule): PlaceLocation[] {
+        return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
+            return rankingItem.getPlaceLocation();
+        });
+    }
+
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): RankedRoundItem[] {
         const unrankedRoundItems: UnrankedRoundItem[] = [];
         horizontalPoule.getPlaces().forEach(place => {
+            if (checkOnSingleQualifyRule && this.hasPlaceSingleQualifyRule(place)) {
+                return;
+            }
             const pouleRankingItems: RankedRoundItem[] = this.getItemsForPoule(place.getPoule());
             const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getNumber());
             unrankedRoundItems.push(pouleRankingItem.getUnranked());
@@ -66,10 +75,14 @@ export class RankingService {
         return this.rankItems(unrankedRoundItems, false);
     }
 
-    getPlaceLocationsForHorizontalPoule(horizontalPoule: HorizontalPoule): PlaceLocation[] {
-        return this.getItemsForHorizontalPoule(horizontalPoule).map(rankingItem => {
-            return rankingItem.getPlaceLocation();
-        });
+    /**
+     * Place can have a multiple and a single rule, if so than do not 
+     * process place for horizontalpoule(multiple)
+     * 
+     * @param place 
+     */
+    protected hasPlaceSingleQualifyRule(place: PoulePlace): boolean {
+        return place.getToQualifyRules().filter(qualifyRuleIt => qualifyRuleIt.isSingle()).length > 0;
     }
 
     getItemByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem {

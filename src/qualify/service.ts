@@ -73,7 +73,7 @@ export class QualifyService {
         const rankedPlaceLocations: PlaceLocation[] = this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
 
         while (rankedPlaceLocations.length > toPlaces.length) {
-            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.unshift();
+            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.shift();
         }
         toPlaces.forEach(toPlace => {
             const toPouleNumber = toPlace.getPoule().getNumber();

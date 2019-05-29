@@ -95,6 +95,11 @@ export class Round {
         return this.getQualifyGroups(winnersOrLosers).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
     }
 
+    getBorderQualifyGroup(winnersOrLosers: number): QualifyGroup {
+        const qualifyGroups = this.getQualifyGroups(winnersOrLosers);
+        return qualifyGroups[qualifyGroups.length - 1];
+    }
+
     getNrOfDropoutPlaces(): number {
         // if (this.nrOfDropoutPlaces === undefined) {
         // @TODO performance check

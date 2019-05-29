@@ -1,4 +1,13 @@
-{
+import { JsonStructure } from '../../../../src/structure/mapper';
+
+/**
+ * rondenummer 1 : 1 ronde, 10 poules van 4
+ * kwalificatie : alle nrs1, 2, 3 en 4 tegen elkaar
+ * rondenummer 2 : 4 rondes, per ronde 2 poules van 5
+ * kwalificatie : alle nrs1 en laatst van alle ronden tegen elkaar
+ * rondenummer 3 : 1 vs 2, 9 vs 10, 11 vs 12, 19 vs 20, ... 39 vs 40
+ */
+export const jsonStructure1: JsonStructure = {
     "firstRoundNumber": {
         "id": 8093,
         "number": 1,
@@ -4188,4 +4197,4 @@
             }
         ]
     }
-}
+};

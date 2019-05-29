@@ -53,7 +53,10 @@ export class QualifyReservationService {
                 retPlaceLocation = fromPlaceLocation;
                 leastNrOfPoulesAvailable = nrOfPoulesAvailable;
             }
-        })
+        });
+        if (retPlaceLocation === undefined) {
+            return fromPlaceLocations[0];
+        }
         return retPlaceLocation;
     }
 
