@@ -1,16 +1,20 @@
 import { describe, it } from 'mocha';
 
+import { StructureMapper } from '../../../public_api';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
-import { jsonStructure1 } from '../../data/structure/mapper/structure1';
+import { jsonStructure332a } from '../../data/structure/mapper/structure-332-a';
+import { check332astructure } from './332a';
 
 
 describe('Structure/Mapper', () => {
-    it('performance', () => {
+    it('332a', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureMapper = getMapper('structure');
-        const structure = structureMapper.toObject(jsonStructure1, competition);
+        const structureMapper: StructureMapper = getMapper('structure');
+        const structure = structureMapper.toObject(jsonStructure332a, competition);
+
+        check332astructure(structure);
     });
 });

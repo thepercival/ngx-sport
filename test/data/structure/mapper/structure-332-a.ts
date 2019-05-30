@@ -1,0 +1,706 @@
+import { JsonStructure } from '../../../../src/structure/mapper';
+
+/**
+ * RN(1) => (3,3,2)
+ * RN(2) => W1(2,2), L1(2,2)
+ * RN(3) => W1W1(2), W1L1(2), L1W1(2), L1L1(2)
+*/
+export const jsonStructure332a: JsonStructure = {
+    "firstRoundNumber": {
+        "id": 8120,
+        "number": 1,
+        "next": {
+            "id": 8121,
+            "number": 2,
+            "next": {
+                "id": 8122,
+                "number": 3,
+                "config": {
+                    "id": 10201,
+                    "qualifyRule": 1,
+                    "nrOfHeadtoheadMatches": 1,
+                    "winPoints": 3.0,
+                    "drawPoints": 1.0,
+                    "hasExtension": false,
+                    "winPointsExt": 2.0,
+                    "drawPointsExt": 1.0,
+                    "minutesPerGameExt": 0,
+                    "enableTime": true,
+                    "minutesPerGame": 20,
+                    "minutesBetweenGames": 5,
+                    "minutesAfter": 5,
+                    "score": {
+                        "id": 13392,
+                        "name": "punten",
+                        "direction": 1,
+                        "maximum": 0
+                    },
+                    "teamup": false,
+                    "pointsCalculation": 0,
+                    "selfReferee": false
+                }
+            },
+            "config": {
+                "id": 10200,
+                "qualifyRule": 1,
+                "nrOfHeadtoheadMatches": 1,
+                "winPoints": 3.0,
+                "drawPoints": 1.0,
+                "hasExtension": false,
+                "winPointsExt": 2.0,
+                "drawPointsExt": 1.0,
+                "minutesPerGameExt": 0,
+                "enableTime": true,
+                "minutesPerGame": 20,
+                "minutesBetweenGames": 5,
+                "minutesAfter": 5,
+                "score": {
+                    "id": 13391,
+                    "name": "punten",
+                    "direction": 1,
+                    "maximum": 0
+                },
+                "teamup": false,
+                "pointsCalculation": 0,
+                "selfReferee": false
+            }
+        },
+        "config": {
+            "id": 10199,
+            "qualifyRule": 1,
+            "nrOfHeadtoheadMatches": 1,
+            "winPoints": 3.0,
+            "drawPoints": 1.0,
+            "hasExtension": false,
+            "winPointsExt": 2.0,
+            "drawPointsExt": 1.0,
+            "minutesPerGameExt": 0,
+            "enableTime": true,
+            "minutesPerGame": 20,
+            "minutesBetweenGames": 5,
+            "minutesAfter": 5,
+            "score": {
+                "id": 13390,
+                "name": "punten",
+                "direction": 1,
+                "maximum": 0
+            },
+            "teamup": false,
+            "pointsCalculation": 0,
+            "selfReferee": false
+        }
+    },
+    "rootRound": {
+        "id": 12647,
+        "poules": [
+            {
+                "places": [
+                    {
+                        "id": 91125,
+                        "number": 1,
+                        "penaltyPoints": 0
+                    },
+                    {
+                        "id": 91126,
+                        "number": 2,
+                        "penaltyPoints": 0
+                    },
+                    {
+                        "id": 91127,
+                        "number": 3,
+                        "penaltyPoints": 0
+                    }
+                ],
+                "games": [
+                    {
+                        "id": 259663,
+                        "roundNumber": 1,
+                        "subNumber": 1,
+                        "resourceBatch": 1,
+                        "startDateTime": "2019-05-28T14:30:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354869,
+                                "homeaway": true,
+                                "poulePlaceNr": 2
+                            },
+                            {
+                                "id": 354870,
+                                "homeaway": false,
+                                "poulePlaceNr": 3
+                            }
+                        ]
+                    },
+                    {
+                        "id": 259664,
+                        "roundNumber": 2,
+                        "subNumber": 1,
+                        "resourceBatch": 4,
+                        "startDateTime": "2019-05-28T15:45:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354871,
+                                "homeaway": true,
+                                "poulePlaceNr": 1
+                            },
+                            {
+                                "id": 354872,
+                                "homeaway": false,
+                                "poulePlaceNr": 2
+                            }
+                        ]
+                    },
+                    {
+                        "id": 259665,
+                        "roundNumber": 3,
+                        "subNumber": 1,
+                        "resourceBatch": 6,
+                        "startDateTime": "2019-05-28T16:35:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354874,
+                                "homeaway": false,
+                                "poulePlaceNr": 1
+                            },
+                            {
+                                "id": 354873,
+                                "homeaway": true,
+                                "poulePlaceNr": 3
+                            }
+                        ]
+                    }
+                ],
+                "id": 27087,
+                "number": 1
+            },
+            {
+                "places": [
+                    {
+                        "id": 91128,
+                        "number": 1,
+                        "penaltyPoints": 0
+                    },
+                    {
+                        "id": 91129,
+                        "number": 2,
+                        "penaltyPoints": 0
+                    },
+                    {
+                        "id": 91130,
+                        "number": 3,
+                        "penaltyPoints": 0
+                    }
+                ],
+                "games": [
+                    {
+                        "id": 259667,
+                        "roundNumber": 1,
+                        "subNumber": 1,
+                        "resourceBatch": 2,
+                        "startDateTime": "2019-05-28T14:55:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354877,
+                                "homeaway": true,
+                                "poulePlaceNr": 2
+                            },
+                            {
+                                "id": 354878,
+                                "homeaway": false,
+                                "poulePlaceNr": 3
+                            }
+                        ]
+                    },
+                    {
+                        "id": 259668,
+                        "roundNumber": 2,
+                        "subNumber": 1,
+                        "resourceBatch": 5,
+                        "startDateTime": "2019-05-28T16:10:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354879,
+                                "homeaway": true,
+                                "poulePlaceNr": 1
+                            },
+                            {
+                                "id": 354880,
+                                "homeaway": false,
+                                "poulePlaceNr": 2
+                            }
+                        ]
+                    },
+                    {
+                        "id": 259669,
+                        "roundNumber": 3,
+                        "subNumber": 1,
+                        "resourceBatch": 7,
+                        "startDateTime": "2019-05-28T17:00:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354882,
+                                "homeaway": false,
+                                "poulePlaceNr": 1
+                            },
+                            {
+                                "id": 354881,
+                                "homeaway": true,
+                                "poulePlaceNr": 3
+                            }
+                        ]
+                    }
+                ],
+                "id": 27088,
+                "number": 2
+            },
+            {
+                "places": [
+                    {
+                        "id": 91131,
+                        "number": 1,
+                        "penaltyPoints": 0
+                    },
+                    {
+                        "id": 91132,
+                        "number": 2,
+                        "penaltyPoints": 0
+                    }
+                ],
+                "games": [
+                    {
+                        "id": 259666,
+                        "roundNumber": 1,
+                        "subNumber": 1,
+                        "resourceBatch": 3,
+                        "startDateTime": "2019-05-28T15:20:00.000000Z",
+                        "fieldNr": 1,
+                        "state": 1,
+                        "scores": [],
+                        "poulePlaces": [
+                            {
+                                "id": 354875,
+                                "homeaway": true,
+                                "poulePlaceNr": 1
+                            },
+                            {
+                                "id": 354876,
+                                "homeaway": false,
+                                "poulePlaceNr": 2
+                            }
+                        ]
+                    }
+                ],
+                "id": 27089,
+                "number": 3
+            }
+        ],
+        "qualifyGroups": [
+            {
+                "id": 42,
+                "winnersOrLosers": 1,
+                "number": 1,
+                "childRound": {
+                    "id": 12648,
+                    "poules": [
+                        {
+                            "places": [
+                                {
+                                    "id": 91133,
+                                    "number": 1,
+                                    "penaltyPoints": 0
+                                },
+                                {
+                                    "id": 91134,
+                                    "number": 2,
+                                    "penaltyPoints": 0
+                                }
+                            ],
+                            "games": [
+                                {
+                                    "id": 259670,
+                                    "roundNumber": 1,
+                                    "subNumber": 1,
+                                    "resourceBatch": 2,
+                                    "startDateTime": "2019-05-28T17:50:00.000000Z",
+                                    "fieldNr": 1,
+                                    "state": 1,
+                                    "scores": [],
+                                    "poulePlaces": [
+                                        {
+                                            "id": 354883,
+                                            "homeaway": true,
+                                            "poulePlaceNr": 1
+                                        },
+                                        {
+                                            "id": 354884,
+                                            "homeaway": false,
+                                            "poulePlaceNr": 2
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": 27090,
+                            "number": 1
+                        },
+                        {
+                            "places": [
+                                {
+                                    "id": 91135,
+                                    "number": 1,
+                                    "penaltyPoints": 0
+                                },
+                                {
+                                    "id": 91136,
+                                    "number": 2,
+                                    "penaltyPoints": 0
+                                }
+                            ],
+                            "games": [
+                                {
+                                    "id": 259671,
+                                    "roundNumber": 1,
+                                    "subNumber": 1,
+                                    "resourceBatch": 1,
+                                    "startDateTime": "2019-05-28T17:25:00.000000Z",
+                                    "fieldNr": 1,
+                                    "state": 1,
+                                    "scores": [],
+                                    "poulePlaces": [
+                                        {
+                                            "id": 354885,
+                                            "homeaway": true,
+                                            "poulePlaceNr": 1
+                                        },
+                                        {
+                                            "id": 354886,
+                                            "homeaway": false,
+                                            "poulePlaceNr": 2
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": 27091,
+                            "number": 2
+                        }
+                    ],
+                    "qualifyGroups": [
+                        {
+                            "id": 43,
+                            "winnersOrLosers": 1,
+                            "number": 1,
+                            "childRound": {
+                                "id": 12649,
+                                "poules": [
+                                    {
+                                        "places": [
+                                            {
+                                                "id": 91137,
+                                                "number": 1,
+                                                "penaltyPoints": 0
+                                            },
+                                            {
+                                                "id": 91138,
+                                                "number": 2,
+                                                "penaltyPoints": 0
+                                            }
+                                        ],
+                                        "games": [
+                                            {
+                                                "id": 259674,
+                                                "roundNumber": 1,
+                                                "subNumber": 1,
+                                                "resourceBatch": 1,
+                                                "startDateTime": "2019-05-28T19:05:00.000000Z",
+                                                "fieldNr": 1,
+                                                "state": 1,
+                                                "scores": [],
+                                                "poulePlaces": [
+                                                    {
+                                                        "id": 354891,
+                                                        "homeaway": true,
+                                                        "poulePlaceNr": 1
+                                                    },
+                                                    {
+                                                        "id": 354892,
+                                                        "homeaway": false,
+                                                        "poulePlaceNr": 2
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "id": 27092,
+                                        "number": 1
+                                    }
+                                ],
+                                "qualifyGroups": []
+                            }
+                        },
+                        {
+                            "id": 44,
+                            "winnersOrLosers": 3,
+                            "number": 1,
+                            "childRound": {
+                                "id": 12650,
+                                "poules": [
+                                    {
+                                        "places": [
+                                            {
+                                                "id": 91139,
+                                                "number": 1,
+                                                "penaltyPoints": 0
+                                            },
+                                            {
+                                                "id": 91140,
+                                                "number": 2,
+                                                "penaltyPoints": 0
+                                            }
+                                        ],
+                                        "games": [
+                                            {
+                                                "id": 259675,
+                                                "roundNumber": 1,
+                                                "subNumber": 1,
+                                                "resourceBatch": 2,
+                                                "startDateTime": "2019-05-28T19:30:00.000000Z",
+                                                "fieldNr": 1,
+                                                "state": 1,
+                                                "scores": [],
+                                                "poulePlaces": [
+                                                    {
+                                                        "id": 354893,
+                                                        "homeaway": true,
+                                                        "poulePlaceNr": 1
+                                                    },
+                                                    {
+                                                        "id": 354894,
+                                                        "homeaway": false,
+                                                        "poulePlaceNr": 2
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "id": 27093,
+                                        "number": 1
+                                    }
+                                ],
+                                "qualifyGroups": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "id": 45,
+                "winnersOrLosers": 3,
+                "number": 1,
+                "childRound": {
+                    "id": 12651,
+                    "poules": [
+                        {
+                            "places": [
+                                {
+                                    "id": 91141,
+                                    "number": 1,
+                                    "penaltyPoints": 0
+                                },
+                                {
+                                    "id": 91142,
+                                    "number": 2,
+                                    "penaltyPoints": 0
+                                }
+                            ],
+                            "games": [
+                                {
+                                    "id": 259672,
+                                    "roundNumber": 1,
+                                    "subNumber": 1,
+                                    "resourceBatch": 4,
+                                    "startDateTime": "2019-05-28T18:40:00.000000Z",
+                                    "fieldNr": 1,
+                                    "state": 1,
+                                    "scores": [],
+                                    "poulePlaces": [
+                                        {
+                                            "id": 354887,
+                                            "homeaway": true,
+                                            "poulePlaceNr": 1
+                                        },
+                                        {
+                                            "id": 354888,
+                                            "homeaway": false,
+                                            "poulePlaceNr": 2
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": 27094,
+                            "number": 1
+                        },
+                        {
+                            "places": [
+                                {
+                                    "id": 91143,
+                                    "number": 1,
+                                    "penaltyPoints": 0
+                                },
+                                {
+                                    "id": 91144,
+                                    "number": 2,
+                                    "penaltyPoints": 0
+                                }
+                            ],
+                            "games": [
+                                {
+                                    "id": 259673,
+                                    "roundNumber": 1,
+                                    "subNumber": 1,
+                                    "resourceBatch": 3,
+                                    "startDateTime": "2019-05-28T18:15:00.000000Z",
+                                    "fieldNr": 1,
+                                    "state": 1,
+                                    "scores": [],
+                                    "poulePlaces": [
+                                        {
+                                            "id": 354889,
+                                            "homeaway": true,
+                                            "poulePlaceNr": 1
+                                        },
+                                        {
+                                            "id": 354890,
+                                            "homeaway": false,
+                                            "poulePlaceNr": 2
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": 27095,
+                            "number": 2
+                        }
+                    ],
+                    "qualifyGroups": [
+                        {
+                            "id": 46,
+                            "winnersOrLosers": 1,
+                            "number": 1,
+                            "childRound": {
+                                "id": 12652,
+                                "poules": [
+                                    {
+                                        "places": [
+                                            {
+                                                "id": 91145,
+                                                "number": 1,
+                                                "penaltyPoints": 0
+                                            },
+                                            {
+                                                "id": 91146,
+                                                "number": 2,
+                                                "penaltyPoints": 0
+                                            }
+                                        ],
+                                        "games": [
+                                            {
+                                                "id": 259676,
+                                                "roundNumber": 1,
+                                                "subNumber": 1,
+                                                "resourceBatch": 3,
+                                                "startDateTime": "2019-05-28T19:55:00.000000Z",
+                                                "fieldNr": 1,
+                                                "state": 1,
+                                                "scores": [],
+                                                "poulePlaces": [
+                                                    {
+                                                        "id": 354895,
+                                                        "homeaway": true,
+                                                        "poulePlaceNr": 1
+                                                    },
+                                                    {
+                                                        "id": 354896,
+                                                        "homeaway": false,
+                                                        "poulePlaceNr": 2
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "id": 27096,
+                                        "number": 1
+                                    }
+                                ],
+                                "qualifyGroups": []
+                            }
+                        },
+                        {
+                            "id": 47,
+                            "winnersOrLosers": 3,
+                            "number": 1,
+                            "childRound": {
+                                "id": 12653,
+                                "poules": [
+                                    {
+                                        "places": [
+                                            {
+                                                "id": 91147,
+                                                "number": 1,
+                                                "penaltyPoints": 0
+                                            },
+                                            {
+                                                "id": 91148,
+                                                "number": 2,
+                                                "penaltyPoints": 0
+                                            }
+                                        ],
+                                        "games": [
+                                            {
+                                                "id": 259677,
+                                                "roundNumber": 1,
+                                                "subNumber": 1,
+                                                "resourceBatch": 4,
+                                                "startDateTime": "2019-05-28T20:20:00.000000Z",
+                                                "fieldNr": 1,
+                                                "state": 1,
+                                                "scores": [],
+                                                "poulePlaces": [
+                                                    {
+                                                        "id": 354897,
+                                                        "homeaway": true,
+                                                        "poulePlaceNr": 1
+                                                    },
+                                                    {
+                                                        "id": 354898,
+                                                        "homeaway": false,
+                                                        "poulePlaceNr": 2
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "id": 27097,
+                                        "number": 1
+                                    }
+                                ],
+                                "qualifyGroups": []
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

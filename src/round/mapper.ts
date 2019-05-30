@@ -30,8 +30,8 @@ export class RoundMapper {
             qualifyGroupMapper.toObject(jsonQualifyGroup, round);
         });
 
-        const structureService = new StructureService({ min: 2, max: 40 });
-        [QualifyGroup.WINNERS].forEach(winnersOrLosers => {
+        const structureService = new StructureService();
+        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
             structureService.updateQualifyGroupsHorizontalPoules(
                 round.getHorizontalPoules(winnersOrLosers).slice(),
                 round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
@@ -40,20 +40,8 @@ export class RoundMapper {
             );
         });
 
-        [QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-            structureService.updateQualifyGroupsHorizontalPoules(
-                round.getHorizontalPoules(winnersOrLosers).slice(),
-                round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
-                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: qualifyGroup.getChildRound().getNrOfPlaces() };
-                })
-            );
-        });
-
-        // if (parentQualifyGroup !== undefined) {
         const qualifyRuleService = new QualifyRuleService(round);
         qualifyRuleService.recreateTo();
-        // }
-        // lines between should be moved to StructureService
 
         return round;
     }
