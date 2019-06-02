@@ -15,41 +15,43 @@ export class Structure {
     }
 
     getLastRoundNumber(): RoundNumber {
-        return this.getLastRoundNumberHelper(this.getFirstRoundNumber());
-    }
-
-    private getLastRoundNumberHelper(roundNumber: RoundNumber): RoundNumber {
-        if (!roundNumber.hasNext()) {
-            return roundNumber;
-        }
-        return this.getLastRoundNumberHelper(roundNumber.getNext());
+        const getLastRoundNumber = (roundNumber: RoundNumber): RoundNumber => {
+            if (!roundNumber.hasNext()) {
+                return roundNumber;
+            }
+            return getLastRoundNumber(roundNumber.getNext());
+        };
+        return getLastRoundNumber(this.getFirstRoundNumber());
     }
 
     getRootRound(): Round {
         return this.rootRound;
     }
 
-    getRoundNumbers(roundNumber: RoundNumber = this.getFirstRoundNumber(), roundNumbers: RoundNumber[] = []): RoundNumber[] {
-        roundNumbers.push(roundNumber);
-        if (roundNumber.hasNext()) {
-            return this.getRoundNumbers(roundNumber.getNext(), roundNumbers);
+    getRoundNumbers(): RoundNumber[] {
+        const roundNumbers: RoundNumber[] = [];
+        const addRoundNumber = (roundNumber: RoundNumber) => {
+            roundNumbers.push(roundNumber);
+            if (roundNumber.hasNext()) {
+                addRoundNumber(roundNumber.getNext());
+            }
         }
+        addRoundNumber(this.getFirstRoundNumber());
         return roundNumbers;
     }
 
     getRoundNumber(roundNumberAsValue: number): RoundNumber {
-        return this.getRoundNumberHelper(roundNumberAsValue, this.getFirstRoundNumber());
-    }
+        const getRoundNumber = (roundNumberAsValue: number, roundNumber: RoundNumber): RoundNumber => {
 
-    private getRoundNumberHelper(roundNumberAsValue: number, roundNumber: RoundNumber): RoundNumber {
-
-        if (roundNumber === undefined) {
-            return undefined;
-        }
-        if (roundNumberAsValue === roundNumber.getNumber()) {
-            return roundNumber;
-        }
-        return this.getRoundNumberHelper(roundNumberAsValue, roundNumber.getNext());
+            if (roundNumber === undefined) {
+                return undefined;
+            }
+            if (roundNumberAsValue === roundNumber.getNumber()) {
+                return roundNumber;
+            }
+            return getRoundNumber(roundNumberAsValue, roundNumber.getNext());
+        };
+        return getRoundNumber(roundNumberAsValue, this.getFirstRoundNumber());
     }
 
     setStructureNumbers() {
@@ -69,20 +71,4 @@ export class Structure {
         }
         setStructureNumbers(this.rootRound);
     }
-
-    // getRound( winnersOrLosersPath: number[] ): Round {
-    //     let round = this.getRootRound();
-    //     winnersOrLosersPath.forEach( winnersOrLosers => {
-    //         round = round.getChildRound(winnersOrLosers);
-    //     });
-    //     return round;
-    // }
-
-    // getRound( winnersOrLosersPath: number[] ): Round {
-    //     let round = this.getRootRound();
-    //     winnersOrLosersPath.forEach( winnersOrLosers => {
-    //         round = round.getChildRound(winnersOrLosers);
-    //     });
-    //     return round;
-    // }
 }

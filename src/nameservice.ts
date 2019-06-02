@@ -158,7 +158,7 @@ export class NameService {
 
     private roundsHaveSameName(roundNumber: RoundNumber): boolean {
         let roundNameAll;
-        return roundNumber.getRounds().some((round) => {
+        return roundNumber.getRounds().every((round) => {
             const roundName = this.getRoundName(round, true);
             if (roundNameAll === undefined) {
                 roundNameAll = roundName;

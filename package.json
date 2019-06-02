@@ -25,6 +25,7 @@
     "codelyzer": "^4.5.0",
     "cross-env": "^5.2.0",
     "mocha": "^6.1.4",
+    "nyc": "github:istanbuljs/nyc",
     "rollup": "^1.10.0",
     "semantic-release": "^15.13.12",
     "travis-deploy-once": "^5.0.11",
@@ -80,7 +81,24 @@
     "travis-deploy-once": "travis-deploy-once",
     "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
     "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
-    "test": "mocha -r test/hook.js --recursive test/cases/**/*.ts"
+    "test": "mocha -r test/hook.js --recursive test/cases/**/*.ts",
+    "coverage": "nyc npm run test",
+    "test1": "mocha -r test/hook.js --recursive test/cases/nameservice.ts",
+    "coverage1": "nyc npm run test1",
+    "help": "nyc help"
+  },
+  "nyc": {
+    "include": [
+      "src/nameservice.ts"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "report-dir": "coverage/reports",
+    "temp-dir": "coverage/.nyc_output"
   },
   "release": {
     "verifyConditions": [

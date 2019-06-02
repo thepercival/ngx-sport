@@ -194,9 +194,6 @@ export class StructureService {
         if (!previous || !previous.getQualifyGroup() || previous.getQualifyGroup() !== current.getQualifyGroup()) {
             return false;
         }
-        if (previous.isBorderPoule() && previous.getNrOfQualifiers() < 2) {
-            return false;
-        }
         if (current.isBorderPoule() && current.getNrOfQualifiers() < 2) {
             return false;
         }
@@ -204,6 +201,9 @@ export class StructureService {
     }
 
     splitQualifyGroup(qualifyGroup: QualifyGroup, pouleOne: HorizontalPoule, pouleTwo: HorizontalPoule) {
+        if (!this.isQualifyGroupSplittable(pouleOne, pouleTwo)) {
+            throw new Error('de kwalificatiegroepen zijn niet splitsbaar');
+        }
         const round = qualifyGroup.getRound();
 
         const firstHorPoule = pouleOne.getNumber() <= pouleTwo.getNumber() ? pouleOne : pouleTwo;
@@ -224,15 +224,15 @@ export class StructureService {
     }
 
     areQualifyGroupsMergable(previous: QualifyGroup, current: QualifyGroup): boolean {
-        return (previous && current && previous.getWinnersOrLosers() !== QualifyGroup.DROPOUTS
+        return (previous !== undefined && current !== undefined && previous.getWinnersOrLosers() !== QualifyGroup.DROPOUTS
             && previous.getWinnersOrLosers() === current.getWinnersOrLosers() && previous !== current);
     }
 
     mergeQualifyGroups(qualifyGroupOne: QualifyGroup, qualifyGroupTwo: QualifyGroup) {
-        const round = qualifyGroupOne.getRound();
-        if (qualifyGroupOne.getWinnersOrLosers() !== qualifyGroupTwo.getWinnersOrLosers()) {
-            throw new Error('de te koppelen kwalificatiegroepen moeten alle winnaars of allebei verliezers zijn');
+        if (!this.areQualifyGroupsMergable(qualifyGroupOne, qualifyGroupTwo)) {
+            throw new Error('de kwalificatiegroepen zijn niet te koppelen');
         }
+        const round = qualifyGroupOne.getRound();
         const winnersOrLosers = qualifyGroupOne.getWinnersOrLosers();
 
         const firstQualifyGroup = qualifyGroupOne.getNumber() <= qualifyGroupTwo.getNumber() ? qualifyGroupOne : qualifyGroupTwo;
@@ -445,28 +445,6 @@ export class StructureService {
         }
         return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules) + 1;
     }
-
-    protected getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
-        const horizontalPoules: HorizontalPoule[] = [];
-
-        return horizontalPoules;
-    }
-
-    // protected movePoulePlace(round: Round, poulePlace: PoulePlace, toPoule: Poule, toNumber?: number) {
-    //     const removed = poulePlace.getPoule().removePlace(poulePlace);
-    //     if (!removed) {
-    //         return false;
-    //     }
-
-    //     // zet poule and position
-    //     poulePlace.setNumber(toPoule.getPlaces().length + 1);
-    //     toPoule.addPlace(poulePlace);
-
-    //     if (toNumber === undefined) {
-    //         return true;
-    //     }
-    //     return toPoule.movePlace(poulePlace, toNumber);
-    // }
 }
 
 interface HorizontolPoulesCreator {
