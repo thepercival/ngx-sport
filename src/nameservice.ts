@@ -35,20 +35,20 @@ export class NameService {
         }
 
         const nrOfRoundsToGo = this.getMaxDepth(round);
-        if (nrOfRoundsToGo >= 2 && nrOfRoundsToGo <= 5) {
-            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
-        } else if (nrOfRoundsToGo === 1) {
-            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
-        } else if (nrOfRoundsToGo === 1 || (nrOfRoundsToGo === 0 && round.getNrOfPlaces() > 1)) {
-            if (round.getNrOfPlaces() === 2 && sameName === false) {
-                const rank = round.getStructureNumber() + 1;
-                return this.getHtmlNumber(rank) + '/' + this.getHtmlNumber(rank + 1) + ' plaats';
-            }
-            return 'finale';
-        } else if (nrOfRoundsToGo === 0) {
-            return round.getParentQualifyGroup() ? this.getWinnersLosersDescription(round.getParentQualifyGroup().getWinnersOrLosers()) : '';
+        if (nrOfRoundsToGo > 5) {
+            return '?';
         }
-        return '?';
+        if (nrOfRoundsToGo >= 1) {
+            return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
+        }
+        // if (round.getNrOfPlaces() > 1) {
+        if (round.getNrOfPlaces() === 2 && sameName === false) {
+            const rank = round.getStructureNumber() + 1;
+            return this.getHtmlNumber(rank) + '/' + this.getHtmlNumber(rank + 1) + ' plaats';
+        }
+        return 'finale';
+        // }
+        // return round.getParentQualifyGroup() ? this.getWinnersLosersDescription(round.getParentQualifyGroup().getWinnersOrLosers()) : '';
     }
 
     getPouleName(poule: Poule, withPrefix: boolean): string {
@@ -64,6 +64,21 @@ export class NameService {
         }
         pouleName += (String.fromCharCode('A'.charCodeAt(0) + secondLetter));
         return pouleName;
+    }
+
+    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false): string {
+        if (competitorName === true && poulePlace.getCompetitor() !== undefined) {
+            return poulePlace.getCompetitor().getName();
+        }
+        if (longName === true) {
+            return this.getPouleName(poulePlace.getPoule(), true) + ' nr. ' + poulePlace.getNumber();
+        }
+        const name = this.getPouleName(poulePlace.getPoule(), false);
+        return name + poulePlace.getNumber();
+    }
+
+    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false): string {
+        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
     }
 
     getPoulePlaceFromName(place: PoulePlace, competitorName = false, longName = false): string {
@@ -117,9 +132,19 @@ export class NameService {
         return name + ' na laatst';
     }
 
+    getRefereeName(game: Game, longName?: boolean): string {
+        if (game.getReferee() !== undefined) {
+            return longName ? game.getReferee().getName() : game.getReferee().getInitials();
+        }
+        if (game.getRefereePoulePlace() !== undefined) {
+            return this.getPoulePlaceName(game.getRefereePoulePlace(), true, longName);
+        }
+        return undefined;
+    }
+
     protected childRoundsHaveEqualDepth(round: Round): boolean {
-        if (round.getQualifyGroups().length < 2) {
-            return true;
+        if (round.getQualifyGroups().length === 1) {
+            return false;
         }
         let depthAll = undefined;
         return round.getQualifyGroups().every(qualifyGroup => {
@@ -129,31 +154,6 @@ export class NameService {
             }
             return depthAll === qualifyGroupMaxDepth;
         });
-    }
-
-    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false): string {
-        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
-    }
-
-    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false): string {
-        if (competitorName === true && poulePlace.getCompetitor() !== undefined) {
-            return poulePlace.getCompetitor().getName();
-        }
-        if (longName === true) {
-            return this.getPouleName(poulePlace.getPoule(), true) + ' nr. ' + poulePlace.getNumber();
-        }
-        const name = this.getPouleName(poulePlace.getPoule(), false);
-        return name + poulePlace.getNumber();
-    }
-
-    getRefereeName(game: Game, longName?: boolean): string {
-        if (game.getReferee() !== undefined) {
-            return longName ? game.getReferee().getName() : game.getReferee().getInitials();
-        }
-        if (game.getRefereePoulePlace() !== undefined) {
-            return this.getPoulePlaceName(game.getRefereePoulePlace(), true, longName);
-        }
-        return undefined;
     }
 
     private roundsHaveSameName(roundNumber: RoundNumber): boolean {
@@ -193,21 +193,10 @@ export class NameService {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
     }
 
-    // private getNrOfPreviousPoules(roundNumber: number, round: Round, poule: Poule): number {
-    //     let nrOfPoules = poule.getNumber() - 1;
-    //     nrOfPoules += this.getNrOfPoulesParentRounds(round);
-    //     nrOfPoules += this.getNrOfPoulesSiblingRounds(roundNumber, round);
-    //     return nrOfPoules;
-    // }
-
-    /* maak hier een aparte functie van, buiten ROUND? */
-    getMaxDepth(round: Round): number {
-        if (round.getQualifyGroups().length === 0) {
-            return 0;
-        }
-        let biggestMaxDepth = 1;
+    private getMaxDepth(round: Round): number {
+        let biggestMaxDepth = 0;
         round.getChildren().forEach(child => {
-            const maxDepth = this.getMaxDepth(child);
+            const maxDepth = 1 + this.getMaxDepth(child);
             if (maxDepth > biggestMaxDepth) {
                 biggestMaxDepth = maxDepth;
             }
