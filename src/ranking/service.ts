@@ -38,10 +38,9 @@ export class RankingService {
                 return 'het beste saldo';
             } else if (rankFunction === this.filterMostUnitsScored) {
                 return 'het meeste aantal eenheden voor';
-            } else if (rankFunction === this.filterBestAgainstEachOther) {
+            } else /* if (rankFunction === this.filterBestAgainstEachOther) */ {
                 return 'het beste onderling resultaat';
             }
-            return '';
         });
     }
 
@@ -90,8 +89,7 @@ export class RankingService {
     }
 
     getCompetitor(placeLocation: PlaceLocation): Competitor {
-        const poulePlace = this.round.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
-        return poulePlace ? poulePlace.getCompetitor() : undefined;
+        return this.round.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr()).getCompetitor();
     }
 
     private rankItems(unrankedItems: UnrankedRoundItem[], againstEachOther: boolean): RankedRoundItem[] {
@@ -102,16 +100,13 @@ export class RankingService {
             const bestItems: UnrankedRoundItem[] = this.findBestItems(unrankedItems, rankFunctions);
             const rank = nrOfIterations + 1;
             bestItems.forEach(bestItem => {
-                const idx = unrankedItems.indexOf(bestItem);
-                if (idx > -1) {
-                    unrankedItems.splice(idx, 1);
-                }
+                unrankedItems.splice(unrankedItems.indexOf(bestItem), 1);
                 rankedItems.push(new RankedRoundItem(bestItem, ++nrOfIterations, rank));
             });
-            if (nrOfIterations > this.maxPoulePlaces) {
-                console.error('should not be happening for ranking calc');
-                break;
-            }
+            // if (nrOfIterations > this.maxPoulePlaces) {
+            //     console.error('should not be happening for ranking calc');
+            //     break;
+            // }
         }
         return rankedItems;
     }
@@ -186,15 +181,9 @@ export class RankingService {
     }
 
     private filterBestAgainstEachOther = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
-        if (items.length === 0) {
-            return [];
-        }
         const poulePlaces = items.map(item => {
             return item.getRound().getPoulePlace(item.getPlaceLocation());
         });
-        if (poulePlaces.length === 0) {
-            return [];
-        }
         const poule = poulePlaces[0].getPoule();
         const round: Round = poule.getRound();
         const games = this.getGamesBetweenEachOther(poulePlaces, poule.getGames());

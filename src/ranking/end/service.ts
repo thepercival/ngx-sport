@@ -1,26 +1,24 @@
-import { Game } from '../game';
-import { PlaceLocation } from '../place/location';
-import { HorizontalPoule } from '../poule/horizontal';
-import { QualifyGroup } from '../qualify/group';
-import { Round } from '../round';
-import { EndRankingItem } from './item';
-import { RankingService } from './service';
+import { Game } from '../../game';
+import { PlaceLocation } from '../../place/location';
+import { HorizontalPoule } from '../../poule/horizontal';
+import { QualifyGroup } from '../../qualify/group';
+import { Round } from '../../round';
+import { Structure } from '../../structure';
+import { EndRankingItem } from '../item';
+import { RankingService } from '../service';
 
 /* tslint:disable:no-bitwise */
 
-export class EndRanking {
+export class EndRankingService {
 
     private currentRank: number;
 
-    constructor(private ruleSet: number) {
+    constructor(private structure: Structure, private ruleSet: number) {
     }
 
-    getItems(round: Round): EndRankingItem[] {
+    getItems(): EndRankingItem[] {
         this.currentRank = 1;
         const getItems = (round: Round): EndRankingItem[] => {
-            if (round === undefined) {
-                return;
-            }
             let items: EndRankingItem[] = [];
             round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
@@ -30,13 +28,12 @@ export class EndRanking {
             } else {
                 items = items.concat(this.getDropoutsNotPlayed(round));
             }
-
             round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
             return items;
         }
-        return getItems(round);
+        return getItems(this.structure.getRootRound());
     }
 
     protected getDropoutsNotPlayed(round: Round): EndRankingItem[] {

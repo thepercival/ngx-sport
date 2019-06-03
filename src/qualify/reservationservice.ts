@@ -5,7 +5,7 @@ import { Round } from '../round';
 export class QualifyReservationService {
     private reservations: PouleNumberReservations[] = [];
 
-    constructor(private childRound: Round) {
+    constructor(childRound: Round) {
         childRound.getPoules().forEach(poule => {
             this.reservations.push({ toPouleNr: poule.getNumber(), fromPoules: [] });
         });
@@ -18,17 +18,6 @@ export class QualifyReservationService {
     reserve(toPouleNumber: number, fromPoule: Poule) {
         this.get(toPouleNumber).fromPoules.push(fromPoule);
     }
-
-    // reserveSingleRules() {
-    //     this.childRound.getFromQualifyRules().filter( rule => !rule.isMultiple() ).forEach( rule => {
-    //         rule.getToPoulePlaces().forEach( toPoulePlace => {
-    //             const fromPoulePlace = rule.getFromEquivalent(toPoulePlace);
-    //             if( this.isFree( toPoulePlace.getPoule().getNumber(), fromPoulePlace.getPoule() ) ) {
-    //                 this.reserve( toPoulePlace.getPoule().getNumber(), fromPoulePlace.getPoule() );
-    //             }
-    //         });            
-    //     });
-    // }
 
     protected get(toPouleNumber: number): PouleNumberReservations {
         return this.reservations.find(reservationIt => reservationIt.toPouleNr === toPouleNumber);
@@ -60,10 +49,7 @@ export class QualifyReservationService {
         return retPlaceLocation;
     }
 
-    protected getNrOfPoulesAvailable(fromPoule: Poule, toPouleNumber?: number): number {
-        if (toPouleNumber === undefined) {
-            toPouleNumber = 1;
-        }
+    protected getNrOfPoulesAvailable(fromPoule: Poule, toPouleNumber: number): number {
         return this.reservations.filter(reservation => reservation.toPouleNr >= toPouleNumber
             && this.isFree(reservation.toPouleNr, fromPoule)).length;
     }

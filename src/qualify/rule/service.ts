@@ -1,4 +1,5 @@
 import { PoulePlace } from '../../pouleplace';
+import { QualifyGroup } from '../../qualify/group';
 import { QualifyRule } from '../../qualify/rule';
 import { QualifyRuleMultiple } from '../../qualify/rule/multiple';
 import { QualifyRuleSingle } from '../../qualify/rule/single';
@@ -38,6 +39,11 @@ export class QualifyRuleService {
                 toPlaces.forEach(toPlace => toPlace.setFromQualifyRule(undefined));
             });
             toQualifyRules.splice(0, toQualifyRules.length);
+        });
+        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
+            round.getHorizontalPoules(winnersOrLosers).forEach(horizontalPoule => {
+                horizontalPoule.setQualifyRuleMultiple(undefined);
+            });
         });
     }
 

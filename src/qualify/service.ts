@@ -92,7 +92,7 @@ export class QualifyService {
         const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
         const rankingItem = this.rankingService.getItemByRank(pouleRankingItems, rank);
         const poulePlace = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
-        return poulePlace ? poulePlace.getCompetitor() : undefined;
+        return poulePlace.getCompetitor();
     }
 
     protected isRoundPlayed(): boolean {

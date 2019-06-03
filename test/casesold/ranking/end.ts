@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { EndRanking } from '../../../src/ranking/end';
+import { EndRankingService } from '../../../src/ranking/end/service';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { jsonStructure16rank } from '../../data/structure16rank';
@@ -16,7 +16,7 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure9, competition);
 
-        const endRanking = new EndRanking(competition.getRuleSet());
+        const endRanking = new EndRankingService(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('jil');
         expect(items[1].getName()).to.equal('max');
@@ -36,7 +36,7 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure16rank, competition);
 
-        const endRanking = new EndRanking(competition.getRuleSet());
+        const endRanking = new EndRankingService(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('tiem');
         expect(items[1].getName()).to.equal('kira');
@@ -63,7 +63,7 @@ describe('Ranking/End', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructure4rankteamup, competition);
 
-        const endRanking = new EndRanking(competition.getRuleSet());
+        const endRanking = new EndRankingService(competition.getRuleSet());
         const items = endRanking.getItems(structure.getRootRound()[0]);
         expect(items[0].getName()).to.equal('rank1');
         expect(items[1].getName()).to.equal('rank2');
