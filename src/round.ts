@@ -141,19 +141,6 @@ export class Round {
         return this.getPoules().find(poule => poule.getNumber() === number);
     }
 
-    /**
-     * winnerslosers = QualifyGroup.WINNERS
-     *  [ A1 B1 C1 ]
-     *  [ A2 B2 C2 ]
-     *  [ A3 B3 C3 ]
-     * winnerslosers = QualifyGroup.LOSERS
-     *  [ C3 B3 A3 ]
-     *  [ C2 B2 A2 ]
-     *  [ C1 B1 A1 ]
-     *
-     * @param winnersOrLosers
-     *
-     **/
     getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
         if (winnersOrLosers === QualifyGroup.WINNERS) {
             return this.winnersHorizontalPoules;

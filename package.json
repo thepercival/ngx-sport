@@ -83,11 +83,14 @@
     "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
     "test": "mocha -r test/hook.js --recursive test/cases/**/*.ts",
     "coverage": "nyc npm run test",
-    "test1": "mocha -r test/hook.js --recursive test/cases/nameservice.ts",
+    "test1": "mocha -r test/hook.js --recursive test/cases/planning/service.ts",
     "coverage1": "nyc npm run test1",
     "help": "nyc help"
   },
   "nyc": {
+    "include": [
+      "src/planning/service.ts"
+    ],
     "reporter": [
       "html",
       "lcov",

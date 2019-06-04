@@ -288,7 +288,6 @@ describe('NameService', () => {
             const game = rootRound.getGames()[0];
             const gamePlaces = game.getPlaces();
 
-            // getPlacesFromName(gamePlaces: GamePlace[], competitorName = false, longName = false): string {
             expect(nameService.getPlacesFromName(gamePlaces, false, false)).to.equal('A2 & A3');
         }
     });
