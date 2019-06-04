@@ -121,16 +121,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354869,
                                 "homeaway": true,
-                                "poulePlaceNr": 2
+                                "placeNr": 2
                             },
                             {
                                 "id": 354870,
                                 "homeaway": false,
-                                "poulePlaceNr": 3
+                                "placeNr": 3
                             }
                         ]
                     },
@@ -143,16 +143,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354871,
                                 "homeaway": true,
-                                "poulePlaceNr": 1
+                                "placeNr": 1
                             },
                             {
                                 "id": 354872,
                                 "homeaway": false,
-                                "poulePlaceNr": 2
+                                "placeNr": 2
                             }
                         ]
                     },
@@ -165,16 +165,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354874,
                                 "homeaway": false,
-                                "poulePlaceNr": 1
+                                "placeNr": 1
                             },
                             {
                                 "id": 354873,
                                 "homeaway": true,
-                                "poulePlaceNr": 3
+                                "placeNr": 3
                             }
                         ]
                     }
@@ -210,16 +210,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354877,
                                 "homeaway": true,
-                                "poulePlaceNr": 2
+                                "placeNr": 2
                             },
                             {
                                 "id": 354878,
                                 "homeaway": false,
-                                "poulePlaceNr": 3
+                                "placeNr": 3
                             }
                         ]
                     },
@@ -232,16 +232,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354879,
                                 "homeaway": true,
-                                "poulePlaceNr": 1
+                                "placeNr": 1
                             },
                             {
                                 "id": 354880,
                                 "homeaway": false,
-                                "poulePlaceNr": 2
+                                "placeNr": 2
                             }
                         ]
                     },
@@ -254,16 +254,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354882,
                                 "homeaway": false,
-                                "poulePlaceNr": 1
+                                "placeNr": 1
                             },
                             {
                                 "id": 354881,
                                 "homeaway": true,
-                                "poulePlaceNr": 3
+                                "placeNr": 3
                             }
                         ]
                     }
@@ -294,16 +294,16 @@ export const jsonStructure332a: JsonStructure = {
                         "fieldNr": 1,
                         "state": 1,
                         "scores": [],
-                        "poulePlaces": [
+                        "places": [
                             {
                                 "id": 354875,
                                 "homeaway": true,
-                                "poulePlaceNr": 1
+                                "placeNr": 1
                             },
                             {
                                 "id": 354876,
                                 "homeaway": false,
-                                "poulePlaceNr": 2
+                                "placeNr": 2
                             }
                         ]
                     }
@@ -343,16 +343,16 @@ export const jsonStructure332a: JsonStructure = {
                                     "fieldNr": 1,
                                     "state": 1,
                                     "scores": [],
-                                    "poulePlaces": [
+                                    "places": [
                                         {
                                             "id": 354883,
                                             "homeaway": true,
-                                            "poulePlaceNr": 1
+                                            "placeNr": 1
                                         },
                                         {
                                             "id": 354884,
                                             "homeaway": false,
-                                            "poulePlaceNr": 2
+                                            "placeNr": 2
                                         }
                                     ]
                                 }
@@ -383,16 +383,16 @@ export const jsonStructure332a: JsonStructure = {
                                     "fieldNr": 1,
                                     "state": 1,
                                     "scores": [],
-                                    "poulePlaces": [
+                                    "places": [
                                         {
                                             "id": 354885,
                                             "homeaway": true,
-                                            "poulePlaceNr": 1
+                                            "placeNr": 1
                                         },
                                         {
                                             "id": 354886,
                                             "homeaway": false,
-                                            "poulePlaceNr": 2
+                                            "placeNr": 2
                                         }
                                     ]
                                 }
@@ -432,16 +432,16 @@ export const jsonStructure332a: JsonStructure = {
                                                 "fieldNr": 1,
                                                 "state": 1,
                                                 "scores": [],
-                                                "poulePlaces": [
+                                                "places": [
                                                     {
                                                         "id": 354891,
                                                         "homeaway": true,
-                                                        "poulePlaceNr": 1
+                                                        "placeNr": 1
                                                     },
                                                     {
                                                         "id": 354892,
                                                         "homeaway": false,
-                                                        "poulePlaceNr": 2
+                                                        "placeNr": 2
                                                     }
                                                 ]
                                             }
@@ -483,16 +483,16 @@ export const jsonStructure332a: JsonStructure = {
                                                 "fieldNr": 1,
                                                 "state": 1,
                                                 "scores": [],
-                                                "poulePlaces": [
+                                                "places": [
                                                     {
                                                         "id": 354893,
                                                         "homeaway": true,
-                                                        "poulePlaceNr": 1
+                                                        "placeNr": 1
                                                     },
                                                     {
                                                         "id": 354894,
                                                         "homeaway": false,
-                                                        "poulePlaceNr": 2
+                                                        "placeNr": 2
                                                     }
                                                 ]
                                             }
@@ -537,16 +537,16 @@ export const jsonStructure332a: JsonStructure = {
                                     "fieldNr": 1,
                                     "state": 1,
                                     "scores": [],
-                                    "poulePlaces": [
+                                    "places": [
                                         {
                                             "id": 354887,
                                             "homeaway": true,
-                                            "poulePlaceNr": 1
+                                            "placeNr": 1
                                         },
                                         {
                                             "id": 354888,
                                             "homeaway": false,
-                                            "poulePlaceNr": 2
+                                            "placeNr": 2
                                         }
                                     ]
                                 }
@@ -577,16 +577,16 @@ export const jsonStructure332a: JsonStructure = {
                                     "fieldNr": 1,
                                     "state": 1,
                                     "scores": [],
-                                    "poulePlaces": [
+                                    "places": [
                                         {
                                             "id": 354889,
                                             "homeaway": true,
-                                            "poulePlaceNr": 1
+                                            "placeNr": 1
                                         },
                                         {
                                             "id": 354890,
                                             "homeaway": false,
-                                            "poulePlaceNr": 2
+                                            "placeNr": 2
                                         }
                                     ]
                                 }
@@ -626,16 +626,16 @@ export const jsonStructure332a: JsonStructure = {
                                                 "fieldNr": 1,
                                                 "state": 1,
                                                 "scores": [],
-                                                "poulePlaces": [
+                                                "places": [
                                                     {
                                                         "id": 354895,
                                                         "homeaway": true,
-                                                        "poulePlaceNr": 1
+                                                        "placeNr": 1
                                                     },
                                                     {
                                                         "id": 354896,
                                                         "homeaway": false,
-                                                        "poulePlaceNr": 2
+                                                        "placeNr": 2
                                                     }
                                                 ]
                                             }
@@ -677,16 +677,16 @@ export const jsonStructure332a: JsonStructure = {
                                                 "fieldNr": 1,
                                                 "state": 1,
                                                 "scores": [],
-                                                "poulePlaces": [
+                                                "places": [
                                                     {
                                                         "id": 354897,
                                                         "homeaway": true,
-                                                        "poulePlaceNr": 1
+                                                        "placeNr": 1
                                                     },
                                                     {
                                                         "id": 354898,
                                                         "homeaway": false,
-                                                        "poulePlaceNr": 2
+                                                        "placeNr": 2
                                                     }
                                                 ]
                                             }

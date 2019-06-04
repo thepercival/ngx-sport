@@ -1,4 +1,4 @@
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { QualifyGroup } from '../qualify/group';
 import { QualifyRuleMultiple } from '../qualify/rule/multiple';
 import { Round } from '../round';
@@ -18,7 +18,7 @@ export class HorizontalPoule {
     protected round: Round;
     protected qualifyGroup: QualifyGroup;
     protected number: number;
-    protected places: PoulePlace[] = [];
+    protected places: Place[] = [];
     protected multipleRule: QualifyRuleMultiple;
 
     constructor(round: Round, number: number) {
@@ -89,15 +89,15 @@ export class HorizontalPoule {
         this.multipleRule = multipleRule;
     }
 
-    getPlaces(): PoulePlace[] {
+    getPlaces(): Place[] {
         return this.places;
     }
 
-    getFirstPlace(): PoulePlace {
+    getFirstPlace(): Place {
         return this.places[0];
     }
 
-    hasPlace(place: PoulePlace): boolean {
+    hasPlace(place: Place): boolean {
         return this.getPlaces().find(placeIt => placeIt === place) !== undefined;
     }
 

@@ -1,5 +1,5 @@
 import { PlaceLocation } from '../place/location';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { Round } from '../round';
 
 export class RankedRoundItem {
@@ -23,8 +23,8 @@ export class RankedRoundItem {
         return this.unrankedRoundItem;
     }
 
-    getPlace(): PoulePlace {
-        return this.unrankedRoundItem.getRound().getPoulePlace(this.unrankedRoundItem.getPlaceLocation());
+    getPlace(): Place {
+        return this.unrankedRoundItem.getRound().getPlace(this.unrankedRoundItem.getPlaceLocation());
     }
 }
 

@@ -1,16 +1,16 @@
 import { Game } from '../game';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 
-export class GamePoulePlace {
+export class GamePlace {
 
     protected id: number;
     protected game: Game;
-    protected poulePlace: PoulePlace;
+    protected place: Place;
     protected homeaway: boolean;
 
-    constructor(game: Game, poulePlace: PoulePlace, homeaway: boolean) {
+    constructor(game: Game, place: Place, homeaway: boolean) {
         this.setGame(game);
-        this.setPoulePlace(poulePlace);
+        this.setPlace(place);
         this.setHomeaway(homeaway);
     }
 
@@ -27,16 +27,16 @@ export class GamePoulePlace {
     }
 
     private setGame(game: Game) {
-        game.getPoulePlaces().push(this);
+        game.getPlaces().push(this);
         this.game = game;
     }
 
-    getPoulePlace(): PoulePlace {
-        return this.poulePlace;
+    getPlace(): Place {
+        return this.place;
     }
 
-    private setPoulePlace(poulePlace: PoulePlace) {
-        this.poulePlace = poulePlace;
+    private setPlace(place: Place) {
+        this.place = place;
     }
 
     getHomeaway(): boolean {

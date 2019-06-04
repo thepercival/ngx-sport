@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { RoundNumber } from '../../number';
-import { RoundNumberConfig } from '../../number/config';
-import { JsonRoundNumberConfigScore, RoundNumberConfigScoreMapper } from './score/mapper';
+import { RoundNumber } from '../round/number';
+import { Config } from '../config';
+import { JsonConfigScore, ConfigScoreMapper } from './score/mapper';
 
 @Injectable()
-export class RoundNumberConfigMapper {
-    constructor(private scoreConfigMapper: RoundNumberConfigScoreMapper) { }
+export class ConfigMapper {
+    constructor(private scoreConfigMapper: ConfigScoreMapper) { }
 
-    toObject(json: JsonRoundNumberConfig, roundNumber: RoundNumber, config?: RoundNumberConfig): RoundNumberConfig {
+    toObject(json: JsonConfig, roundNumber: RoundNumber, config?: Config): Config {
         if (config === undefined) {
-            config = new RoundNumberConfig(roundNumber);
+            config = new Config(roundNumber);
         }
         config.setId(json.id);
         config.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
@@ -32,7 +32,7 @@ export class RoundNumberConfigMapper {
         return config;
     }
 
-    toJson(config: RoundNumberConfig): JsonRoundNumberConfig {
+    toJson(config: Config): JsonConfig {
         return {
             id: config.getId(),
             nrOfHeadtoheadMatches: config.getNrOfHeadtoheadMatches(),
@@ -55,7 +55,7 @@ export class RoundNumberConfigMapper {
     }
 }
 
-export interface JsonRoundNumberConfig {
+export interface JsonConfig {
     id?: number;
     nrOfHeadtoheadMatches: number;
     qualifyRule: number;
@@ -69,7 +69,7 @@ export interface JsonRoundNumberConfig {
     minutesPerGame: number;
     minutesBetweenGames: number;
     minutesAfter: number;
-    score: JsonRoundNumberConfigScore;
+    score: JsonConfigScore;
     teamup: boolean;
     pointsCalculation: number;
     selfReferee: boolean;

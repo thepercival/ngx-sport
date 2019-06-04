@@ -13,27 +13,27 @@ export class StructureMapper {
     toObject(json: JsonStructure, competition: Competition): Structure {
         const firstRoundNumber = this.roundNumberMapper.toObject(json.firstRoundNumber, competition);
         const rootRound = this.roundMapper.toObject(json.rootRound, firstRoundNumber);
-        this.setRefereePoulePlaces(json.rootRound, firstRoundNumber);
+        this.setRefereePlaces(json.rootRound, firstRoundNumber);
         const structure = new Structure(firstRoundNumber, rootRound);
         structure.setStructureNumbers();
         return structure;
     }
 
-    protected setRefereePoulePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
+    protected setRefereePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
         if (roundNumber.getConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             const games = roundNumber.getGames();
             jsonRound.poules.forEach(jsonPoule => jsonPoule.games.forEach(jsonGame => {
-                if (jsonGame.refereePoulePlaceId === undefined) {
+                if (jsonGame.refereePlaceId === undefined) {
                     return;
                 }
-                const refereePoulePlace = places.find(place => place.getId() === jsonGame.refereePoulePlaceId);
+                const refereePlace = places.find(place => place.getId() === jsonGame.refereePlaceId);
                 const game = games.find(game => game.getId() === jsonGame.id);
-                game.setRefereePoulePlace(refereePoulePlace);
+                game.setRefereePlace(refereePlace);
             }));
         }
         jsonRound.qualifyGroups.forEach(qualifyGroup => {
-            this.setRefereePoulePlaces(qualifyGroup.childRound, roundNumber.getNext());
+            this.setRefereePlaces(qualifyGroup.childRound, roundNumber.getNext());
         });
     }
 

@@ -1,10 +1,10 @@
 import { HorizontalPoule } from '../../poule/horizontal';
-import { PoulePlace } from '../../pouleplace';
+import { Place } from '../../place';
 import { Round } from '../../round';
 import { QualifyRule } from '../rule';
 
 export class QualifyRuleMultiple extends QualifyRule {
-    private toPlaces: PoulePlace[] = [];
+    private toPlaces: Place[] = [];
     private fromHorizontalPoule: HorizontalPoule;
     private nrOfToPlaces: number;
 
@@ -35,7 +35,7 @@ export class QualifyRuleMultiple extends QualifyRule {
         return this.fromHorizontalPoule.getQualifyGroup().getWinnersOrLosers();
     }
 
-    addToPlace(toPlace: PoulePlace) {
+    addToPlace(toPlace: Place) {
         this.toPlaces.push(toPlace);
         toPlace.setFromQualifyRule(this);
     }
@@ -44,7 +44,7 @@ export class QualifyRuleMultiple extends QualifyRule {
         return this.nrOfToPlaces === this.toPlaces.length;
     }
 
-    getToPlaces(): PoulePlace[] {
+    getToPlaces(): Place[] {
         return this.toPlaces;
     }
 

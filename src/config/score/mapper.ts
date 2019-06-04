@@ -1,19 +1,19 @@
-import { RoundNumberConfig } from '../../config';
-import { RoundNumberConfigScore } from '../score';
+import { Config } from '../../config';
+import { ConfigScore } from '../score';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class RoundNumberConfigScoreMapper {
+export class ConfigScoreMapper {
 
     constructor() {
     }
 
-    toObject(json: JsonRoundNumberConfigScore, roundConfig: RoundNumberConfig): RoundNumberConfigScore {
+    toObject(json: JsonConfigScore, config: Config): ConfigScore {
         let parent;
         if (json.parent !== undefined) {
-            parent = this.toObject(json.parent, roundConfig);
+            parent = this.toObject(json.parent, config);
         }
-        const roundScoreConfig = new RoundNumberConfigScore(roundConfig, parent);
+        const roundScoreConfig = new ConfigScore(config, parent);
         roundScoreConfig.setId(json.id);
         roundScoreConfig.setName(json.name);
         roundScoreConfig.setDirection(json.direction);
@@ -21,7 +21,7 @@ export class RoundNumberConfigScoreMapper {
         return roundScoreConfig;
     }
 
-    toJson(scoreConfig: RoundNumberConfigScore): JsonRoundNumberConfigScore {
+    toJson(scoreConfig: ConfigScore): JsonConfigScore {
         return {
             id: scoreConfig.getId(),
             name: scoreConfig.getName(),
@@ -32,10 +32,10 @@ export class RoundNumberConfigScoreMapper {
     }
 }
 
-export interface JsonRoundNumberConfigScore {
+export interface JsonConfigScore {
     id?: number;
     name: string;
     direction: number;
     maximum: number;
-    parent?: JsonRoundNumberConfigScore;
+    parent?: JsonConfigScore;
 }

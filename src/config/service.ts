@@ -1,14 +1,14 @@
-import { SportConfig } from '../../../config';
-import { RankingService } from '../../../ranking/service';
-import { RoundNumber } from '../../../round/number';
-import { RoundNumberConfig } from '../config';
-import { RoundNumberConfigScore } from './score';
+import { SportConfig } from '../sportconfig';
+import { RankingService } from '../ranking/service';
+import { RoundNumber } from '../round/number';
+import { Config } from '../config';
+import { ConfigScore } from './score';
 
-export class RoundNumberConfigService {
+export class ConfigService {
 
-    createFromPrevious(roundNumber: RoundNumber): RoundNumberConfig {
+    createFromPrevious(roundNumber: RoundNumber): Config {
         const previousConfig = roundNumber.getPrevious().getConfig();
-        const config = new RoundNumberConfig(roundNumber);
+        const config = new Config(roundNumber);
         config.setQualifyRule(previousConfig.getQualifyRule());
         config.setNrOfHeadtoheadMatches(previousConfig.getNrOfHeadtoheadMatches());
         config.setWinPoints(previousConfig.getWinPoints());
@@ -28,18 +28,18 @@ export class RoundNumberConfigService {
         return config;
     }
 
-    createDefault(roundNumber: RoundNumber): RoundNumberConfig {
+    createDefault(roundNumber: RoundNumber): Config {
         const sport = roundNumber.getCompetition().getLeague().getSport();
-        const config = new RoundNumberConfig(roundNumber);
+        const config = new Config(roundNumber);
         config.setQualifyRule(RankingService.RULESSET_WC);
-        config.setNrOfHeadtoheadMatches(RoundNumberConfig.DEFAULTNROFHEADTOHEADMATCHES);
+        config.setNrOfHeadtoheadMatches(Config.DEFAULTNROFHEADTOHEADMATCHES);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
-        config.setHasExtension(RoundNumberConfig.DEFAULTHASEXTENSION);
+        config.setHasExtension(Config.DEFAULTHASEXTENSION);
         config.setWinPointsExt(config.getWinPoints() - 1);
         config.setDrawPointsExt(config.getDrawPoints());
         config.setMinutesPerGameExt(0);
-        config.setEnableTime(RoundNumberConfig.DEFAULTENABLETIME);
+        config.setEnableTime(Config.DEFAULTENABLETIME);
         config.setMinutesPerGame(0);
         config.setMinutesBetweenGames(0);
         config.setMinutesAfter(0);
@@ -49,7 +49,7 @@ export class RoundNumberConfigService {
         config.setMinutesAfter(this.getDefaultMinutesAfter());
         config.setScore(this.createScoreConfig(config));
         config.setTeamup(false);
-        config.setPointsCalculation(RoundNumberConfig.POINTS_CALC_GAMEPOINTS);
+        config.setPointsCalculation(Config.POINTS_CALC_GAMEPOINTS);
         config.setSelfReferee(false);
         return config;
     }
@@ -58,14 +58,14 @@ export class RoundNumberConfigService {
         if (sport === SportConfig.Chess) {
             return 1;
         }
-        return RoundNumberConfig.DEFAULTWINPOINTS;
+        return Config.DEFAULTWINPOINTS;
     }
 
     getDefaultDrawPoints(sport: string): number {
         if (sport === SportConfig.Chess) {
             return 0.5;
         }
-        return RoundNumberConfig.DEFAULTDRAWPOINTS;
+        return Config.DEFAULTDRAWPOINTS;
     }
 
     getDefaultMinutesPerGame(): number {
@@ -95,7 +95,7 @@ export class RoundNumberConfigService {
         // });
     }
 
-    protected createScoreConfig(config: RoundNumberConfig): RoundNumberConfigScore {
+    protected createScoreConfig(config: Config): ConfigScore {
         const roundNumber = config.getRoundNumber();
         const sport = roundNumber.getCompetition().getLeague().getSport();
 
@@ -119,26 +119,26 @@ export class RoundNumberConfigService {
 
         let parent;
         if (parentUnitName !== undefined) {
-            parent = this.createScoreConfigFromRoundHelper(config, parentUnitName, RoundNumberConfigScore.UPWARDS, 0, undefined);
+            parent = this.createScoreConfigFromRoundHelper(config, parentUnitName, ConfigScore.UPWARDS, 0, undefined);
         }
-        return this.createScoreConfigFromRoundHelper(config, unitName, RoundNumberConfigScore.UPWARDS, 0, parent);
+        return this.createScoreConfigFromRoundHelper(config, unitName, ConfigScore.UPWARDS, 0, parent);
     }
 
     protected createScoreConfigFromRoundHelper(
-        config: RoundNumberConfig,
+        config: Config,
         name: string,
         direction: number,
         maximum: number,
-        parent: RoundNumberConfigScore
-    ): RoundNumberConfigScore {
-        const scoreConfig = new RoundNumberConfigScore(config, parent);
+        parent: ConfigScore
+    ): ConfigScore {
+        const scoreConfig = new ConfigScore(config, parent);
         scoreConfig.setName(name);
         scoreConfig.setDirection(direction);
         scoreConfig.setMaximum(maximum);
         return scoreConfig;
     }
 
-    protected copyScoreConfigFromPrevious(config: RoundNumberConfig, scoreConfig: RoundNumberConfigScore) {
+    protected copyScoreConfigFromPrevious(config: Config, scoreConfig: ConfigScore) {
         const parent = scoreConfig.getParent() ? this.copyScoreConfigFromPrevious(config, scoreConfig.getParent()) : undefined;
         return this.createScoreConfigFromRoundHelper(
             config, scoreConfig.getName(), scoreConfig.getDirection(), scoreConfig.getMaximum(), parent);

@@ -2,9 +2,9 @@ import { Competition } from '../competition';
 import { Competitor } from '../competitor';
 import { Game } from '../game';
 import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { Round } from '../round';
-import { RoundNumberConfig } from '../round/number/config';
+import { Config } from '../config';
 
 
 export class RoundNumber {
@@ -13,7 +13,7 @@ export class RoundNumber {
     protected previous: RoundNumber;
     protected next: RoundNumber;
     protected rounds: Round[] = [];
-    protected config: RoundNumberConfig;
+    protected config: Config;
     protected id: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {
@@ -103,7 +103,7 @@ export class RoundNumber {
         return nrOfGames;
     }
 
-    getPlaces(): PoulePlace[] {
+    getPlaces(): Place[] {
         let places = [];
         this.getPoules().forEach(poule => {
             places = places.concat(poule.getPlaces());
@@ -139,11 +139,11 @@ export class RoundNumber {
         return this.getRounds()[0];
     }
 
-    getConfig(): RoundNumberConfig {
+    getConfig(): Config {
         return this.config;
     }
 
-    setConfig(config: RoundNumberConfig) {
+    setConfig(config: Config) {
         this.config = config;
     }
 

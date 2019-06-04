@@ -1,7 +1,7 @@
 import { Game } from '../game';
 import { GameScore } from '../game/score';
 import { GameScoreHomeAway } from '../game/score/homeaway';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { Round } from '../round';
 import { UnrankedRoundItem } from './item';
 
@@ -14,13 +14,13 @@ export class RankingItemsGetter {
     ) {
     }
 
-    static getIndex(poulePlace: PoulePlace) {
-        return poulePlace.getPoule().getNumber() + '-' + poulePlace.getNumber();
+    static getIndex(place: Place) {
+        return place.getPoule().getNumber() + '-' + place.getNumber();
     }
 
-    getUnrankedItems(poulePlaces: PoulePlace[], games: Game[]): UnrankedRoundItem[] {
-        const items = poulePlaces.map(poulePlace => {
-            return new UnrankedRoundItem(this.round, poulePlace.getLocation(), poulePlace.getPenaltyPoints());
+    getUnrankedItems(places: Place[], games: Game[]): UnrankedRoundItem[] {
+        const items = places.map(place => {
+            return new UnrankedRoundItem(this.round, place.getLocation(), place.getPenaltyPoints());
         });
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
@@ -33,9 +33,9 @@ export class RankingItemsGetter {
                 const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, false);
                 const subScored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, true);
                 const subReceived = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, true);
-                game.getPoulePlaces(homeAway).forEach(gamePoulePlace => {
-                    const item = items.find(item => item.getPlaceLocation().getPlaceNr() === gamePoulePlace.getPoulePlace().getLocation().getPlaceNr()
-                        && item.getPlaceLocation().getPouleNr() === gamePoulePlace.getPoulePlace().getLocation().getPouleNr());
+                game.getPlaces(homeAway).forEach(gamePlace => {
+                    const item = items.find(item => item.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
+                        && item.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
                     item.addGame();
                     item.addPoints(points);
                     item.addScored(scored);

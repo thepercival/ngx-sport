@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 
 import { GameMapper, JsonGame } from '../game/mapper';
 import { Poule } from '../poule';
-import { JsonPoulePlace, PoulePlaceMapper } from '../pouleplace/mapper';
+import { JsonPlace, PlaceMapper } from '../place/mapper';
 import { Round } from '../round';
 
 @Injectable()
 export class PouleMapper {
-    constructor(private placeMapper: PoulePlaceMapper, private gameMapper: GameMapper) { }
+    constructor(private placeMapper: PlaceMapper, private gameMapper: GameMapper) { }
 
     toObject(json: JsonPoule, round: Round, poule?: Poule): Poule {
         poule = new Poule(round, json.number);
         poule.setId(json.id);
         poule.setName(json.name);
-        json.places.sort((poulePlaceA, poulePlaceB) => {
-            return (poulePlaceA.number > poulePlaceB.number) ? 1 : -1;
+        json.places.sort((placeA, placeB) => {
+            return (placeA.number > placeB.number) ? 1 : -1;
         });
         json.places.map(jsonPlace => this.placeMapper.toObject(jsonPlace, poule));
         if (json.games !== undefined) {
@@ -38,6 +38,6 @@ export interface JsonPoule {
     id?: number;
     number: number;
     name?: string;
-    places: JsonPoulePlace[];
+    places: JsonPlace[];
     games: JsonGame[];
 }

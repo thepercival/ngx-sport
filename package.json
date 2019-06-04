@@ -88,9 +88,6 @@
     "help": "nyc help"
   },
   "nyc": {
-    "include": [
-      "src/nameservice.ts"
-    ],
     "reporter": [
       "html",
       "lcov",

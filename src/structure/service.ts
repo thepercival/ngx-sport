@@ -3,12 +3,12 @@ import { Competition } from '../competition';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { HorizontalPouleService } from '../poule/horizontal/service';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { RoundNumberConfigService } from '../round/number/config/service';
+import { ConfigService } from '../config/service';
 import { Structure } from '../structure';
 
 export interface CompetitorRange {
@@ -61,12 +61,12 @@ export class StructureService {
         8
     ];
 
-    private configService: RoundNumberConfigService;
+    private configService: ConfigService;
 
     constructor(
         private competitorRange?: CompetitorRange
     ) {
-        this.configService = new RoundNumberConfigService();
+        this.configService = new ConfigService();
     }
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
@@ -81,7 +81,7 @@ export class StructureService {
     }
 
     removePlaceFromRootRound(round: Round) {
-        // console.log('removePoulePlace for round ' + round.getNumberAsValue());
+        // console.log('removePlace for round ' + round.getNumberAsValue());
         const nrOfPlaces = round.getNrOfPlaces();
         if (nrOfPlaces === round.getNrOfPlacesChildren()) {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');
@@ -101,7 +101,7 @@ export class StructureService {
         structure.setStructureNumbers();
     }
 
-    addPlaceToRootRound(round: Round): PoulePlace {
+    addPlaceToRootRound(round: Round): Place {
         const newNrOfPlaces = round.getNrOfPlaces() + 1;
         if (this.competitorRange && newNrOfPlaces > this.competitorRange.max) {
             throw new Error('er mogen maximaal ' + this.competitorRange.max + ' deelnemers meedoen');
@@ -418,7 +418,7 @@ export class StructureService {
             const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules);
             const poule = new Poule(round);
             for (let i = 0; i < nrOfPlacesToAdd; i++) {
-                new PoulePlace(poule);
+                new Place(poule);
             }
             nrOfPlaces -= nrOfPlacesToAdd;
             nrOfPoules--;

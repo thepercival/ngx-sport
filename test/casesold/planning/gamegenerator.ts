@@ -3,21 +3,21 @@ import { describe, it } from 'mocha';
 
 import { GameGenerator } from '../../../src/planning/gamegenerator';
 import { PlanningGameRound } from '../../../src/planning/gameround';
-import { PoulePlace } from '../../../src/pouleplace';
-import { PoulePlaceCombination } from '../../../src/pouleplace/combination';
+import { Place } from '../../../src/place';
+import { PlaceCombination } from '../../../src/place/combination';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { jsonStructureGameGenerator } from '../../data/structure-gamegenerator';
 
 
-export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number, subNr: number, home: PoulePlace[], away: PoulePlace[]) {
-    const combination: PoulePlaceCombination = gameRounds[roundNr - 1].getCombinations()[subNr - 1];
-    expect(combination.getHome().map(poulePlace => poulePlace.getNumber())).to.deep.equal(home);
-    expect(combination.getAway().map(poulePlace => poulePlace.getNumber())).to.deep.equal(away)
+export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number, subNr: number, home: Place[], away: Place[]) {
+    const combination: PlaceCombination = gameRounds[roundNr - 1].getCombinations()[subNr - 1];
+    expect(combination.getHome().map(place => place.getNumber())).to.deep.equal(home);
+    expect(combination.getAway().map(place => place.getNumber())).to.deep.equal(away)
 }
 
 describe('Planning/GameGenerator', () => {
-    it('FourPoulePlaces', () => {
+    it('FourPlaces', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
@@ -36,7 +36,7 @@ describe('Planning/GameGenerator', () => {
         this.assertSameGame(gameRounds, roundNr, subNr, [4], [2]);
     });
 
-    it('FourPoulePlacesTeamup', () => {
+    it('FourPlacesTeamup', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 

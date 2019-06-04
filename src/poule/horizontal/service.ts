@@ -1,4 +1,4 @@
-import { PoulePlace } from '../../pouleplace';
+import { Place } from '../../place';
 import { QualifyGroup } from '../../qualify/group';
 import { Round } from '../../round';
 import { HorizontalPoule } from '../horizontal';
@@ -55,12 +55,12 @@ export class HorizontalPouleService {
     protected createRoundHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
         const horizontalPoules = this.round.getHorizontalPoules(winnersOrLosers);
 
-        const poulePlacesOrderedByPlace = this.getPlacesHorizontal();
+        const placesOrderedByPlaceNumber = this.getPlacesHorizontal();
         if (winnersOrLosers === QualifyGroup.LOSERS) {
-            poulePlacesOrderedByPlace.reverse();
+            placesOrderedByPlaceNumber.reverse();
         }
 
-        poulePlacesOrderedByPlace.forEach(placeIt => {
+        placesOrderedByPlaceNumber.forEach(placeIt => {
             let horizontalPoule = horizontalPoules.find(horizontalPoule => {
                 return horizontalPoule.getPlaces().some(poulePlaceIt => {
                     let poulePlaceNrIt = poulePlaceIt.getNumber();
@@ -84,22 +84,22 @@ export class HorizontalPouleService {
         return horizontalPoules;
     }
 
-    protected getPlacesHorizontal(): PoulePlace[] {
-        let places: PoulePlace[] = [];
+    protected getPlacesHorizontal(): Place[] {
+        let places: Place[] = [];
         this.round.getPoules().forEach((poule) => {
             places = places.concat(poule.getPlaces());
         });
-        places.sort((poulePlaceA, poulePlaceB) => {
-            if (poulePlaceA.getNumber() > poulePlaceB.getNumber()) {
+        places.sort((placeA, placeB) => {
+            if (placeA.getNumber() > placeB.getNumber()) {
                 return 1;
             }
-            if (poulePlaceA.getNumber() < poulePlaceB.getNumber()) {
+            if (placeA.getNumber() < placeB.getNumber()) {
                 return -1;
             }
-            if (poulePlaceA.getPoule().getNumber() > poulePlaceB.getPoule().getNumber()) {
+            if (placeA.getPoule().getNumber() > placeB.getPoule().getNumber()) {
                 return 1;
             }
-            if (poulePlaceA.getPoule().getNumber() < poulePlaceB.getPoule().getNumber()) {
+            if (placeA.getPoule().getNumber() < placeB.getPoule().getNumber()) {
                 return -1;
             }
             return 0;

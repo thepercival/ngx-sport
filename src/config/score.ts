@@ -1,24 +1,24 @@
-import { RoundNumberConfig } from '../config';
+import { Config } from '../config';
 
-export class RoundNumberConfigScore {
+export class ConfigScore {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected config: RoundNumberConfig;
-    protected parent: RoundNumberConfigScore;
+    protected config: Config;
+    protected parent: ConfigScore;
     protected name: string;
     protected direction: number;
     protected maximum: number;
-    protected child: RoundNumberConfigScore;
+    protected child: ConfigScore;
 
-    constructor(config: RoundNumberConfig, parent: RoundNumberConfigScore) {
+    constructor(config: Config, parent: ConfigScore) {
         this.setConfig(config);
         this.setParent(parent);
     }
 
     static getDirectionDescription(direction: number) {
-        return direction === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
+        return direction === ConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     getId(): number {
@@ -60,19 +60,19 @@ export class RoundNumberConfigScore {
         this.maximum = maximum;
     }
 
-    getConfig(): RoundNumberConfig {
+    getConfig(): Config {
         return this.config;
     }
 
-    private setConfig(config: RoundNumberConfig) {
+    private setConfig(config: Config) {
         this.config = config;
     }
 
-    getParent(): RoundNumberConfigScore {
+    getParent(): ConfigScore {
         return this.parent;
     }
 
-    private setParent(parent: RoundNumberConfigScore) {
+    private setParent(parent: ConfigScore) {
         this.parent = parent;
         if (this.parent !== undefined) {
             this.parent.setChild(this);
@@ -87,11 +87,11 @@ export class RoundNumberConfigScore {
         return this;
     }
 
-    getChild(): RoundNumberConfigScore {
+    getChild(): ConfigScore {
         return this.child;
     }
 
-    setChild(child: RoundNumberConfigScore) {
+    setChild(child: ConfigScore) {
         this.child = child;
     }
 

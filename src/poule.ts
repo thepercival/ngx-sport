@@ -1,7 +1,7 @@
 import { Competition } from './competition';
 import { Competitor } from './competitor';
 import { Game } from './game';
-import { PoulePlace } from './pouleplace';
+import { Place } from './place';
 import { Round } from './round';
 
 export class Poule {
@@ -10,7 +10,7 @@ export class Poule {
     protected number: number;
     protected structureNumber: number;
     protected name: string;
-    protected places: PoulePlace[] = [];
+    protected places: Place[] = [];
     protected games: Game[] = [];
 
     constructor(round: Round, number?: number) {
@@ -72,22 +72,22 @@ export class Poule {
         this.name = name;
     }
 
-    getPlaces(): PoulePlace[] {
+    getPlaces(): Place[] {
         return this.places;
     }
 
-    getPlace(number: number): PoulePlace {
+    getPlace(number: number): Place {
         return this.getPlaces().find(place => place.getNumber() === number);
     }
 
     getCompetitors(): Competitor[] {
         const competitors: Competitor[] = [];
-        for (const pouleplace of this.getPlaces()) {
-            const competitor = pouleplace.getCompetitor();
+        this.getPlaces().forEach( place => {
+            const competitor = place.getCompetitor();
             if (competitor !== undefined) {
                 competitors.push(competitor);
             }
-        }
+        });
         return competitors;
     }
 
@@ -125,7 +125,7 @@ export class Poule {
         return (nrOfPlaces / 2);
     }
 
-    addPlace(place: PoulePlace) {
+    addPlace(place: Place) {
         if (place.getNumber() <= this.getPlaces().length) {
             throw new Error('pouleplek kan niet toegevoegd worden, omdat het nummer van de plek kleiner is dan het aantal huidige plekken');
         }

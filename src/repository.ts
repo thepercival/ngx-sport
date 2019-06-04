@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 
-import { SportConfig } from './config';
+import { SportConfig } from './sportconfig';
 
 export class SportRepository {
 

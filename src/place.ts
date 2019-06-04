@@ -7,7 +7,7 @@ import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
 import { Round } from './round';
 
-export class PoulePlace {
+export class Place {
     protected id: number;
     protected poule: Poule;
     protected number: number;
@@ -113,7 +113,7 @@ export class PoulePlace {
     setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {
         const toQualifyRuleOld = this.getToQualifyRule(winnersOrLosers);
         if (toQualifyRuleOld !== undefined) {
-            // toQualifyRuleOld.removeFromPoulePlace( this );
+            // toQualifyRuleOld.removeFromPlace( this );
             const index = this.toQualifyRules.indexOf(toQualifyRuleOld);
             if (index > -1) {
                 this.toQualifyRules.splice(index, 1);
@@ -141,7 +141,7 @@ export class PoulePlace {
 
     getGames(): Game[] {
         return this.getPoule().getGames().filter(gameIt => {
-            return gameIt.getPoulePlaces().find(gamePoulePlace => gamePoulePlace.getPoulePlace() === this) !== undefined;
+            return gameIt.getPlaces().find(gamePlace => gamePlace.getPlace() === this) !== undefined;
         });
     }
 }

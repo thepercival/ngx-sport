@@ -1,12 +1,12 @@
 import { Field } from './field';
-import { GamePoulePlace } from './game/pouleplace';
+import { GamePlace } from './game/place';
 import { GameScore } from './game/score';
 import { GameScoreHomeAway } from './game/score/homeaway';
 import { Poule } from './poule';
-import { PoulePlace } from './pouleplace';
+import { Place } from './place';
 import { Referee } from './referee';
 import { Round } from './round';
-import { RoundNumberConfig } from './round/number/config';
+import { Config } from './config';
 
 export class Game {
     static readonly WINNERS = 1;
@@ -31,12 +31,12 @@ export class Game {
     protected resourceBatch: number;
     protected field: Field;
     protected referee: Referee;
-    protected refereePoulePlace: PoulePlace;
+    protected refereePlace: Place;
     protected startDateTime: Date;
     protected state: number;
     protected scoresMoment: number;
     protected scores: GameScore[] = [];
-    protected poulePlaces: GamePoulePlace[] = [];
+    protected places: GamePlace[] = [];
 
     constructor(
         poule: Poule,
@@ -101,12 +101,12 @@ export class Game {
         return this.referee;
     }
 
-    setRefereePoulePlace(refereePoulePlace: PoulePlace): void {
-        this.refereePoulePlace = refereePoulePlace;
+    setRefereePlace(refereePlace: Place): void {
+        this.refereePlace = refereePlace;
     }
 
-    getRefereePoulePlace(): PoulePlace {
-        return this.refereePoulePlace;
+    getRefereePlace(): Place {
+        return this.refereePlace;
     }
 
     setReferee(referee: Referee): void {
@@ -121,25 +121,25 @@ export class Game {
         this.startDateTime = startDateTime;
     }
 
-    getPoulePlaces(homeaway: boolean = undefined): GamePoulePlace[] {
+    getPlaces(homeaway: boolean = undefined): GamePlace[] {
         if (homeaway !== undefined) {
-            return this.poulePlaces.filter(poulePlace => poulePlace.getHomeaway() === homeaway);
+            return this.places.filter(place => place.getHomeaway() === homeaway);
         }
-        return this.poulePlaces;
+        return this.places;
     }
 
-    setPoulePlaces(poulePlaces: GamePoulePlace[]): void {
-        this.poulePlaces = poulePlaces;
+    setPlaces(places: GamePlace[]): void {
+        this.places = places;
     }
 
-    isParticipating(poulePlace: PoulePlace, homeaway: boolean = undefined): boolean {
-        return this.getPoulePlaces(homeaway).find(gamePoulePlace => gamePoulePlace.getPoulePlace() === poulePlace) !== undefined;
+    isParticipating(place: Place, homeaway: boolean = undefined): boolean {
+        return this.getPlaces(homeaway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
     }
 
-    getHomeAway(poulePlace: PoulePlace): boolean {
-        if (this.isParticipating(poulePlace, Game.HOME)) {
+    getHomeAway(place: Place): boolean {
+        if (this.isParticipating(place, Game.HOME)) {
             return Game.HOME;
-        } else if (this.isParticipating(poulePlace, Game.AWAY)) {
+        } else if (this.isParticipating(place, Game.AWAY)) {
             return Game.AWAY;
         }
         return undefined;
@@ -170,8 +170,8 @@ export class Game {
         }
         let home = this.getScores()[0].getHome();
         let away = this.getScores()[0].getAway();
-        const roundNumberConfig = this.getConfig();
-        if (roundNumberConfig.getCalculateScore() !== roundNumberConfig.getInputScore()) {
+        const config = this.getConfig();
+        if (config.getCalculateScore() !== config.getInputScore()) {
             home = 0;
             away = 0;
             this.getScores().forEach(score => {
@@ -195,17 +195,9 @@ export class Game {
         return new GameScoreHomeAway(home, away);
     }
 
-    getConfig(): RoundNumberConfig {
+    getConfig(): Config {
         return this.getRound().getNumber().getConfig();
     }
-
-    /*getScoreConfig(): RoundConfigScore {
-        let roundConfigScore = this.getRound().getConfig().getScore();
-        while (roundConfigScore.isInput() === false && roundConfigScore.getParent() !== undefined) {
-            roundConfigScore = roundConfigScore.getParent();
-        }
-        return roundConfigScore;
-    }*/
 
     getScoresMoment(): number {
         return this.scoresMoment;

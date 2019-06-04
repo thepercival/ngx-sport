@@ -19,6 +19,6 @@ describe('Planning/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        expect(rootRound.getGames().length).to.equal(6);
+        expect(rootRound.getGames().length).to.equal(9);
     });
 })

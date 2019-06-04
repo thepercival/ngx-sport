@@ -1,4 +1,4 @@
-import { PoulePlace } from '../../pouleplace';
+import { Place } from '../../place';
 import { QualifyGroup } from '../../qualify/group';
 import { QualifyRule } from '../../qualify/rule';
 import { QualifyRuleMultiple } from '../../qualify/rule/multiple';
@@ -30,7 +30,7 @@ export class QualifyRuleService {
         round.getPlaces().forEach(place => {
             const toQualifyRules = place.getToQualifyRules();
             toQualifyRules.forEach(toQualifyRule => {
-                let toPlaces: PoulePlace[] = [];
+                let toPlaces: Place[] = [];
                 if (toQualifyRule.isMultiple()) {
                     toPlaces = toPlaces.concat((<QualifyRuleMultiple>toQualifyRule).getToPlaces());
                 } else {
@@ -81,7 +81,7 @@ export class QualifyRuleService {
         });
     }
 
-    private connectPlaceWithRule(childPlace: PoulePlace, queue: QualifyRuleQueue, startEnd: number, reservationService: QualifyReservationService) {
+    private connectPlaceWithRule(childPlace: Place, queue: QualifyRuleQueue, startEnd: number, reservationService: QualifyReservationService) {
 
         const setToPlacesAndReserve = (qualifyRule: QualifyRule) => {
             if (qualifyRule.isSingle()) {

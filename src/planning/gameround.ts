@@ -1,10 +1,10 @@
-import { PoulePlaceCombination } from '../pouleplace/combination';
+import { PlaceCombination } from '../place/combination';
 
 export class PlanningGameRound {
     public constructor(
         private roundNumber: number,
-        private combinations: PoulePlaceCombination[]
+        private combinations: PlaceCombination[]
     ) { }
     getNumber(): number { return this.roundNumber; }
-    getCombinations(): PoulePlaceCombination[] { return this.combinations; }
+    getCombinations(): PlaceCombination[] { return this.combinations; }
 }

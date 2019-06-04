@@ -4,8 +4,8 @@ export function setScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: n
     const homePlace = poule.getPlace(homePlaceNr);
     const awayPlace = poule.getPlace(awayPlaceNr);
     const game = poule.getGames().find(game => {
-        const homePlaces = game.getPoulePlaces(Game.HOME).map(gamePlace => gamePlace.getPoulePlace());
-        const awayPlaces = game.getPoulePlaces(Game.AWAY).map(gamePlace => gamePlace.getPoulePlace());
+        const homePlaces = game.getPlaces(Game.HOME).map(gamePlace => gamePlace.getPlace());
+        const awayPlaces = game.getPlaces(Game.AWAY).map(gamePlace => gamePlace.getPlace());
         return ((homePlaces.find(homePlaceIt => homePlaceIt === homePlace) !== undefined
             && awayPlaces.find(awayPlaceIt => awayPlaceIt === awayPlace) !== undefined)
             || (homePlaces.find(homePlaceIt => homePlaceIt === awayPlace) !== undefined

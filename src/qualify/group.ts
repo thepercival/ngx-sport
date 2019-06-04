@@ -105,7 +105,7 @@ export class QualifyGroup {
         return this === qualifyGroups[qualifyGroups.length - 1];
     }
 
-    // isInBorderHoritontalPoule(place: PoulePlace): boolean {
+    // isInBorderHoritontalPoule(place: Place): boolean {
     //     const horizontalPoules = this.getHorizontalPoules();
     //     const borderHorizontalPoule = horizontalPoules[horizontalPoules.length - 1];
     //     return borderHorizontalPoule.hasPlace(place);

@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../../competition';
 import { RoundNumber } from '../number';
-import { JsonRoundNumberConfig, RoundNumberConfigMapper } from './config/mapper';
+import { JsonConfig, ConfigMapper } from '../../config/mapper';
 
 @Injectable()
 export class RoundNumberMapper {
-    constructor(private configMapper: RoundNumberConfigMapper) { }
+    constructor(private configMapper: ConfigMapper) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
@@ -31,6 +31,6 @@ export class RoundNumberMapper {
 export interface JsonRoundNumber {
     id?: number;
     number: number;
-    config: JsonRoundNumberConfig;
+    config: JsonConfig;
     next?: JsonRoundNumber;
 }

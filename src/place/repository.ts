@@ -5,17 +5,17 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Poule } from '../poule';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { SportRepository } from '../repository';
-import { JsonPoulePlace, PoulePlaceMapper } from './mapper';
+import { JsonPlace, PlaceMapper } from './mapper';
 
 @Injectable()
-export class PoulePlaceRepository extends SportRepository {
+export class PlaceRepository extends SportRepository {
 
     private url: string;
 
     constructor(
-        private mapper: PoulePlaceMapper,
+        private mapper: PlaceMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -23,12 +23,12 @@ export class PoulePlaceRepository extends SportRepository {
     }
 
     getUrlpostfix(): string {
-        return 'pouleplaces';
+        return 'places';
     }
 
-    editObject(poulePlace: PoulePlace, poule: Poule): Observable<PoulePlace> {
-        return this.http.put(this.url + '/' + poulePlace.getId(), this.mapper.toJson(poulePlace), this.getOptions(poule)).pipe(
-            map((jsonRes: JsonPoulePlace) => this.mapper.toObject(jsonRes, poulePlace.getPoule(), poulePlace)),
+    editObject(place: Place, poule: Poule): Observable<Place> {
+        return this.http.put(this.url + '/' + place.getId(), this.mapper.toJson(place), this.getOptions(poule)).pipe(
+            map((jsonRes: JsonPlace) => this.mapper.toObject(jsonRes, place.getPoule(), place)),
             catchError((err) => this.handleError(err))
         );
     }

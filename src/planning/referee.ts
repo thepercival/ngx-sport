@@ -1,11 +1,11 @@
 import { Game } from '../game';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { Referee } from '../referee';
 
 export class PlanningReferee {
     constructor(
         private referee: Referee,
-        private poulePlace: PoulePlace) {
+        private place: Place) {
 
     }
 
@@ -13,17 +13,17 @@ export class PlanningReferee {
         return this.referee;
     }
 
-    getPoulePlace(): PoulePlace {
-        return this.poulePlace;
+    getPlace(): Place {
+        return this.place;
     }
 
     isSelf(): boolean {
-        return this.poulePlace !== undefined;
+        return this.place !== undefined;
     }
 
     assign(game: Game) {
         game.setReferee(this.referee ? this.referee : undefined);
-        game.setRefereePoulePlace(this.poulePlace ? this.poulePlace : undefined);
+        game.setRefereePlace(this.place ? this.place : undefined);
     }
 }
 

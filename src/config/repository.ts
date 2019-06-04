@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
-import { SportRepository } from '../../../repository';
-import { RoundNumber } from '../../../round/number';
-import { RoundNumberConfig } from '../config';
-import { JsonRoundNumberConfig, RoundNumberConfigMapper } from './mapper';
+import { SportRepository } from '../repository';
+import { RoundNumber } from '../round/number';
+import { Config } from '../config';
+import { JsonConfig, ConfigMapper } from './mapper';
 
 @Injectable()
-export class RoundNumberConfigRepository extends SportRepository {
+export class ConfigRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private mapper: RoundNumberConfigMapper,
+        private mapper: ConfigMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -22,24 +22,24 @@ export class RoundNumberConfigRepository extends SportRepository {
     }
 
     getUrlpostfix(): string {
-        return 'roundconfigs';
+        return 'configs';
     }
 
-    editObject(roundNumber: RoundNumber, roundNumberConfig: JsonRoundNumberConfig): Observable<RoundNumberConfig[][]> {
-        return forkJoin(this.getUpdates(roundNumber, roundNumberConfig));
+    editObject(roundNumber: RoundNumber, config: JsonConfig): Observable<Config[][]> {
+        return forkJoin(this.getUpdates(roundNumber, config));
     }
 
-    getUpdates(roundNumber: RoundNumber, roundNumberConfig: JsonRoundNumberConfig): Observable<RoundNumberConfig[]>[] {
-        let reposUpdates: Observable<RoundNumberConfig[]>[] = [];
+    getUpdates(roundNumber: RoundNumber, config: JsonConfig): Observable<Config[]>[] {
+        let reposUpdates: Observable<Config[]>[] = [];
         const options = this.getOptions(roundNumber);
         reposUpdates.push(
-            this.http.put(this.url + '/' + roundNumber.getConfig().getId(), roundNumberConfig, options).pipe(
-                map((json: JsonRoundNumberConfig) => this.mapper.toObject(json, roundNumber)),
+            this.http.put(this.url + '/' + roundNumber.getConfig().getId(), config, options).pipe(
+                map((json: JsonConfig) => this.mapper.toObject(json, roundNumber)),
                 catchError((err) => this.handleError(err))
             )
         );
         if ( roundNumber.hasNext() ) {
-            reposUpdates = reposUpdates.concat( this.getUpdates(roundNumber.getNext(), roundNumberConfig) );
+            reposUpdates = reposUpdates.concat( this.getUpdates(roundNumber.getNext(), config) );
         }
         return reposUpdates;
     }

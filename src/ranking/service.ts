@@ -3,7 +3,7 @@ import { Game } from '../game';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { Round } from '../round';
 import { RankingItemsGetter } from './helper';
 import { RankedRoundItem, UnrankedRoundItem } from './item';
@@ -13,7 +13,7 @@ import { RankedRoundItem, UnrankedRoundItem } from './item';
 export class RankingService {
     static readonly RULESSET_WC = 1;
     static readonly RULESSET_EC = 2;
-    private maxPoulePlaces = 64;
+    private maxPlaces = 64;
     private gameStates: number;
     private cache: {} = {};
 
@@ -80,7 +80,7 @@ export class RankingService {
      * 
      * @param place 
      */
-    protected hasPlaceSingleQualifyRule(place: PoulePlace): boolean {
+    protected hasPlaceSingleQualifyRule(place: Place): boolean {
         return place.getToQualifyRules().filter(qualifyRuleIt => qualifyRuleIt.isSingle()).length > 0;
     }
 
@@ -103,7 +103,7 @@ export class RankingService {
                 unrankedItems.splice(unrankedItems.indexOf(bestItem), 1);
                 rankedItems.push(new RankedRoundItem(bestItem, ++nrOfIterations, rank));
             });
-            // if (nrOfIterations > this.maxPoulePlaces) {
+            // if (nrOfIterations > this.maxPlaces) {
             //     console.error('should not be happening for ranking calc');
             //     break;
             // }
@@ -181,17 +181,17 @@ export class RankingService {
     }
 
     private filterBestAgainstEachOther = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
-        const poulePlaces = items.map(item => {
-            return item.getRound().getPoulePlace(item.getPlaceLocation());
+        const places = items.map(item => {
+            return item.getRound().getPlace(item.getPlaceLocation());
         });
-        const poule = poulePlaces[0].getPoule();
+        const poule = places[0].getPoule();
         const round: Round = poule.getRound();
-        const games = this.getGamesBetweenEachOther(poulePlaces, poule.getGames());
+        const games = this.getGamesBetweenEachOther(places, poule.getGames());
         if (games.length === 0) {
             return items;
         }
         const getter = new RankingItemsGetter(round, this.gameStates);
-        const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poulePlaces, games);
+        const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(places, games);
         const rankedItems = this.rankItems(unrankedItems, true).filter(rankItem => rankItem.getRank() === 1);
         if (rankedItems.length === items.length) {
             return items;
@@ -250,14 +250,14 @@ export class RankingService {
         return bestItems;
     }
 
-    private getGamesBetweenEachOther = (poulePlaces: PoulePlace[], games: Game[]): Game[] => {
+    private getGamesBetweenEachOther = (places: Place[], games: Game[]): Game[] => {
         const gamesRet: Game[] = [];
         games.forEach(p_gameIt => {
             if ((p_gameIt.getState() & this.gameStates) === 0) {
                 return;
             }
-            const inHome = poulePlaces.some(poulePlace => p_gameIt.isParticipating(poulePlace, Game.HOME));
-            const inAway = poulePlaces.some(poulePlace => p_gameIt.isParticipating(poulePlace, Game.AWAY));
+            const inHome = places.some(place => p_gameIt.isParticipating(place, Game.HOME));
+            const inAway = places.some(place => p_gameIt.isParticipating(place, Game.AWAY));
             if (inHome && inAway) {
                 gamesRet.push(p_gameIt);
             }

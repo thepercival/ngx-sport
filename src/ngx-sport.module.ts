@@ -7,7 +7,7 @@ import { CompetitionMapper } from './competition/mapper';
 import { CompetitionRepository } from './competition/repository';
 import { Competitor } from './competitor';
 import { CompetitorRepository } from './competitor/repository';
-import { SportConfig } from './config';
+import { SportConfig } from './sportconfig';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
 import { ExternalSystem } from './external/system';
@@ -17,7 +17,7 @@ import { ExternalSystemRepository } from './external/system/repository';
 import { Field } from './field';
 import { FieldRepository } from './field/repository';
 import { Game } from './game';
-import { GamePoulePlace } from './game/pouleplace';
+import { GamePlace } from './game/place';
 import { GameRepository } from './game/repository';
 import { GameScore } from './game/score';
 import { League } from './league';
@@ -28,10 +28,9 @@ import { PlanningRepository } from './planning/repository';
 import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { PoulePlace } from './pouleplace';
-import { PoulePlaceRepository } from './pouleplace/repository';
+import { Place } from './place';
+import { PlaceRepository } from './place/repository';
 import { QualifyGroup } from './qualify/group';
-import { QualifyRuleMapper } from './qualify/rule/mapper';
 import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { QualifyService } from './qualify/service';
@@ -43,11 +42,11 @@ import { RefereeRepository } from './referee/repository';
 import { SportRepository } from './repository';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
-import { RoundNumberConfig } from './round/number/config';
-import { RoundNumberConfigMapper } from './round/number/config/mapper';
-import { RoundNumberConfigRepository } from './round/number/config/repository';
-import { RoundNumberConfigScore } from './round/number/config/score';
-import { RoundNumberConfigService } from './round/number/config/service';
+import { Config } from './config';
+import { ConfigMapper } from './config/mapper';
+import { ConfigRepository } from './config/repository';
+import { ConfigScore } from './config/score';
+import { ConfigService } from './config/service';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
@@ -58,23 +57,23 @@ import { StructureService } from './structure/service';
 @NgModule({
     imports: [
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PoulePlaceRepository, QualifyRuleMapper, QualifyService, RefereeRepository,
-        RoundRepository, RoundNumberConfigRepository, RoundNumberConfigService,
+        PlanningService, PlaceRepository, QualifyService, RefereeRepository,
+        RoundRepository, ConfigRepository, ConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, RoundNumberConfigMapper
+        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, ConfigMapper
     ],
     exports: [
-        Association, League, Competition, SportConfig, Field, Game, GameScore, GamePoulePlace, HorizontalPoule,
-        Poule, PoulePlace, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee, SportRepository,
-        Round, RoundNumber, RoundNumberConfig, RoundNumberConfigScore,
+        Association, League, Competition, SportConfig, Field, Game, GameScore, GamePlace, HorizontalPoule,
+        Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee, SportRepository,
+        Round, RoundNumber, Config, ConfigScore,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PoulePlaceRepository, QualifyRuleMapper, QualifyService, RefereeRepository, RoundRepository,
-        RoundNumberConfigRepository, RoundNumberConfigService,
+        PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
+        ConfigRepository, ConfigService,
         SeasonRepository, StructureRepository, StructureService,
         CompetitorRepository,
         PlanningRepository, NameService,

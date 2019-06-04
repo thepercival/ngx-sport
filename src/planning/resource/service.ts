@@ -1,12 +1,12 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
-import { PoulePlace } from '../../pouleplace';
-import { RoundNumberConfig } from '../../round/number/config';
+import { Place } from '../../place';
+import { Config } from '../../config';
 import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
 
 export class PlanningResourceService {
-    private assignedPoulePlaces: PoulePlace[] = [];
+    private assignedPlaces: Place[] = [];
     private availableReferees: PlanningReferee[] = [];
     private assignableReferees: PlanningReferee[] = [];
     private availableFields: Field[] = [];
@@ -15,15 +15,15 @@ export class PlanningResourceService {
     private blockedPeriod;
     private currentGameStartDate: Date;
     private nrOfPoules: number;
-    // private assignedPoulePlacesPerField = {};
+    // private assignedPlacesPerField = {};
 
     constructor(
-        private roundNumberConfig: RoundNumberConfig,
+        private config: Config,
         dateTime: Date
     ) {
         this.currentGameStartDate = this.cloneDateTime(dateTime);
-        if (this.roundNumberConfig.getSelfReferee()) {
-            this.nrOfPoules = this.roundNumberConfig.getRoundNumber().getPoules().length;
+        if (this.config.getSelfReferee()) {
+            this.nrOfPoules = this.config.getRoundNumber().getPoules().length;
         }
     }
 
@@ -35,14 +35,14 @@ export class PlanningResourceService {
         this.availableFields = fields;
         this.fillAssignableFields();
         // fields.forEach(field => {
-        //     this.assignedPoulePlacesPerField[field.getId()] = [];
+        //     this.assignedPlacesPerField[field.getId()] = [];
         // });
 
     }
 
     setReferees(referees: PlanningReferee[]) {
         this.availableReferees = referees;
-        if (this.roundNumberConfig.getSelfReferee()) {
+        if (this.config.getSelfReferee()) {
             this.availableReferees.reverse();
         }
         this.fillAssignableReferees();
@@ -71,7 +71,7 @@ export class PlanningResourceService {
         if (this.areFieldsAvailable()) {
             this.assignField(game);
         }
-        this.assignPoulePlaces(game);
+        this.assignPlaces(game);
         if (this.areRefereesAvailable()) {
             this.assignReferee(game);
         }
@@ -82,7 +82,7 @@ export class PlanningResourceService {
         this.fillAssignableReferees();
         this.resourceBatch++;
         this.setNextGameStartDateTime();
-        this.resetPoulePlaces();
+        this.resetPlaces();
     }
 
     private getEndDateTime(): Date {
@@ -90,16 +90,16 @@ export class PlanningResourceService {
             return undefined;
         }
         const endDateTime = new Date(this.currentGameStartDate.getTime());
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMaximalNrOfMinutesPerGame());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.config.getMaximalNrOfMinutesPerGame());
         return endDateTime;
     }
 
-    private assignPoulePlaces(game: Game) {
-        game.getPoulePlaces().forEach(gamePoulePlace => {
-            const poulePlace = gamePoulePlace.getPoulePlace();
-            this.assignedPoulePlaces.push(poulePlace);
+    private assignPlaces(game: Game) {
+        game.getPlaces().forEach(gamePlace => {
+            const place = gamePlace.getPlace();
+            this.assignedPlaces.push(place);
             // if (game.getField() !== undefined) {
-            //     this.assignedPoulePlacesPerField[game.getField().getId()].push(poulePlace);
+            //     this.assignedPlacesPerField[game.getField().getId()].push(place);
             // }
         });
     }
@@ -112,7 +112,7 @@ export class PlanningResourceService {
         this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         referee.assign(game);
         if (referee.isSelf()) {
-            this.assignedPoulePlaces.push(referee.getPoulePlace());
+            this.assignedPlaces.push(referee.getPlace());
         }
     }
 
@@ -153,7 +153,7 @@ export class PlanningResourceService {
             this.assignableReferees = this.availableReferees.slice();
             return;
         }
-        if (this.roundNumberConfig.getSelfReferee()) {
+        if (this.config.getSelfReferee()) {
             this.assignableReferees = this.assignableReferees.concat(this.availableReferees);
             return;
         }
@@ -183,31 +183,31 @@ export class PlanningResourceService {
     private getAssignableField(): Field {
         return this.assignableFields[0];
         // return this.assignableFields.find(field => {
-        //     return game.getPoulePlaces().every(gamePoulePlace => {
-        //         return this.assignedPoulePlacesPerField[field.getId()].find(poulePlace => poulePlace === gamePoulePlace.getPoulePlace()) === undefined;
+        //     return game.getPlaces().every(gamePlace => {
+        //         return this.assignedPlacesPerField[field.getId()].find(place => place === gamePlace.getPlace()) === undefined;
         //     })
         // });
     }
 
     private areRefereesAvailable(): boolean {
         return this.availableReferees.length > 0 &&
-            (!this.roundNumberConfig.getSelfReferee() || this.availableReferees.length > this.roundNumberConfig.getNrOfCompetitorsPerGame());
+            (!this.config.getSelfReferee() || this.availableReferees.length > this.config.getNrOfCompetitorsPerGame());
     }
 
     private isSomeRefereeAssignable(game: Game): boolean {
-        if (!this.roundNumberConfig.getSelfReferee()) {
+        if (!this.config.getSelfReferee()) {
             return this.assignableReferees.length > 0;
         }
         return this.getAssignableReferee(game) !== undefined;
     }
 
     private getAssignableReferee(game: Game): PlanningReferee {
-        if (!this.roundNumberConfig.getSelfReferee()) {
+        if (!this.config.getSelfReferee()) {
             return this.assignableReferees[0];
         }
         return this.assignableReferees.find(assignableRef => {
-            return !game.isParticipating(assignableRef.getPoulePlace()) && this.isPoulePlaceAssignable(assignableRef.getPoulePlace())
-                && (this.nrOfPoules === 1 || assignableRef.getPoulePlace().getPoule() !== game.getPoule());
+            return !game.isParticipating(assignableRef.getPlace()) && this.isPlaceAssignable(assignableRef.getPlace())
+                && (this.nrOfPoules === 1 || assignableRef.getPlace().getPoule() !== game.getPoule());
         });
     }
 
@@ -222,7 +222,7 @@ export class PlanningResourceService {
         if (this.currentGameStartDate === undefined) {
             return;
         }
-        const add = this.roundNumberConfig.getMaximalNrOfMinutesPerGame() + this.roundNumberConfig.getMinutesBetweenGames();
+        const add = this.config.getMaximalNrOfMinutesPerGame() + this.config.getMinutesBetweenGames();
         this.currentGameStartDate = this.addMinutes(this.currentGameStartDate, add);
     }
 
@@ -232,7 +232,7 @@ export class PlanningResourceService {
             return dateTime;
         }
         const endDateTime = this.cloneDateTime(dateTime);
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.roundNumberConfig.getMaximalNrOfMinutesPerGame());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.config.getMaximalNrOfMinutesPerGame());
         if (endDateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
             dateTime = new Date(this.blockedPeriod.end.getTime());
         }
@@ -248,26 +248,26 @@ export class PlanningResourceService {
             return false;
         }
 
-        return this.areAllPoulePlacesAssignable(this.getPoulePlaces(game));
+        return this.areAllPlacesAssignable(this.getPlaces(game));
     }
 
-    protected getPoulePlaces(game: Game): PoulePlace[] {
-        return game.getPoulePlaces().map(gamePoulePlace => gamePoulePlace.getPoulePlace());
+    protected getPlaces(game: Game): Place[] {
+        return game.getPlaces().map(gamePlace => gamePlace.getPlace());
     }
 
-    protected areAllPoulePlacesAssignable(poulePlaces: PoulePlace[]): boolean {
-        return poulePlaces.every(poulePlace => this.isPoulePlaceAssignable(poulePlace));
+    protected areAllPlacesAssignable(places: Place[]): boolean {
+        return places.every(place => this.isPlaceAssignable(place));
     }
 
-    protected isPoulePlaceAssignable(poulePlace: PoulePlace): boolean {
-        return !this.hasPoulePlace(this.assignedPoulePlaces, poulePlace);
+    protected isPlaceAssignable(place: Place): boolean {
+        return !this.hasPlace(this.assignedPlaces, place);
     }
 
-    protected hasPoulePlace(poulePlaces: PoulePlace[], poulePlaceToFind: PoulePlace): boolean {
-        return poulePlaces.find(poulePlaceIt => poulePlaceIt === poulePlaceToFind) !== undefined;
+    protected hasPlace(places: Place[], placeToFind: Place): boolean {
+        return places.find(placeIt => placeIt === placeToFind) !== undefined;
     }
 
-    private resetPoulePlaces() {
-        this.assignedPoulePlaces = [];
+    private resetPlaces() {
+        this.assignedPlaces = [];
     }
 }

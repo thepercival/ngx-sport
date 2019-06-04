@@ -117,14 +117,14 @@ export class PlanningService {
     }
 
     protected createHelper(roundNumber: RoundNumber) {
-        const roundNumberConfig = roundNumber.getConfig();
+        const config = roundNumber.getConfig();
         roundNumber.getPoules().forEach((poule) => {
             const generator = new GameGenerator(poule);
-            const gameRounds = generator.generate(roundNumberConfig.getTeamup());
+            const gameRounds = generator.generate(config.getTeamup());
             // if (poule.getPlaces().length === 8) {
             //     gameRounds = generator.generateBen();
             // }
-            for (let headToHead = 1; headToHead <= roundNumberConfig.getNrOfHeadtoheadMatches(); headToHead++) {
+            for (let headToHead = 1; headToHead <= config.getNrOfHeadtoheadMatches(); headToHead++) {
                 const reverseHomeAway = (headToHead % 2) === 0;
 
                 const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
@@ -132,7 +132,7 @@ export class PlanningService {
                     let subNumber = 1;
                     gameRound.getCombinations().forEach(combination => {
                         const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
-                        game.setPoulePlaces(combination.getGamePoulePlaces(game, reverseHomeAway/*, reverseCombination*/));
+                        game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
                     });
                 });
             }

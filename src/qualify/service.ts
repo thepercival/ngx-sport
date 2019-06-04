@@ -3,7 +3,7 @@ import { Game } from '../game';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
-import { PoulePlace } from '../pouleplace';
+import { Place } from '../place';
 import { RankedRoundItem } from '../ranking/item';
 import { RankingService } from '../ranking/service';
 import { Round } from '../round';
@@ -23,20 +23,20 @@ export class QualifyService {
         this.rankingService = new RankingService(round, ruleSet);
     }
 
-    setQualifiers(filterPoule?: Poule): PoulePlace[] {
-        let changedPoulePlaces: PoulePlace[] = [];
+    setQualifiers(filterPoule?: Poule): Place[] {
+        let changedPlaces: Place[] = [];
 
         const setQualifiersForHorizontalPoule = (horizontalPoule: HorizontalPoule) => {
             const multipleRule = horizontalPoule.getQualifyRuleMultiple();
             if (multipleRule) {
-                changedPoulePlaces = changedPoulePlaces.concat(this.setQualifiersForMultipleRuleAndReserve(<QualifyRuleMultiple>multipleRule));
+                changedPlaces = changedPlaces.concat(this.setQualifiersForMultipleRuleAndReserve(<QualifyRuleMultiple>multipleRule));
             } else {
                 horizontalPoule.getPlaces().forEach(place => {
                     if (filterPoule !== undefined && place.getPoule() !== filterPoule) {
                         return;
                     }
                     const singleRule = <QualifyRuleSingle>place.getToQualifyRule(horizontalPoule.getWinnersOrLosers());
-                    changedPoulePlaces.push(this.setQualifierForSingleRuleAndReserve(singleRule));
+                    changedPlaces.push(this.setQualifierForSingleRuleAndReserve(singleRule));
                 });
             }
         }
@@ -46,10 +46,10 @@ export class QualifyService {
                 setQualifiersForHorizontalPoule(horizontalPoule);
             });
         });
-        return changedPoulePlaces;
+        return changedPlaces;
     }
 
-    protected setQualifierForSingleRuleAndReserve(ruleSingle: QualifyRuleSingle): PoulePlace {
+    protected setQualifierForSingleRuleAndReserve(ruleSingle: QualifyRuleSingle): Place {
         const fromPlace = ruleSingle.getFromPlace();
         const poule = fromPlace.getPoule();
         const rank = fromPlace.getNumber();
@@ -59,15 +59,15 @@ export class QualifyService {
         return ruleSingle.getToPlace();
     }
 
-    protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: QualifyRuleMultiple): PoulePlace[] {
-        let changedPoulePlaces: PoulePlace[] = [];
+    protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: QualifyRuleMultiple): Place[] {
+        let changedPlaces: Place[] = [];
         const toPlaces = ruleMultiple.getToPlaces();
         if (!this.isRoundPlayed()) {
             toPlaces.forEach((toPlace) => {
                 toPlace.setCompetitor(undefined);
-                changedPoulePlaces.push(toPlace);
+                changedPlaces.push(toPlace);
             });
-            return changedPoulePlaces;
+            return changedPlaces;
         }
         const round = ruleMultiple.getFromRound();
         const rankedPlaceLocations: PlaceLocation[] = this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
@@ -79,10 +79,10 @@ export class QualifyService {
             const toPouleNumber = toPlace.getPoule().getNumber();
             const rankedPlaceLocation = this.reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankedPlaceLocations);
             toPlace.setCompetitor(this.rankingService.getCompetitor(rankedPlaceLocation));
-            changedPoulePlaces.push(toPlace);
+            changedPlaces.push(toPlace);
             rankedPlaceLocations.splice(rankedPlaceLocations.indexOf(rankedPlaceLocation), 1);
         });
-        return changedPoulePlaces;
+        return changedPlaces;
     }
 
     protected getQualifiedCompetitor(poule: Poule, rank: number): Competitor {
@@ -91,8 +91,8 @@ export class QualifyService {
         }
         const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
         const rankingItem = this.rankingService.getItemByRank(pouleRankingItems, rank);
-        const poulePlace = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
-        return poulePlace.getCompetitor();
+        const place = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
+        return place.getCompetitor();
     }
 
     protected isRoundPlayed(): boolean {
@@ -112,5 +112,5 @@ export class QualifyService {
 
 export interface INewQualifier {
     competitor: Competitor;
-    poulePlace: PoulePlace;
+    place: Place;
 }

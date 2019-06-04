@@ -1,22 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { FieldMapper } from '../field/mapper';
 import { Game } from '../game';
-import { GamePoulePlaceMapper, JsonGamePoulePlace } from '../game/pouleplace/mapper';
+import { GamePlaceMapper, JsonGamePlace } from './place/mapper';
 import { Poule } from '../poule';
-import { PoulePlaceMapper } from '../pouleplace/mapper';
-import { RefereeMapper } from '../referee/mapper';
 import { GameScoreMapper, JsonGameScore } from './score/mapper';
 
 @Injectable()
 export class GameMapper {
 
     constructor(
-        private gamePouleplaceMapper: GamePoulePlaceMapper,
-        private fieldMapper: FieldMapper,
-        private refereeMapper: RefereeMapper,
+        private gamePlaceMapper: GamePlaceMapper,
         private scoreMapper: GameScoreMapper,
-        private poulePlaceMapper: PoulePlaceMapper,
     ) { }
 
     toObject(json: JsonGame, poule: Poule, game?: Game): Game {
@@ -35,10 +29,10 @@ export class GameMapper {
             game.getScores().pop();
         }
         json.scores.map(jsonScore => this.scoreMapper.toObject(jsonScore, game));
-        while (game.getPoulePlaces().length > 0) {
-            game.getPoulePlaces().pop();
+        while (game.getPlaces().length > 0) {
+            game.getPlaces().pop();
         }
-        json.poulePlaces.map(jsonGamePoulePlace => this.gamePouleplaceMapper.toObject(jsonGamePoulePlace, game));
+        json.places.map(jsonGamePlace => this.gamePlaceMapper.toObject(jsonGamePlace, game));
         return game;
     }
 
@@ -52,14 +46,14 @@ export class GameMapper {
     toJson(game: Game): JsonGame {
         return {
             id: game.getId(),
-            poulePlaces: game.getPoulePlaces().map(gamePoulePlace => this.gamePouleplaceMapper.toJson(gamePoulePlace)),
+            places: game.getPlaces().map(gamePlace => this.gamePlaceMapper.toJson(gamePlace)),
             roundNumber: game.getRoundNumber(),
             subNumber: game.getSubNumber(),
             resourceBatch: game.getResourceBatch(),
             fieldNr: game.getField() ? game.getField().getNumber() : undefined,
             state: game.getState(),
             refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
-            refereePoulePlaceId: game.getRefereePoulePlace() ? game.getRefereePoulePlace().getId() : undefined,
+            refereePlaceId: game.getRefereePlace() ? game.getRefereePlace().getId() : undefined,
             startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
             scoresMoment: game.getScoresMoment(),
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
@@ -69,7 +63,7 @@ export class GameMapper {
 
 export interface JsonGame {
     id?: number;
-    poulePlaces: JsonGamePoulePlace[];
+    places: JsonGamePlace[];
     roundNumber: number;
     subNumber: number;
     resourceBatch: number;
@@ -77,7 +71,7 @@ export interface JsonGame {
     state: number;
     startDateTime?: string;
     refereeInitials?: string;
-    refereePoulePlaceId?: number;
+    refereePlaceId?: number;
     scoresMoment?: number;
     scores?: JsonGameScore[];
 }

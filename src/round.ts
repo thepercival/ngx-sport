@@ -4,7 +4,7 @@ import { Game } from './game';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { PoulePlace } from './pouleplace';
+import { Place } from './place';
 import { QualifyGroup } from './qualify/group';
 import { RoundNumber } from './round/number';
 
@@ -165,12 +165,12 @@ export class Round {
         return this.getHorizontalPoules(winnersOrLosers)[0];
     }
 
-    getFirstPlace(winnersOrLosers: number): PoulePlace {
+    getFirstPlace(winnersOrLosers: number): Place {
         return this.getFirstHorizontalPoule(winnersOrLosers).getFirstPlace();
     }
 
-    getPlaces(order?: number): PoulePlace[] {
-        let places: PoulePlace[] = [];
+    getPlaces(order?: number): Place[] {
+        let places: Place[] = [];
         if (order === Round.ORDER_NUMBER_POULE) {
             this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
                 places = places.concat(poule.getPlaces());
@@ -183,7 +183,7 @@ export class Round {
         return places;
     }
 
-    getPoulePlace(placeLocation: PlaceLocation): PoulePlace {
+    getPlace(placeLocation: PlaceLocation): Place {
         return this.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
     }
 

@@ -3,15 +3,15 @@ import { CompetitionMapper } from '../src/competition/mapper';
 import { CompetitorMapper } from '../src/competitor/mapper';
 import { FieldMapper } from '../src/field/mapper';
 import { GameMapper } from '../src/game/mapper';
-import { GamePoulePlaceMapper } from '../src/game/pouleplace/mapper';
+import { GamePlaceMapper } from '../src/game/place/mapper';
 import { GameScoreMapper } from '../src/game/score/mapper';
 import { LeagueMapper } from '../src/league/mapper';
 import { PouleMapper } from '../src/poule/mapper';
-import { PoulePlaceMapper } from '../src/pouleplace/mapper';
+import { PlaceMapper } from '../src/place/mapper';
 import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
-import { RoundNumberConfigMapper } from '../src/round/number/config/mapper';
-import { RoundNumberConfigScoreMapper } from '../src/round/number/config/score/mapper';
+import { ConfigMapper } from '../src/config/mapper';
+import { ConfigScoreMapper } from '../src/config/score/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
@@ -35,30 +35,27 @@ export function getMapper(mapper: string) {
             getMapper('referee'),
             getMapper('field')
         );
-    } else if (mapper === 'roundconfigscore') {
-        return new RoundNumberConfigScoreMapper();
-    } else if (mapper === 'roundconfig') {
-        return new RoundNumberConfigMapper(getMapper('roundconfigscore'));
+    } else if (mapper === 'configscore') {
+        return new ConfigScoreMapper();
+    } else if (mapper === 'config') {
+        return new ConfigMapper(getMapper('configscore'));
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper(getMapper('roundconfig'));
+        return new RoundNumberMapper(getMapper('config'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
-    } else if (mapper === 'pouleplace') {
-        return new PoulePlaceMapper(getMapper('competitor'));
-    } else if (mapper === 'gamepouleplace') {
-        return new GamePoulePlaceMapper();
+    } else if (mapper === 'place') {
+        return new PlaceMapper(getMapper('competitor'));
+    } else if (mapper === 'gameplace') {
+        return new GamePlaceMapper();
     } else if (mapper === 'gamescore') {
         return new GameScoreMapper();
     } else if (mapper === 'game') {
         return new GameMapper(
-            getMapper('gamepouleplace'),
-            getMapper('field'),
-            getMapper('referee'),
-            getMapper('gamescore'),
-            getMapper('pouleplace'),
+            getMapper('gameplace'),
+            getMapper('gamescore')
         );
     } else if (mapper === 'poule') {
-        return new PouleMapper(getMapper('pouleplace'), getMapper('game'));
+        return new PouleMapper(getMapper('place'), getMapper('game'));
     } else if (mapper === 'round') {
         return new RoundMapper(getMapper('poule'));
     } else if (mapper === 'structure') {

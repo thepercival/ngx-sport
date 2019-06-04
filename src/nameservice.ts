@@ -1,8 +1,8 @@
 import { Game } from './game';
-import { GamePoulePlace } from './game/pouleplace';
+import { GamePlace } from './game/place';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { PoulePlace } from './pouleplace';
+import { Place } from './place';
 import { QualifyGroup } from './qualify/group';
 import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
@@ -66,25 +66,25 @@ export class NameService {
         return pouleName;
     }
 
-    getPoulePlaceName(poulePlace: PoulePlace, competitorName = false, longName = false): string {
-        if (competitorName === true && poulePlace.getCompetitor() !== undefined) {
-            return poulePlace.getCompetitor().getName();
+    getPlaceName(place: Place, competitorName = false, longName = false): string {
+        if (competitorName === true && place.getCompetitor() !== undefined) {
+            return place.getCompetitor().getName();
         }
         if (longName === true) {
-            return this.getPouleName(poulePlace.getPoule(), true) + ' nr. ' + poulePlace.getNumber();
+            return this.getPouleName(place.getPoule(), true) + ' nr. ' + place.getNumber();
         }
-        const name = this.getPouleName(poulePlace.getPoule(), false);
-        return name + poulePlace.getNumber();
+        const name = this.getPouleName(place.getPoule(), false);
+        return name + place.getNumber();
     }
 
-    getPoulePlaceFromName(place: PoulePlace, competitorName, longName = false): string {
+    getPlaceFromName(place: Place, competitorName, longName = false): string {
         if (competitorName === true && place.getCompetitor() !== undefined) {
             return place.getCompetitor().getName();
         }
 
         const parentQualifyGroup = place.getRound().getParentQualifyGroup();
         if (parentQualifyGroup === undefined) {
-            return this.getPoulePlaceName(place, false, longName);
+            return this.getPlaceName(place, false, longName);
         }
 
         const fromQualifyRule = place.getFromQualifyRule();
@@ -95,16 +95,16 @@ export class NameService {
             return '?' + fromQualifyRule.getFromPlaceNumber();
         }
 
-        const fromPoulePlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
-        if (longName !== true || fromPoulePlace.getPoule().needsRanking()) {
-            return this.getPoulePlaceName(fromPoulePlace, false, longName);
+        const fromPlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
+        if (longName !== true || fromPlace.getPoule().needsRanking()) {
+            return this.getPlaceName(fromPlace, false, longName);
         }
-        const name = this.getWinnersLosersDescription(fromPoulePlace.getNumber() === 1 ? QualifyGroup.WINNERS : QualifyGroup.LOSERS);
-        return name + ' ' + this.getPouleName(fromPoulePlace.getPoule(), false);
+        const name = this.getWinnersLosersDescription(fromPlace.getNumber() === 1 ? QualifyGroup.WINNERS : QualifyGroup.LOSERS);
+        return name + ' ' + this.getPouleName(fromPlace.getPoule(), false);
     }
 
-    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName: boolean, longName: boolean): string {
-        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
+    getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName: boolean): string {
+        return gamePlaces.map(gamePlace => this.getPlaceFromName(gamePlace.getPlace(), competitorName, longName)).join(' & ');
     }
 
     /**
@@ -142,8 +142,8 @@ export class NameService {
         if (game.getReferee() !== undefined) {
             return longName ? game.getReferee().getName() : game.getReferee().getInitials();
         }
-        if (game.getRefereePoulePlace() !== undefined) {
-            return this.getPoulePlaceName(game.getRefereePoulePlace(), true, longName);
+        if (game.getRefereePlace() !== undefined) {
+            return this.getPlaceName(game.getRefereePlace(), true, longName);
         }
         return undefined;
     }
