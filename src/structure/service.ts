@@ -75,7 +75,9 @@ export class StructureService {
         const rootRound = new Round(firstRoundNumber, undefined);
         let nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
-        return new Structure(firstRoundNumber, rootRound);
+        const structure = new Structure(firstRoundNumber, rootRound);
+        structure.setStructureNumbers();
+        return structure;
     }
 
     removePlaceFromRootRound(round: Round) {

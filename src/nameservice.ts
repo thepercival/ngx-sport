@@ -77,11 +77,7 @@ export class NameService {
         return name + poulePlace.getNumber();
     }
 
-    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName = false, longName = false): string {
-        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
-    }
-
-    getPoulePlaceFromName(place: PoulePlace, competitorName = false, longName = false): string {
+    getPoulePlaceFromName(place: PoulePlace, competitorName, longName = false): string {
         if (competitorName === true && place.getCompetitor() !== undefined) {
             return place.getCompetitor().getName();
         }
@@ -107,6 +103,10 @@ export class NameService {
         return name + ' ' + this.getPouleName(fromPoulePlace.getPoule(), false);
     }
 
+    getPoulePlacesFromName(gamePoulePlaces: GamePoulePlace[], competitorName: boolean, longName: boolean): string {
+        return gamePoulePlaces.map(gamePoulePlace => this.getPoulePlaceFromName(gamePoulePlace.getPoulePlace(), competitorName, longName)).join(' & ');
+    }
+
     /**
      * 
      * "nummers 2" voor winners complete
@@ -118,18 +118,24 @@ export class NameService {
      * @param horizontalPoule 
      */
     getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
+        if (horizontalPoule.getQualifyGroup() === undefined) {
+            return 'nummers ' + horizontalPoule.getNumber();
+        }
         const nrOfQualifiers = horizontalPoule.getNrOfQualifiers();
-        let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
+
         if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
+            let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
             if (horizontalPoule.isBorderPoule()) {
                 return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + name;
             }
             return name;
         }
+        let name = (nrOfQualifiers > 1 ? 'nummers ' : '');
+        name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
         if (horizontalPoule.isBorderPoule()) {
             return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'slechtste ' + name;
         }
-        return name + ' na laatst';
+        return name;
     }
 
     getRefereeName(game: Game, longName?: boolean): string {
