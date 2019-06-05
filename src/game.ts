@@ -121,7 +121,7 @@ export class Game {
         this.startDateTime = startDateTime;
     }
 
-    getPlaces(homeaway: boolean = undefined): GamePlace[] {
+    getPlaces(homeaway?: boolean): GamePlace[] {
         if (homeaway !== undefined) {
             return this.places.filter(place => place.getHomeaway() === homeaway);
         }
@@ -132,7 +132,7 @@ export class Game {
         this.places = places;
     }
 
-    isParticipating(place: Place, homeaway: boolean = undefined): boolean {
+    isParticipating(place: Place, homeaway?: boolean): boolean {
         return this.getPlaces(homeaway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
     }
 

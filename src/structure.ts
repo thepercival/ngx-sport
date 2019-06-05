@@ -35,12 +35,12 @@ export class Structure {
             if (roundNumber.hasNext()) {
                 addRoundNumber(roundNumber.getNext());
             }
-        }
+        };
         addRoundNumber(this.getFirstRoundNumber());
         return roundNumbers;
     }
 
-    getRoundNumber(roundNumberAsValue: number): RoundNumber {
+    getRoundNumber(initRoundNumberAsValue: number): RoundNumber {
         const getRoundNumber = (roundNumberAsValue: number, roundNumber: RoundNumber): RoundNumber => {
 
             if (roundNumber === undefined) {
@@ -51,7 +51,7 @@ export class Structure {
             }
             return getRoundNumber(roundNumberAsValue, roundNumber.getNext());
         };
-        return getRoundNumber(roundNumberAsValue, this.getFirstRoundNumber());
+        return getRoundNumber(initRoundNumberAsValue, this.getFirstRoundNumber());
     }
 
     setStructureNumbers() {
@@ -68,7 +68,7 @@ export class Structure {
             round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
                 setStructureNumbers(qualifyGroup.getChildRound());
             });
-        }
+        };
         setStructureNumbers(this.rootRound);
     }
 }

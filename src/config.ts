@@ -207,7 +207,7 @@ export class Config {
     }
 
     getNrOfCompetitorsPerGame(): number {
-        return this.getTeamup() ? 4 : 2
+        return this.getTeamup() ? 4 : 2;
     }
 }
 

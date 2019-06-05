@@ -8,7 +8,7 @@ export class HorizontalPouleService {
 
     constructor(
         private round: Round,
-        winnersOrLosers: number = undefined
+        winnersOrLosers?: number
     ) {
         if (winnersOrLosers === undefined) {
             this.winnersAndLosers = [QualifyGroup.WINNERS, QualifyGroup.LOSERS];
@@ -61,8 +61,8 @@ export class HorizontalPouleService {
         }
 
         placesOrderedByPlaceNumber.forEach(placeIt => {
-            let horizontalPoule = horizontalPoules.find(horizontalPoule => {
-                return horizontalPoule.getPlaces().some(poulePlaceIt => {
+            let horizontalPoule = horizontalPoules.find(horizontalPouleIt => {
+                return horizontalPouleIt.getPlaces().some(poulePlaceIt => {
                     let poulePlaceNrIt = poulePlaceIt.getNumber();
                     if (winnersOrLosers === QualifyGroup.LOSERS) {
                         poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;

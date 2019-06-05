@@ -73,7 +73,7 @@ export class StructureService {
         const firstRoundNumber = new RoundNumber(competition);
         this.configService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
-        let nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
+        const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
         const structure = new Structure(firstRoundNumber, rootRound);
         structure.setStructureNumbers();
@@ -125,7 +125,8 @@ export class StructureService {
         const newNrOfPlaces = round.getNrOfPlaces() - (modifyNrOfPlaces ? lastPoule.getPlaces().length : 0);
 
         if (newNrOfPlaces < round.getNrOfPlacesChildren()) {
-            throw new Error('de poule kan niet verwijderd worden, omdat er te weinig deelnemers overblijven om naar de volgende ronde gaan');
+            throw new Error('de poule kan niet verwijderd worden, omdat er te weinig deelnemers '
+            + 'overblijven om naar de volgende ronde gaan');
         }
 
         this.updateRound(round, newNrOfPlaces, poules.length - 1);
@@ -278,7 +279,7 @@ export class StructureService {
     }
 
     protected updateQualifyGroups(round: Round, winnersOrLosers: number, newNrOfPlacesChildren: number) {
-        const roundNrOfPlaces = round.getNrOfPlaces()
+        const roundNrOfPlaces = round.getNrOfPlaces();
         if (newNrOfPlacesChildren > roundNrOfPlaces) {
             newNrOfPlacesChildren = roundNrOfPlaces;
         }
@@ -292,7 +293,7 @@ export class StructureService {
             if (qualifyGroup === undefined) {
                 qualifyGroup = new QualifyGroup(round, winnersOrLosers);
                 const nextRoundNumber = round.getNumber().hasNext() ? round.getNumber().getNext() : this.createRoundNumber(round);
-                new Round(nextRoundNumber, qualifyGroup);
+                const tmp = new Round(nextRoundNumber, qualifyGroup);
                 nrOfQualifiers = newNrOfPlacesChildren;
             } else {
                 round.getQualifyGroups(winnersOrLosers).push(qualifyGroup);
@@ -319,10 +320,10 @@ export class StructureService {
 
         const horizontolPoulesCreators: HorizontolPoulesCreator[] = [];
         const qualifyGroups = round.getQualifyGroups(winnersOrLosers);
-        const removedQualifyGroups = qualifyGroups.splice(0, qualifyGroups.length);
+        const initRemovedQualifyGroups = qualifyGroups.splice(0, qualifyGroups.length);
         let qualifyGroupNumber = 1;
         while (newNrOfPlacesChildren > 0) {
-            const horizontolPoulesCreator = getNewQualifyGroup(removedQualifyGroups);
+            const horizontolPoulesCreator = getNewQualifyGroup(initRemovedQualifyGroups);
             horizontolPoulesCreator.qualifyGroup.setNumber(qualifyGroupNumber++);
             horizontolPoulesCreators.push(horizontolPoulesCreator);
             newNrOfPlacesChildren -= horizontolPoulesCreator.nrOfQualifiers;
@@ -333,7 +334,7 @@ export class StructureService {
             const newNrOfPoules = this.calculateNewNrOfPoules(creator.qualifyGroup, creator.nrOfQualifiers);
             this.updateRound(creator.qualifyGroup.getChildRound(), creator.nrOfQualifiers, newNrOfPoules);
         });
-        this.cleanupRemovedQualifyGroups(round, removedQualifyGroups);
+        this.cleanupRemovedQualifyGroups(round, initRemovedQualifyGroups);
     }
 
     updateQualifyGroupsHorizontalPoules(roundHorizontalPoules: HorizontalPoule[], horizontolPoulesCreators: HorizontolPoulesCreator[]) {
@@ -351,9 +352,9 @@ export class StructureService {
 
     /**
      * if roundnumber has no rounds left, also remove round number
-     * 
-     * @param round 
-     * @param removedQualifyGroups 
+     *
+     * @param round
+     * @param removedQualifyGroups
      */
     protected cleanupRemovedQualifyGroups(round: Round, removedQualifyGroups: QualifyGroup[]) {
         const nextRoundNumber = round.getNumber().getNext();
@@ -418,7 +419,7 @@ export class StructureService {
             const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules);
             const poule = new Poule(round);
             for (let i = 0; i < nrOfPlacesToAdd; i++) {
-                new Place(poule);
+                const tmp = new Place(poule);
             }
             nrOfPlaces -= nrOfPlacesToAdd;
             nrOfPoules--;

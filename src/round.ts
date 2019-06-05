@@ -34,7 +34,7 @@ export class Round {
         this.number = roundNumber;
         this.setParentQualifyGroup(parentQualifyGroup);
         this.number.getRounds().push(this);
-        //this.setValue();
+        // this.setValue();
     }
 
     getId(): number {

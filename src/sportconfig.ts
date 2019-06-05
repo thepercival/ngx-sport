@@ -39,7 +39,7 @@ export class SportConfig {
             SportConfig.Squash,
             SportConfig.TableTennis,
             SportConfig.Tennis,
-            SportConfig.Volleyball,            
+            SportConfig.Volleyball,
         ];
     }
 }
