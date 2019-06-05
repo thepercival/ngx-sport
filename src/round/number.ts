@@ -39,6 +39,11 @@ export class RoundNumber {
         return this.next;
     }
 
+    createNext(): RoundNumber {
+        this.next = new RoundNumber(this.getCompetition(), this);
+        return this.getNext();
+    }
+
     removeNext() {
         this.next = undefined;
     }
@@ -49,11 +54,6 @@ export class RoundNumber {
 
     getPrevious(): RoundNumber {
         return this.previous;
-    }
-
-    createNext(): RoundNumber {
-        this.next = new RoundNumber(this.getCompetition(), this);
-        return this.getNext();
     }
 
     getCompetition(): Competition {

@@ -426,7 +426,7 @@ export class StructureService {
         return round;
     }
 
-    protected getRoot(round: Round) {
+    protected getRoot(round: Round): Round {
         if (!round.isRoot()) {
             return this.getRoot(round.getParent());
         }

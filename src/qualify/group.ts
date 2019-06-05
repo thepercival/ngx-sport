@@ -71,14 +71,6 @@ export class QualifyGroup {
         this.number = number;
     }
 
-    // getNrOfHorizontalPoules(): number {
-    //     return this.nrOfHorizontalPoules;
-    // }
-
-    // setNrOfHorizontalPoules(nrOfHorizontalPoules: number): void {
-    //     this.nrOfHorizontalPoules = nrOfHorizontalPoules;
-    // }
-
     getChildRound(): Round {
         return this.childRound;
     }

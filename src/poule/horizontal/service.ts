@@ -8,7 +8,7 @@ export class HorizontalPouleService {
 
     constructor(
         private round: Round,
-        private winnersOrLosers: number = undefined
+        winnersOrLosers: number = undefined
     ) {
         if (winnersOrLosers === undefined) {
             this.winnersAndLosers = [QualifyGroup.WINNERS, QualifyGroup.LOSERS];

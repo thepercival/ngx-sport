@@ -8,6 +8,6 @@ export abstract class QualifyRule {
     abstract isSingle(): boolean;
     abstract getWinnersOrLosers(): number;
 
-    abstract getFromPlaceNumber(): number;    
+    abstract getFromPlaceNumber(): number;
 }
 
