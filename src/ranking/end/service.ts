@@ -32,7 +32,7 @@ export class EndRankingService {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
             return items;
-        }
+        };
         return getItems(this.structure.getRootRound());
     }
 
@@ -68,7 +68,7 @@ export class EndRankingService {
 
     protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingService: RankingService): EndRankingItem[] {
         const rankedPlaceLocations: PlaceLocation[] = rankingService.getPlaceLocationsForHorizontalPoule(horizontalPoule);
-        rankedPlaceLocations.splice(0, horizontalPoule.getNrOfQualifiers())
+        rankedPlaceLocations.splice(0, horizontalPoule.getNrOfQualifiers());
         return rankedPlaceLocations.map(rankedPlaceLocation => {
             const competitor = rankingService.getCompetitor(rankedPlaceLocation);
             const name = competitor ? competitor.getName() : 'onbekend';

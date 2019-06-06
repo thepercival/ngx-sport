@@ -29,12 +29,12 @@ export class RankedRoundItem {
 }
 
 export class UnrankedRoundItem {
-    private games: number = 0;
-    private points: number = 0;
-    private scored: number = 0;
-    private received: number = 0;
-    private subScored: number = 0;
-    private subReceived: number = 0;
+    private games = 0;
+    private points = 0;
+    private scored = 0;
+    private received = 0;
+    private subScored = 0;
+    private subReceived = 0;
 
     constructor(private round: Round, private placeLocation: PlaceLocation, penaltyPoints?: number) {
         if (penaltyPoints !== undefined) {

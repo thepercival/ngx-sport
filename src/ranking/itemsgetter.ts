@@ -34,8 +34,8 @@ export class RankingItemsGetter {
                 const subScored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, true);
                 const subReceived = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, true);
                 game.getPlaces(homeAway).forEach(gamePlace => {
-                    const item = items.find(item => item.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
-                        && item.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
+                    const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
+                        && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
                     item.addGame();
                     item.addPoints(points);
                     item.addScored(scored);
