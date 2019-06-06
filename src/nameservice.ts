@@ -145,7 +145,7 @@ export class NameService {
         if (game.getRefereePlace() !== undefined) {
             return this.getPlaceName(game.getRefereePlace(), true, longName);
         }
-        return undefined;
+        return '';
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {
@@ -188,14 +188,14 @@ export class NameService {
         return true;
     }
 
-    private getHtmlFractalNumber(number): string {
+    private getHtmlFractalNumber(number: number): string {
         if (number === 2 || number === 4) {
             return '&frac1' + number + ';';
         }
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
     }
 
-    private getHtmlNumber(number): string {
+    private getHtmlNumber(number: number): string {
         return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
     }
 
