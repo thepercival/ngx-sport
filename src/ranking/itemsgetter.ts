@@ -14,7 +14,7 @@ export class RankingItemsGetter {
     ) {
     }
 
-    static getIndex(place: Place) {
+    static getIndex(place: Place): string {
         return place.getPoule().getNumber() + '-' + place.getNumber();
     }
 

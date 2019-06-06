@@ -3,7 +3,7 @@ import { Place } from '../place';
 import { Round } from '../round';
 
 export class RankedRoundItem {
-    constructor(private unrankedRoundItem: UnrankedRoundItem, private uniqueRank: number, private rank: number
+    constructor(private unranked: UnrankedRoundItem, private uniqueRank: number, private rank: number
     ) {
     }
 
@@ -16,15 +16,15 @@ export class RankedRoundItem {
     }
 
     getPlaceLocation(): PlaceLocation {
-        return this.unrankedRoundItem.getPlaceLocation();
+        return this.unranked.getPlaceLocation();
     }
 
     getUnranked(): UnrankedRoundItem {
-        return this.unrankedRoundItem;
+        return this.unranked;
     }
 
     getPlace(): Place {
-        return this.unrankedRoundItem.getRound().getPlace(this.unrankedRoundItem.getPlaceLocation());
+        return this.unranked.getRound().getPlace(this.unranked.getPlaceLocation());
     }
 }
 
@@ -33,8 +33,8 @@ export class UnrankedRoundItem {
     private points: number = 0;
     private scored: number = 0;
     private received: number = 0;
-    private subReceived: number = 0;
     private subScored: number = 0;
+    private subReceived: number = 0;
 
     constructor(private round: Round, private placeLocation: PlaceLocation, penaltyPoints?: number) {
         if (penaltyPoints !== undefined) {

@@ -5,7 +5,7 @@ import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { Place } from '../place';
 import { Round } from '../round';
-import { RankingItemsGetter } from './helper';
+import { RankingItemsGetter } from './itemsgetter';
 import { RankedRoundItem, UnrankedRoundItem } from './item';
 
 /* tslint:disable:no-bitwise */
@@ -75,10 +75,10 @@ export class RankingService {
     }
 
     /**
-     * Place can have a multiple and a single rule, if so than do not 
+     * Place can have a multiple and a single rule, if so than do not
      * process place for horizontalpoule(multiple)
-     * 
-     * @param place 
+     *
+     * @param place
      */
     protected hasPlaceSingleQualifyRule(place: Place): boolean {
         return place.getToQualifyRules().filter(qualifyRuleIt => qualifyRuleIt.isSingle()).length > 0;
@@ -124,12 +124,12 @@ export class RankingService {
     }
 
     private getRankFunctions(againstEachOther?: boolean): Function[] {
-        const rankFunctions: Function[] = [this.filterMostPoints, this.filterFewestGames];
+        let rankFunctions: Function[] = [this.filterMostPoints, this.filterFewestGames];
+        const unitRankFunctions: Function[] = [
+            this.filterBestUnitDifference, this.filterMostUnitsScored, this.filterBestSubUnitDifference, this.filterMostSubUnitsScored
+        ];
         if (this.rulesSet === RankingService.RULESSET_WC) {
-            rankFunctions.push(this.filterBestUnitDifference);
-            rankFunctions.push(this.filterMostUnitsScored);
-            rankFunctions.push(this.filterBestSubUnitDifference);
-            rankFunctions.push(this.filterMostSubUnitsScored);
+            rankFunctions = rankFunctions.concat(unitRankFunctions);
             if (againstEachOther !== false) {
                 rankFunctions.push(this.filterBestAgainstEachOther);
             }
@@ -137,10 +137,7 @@ export class RankingService {
             if (againstEachOther !== false) {
                 rankFunctions.push(this.filterBestAgainstEachOther);
             }
-            rankFunctions.push(this.filterBestUnitDifference);
-            rankFunctions.push(this.filterMostUnitsScored);
-            rankFunctions.push(this.filterBestSubUnitDifference);
-            rankFunctions.push(this.filterMostSubUnitsScored);
+            rankFunctions = rankFunctions.concat(unitRankFunctions);
         } else {
             throw new Error('Unknown qualifying rule');
         }
@@ -151,7 +148,7 @@ export class RankingService {
         let mostPoints;
         let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
-            let points = item.getPoints();
+            const points = item.getPoints();
             if (mostPoints === undefined || points === mostPoints) {
                 mostPoints = points;
                 bestItems.push(item);
@@ -168,7 +165,7 @@ export class RankingService {
         let fewestGames;
         let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
-            let nrOfGames = item.getGames();
+            const nrOfGames = item.getGames();
             if (fewestGames === undefined || nrOfGames === fewestGames) {
                 fewestGames = nrOfGames;
                 bestItems.push(item);
@@ -198,7 +195,7 @@ export class RankingService {
         }
         return rankedItems.map(rankedItem => {
             return items.find(item => item.getPlaceLocation().getPouleNr() === rankedItem.getPlaceLocation().getPouleNr()
-                && item.getPlaceLocation().getPlaceNr() === rankedItem.getPlaceLocation().getPlaceNr())
+                && item.getPlaceLocation().getPlaceNr() === rankedItem.getPlaceLocation().getPlaceNr());
         });
     }
 
@@ -214,7 +211,7 @@ export class RankingService {
         let bestDiff;
         let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
-            let diff = sub ? item.getSubDiff() : item.getDiff();
+            const diff = sub ? item.getSubDiff() : item.getDiff();
             if (bestDiff === undefined || diff === bestDiff) {
                 bestDiff = diff;
                 bestItems.push(item);
@@ -238,7 +235,7 @@ export class RankingService {
         let mostScored;
         let bestItems: UnrankedRoundItem[] = [];
         items.forEach(item => {
-            let scored = sub ? item.getSubScored() : item.getScored();
+            const scored = sub ? item.getSubScored() : item.getScored();
             if (mostScored === undefined || scored === mostScored) {
                 mostScored = scored;
                 bestItems.push(item);
