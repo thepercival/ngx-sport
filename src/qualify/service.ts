@@ -11,6 +11,7 @@ import { QualifyGroup } from './group';
 import { QualifyReservationService } from './reservationservice';
 import { QualifyRuleMultiple } from './rule/multiple';
 import { QualifyRuleSingle } from './rule/single';
+import { State } from '../state';
 
 
 export class QualifyService {
@@ -39,7 +40,7 @@ export class QualifyService {
                     changedPlaces.push(this.setQualifierForSingleRuleAndReserve(singleRule));
                 });
             }
-        }
+        };
         this.round.getQualifyGroups().forEach(qualifyGroup => {
             this.reservationService = new QualifyReservationService(qualifyGroup.getChildRound());
             qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
@@ -60,7 +61,7 @@ export class QualifyService {
     }
 
     protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: QualifyRuleMultiple): Place[] {
-        let changedPlaces: Place[] = [];
+        const changedPlaces: Place[] = [];
         const toPlaces = ruleMultiple.getToPlaces();
         if (!this.isRoundPlayed()) {
             toPlaces.forEach((toPlace) => {
@@ -70,7 +71,8 @@ export class QualifyService {
             return changedPlaces;
         }
         const round = ruleMultiple.getFromRound();
-        const rankedPlaceLocations: PlaceLocation[] = this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
+        const rankedPlaceLocations: PlaceLocation[] =
+            this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
 
         while (rankedPlaceLocations.length > toPlaces.length) {
             ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.shift();
@@ -104,9 +106,9 @@ export class QualifyService {
 
     protected isPoulePlayed(poule: Poule): boolean {
         if (this.poulesPlayed[poule.getNumber()] === undefined) {
-            this.poulesPlayed[poule.getNumber()] = (poule.getState() === Game.STATE_PLAYED);
+            this.poulesPlayed[poule.getNumber()] = (poule.getState() === State.Finished);
         }
-        return this.poulesPlayed[poule.getNumber()]
+        return this.poulesPlayed[poule.getNumber()];
     }
 }
 

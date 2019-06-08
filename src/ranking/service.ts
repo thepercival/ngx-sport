@@ -7,6 +7,7 @@ import { Place } from '../place';
 import { Round } from '../round';
 import { RankingItemsGetter } from './itemsgetter';
 import { RankedRoundItem, UnrankedRoundItem } from './item';
+import { State } from '../state';
 
 /* tslint:disable:no-bitwise */
 
@@ -22,7 +23,7 @@ export class RankingService {
         private rulesSet: number,
         gameStates?: number
     ) {
-        this.gameStates = (gameStates !== undefined) ? gameStates : Game.STATE_PLAYED;
+        this.gameStates = (gameStates !== undefined) ? gameStates : State.Finished;
     }
 
     getRuleDescriptions() {

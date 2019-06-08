@@ -1,20 +1,22 @@
 import { Game, GameScore, Poule } from '../public_api';
+import { State } from '../src/state';
 
-export function setScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number, state?: number) {
+export function setScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number
+    , state?: number) {
     const homePlace = poule.getPlace(homePlaceNr);
     const awayPlace = poule.getPlace(awayPlaceNr);
-    const game = poule.getGames().find(game => {
+    const foundGame = poule.getGames().find(game => {
         const homePlaces = game.getPlaces(Game.HOME).map(gamePlace => gamePlace.getPlace());
         const awayPlaces = game.getPlaces(Game.AWAY).map(gamePlace => gamePlace.getPlace());
         return ((homePlaces.find(homePlaceIt => homePlaceIt === homePlace) !== undefined
             && awayPlaces.find(awayPlaceIt => awayPlaceIt === awayPlace) !== undefined)
             || (homePlaces.find(homePlaceIt => homePlaceIt === awayPlace) !== undefined
-                && awayPlaces.find(awayPlaceIt => awayPlaceIt === homePlace) !== undefined))
+                && awayPlaces.find(awayPlaceIt => awayPlaceIt === homePlace) !== undefined));
     });
-    const newHomeGoals = game.getHomeAway(homePlace) === Game.HOME ? homeGoals : awayGoals;
-    const newAwayGoals = game.getHomeAway(awayPlace) === Game.AWAY ? awayGoals : homeGoals;
-    game.getScores().push(new GameScore(game, newHomeGoals, newAwayGoals));
+    const newHomeGoals = foundGame.getHomeAway(homePlace) === Game.HOME ? homeGoals : awayGoals;
+    const newAwayGoals = foundGame.getHomeAway(awayPlace) === Game.AWAY ? awayGoals : homeGoals;
+    foundGame.getScores().push(new GameScore(foundGame, newHomeGoals, newAwayGoals));
 
-    game.setState(state ? state : Game.STATE_PLAYED);
+    foundGame.setState(state ? state : State.Finished);
 }
 

@@ -7,6 +7,7 @@ import { HorizontalPoule } from './poule/horizontal';
 import { Place } from './place';
 import { QualifyGroup } from './qualify/group';
 import { RoundNumber } from './round/number';
+import { State } from './state';
 
 export class Round {
     static readonly ORDER_NUMBER_POULE = 1;
@@ -213,16 +214,16 @@ export class Round {
     }
 
     getState(): number {
-        if (this.getPoules().every(poule => poule.getState() === Game.STATE_PLAYED)) {
-            return Game.STATE_PLAYED;
-        } else if (this.getPoules().some(poule => poule.getState() !== Game.STATE_CREATED)) {
-            return Game.STATE_INPLAY;
+        if (this.getPoules().every(poule => poule.getState() === State.Finished)) {
+            return State.Finished;
+        } else if (this.getPoules().some(poule => poule.getState() !== State.Created)) {
+            return State.InProgress;
         }
-        return Game.STATE_CREATED;
+        return State.Created;
     }
 
     isStarted(): boolean {
-        return this.getState() > Game.STATE_CREATED;
+        return this.getState() > State.Created;
     }
 
     needsRanking(): boolean {

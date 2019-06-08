@@ -2,11 +2,9 @@ import { Field } from './field';
 import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
+import { State } from './state';
 
 export class Competition {
-    static readonly STATE_CREATED = 1;
-    static readonly STATE_PUBLISHED = 2;
-
     protected id: number;
     protected league: League;
     protected season: Season;
@@ -19,7 +17,7 @@ export class Competition {
     constructor(league: League, season: Season) {
         this.setLeague(league);
         this.setSeason(season);
-        this.setState(Competition.STATE_CREATED);
+        this.setState(State.Created);
     }
 
     getId(): number {
@@ -68,16 +66,6 @@ export class Competition {
 
     setState(state: number): void {
         this.state = state;
-    }
-
-    getStateDescription(): string {
-        if (this.state === Competition.STATE_CREATED) {
-            return 'aangemaakt';
-        } else if (this.state === Competition.STATE_PUBLISHED) {
-            return 'gepubliceerd';
-        }
-
-        return undefined;
     }
 
     getName(): string {

@@ -5,6 +5,7 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { Round } from '../round';
 import { Config } from '../config';
+import { State } from '../state';
 
 
 export class RoundNumber {
@@ -152,15 +153,15 @@ export class RoundNumber {
     }
 
     getState(): number {
-        if (this.getRounds().every(round => round.getState() === Game.STATE_PLAYED)) {
-            return Game.STATE_PLAYED;
-        } else if (this.getRounds().some(round => round.getState() !== Game.STATE_CREATED)) {
-            return Game.STATE_INPLAY;
+        if (this.getRounds().every(round => round.getState() === State.Finished)) {
+            return State.Finished;
+        } else if (this.getRounds().some(round => round.getState() !== State.Created)) {
+            return State.InProgress;
         }
-        return Game.STATE_CREATED;
+        return State.Created;
     }
 
     isStarted(): boolean {
-        return this.getState() > Game.STATE_CREATED;
+        return this.getState() > State.Created;
     }
 }

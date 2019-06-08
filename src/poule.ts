@@ -3,6 +3,7 @@ import { Competitor } from './competitor';
 import { Game } from './game';
 import { Place } from './place';
 import { Round } from './round';
+import { State } from './state';
 
 export class Poule {
     protected id: number;
@@ -100,12 +101,12 @@ export class Poule {
     }
 
     getState(): number {
-        if (this.getGames().length > 0 && this.getGames().every(game => game.getState() === Game.STATE_PLAYED)) {
-            return Game.STATE_PLAYED;
-        } else if (this.getGames().some(game => game.getState() !== Game.STATE_CREATED)) {
-            return Game.STATE_INPLAY;
+        if (this.getGames().length > 0 && this.getGames().every(game => game.getState() === State.Finished)) {
+            return State.Finished;
+        } else if (this.getGames().some(game => game.getState() !== State.Created)) {
+            return State.InProgress;
         }
-        return Game.STATE_CREATED;
+        return State.Created;
     }
 
     needsRanking(): boolean {

@@ -1,4 +1,3 @@
-import { Game } from '../../game';
 import { PlaceLocation } from '../../place/location';
 import { HorizontalPoule } from '../../poule/horizontal';
 import { QualifyGroup } from '../../qualify/group';
@@ -6,6 +5,7 @@ import { Round } from '../../round';
 import { Structure } from '../../structure';
 import { EndRankingItem } from '../item';
 import { RankingService } from '../service';
+import { State } from '../../state';
 
 /* tslint:disable:no-bitwise */
 
@@ -23,7 +23,7 @@ export class EndRankingService {
             round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
-            if (round.getState() === Game.STATE_PLAYED) {
+            if (round.getState() === State.Finished) {
                 items = items.concat(this.getDropouts(round));
             } else {
                 items = items.concat(this.getDropoutsNotPlayed(round));

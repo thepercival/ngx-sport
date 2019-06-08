@@ -7,6 +7,7 @@ import { Place } from './place';
 import { Referee } from './referee';
 import { Round } from './round';
 import { Config } from './config';
+import { State } from './state';
 
 export class Game {
     static readonly WINNERS = 1;
@@ -14,9 +15,6 @@ export class Game {
     static readonly LOSERS = 3;
     static readonly HOME = true;
     static readonly AWAY = false;
-    static readonly STATE_CREATED = 1;
-    static readonly STATE_INPLAY = 2;
-    static readonly STATE_PLAYED = 4;
     static readonly ORDER_BYNUMBER = 1;
     static readonly ORDER_RESOURCEBATCH = 2;
     static readonly MOMENT_HALFTIME = 1;
@@ -45,7 +43,7 @@ export class Game {
         this.setPoule(poule);
         this.setRoundNumber(roundNumber);
         this.setSubNumber(subNumber);
-        this.setState(Game.STATE_CREATED);
+        this.setState(State.Created);
     }
 
     getId(): number {

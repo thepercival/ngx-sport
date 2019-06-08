@@ -6,6 +6,7 @@ import { Competitor } from '../../../src/competitor';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { setScoreSingle } from '../../helper';
+import { State } from '../../../src/state';
 
 describe('Ranking/Service', () => {
 
@@ -93,18 +94,18 @@ describe('Ranking/Service', () => {
 
         const pouleOne = rootRound.getPoules()[0];
 
-        setScoreSingle(pouleOne, 1, 2, 2, 1, Game.STATE_INPLAY);
-        setScoreSingle(pouleOne, 1, 3, 3, 1, Game.STATE_INPLAY);
-        setScoreSingle(pouleOne, 2, 3, 3, 2, Game.STATE_INPLAY);
+        setScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
+        setScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
+        setScoreSingle(pouleOne, 2, 3, 3, 2, State.InProgress);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC, Game.STATE_INPLAY + Game.STATE_PLAYED);
+        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC, State.InProgress + State.Finished);
         const items = rankingService.getItemsForPoule(pouleOne);
 
         expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(1));
         expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
         expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_WC, Game.STATE_PLAYED);
+        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_WC, State.InProgress);
         const items2 = rankingService2.getItemsForPoule(pouleOne);
         items2.forEach(item => expect(item.getRank()).to.equal(1));
     });
