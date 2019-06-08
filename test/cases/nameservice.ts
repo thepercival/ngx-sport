@@ -98,7 +98,7 @@ describe('NameService', () => {
 
 
 
-        // root needs ranking, depth 2 
+        // root needs ranking, depth 2
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 16, 8);
@@ -141,7 +141,9 @@ describe('NameService', () => {
             structureService.addQualifier(doubleLosersChildRound, QualifyGroup.LOSERS);
 
             const number = 8;
-            expect(nameService.getRoundName(rootRound)).to.equal('<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span> finale');
+            expect(nameService.getRoundName(rootRound)).to.equal(
+                '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span> finale'
+            );
 
             const losersFinal = doubleLosersChildRound.getBorderQualifyGroup(QualifyGroup.LOSERS).getChildRound();
             expect(nameService.getRoundName(losersFinal)).to.equal('15<sup>de</sup>' + '/' + '16<sup>de</sup>' + ' plaats');
@@ -155,7 +157,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 89, 30);
@@ -179,7 +181,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 3);
@@ -210,7 +212,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 9, 3);
@@ -272,7 +274,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 3, 1);
@@ -299,7 +301,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 12, 3);
@@ -353,7 +355,7 @@ describe('NameService', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        // basics 
+        // basics
         {
             const structureService = new StructureService();
             const structure = structureService.create(competition, 3, 1);
