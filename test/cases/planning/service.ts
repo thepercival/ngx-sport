@@ -21,4 +21,4 @@ describe('Planning/Service', () => {
 
         expect(rootRound.getGames().length).to.equal(9);
     });
-})
+});

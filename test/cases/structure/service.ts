@@ -32,15 +32,15 @@ describe('Structure/Service', () => {
     it('default poules', () => {
         const structureService = new StructureService({ min: 3, max: 40 });
 
-        expect(structureService.getDefaultNrOfPoules(2)).to.equal(undefined);
+        expect(() => structureService.getDefaultNrOfPoules(2)).to.throw(Error);
         expect(structureService.getDefaultNrOfPoules(3)).to.equal(1);
         expect(structureService.getDefaultNrOfPoules(40)).to.equal(8);
-        expect(structureService.getDefaultNrOfPoules(41)).to.equal(undefined);
+        expect(() => structureService.getDefaultNrOfPoules(41)).to.throw(Error);
 
         const structureService2 = new StructureService();
         expect(structureService2.getDefaultNrOfPoules(2)).to.equal(1);
-        expect(structureService2.getDefaultNrOfPoules(1)).to.equal(undefined);
-        expect(structureService2.getDefaultNrOfPoules(41)).to.equal(undefined);
+        expect(() => structureService2.getDefaultNrOfPoules(1)).to.throw(Error);
+        expect(structureService2.getDefaultNrOfPoules(41)).to.equal(8);
     });
 
     it('minimal number of places per poule', () => {
@@ -54,20 +54,7 @@ describe('Structure/Service', () => {
         expect(() => structureService.removePlaceFromRootRound(rootRound)).to.throw(Error);
     });
 
-    it('minimal number of poules', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 2);
-        const rootRound = structure.getRootRound();
-
-        expect(() => structureService.removePoule(rootRound, false)).to.not.throw(Error);
-
-        expect(() => structureService.removePoule(rootRound, false)).to.throw(Error);
-    });
-
-    it('minimal number of places', () => {
+    it('minimal number of places/poules', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
@@ -449,16 +436,16 @@ describe('Structure/Service', () => {
         structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
         const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
-        const winnersHorPoules = winnersBorderQualifyGroup.getHorizontalPoules();
+        const winHorPoules = winnersBorderQualifyGroup.getHorizontalPoules();
 
-        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, winnersHorPoules[0], winnersHorPoules[1])).to.not.throw(Error);
+        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, winHorPoules[0], winHorPoules[1])).to.not.throw(Error);
         const winnersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyGroup.WINNERS);
         expect(() => structureService.mergeQualifyGroups(winnersBorderQualifyGroups[1], winnersBorderQualifyGroups[0])).to.not.throw(Error);
 
         const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
-        const losersHorPoules = losersBorderQualifyGroup.getHorizontalPoules();
+        const losHorPoules = losersBorderQualifyGroup.getHorizontalPoules();
 
-        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, losersHorPoules[0], losersHorPoules[1])).to.not.throw(Error);
+        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, losHorPoules[0], losHorPoules[1])).to.not.throw(Error);
         const losersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyGroup.LOSERS);
         expect(() => structureService.mergeQualifyGroups(losersBorderQualifyGroups[0], losersBorderQualifyGroups[1])).to.not.throw(Error);
     });
