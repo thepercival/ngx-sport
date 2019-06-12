@@ -149,12 +149,12 @@ export class Round {
         return this.losersHorizontalPoules;
     }
 
-    protected getFirstHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
-        return this.getHorizontalPoules(winnersOrLosers)[0];
+    getHorizontalPoule(winnersOrLosers: number, number: number): HorizontalPoule {
+        return this.getHorizontalPoules(winnersOrLosers).find( horPoule => horPoule.getNumber() === number );
     }
 
     getFirstPlace(winnersOrLosers: number): Place {
-        return this.getFirstHorizontalPoule(winnersOrLosers).getFirstPlace();
+        return this.getHorizontalPoule(winnersOrLosers, 1).getFirstPlace();
     }
 
     getPlaces(order?: number): Place[] {

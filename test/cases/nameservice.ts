@@ -395,9 +395,9 @@ describe('NameService', () => {
             const gameSelfMiddle = rootRound.getGames()[1];
             gameSelfMiddle.setRefereePlace(undefined);
 
-            expect(nameService.getRefereeName(gameSelfMiddle)).to.equal(undefined);
-            expect(nameService.getRefereeName(gameSelfMiddle, false)).to.equal(undefined);
-            expect(nameService.getRefereeName(gameSelfMiddle, true)).to.equal(undefined);
+            expect(nameService.getRefereeName(gameSelfMiddle)).to.equal('');
+            expect(nameService.getRefereeName(gameSelfMiddle, false)).to.equal('');
+            expect(nameService.getRefereeName(gameSelfMiddle, true)).to.equal('');
         }
     });
 

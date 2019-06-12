@@ -133,6 +133,18 @@ export class StructureService {
         structure.setStructureNumbers();
     }
 
+    addQualifiers(round: Round, winnersOrLosers: number, nrOfQualifiers: number ) {
+        if ( round.getBorderQualifyGroup(winnersOrLosers) === undefined  ) {
+            if ( nrOfQualifiers < 2) {
+                throw Error('Voeg miniaal 2 gekwalificeerden toe' );
+            }
+            nrOfQualifiers--;
+        }
+        for ( let qualifier = 0 ; qualifier < nrOfQualifiers ; qualifier++ ) {
+            this.addQualifier(round, winnersOrLosers);
+        }
+    }
+
     addQualifier(round: Round, winnersOrLosers: number) {
         if (round.getNrOfPlacesChildren() >= round.getNrOfPlaces()) {
             throw new Error('er mogen maximaal ' + round.getNrOfPlacesChildren() + ' deelnemers naar de volgende ronde');
