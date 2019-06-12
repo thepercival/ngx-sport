@@ -97,7 +97,7 @@ describe('QualifyReservationService', () => {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
             pouleThree.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleFour = rootRound.getPoule(3);
+        const pouleFour = rootRound.getPoule(4);
         for (let nr = 1; nr <= pouleFour.getPlaces().length; nr++) {
             const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + pouleThree.getPlaces().length + nr;
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);

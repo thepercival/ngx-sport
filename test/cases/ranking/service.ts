@@ -105,7 +105,7 @@ describe('Ranking/Service', () => {
         expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
         expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_WC, State.InProgress);
+        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_WC);
         const items2 = rankingService2.getItemsForPoule(pouleOne);
         items2.forEach(item => expect(item.getRank()).to.equal(1));
     });
