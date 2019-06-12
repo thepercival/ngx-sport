@@ -41,7 +41,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 0, 0);
         setScoreSingle(pouleOne, 1, 3, 0, 0);
@@ -67,7 +67,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -92,7 +92,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
         setScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
@@ -121,8 +121,8 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
-        const pouleTwo = rootRound.getPoules()[1];
+        const pouleOne = rootRound.getPoule(1);
+        const pouleTwo = rootRound.getPoule(2);
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -159,8 +159,8 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
-        const pouleTwo = rootRound.getPoules()[1];
+        const pouleOne = rootRound.getPoule(1);
+        const pouleTwo = rootRound.getPoule(2);
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -190,7 +190,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
         const placeOne = pouleOne.getPlace(1);
         const competitor = new Competitor(competition.getLeague().getAssociation(), 'test');
         placeOne.setCompetitor(competitor);
@@ -212,7 +212,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 1, 0);
         setScoreSingle(pouleOne, 1, 3, 1, 0);
@@ -246,7 +246,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);
@@ -271,7 +271,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 5, 0);
         setScoreSingle(pouleOne, 1, 3, 0, 1);
@@ -299,7 +299,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         // setScoreSingle(pouleOne, 1, 2, 1, 0);
         setScoreSingle(pouleOne, 1, 3, 1, 0);
@@ -326,7 +326,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         setScoreSingle(pouleOne, 1, 2, 1, 1);
         setScoreSingle(pouleOne, 1, 3, 2, 1);
@@ -350,7 +350,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -376,7 +376,7 @@ describe('Ranking/Service', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);

@@ -1,5 +1,4 @@
 import { Competitor } from '../competitor';
-import { Game } from '../game';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';

@@ -407,7 +407,7 @@ describe('Structure/Service', () => {
         expect(hasHorPoule( qualifyGroup56, horPoule4c)).to.equal(false);
     });
 
-    it('qualifygroups unmergable winners 33', () => {
+    it('qualifygroups mergable 33', () => {
 
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -422,7 +422,6 @@ describe('Structure/Service', () => {
         {
             const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
             const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
-            // const horPoules = borderQualifyGroup.getHorizontalPoules();
 
             expect(structureService.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
             expect(structureService.areQualifyGroupsMergable(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
@@ -434,7 +433,7 @@ describe('Structure/Service', () => {
         }
     });
 
-    it('qualifygroups unmergable winners 544', () => {
+    it('qualifygroups mergable 544', () => {
 
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -449,7 +448,6 @@ describe('Structure/Service', () => {
         {
             const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
             const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
-            // const horPoules = borderQualifyGroup.getHorizontalPoules();
 
             expect(structureService.areQualifyGroupsMergable(winnersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
             expect(structureService.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
@@ -462,7 +460,7 @@ describe('Structure/Service', () => {
         }
     });
 
-    it('qualifygroups mergable winners 544', () => {
+    it('qualifygroups mergable 544', () => {
 
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);

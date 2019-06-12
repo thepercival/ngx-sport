@@ -52,9 +52,9 @@ describe('Structure', () => {
         expect(rootRound.getStructureNumber()).to.equal(2);
         expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getStructureNumber()).to.equal(14);
 
-        expect(rootRound.getPoules()[0].getStructureNumber()).to.equal(1);
-        expect(rootRound.getPoules()[3].getStructureNumber()).to.equal(4);
-        expect(rootRound.getChild(QualifyGroup.WINNERS, 1).getPoules()[0].getStructureNumber()).to.equal(5);
-        expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getPoules()[0].getStructureNumber()).to.equal(6);
+        expect(rootRound.getPoule(1).getStructureNumber()).to.equal(1);
+        expect(rootRound.getPoule(4).getStructureNumber()).to.equal(4);
+        expect(rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1).getStructureNumber()).to.equal(5);
+        expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getPoule(1).getStructureNumber()).to.equal(6);
     });
 });

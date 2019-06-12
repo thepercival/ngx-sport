@@ -31,7 +31,7 @@ describe('QualifyReservationService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
@@ -81,23 +81,23 @@ describe('QualifyReservationService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
             pouleOne.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleTwo = rootRound.getPoules()[1];
+        const pouleTwo = rootRound.getPoule(2);
         for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
             pouleTwo.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleThree = rootRound.getPoules()[2];
+        const pouleThree = rootRound.getPoule(3);
         for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
             const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr;
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
             pouleThree.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleFour = rootRound.getPoules()[3];
+        const pouleFour = rootRound.getPoule(3);
         for (let nr = 1; nr <= pouleFour.getPlaces().length; nr++) {
             const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + pouleThree.getPlaces().length + nr;
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
@@ -167,19 +167,20 @@ describe('QualifyReservationService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
             pouleOne.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleTwo = rootRound.getPoules()[1];
+        const pouleTwo = rootRound.getPoule(2);
         for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
             pouleTwo.getPlace(nr).setCompetitor(competitor);
         }
-        const pouleThree = rootRound.getPoules()[2];
+        const pouleThree = rootRound.getPoule(3);
         for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr));
+            const name = '' + (pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr);
+            const competitor = new Competitor(competition.getLeague().getAssociation(), name);
             pouleThree.getPlace(nr).setCompetitor(competitor);
         }
 
@@ -196,7 +197,7 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();
 
-        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoules()[0];
+        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1);
 
         expect(winnersPoule.getPlace(4).getCompetitor()).to.equal(undefined);
     });

@@ -28,7 +28,7 @@ describe('EndRankingService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
@@ -58,7 +58,7 @@ describe('EndRankingService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         const competitor1 = new Competitor(competition.getLeague().getAssociation(), '1');
         const competitor2 = new Competitor(competition.getLeague().getAssociation(), '2');
@@ -85,7 +85,7 @@ describe('EndRankingService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
@@ -117,7 +117,7 @@ describe('EndRankingService', () => {
         const planningService = new PlanningService(competition);
         planningService.create(rootRound.getNumber());
 
-        const pouleOne = rootRound.getPoules()[0];
+        const pouleOne = rootRound.getPoule(1);
 
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
@@ -135,9 +135,9 @@ describe('EndRankingService', () => {
         setScoreSingle(pouleOne, 3, 5, 5, 3);
         setScoreSingle(pouleOne, 4, 5, 5, 4);
 
-        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoules()[0];
+        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1);
         setScoreSingle(winnersPoule, 1, 2, 2, 1);
-        const loserssPoule = rootRound.getChild(QualifyGroup.LOSERS, 1).getPoules()[0];
+        const loserssPoule = rootRound.getChild(QualifyGroup.LOSERS, 1).getPoule(1);
         setScoreSingle(loserssPoule, 1, 2, 2, 1);
 
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);

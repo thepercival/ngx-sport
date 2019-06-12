@@ -24,7 +24,7 @@ describe('Planning/GameGenerator', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructureGameGenerator, competition);
 
-        const gameGenerator = new GameGenerator(structure.getRootRound().getPoules()[0]);
+        const gameGenerator = new GameGenerator(structure.getRootRound().getPoule(1));
         const gameRounds = gameGenerator.generate(structure.getFirstRoundNumber().getConfig().getTeamup());
 
         let roundNr = 1; let subNr = 1;
@@ -43,7 +43,7 @@ describe('Planning/GameGenerator', () => {
         const structureMapper = getMapper('structure');
         const structure = structureMapper.toObject(jsonStructureGameGenerator, competition);
 
-        const gameGenerator = new GameGenerator(structure.getRootRound().getPoules()[0]);
+        const gameGenerator = new GameGenerator(structure.getRootRound().getPoule(1));
         structure.getFirstRoundNumber().getConfig().setTeamup(true);
         const gameRounds = gameGenerator.generate(structure.getFirstRoundNumber().getConfig().getTeamup());
 
