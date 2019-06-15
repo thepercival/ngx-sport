@@ -4,10 +4,10 @@ import { describe, it } from 'mocha';
 import { Competitor, Game, PlanningService, PoulePlace } from '../../../public_api';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
-import { jsonCompetition3Fields } from '../../data/competition3fields';
-import { jsonStructureGameGenerator } from '../../data/structure-gamegenerator';
-import { jsonStructureGameGeneratorFive } from '../../data/structure-gamegenerator-five';
-import { jsonStructureCompetitorAsReferee } from '../../data/structure2x7-3fields';
+import { jsonCompetition3Fields } from '../../dataold/competition3fields';
+import { jsonStructureGameGenerator } from '../../dataold/structure-gamegenerator';
+import { jsonStructureGameGeneratorFive } from '../../dataold/structure-gamegenerator-five';
+import { jsonStructureCompetitorAsReferee } from '../../dataold/structure2x7-3fields';
 
 export function assertSameGame(game: Game, roundNr: number, subNr: number, home: PoulePlace[], away: PoulePlace[]) {
     expect(game.getRoundNumber()).to.equal(roundNr);

@@ -37,17 +37,6 @@ export class StructureRepository extends SportRepository {
         );
     }
 
-    createObject(json: JsonStructure, competition: Competition): Observable<Structure> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams().set('competitionid', competition.getId().toString())
-        };
-        return this.http.post(this.url, json, options).pipe(
-            map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, competition)),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
     editObject(structure: Structure, competition: Competition): Observable<Structure> {
         const options = { headers: super.getHeaders() };
         return this.http.put(this.url + '/' + competition.getId(), this.mapper.toJson(structure), options).pipe(

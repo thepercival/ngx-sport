@@ -7,7 +7,7 @@ import { Place } from '../../../src/place';
 import { PlaceCombination } from '../../../src/place/combination';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
-import { jsonStructureGameGenerator } from '../../data/structure-gamegenerator';
+import { jsonStructureGameGenerator } from '../../dataold/structure-gamegenerator';
 
 
 export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number, subNr: number, home: Place[], away: Place[]) {
