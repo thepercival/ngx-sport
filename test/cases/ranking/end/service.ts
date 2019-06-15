@@ -41,7 +41,7 @@ describe('EndRankingService', () => {
         const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
         const items = rankingService.getItems();
 
-        for (let rank = 1; rank < items.length; rank++) {
+        for (let rank = 1; rank <= items.length; rank++) {
             expect(items[rank - 1].getName()).to.equal('' + rank);
             expect(items[rank - 1].getUniqueRank()).to.equal(rank);
         }
@@ -98,7 +98,7 @@ describe('EndRankingService', () => {
         const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
         const items = rankingService.getItems();
 
-        for (let rank = 1; rank < items.length; rank++) {
+        for (let rank = 1; rank <= items.length; rank++) {
             expect(items[rank - 1].getName()).to.equal('nog onbekend');
         }
     });
