@@ -34,7 +34,7 @@ export class Poule {
         return this.round;
     }
 
-    setRound(round: Round): void {
+    protected setRound(round: Round): void {
         // if( this.round != undefined ){ // remove from old round
         //     var index = this.round.getPoules().indexOf(this);
         //     if (index > -1) {
