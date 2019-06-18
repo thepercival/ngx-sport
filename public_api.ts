@@ -60,7 +60,6 @@ export * from './src/round';
 export * from './src/round/mapper';
 export * from './src/config/count';
 export * from './src/config/count/repository';
-export * from './src/config/count/service';
 export * from './src/config/count/mapper';
 export * from './src/round/repository';
 export * from './src/round/number/mapper';

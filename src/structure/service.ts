@@ -401,21 +401,19 @@ export class StructureService {
 
     protected createScoreConfigFromPrevious(config: CountConfig, previousScoreConfig: ConfigScore) {
 
-        const newScoreConfig = new ConfigScore(config, parent);
-        newScoreConfig.setName(scoreConfig.getName());
-        newScoreConfig.setDirection(scoreConfig.getDirection());
-        newScoreConfig.setMaximum(scoreConfig.getMaximum());    
+        // const newScoreConfig = new ConfigScore(config, parent);
+        // newScoreConfig.setName(scoreConfig.getName());
+        // newScoreConfig.setDirection(scoreConfig.getDirection());
+        // newScoreConfig.setMaximum(scoreConfig.getMaximum());
 
-        const previousUnitScoreConfig = this.createScoreConfigFromPrevious(config, previousScoreConfig );
-        if( previousScoreConfig.getChild() ) {
-            const newScoreConfig = new ConfigScore(config, parent);
-            newScoreConfig.setName(scoreConfig.getName());
-            newScoreConfig.setDirection(scoreConfig.getDirection());
-            newScoreConfig.setMaximum(scoreConfig.getMaximum());    
-        }
-        
-        
-        return previousScoreConfig;
+        // const previousUnitScoreConfig = this.createScoreConfigFromPrevious(config, previousScoreConfig );
+        // if ( previousScoreConfig.getChild() ) {
+        //     const newScoreConfig = new ConfigScore(config, parent);
+        //     newScoreConfig.setName(scoreConfig.getName());
+        //     newScoreConfig.setDirection(scoreConfig.getDirection());
+        //     newScoreConfig.setMaximum(scoreConfig.getMaximum());
+        // }
+        // return previousScoreConfig;
     }
 
     private createPlanningConfigFromPrevious(roundNumber: RoundNumber): PlanningConfig {

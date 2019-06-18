@@ -9,7 +9,7 @@ import { CountConfig } from '../../config/count';
 
 @Injectable()
 export class RoundNumberMapper {
-    constructor(private sportMapper: SportMapper, 
+    constructor(private sportMapper: SportMapper,
         private countConfigMapper: CountConfigMapper, private planningConfigMapper: PlanningConfigMapper) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
