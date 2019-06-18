@@ -8,7 +8,7 @@ import { SportRepository } from '../../repository';
 import { ExternalObject, ImportableObject } from '../object';
 import { ExternalSystem } from '../system';
 import { ExternalObjectMapper, JsonExternalObject } from './mapper';
-import { SportCache } from '../../cache';
+import { TheCache } from '../../cache';
 
 @Injectable()
 export class ExternalObjectRepository extends SportRepository {
@@ -77,7 +77,7 @@ export class ExternalObjectRepository extends SportRepository {
         const url = this.getUrl() + '/' + externalObject.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((associationRes: JsonExternalObject) => {
-                SportCache.externals[externalObject.getId()] = undefined;
+                TheCache.externals[externalObject.getId()] = undefined;
                 return associationRes;
             }),
             catchError((err) => this.handleError(err))

@@ -1,119 +1,22 @@
 import { Poule } from '../poule';
 import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
-import { Config } from '../config';
+import { PlanningConfig } from '../config/planning';
 import { PlanningGameRound } from './gameround';
 
 export class GameGenerator {
     public constructor(private poule: Poule) {
     }
 
-    /*public generateBen(): PlanningGameRound[] {
-        const gameRounds: PlanningGameRound[] = [];
-        let gameRound = new PlanningGameRound(1, []); gameRounds.push(gameRound);
-        const p = this.poule.getPlaces();
-        p.unshift(undefined);
-        // gameRound.getCombinations().push(new PlaceCombination([p[1], p[2]], [p[7], p[8]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[3], p[4]], [p[5], p[6]])); ////
-        // gameRound = new PlanningGameRound(2, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[7], p[3]], [p[4], p[1]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[5]], [p[2], p[6]])); ////
-        // gameRound = new PlanningGameRound(3, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[1]], [p[6], p[4]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[5], p[2]], [p[3], p[7]])); ////
-        // gameRound = new PlanningGameRound(4, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[6], p[5]], [p[4], p[2]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[1], p[7]], [p[3], p[8]])); ////
-        // gameRound = new PlanningGameRound(5, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[2], p[4]], [p[1], p[6]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[7]], [p[3], p[5]])); ////
-        // gameRound = new PlanningGameRound(6, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[7], p[4]], [p[1], p[5]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[2]], [p[6], p[3]])); //
-        // gameRound = new PlanningGameRound(7, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[6], p[8]], [p[2], p[3]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[1], p[4]], [p[5], p[7]])); ////
-
-        // // next
-        // gameRound = new PlanningGameRound(8, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[5], p[3]], [p[2], p[1]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[4]], [p[7], p[6]])); //// 
-        // gameRound = new PlanningGameRound(9, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[6], p[1]], [p[4], p[7]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[8], p[3]], [p[2], p[5]])); //// 
-        // gameRound = new PlanningGameRound(10, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[1], p[3]], [p[2], p[7]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[4], p[6]], [p[5], p[8]])); ////
-        // gameRound = new PlanningGameRound(11, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[6], p[2]], [p[3], p[1]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[7], p[5]], [p[4], p[8]])); ////
-        // gameRound = new PlanningGameRound(12, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[6], p[7]], [p[4], p[5]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[3], p[2]], [p[1], p[8]])); ////
-        // gameRound = new PlanningGameRound(13, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[7], p[2]], [p[4], p[3]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[5], p[1]], [p[8], p[6]])); ////
-        // gameRound = new PlanningGameRound(14, []); gameRounds.push(gameRound);
-        // gameRound.getCombinations().push(new PlaceCombination([p[3], p[6]], [p[7], p[1]])); ////
-        // gameRound.getCombinations().push(new PlaceCombination([p[5], p[4]], [p[2], p[8]])); ////
-
-        gameRound.getCombinations().push(new PlaceCombination([p[1], p[2]], [p[5], p[6]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[3], p[4]], [p[7], p[8]])); ////
-        gameRound = new PlanningGameRound(2, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[7], p[3]], [p[2], p[6]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[5]], [p[4], p[1]])); ////
-        gameRound = new PlanningGameRound(3, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[1]], [p[3], p[7]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[5], p[2]], [p[6], p[4]])); ////
-        gameRound = new PlanningGameRound(4, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[6], p[5]], [p[3], p[8]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[1], p[7]], [p[4], p[2]])); ////
-        gameRound = new PlanningGameRound(5, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[2], p[4]], [p[3], p[5]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[7]], [p[1], p[6]])); ////
-        gameRound = new PlanningGameRound(6, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[7], p[4]], [p[6], p[3]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[2]], [p[1], p[5]])); //
-        gameRound = new PlanningGameRound(7, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[6], p[8]], [p[5], p[7]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[1], p[4]], [p[2], p[3]])); ////
-
-        // next
-        gameRound = new PlanningGameRound(8, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[5], p[3]], [p[7], p[6]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[4]], [p[2], p[1]])); //// 
-        gameRound = new PlanningGameRound(9, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[6], p[1]], [p[2], p[5]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[8], p[3]], [p[4], p[7]])); //// 
-        gameRound = new PlanningGameRound(10, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[1], p[3]], [p[5], p[8]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[4], p[6]], [p[2], p[7]])); ////
-        gameRound = new PlanningGameRound(11, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[6], p[2]], [p[4], p[8]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[7], p[5]], [p[3], p[1]])); ////
-        gameRound = new PlanningGameRound(12, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[6], p[7]], [p[1], p[8]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[3], p[2]], [p[4], p[5]])); ////
-        gameRound = new PlanningGameRound(13, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[7], p[2]], [p[8], p[6]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[5], p[1]], [p[4], p[3]])); ////
-        gameRound = new PlanningGameRound(14, []); gameRounds.push(gameRound);
-        gameRound.getCombinations().push(new PlaceCombination([p[3], p[6]], [p[2], p[8]])); ////
-        gameRound.getCombinations().push(new PlaceCombination([p[5], p[4]], [p[7], p[1]])); ////
-
-        p.shift();
-        return gameRounds;
-    }*/
-
     public generate(teamUp: boolean): PlanningGameRound[] {
         const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(this.poule.getPlaces().slice());
 
         const nrOfPlaces = this.poule.getPlaces().length;
-        if (teamUp !== true || nrOfPlaces < Config.TEAMUP_MIN || nrOfPlaces > Config.TEAMUP_MAX) {
+        if (teamUp !== true || nrOfPlaces < PlanningConfig.TEAMUP_MIN || nrOfPlaces > PlanningConfig.TEAMUP_MAX) {
             return gameRoundsSingle;
         }
         const teams: Place[][] = [];
-        gameRoundsSingle.forEach(gameRound => gameRound.getCombinations().forEach((combination) => {
+        gameRoundsSingle.forEach(gameRoundIt => gameRoundIt.getCombinations().forEach((combination) => {
             teams.push(combination.get());
         }));
 
@@ -122,17 +25,17 @@ export class GameGenerator {
         teams.forEach(team => {
             const opponents = this.getCombinationsWithOut(team);
             for (let nr = 1; nr <= opponents.length; nr++) {
-                let gameRound = gameRoundsTmp.find(gameRoundIt => nr === gameRoundIt.getNumber());
-                if (gameRound === undefined) {
-                    gameRound = new PlanningGameRound(nr, []);
-                    gameRoundsTmp.push(gameRound);
+                let gameRoundIt = gameRoundsTmp.find(gameRoundItIt => nr === gameRoundItIt.getNumber());
+                if (gameRoundIt === undefined) {
+                    gameRoundIt = new PlanningGameRound(nr, []);
+                    gameRoundsTmp.push(gameRoundIt);
                 }
                 const combination = new PlaceCombination(team, opponents[nr - 1].get());
-                gameRound.getCombinations().push(combination);
+                gameRoundIt.getCombinations().push(combination);
             }
         });
 
-        let games = this.flattenGameRounds(gameRoundsTmp);
+        const games = this.flattenGameRounds(gameRoundsTmp);
 
         const totalNrOfCombinations = this.getTotalNrOfCombinations(nrOfPlaces);
         if (totalNrOfCombinations !== games.length) {

@@ -14,8 +14,8 @@ export class NameService {
     }
 
     getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
-        const description = winnersOrLosers === QualifyGroup.WINNERS ? 'winnaar' : (winnersOrLosers === QualifyGroup.LOSERS ? 'verliezer' : '');
-        return ((multiple && (description !== '')) ? description + 's' : description);
+        const descr = winnersOrLosers === QualifyGroup.WINNERS ? 'winnaar' : (winnersOrLosers === QualifyGroup.LOSERS ? 'verliezer' : '');
+        return ((multiple && (descr !== '')) ? descr + 's' : descr);
     }
 
     /**
@@ -108,14 +108,14 @@ export class NameService {
     }
 
     /**
-     * 
+     *
      * "nummers 2" voor winners complete
      * "3 beste nummers 2" voor winners incomplete
-     * 
+     *
      * "nummers 2 na laast" voor losers complete
      * "3 slechtste nummers 2 na laast" voor losers incomplete
-     * 
-     * @param horizontalPoule 
+     *
+     * @param horizontalPoule
      */
     getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
         if (horizontalPoule.getQualifyGroup() === undefined) {
@@ -124,11 +124,11 @@ export class NameService {
         const nrOfQualifiers = horizontalPoule.getNrOfQualifiers();
 
         if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-            let name = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
+            const nameWinners = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
             if (horizontalPoule.isBorderPoule()) {
-                return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + name;
+                return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + nameWinners;
             }
-            return name;
+            return nameWinners;
         }
         let name = (nrOfQualifiers > 1 ? 'nummers ' : '');
         name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
@@ -152,7 +152,7 @@ export class NameService {
         if (round.getQualifyGroups().length === 1) {
             return false;
         }
-        let depthAll = undefined;
+        let depthAll;
         return round.getQualifyGroups().every(qualifyGroup => {
             const qualifyGroupMaxDepth = this.getMaxDepth(qualifyGroup.getChildRound());
             if (depthAll === undefined) {

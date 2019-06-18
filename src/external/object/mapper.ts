@@ -1,6 +1,6 @@
 import { ExternalObject } from '../object';
 import { Injectable } from '@angular/core';
-import { SportCache } from '../../cache';
+import { TheCache } from '../../cache';
 
 @Injectable()
 export class ExternalObjectMapper {
@@ -9,7 +9,7 @@ export class ExternalObjectMapper {
 
     toObject(json: JsonExternalObject, externalObject?: ExternalObject): ExternalObject {
         if (externalObject === undefined && json.id !== undefined) {
-            externalObject = SportCache.externals[json.id];
+            externalObject = TheCache.externals[json.id];
         }
         if (externalObject === undefined) {
             externalObject = new ExternalObject(
@@ -17,7 +17,7 @@ export class ExternalObjectMapper {
                 json.externalSystemId);
             externalObject.setId(json.id);
             externalObject.setExternalId(json.externalId);
-            SportCache.externals[externalObject.getId()] = externalObject;
+            TheCache.externals[externalObject.getId()] = externalObject;
         }
         return externalObject;
     }

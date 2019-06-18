@@ -1,6 +1,9 @@
 import { Competitor } from './competitor';
+import { Sport } from './sport';
+import { CountConfig } from './config/count';
+import { CountConfigSupplier } from './config/supplier';
 
-export class Association {
+export class Association implements CountConfigSupplier {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 20;
     static readonly MAX_LENGTH_DESCRIPTION = 50;
@@ -8,9 +11,11 @@ export class Association {
     protected id: number;
     protected name: string;
     protected description: string;
+    protected sport: Sport;
     protected parent: Association;
     protected children: Association[];
     protected competitors: Competitor[] = [];
+    protected countConfig: CountConfig;
 
     constructor(name: string, parent?: Association) {
         this.children = [];
@@ -78,5 +83,21 @@ export class Association {
 
     getCompetitors(): Competitor[] {
         return this.competitors;
+    }
+
+    getSport(): Sport {
+        return this.sport;
+    }
+
+    setSport(sport: Sport): void {
+        this.sport = sport;
+    }
+
+    getCountConfig(sport?: Sport): CountConfig {
+        return this.countConfig;
+    }
+
+    setCountConfig(countConfig: CountConfig) {
+        this.countConfig = countConfig;
     }
 }

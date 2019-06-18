@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 import { Season } from '../season';
 
 @Injectable()
@@ -9,12 +9,12 @@ export class SeasonMapper {
 
     toObject(json: JsonSeason, season?: Season): Season {
         if (season === undefined && json.id !== undefined) {
-            season = SportCache.seasons[json.id];
+            season = TheCache.seasons[json.id];
         }
         if (season === undefined) {
             season = new Season(json.name);
             season.setId(json.id);
-            SportCache.seasons[season.getId()] = season;
+            TheCache.seasons[season.getId()] = season;
         }
         season.setStartDateTime(new Date(json.startDateTime));
         season.setEndDateTime(new Date(json.endDateTime));

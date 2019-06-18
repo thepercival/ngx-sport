@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 import { League } from '../league';
 import { SportRepository } from '../repository';
 import { JsonLeague, LeagueMapper } from './mapper';
@@ -60,7 +60,7 @@ export class LeagueRepository extends SportRepository {
         const url = this.url + '/' + league.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((json: JsonLeague) => {
-                SportCache.leagues[league.getId()] = undefined;
+                TheCache.leagues[league.getId()] = undefined;
                 return json;
             }),
             catchError((err) => this.handleError(err))

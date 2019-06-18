@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
-import { SportRepository } from '../repository';
-import { RoundNumber } from '../round/number';
-import { Config } from '../config';
-import { JsonConfig, ConfigMapper } from './mapper';
+import { SportRepository } from '../../repository';
+import { RoundNumber } from '../../round/number';
+import { PlanningConfig } from '../planning';
+import { JsonPlanningConfig, PlanningConfigMapper } from '../planning/mapper';
 
 @Injectable()
-export class ConfigRepository extends SportRepository {
+export class PlanningConfigRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private mapper: ConfigMapper,
+        private mapper: PlanningConfigMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -25,16 +25,16 @@ export class ConfigRepository extends SportRepository {
         return 'configs';
     }
 
-    editObject(roundNumber: RoundNumber, config: JsonConfig): Observable<Config[][]> {
+    editObject(roundNumber: RoundNumber, config: JsonPlanningConfig): Observable<PlanningConfig[][]> {
         return forkJoin(this.getUpdates(roundNumber, config));
     }
 
-    getUpdates(roundNumber: RoundNumber, config: JsonConfig): Observable<Config[]>[] {
-        let reposUpdates: Observable<Config[]>[] = [];
+    getUpdates(roundNumber: RoundNumber, config: JsonPlanningConfig): Observable<PlanningConfig[]>[] {
+        let reposUpdates: Observable<PlanningConfig[]>[] = [];
         const options = this.getOptions(roundNumber);
         reposUpdates.push(
-            this.http.put(this.url + '/' + roundNumber.getConfig().getId(), config, options).pipe(
-                map((json: JsonConfig) => this.mapper.toObject(json, roundNumber)),
+            this.http.put(this.url + '/' + roundNumber.getPlanningConfig().getId(), config, options).pipe(
+                map((json: JsonPlanningConfig) => this.mapper.toObject(json, roundNumber)),
                 catchError((err) => this.handleError(err))
             )
         );

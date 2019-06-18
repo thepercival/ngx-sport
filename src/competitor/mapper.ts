@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Association } from '../association';
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 import { Competitor } from '../competitor';
 
 @Injectable()
@@ -10,12 +10,12 @@ export class CompetitorMapper {
 
     toObject(json: JsonCompetitor, association: Association, competitor?: Competitor): Competitor {
         if (competitor === undefined && json.id !== undefined) {
-            competitor = SportCache.competitors[json.id];
+            competitor = TheCache.competitors[json.id];
         }
         if (competitor === undefined) {
             competitor = new Competitor(association, json.name);
             competitor.setId(json.id);
-            SportCache.competitors[competitor.getId()] = competitor;
+            TheCache.competitors[competitor.getId()] = competitor;
         }
         competitor.setAbbreviation(json.abbreviation);
         competitor.setRegistered(json.registered),

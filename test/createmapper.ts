@@ -10,8 +10,9 @@ import { PouleMapper } from '../src/poule/mapper';
 import { PlaceMapper } from '../src/place/mapper';
 import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
-import { ConfigMapper } from '../src/config/mapper';
-import { ConfigScoreMapper } from '../src/config/score/mapper';
+import { CountConfigMapper } from '../src/config/count/mapper';
+import { PlanningConfigMapper } from '../src/config/planning/mapper';
+import { ConfigScoreMapper } from '../src/config/count/score/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
@@ -37,10 +38,12 @@ export function getMapper(mapper: string) {
         );
     } else if (mapper === 'configscore') {
         return new ConfigScoreMapper();
-    } else if (mapper === 'config') {
-        return new ConfigMapper(getMapper('configscore'));
+    } else if (mapper === 'countconfig') {
+        return new CountConfigMapper(getMapper('configscore'));
+    } else if (mapper === 'planningconfig') {
+        return new PlanningConfigMapper();
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper(getMapper('config'));
+        return new RoundNumberMapper(getMapper('countconfig'), getMapper('planningconfig'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
     } else if (mapper === 'place') {

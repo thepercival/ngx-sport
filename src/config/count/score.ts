@@ -1,19 +1,19 @@
-import { Config } from '../config';
+import { CountConfig } from '../count';
 
 export class ConfigScore {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected config: Config;
+    protected countConfig: CountConfig;
     protected parent: ConfigScore;
     protected name: string;
     protected direction: number;
     protected maximum: number;
     protected child: ConfigScore;
 
-    constructor(config: Config, parent: ConfigScore) {
-        this.setConfig(config);
+    constructor(countConfig: CountConfig, parent: ConfigScore) {
+        this.setCountConfig(countConfig);
         this.setParent(parent);
     }
 
@@ -60,12 +60,12 @@ export class ConfigScore {
         this.maximum = maximum;
     }
 
-    getConfig(): Config {
-        return this.config;
+    getCountConfig(): CountConfig {
+        return this.countConfig;
     }
 
-    private setConfig(config: Config) {
-        this.config = config;
+    private setCountConfig(countConfig: CountConfig) {
+        this.countConfig = countConfig;
     }
 
     getParent(): ConfigScore {

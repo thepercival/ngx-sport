@@ -1,7 +1,7 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
 import { Place } from '../../place';
-import { Config } from '../../config';
+import { PlanningConfig } from '../../config/planning';
 import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
 
@@ -18,17 +18,18 @@ export class PlanningResourceService {
     // private assignedPlacesPerField = {};
 
     constructor(
-        private config: Config,
+        private config: PlanningConfig,
         dateTime: Date
     ) {
         this.currentGameStartDate = this.cloneDateTime(dateTime);
-        if (this.config.getSelfReferee()) {
-            this.nrOfPoules = this.config.getRoundNumber().getPoules().length;
-        }
     }
 
     setBlockedPeriod(blockedPeriod: BlockedPeriod) {
         this.blockedPeriod = blockedPeriod;
+    }
+
+    setNrOfPoules(nrOfPoules: number) {
+        this.nrOfPoules = nrOfPoules;
     }
 
     setFields(fields: Field[]) {

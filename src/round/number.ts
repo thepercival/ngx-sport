@@ -4,17 +4,21 @@ import { Game } from '../game';
 import { Poule } from '../poule';
 import { Place } from '../place';
 import { Round } from '../round';
-import { Config } from '../config';
+import { Sport } from '../sport';
+import { CountConfig } from '../config/count';
+import { PlanningConfig,  } from '../config/planning';
+import { CountConfigSupplier, PlanningConfigSupplier } from '../config/supplier';
+
 import { State } from '../state';
 
-
-export class RoundNumber {
+export class RoundNumber implements PlanningConfigSupplier, CountConfigSupplier {
     protected competition: Competition;
     protected number: number;
     protected previous: RoundNumber;
     protected next: RoundNumber;
     protected rounds: Round[] = [];
-    protected config: Config;
+    protected countConfigs: CountConfig[] = [];
+    protected planningConfig: PlanningConfig;
     protected id: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {
@@ -140,14 +144,6 @@ export class RoundNumber {
         return this.getRounds()[0];
     }
 
-    getConfig(): Config {
-        return this.config;
-    }
-
-    setConfig(config: Config) {
-        this.config = config;
-    }
-
     needsRanking(): boolean {
         return this.getRounds().some(round => round.needsRanking());
     }
@@ -163,5 +159,25 @@ export class RoundNumber {
 
     isStarted(): boolean {
         return this.getState() > State.Created;
+    }
+
+    setPlanningConfig(config: PlanningConfig) {
+        this.planningConfig = config;
+    }
+
+    getPlanningConfig(): PlanningConfig {
+        return this.planningConfig;
+    }
+
+    getCountConfigs(): CountConfig[] {
+        return this.countConfigs;
+    }
+
+    getCountConfig(sport?: Sport): CountConfig {
+        return this.countConfigs.find( countConfig => countConfig.getSport() === sport );
+    }
+
+    setCountConfig(countConfig: CountConfig) {
+        this.countConfigs.push( countConfig );
     }
 }

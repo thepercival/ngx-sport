@@ -53,7 +53,7 @@ export class RankingItemsGetter {
         if (finalScore === undefined) {
             return points;
         }
-        const config = this.round.getNumber().getConfig();
+        const config = this.round.getNumber().getCountConfig();
         if (this.getGameScorePart(finalScore, homeAway) > this.getGameScorePart(finalScore, !homeAway)) {
             if (scoresMoment === Game.MOMENT_EXTRATIME) {
                 points += config.getWinPointsExt();

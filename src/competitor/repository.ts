@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Association } from '../association';
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 import { Competition } from '../competition';
 import { Competitor } from '../competitor';
 import { CompetitorMapper, JsonCompetitor } from '../competitor/mapper';
@@ -67,7 +67,7 @@ export class CompetitorRepository extends SportRepository {
         const url = this.url + '/' + competitor.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((jsonRes: JsonCompetitor) => {
-                SportCache.competitors[competitor.getId()] = undefined;
+                TheCache.competitors[competitor.getId()] = undefined;
                 return jsonRes;
             }),
             catchError((err) => this.handleError(err))

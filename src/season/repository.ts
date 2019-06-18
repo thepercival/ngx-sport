@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { SportRepository } from '../repository';
 import { Season } from '../season';
 import { JsonSeason, SeasonMapper } from '../season/mapper';
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 
 
 @Injectable()
@@ -65,7 +65,7 @@ export class SeasonRepository extends SportRepository {
         const url = this.url + '/' + season.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((json: JsonSeason) => {
-                SportCache.seasons[season.getId()] = undefined;
+                TheCache.seasons[season.getId()] = undefined;
                 return json;
             }),
             catchError((err) => this.handleError(err))

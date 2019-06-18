@@ -1,4 +1,4 @@
-import { Config } from '../../config';
+import { CountConfig } from '../../count';
 import { ConfigScore } from '../score';
 import { Injectable } from '@angular/core';
 
@@ -8,12 +8,12 @@ export class ConfigScoreMapper {
     constructor() {
     }
 
-    toObject(json: JsonConfigScore, config: Config): ConfigScore {
+    toObject(json: JsonConfigScore, countConfig: CountConfig): ConfigScore {
         let parent;
         if (json.parent !== undefined) {
-            parent = this.toObject(json.parent, config);
+            parent = this.toObject(json.parent, countConfig);
         }
-        const roundScoreConfig = new ConfigScore(config, parent);
+        const roundScoreConfig = new ConfigScore(countConfig, parent);
         roundScoreConfig.setId(json.id);
         roundScoreConfig.setName(json.name);
         roundScoreConfig.setDirection(json.direction);

@@ -10,7 +10,6 @@ export class League implements ImportableObject {
     protected id: number;
     protected name: string;
     protected abbreviation: string;
-    protected sport: string;
     protected association: Association;
 
     constructor(name: string) {
@@ -39,14 +38,6 @@ export class League implements ImportableObject {
 
     setAbbreviation(abbreviation: string): void {
         this.abbreviation = abbreviation;
-    }
-
-    getSport(): string {
-        return this.sport;
-    }
-
-    setSport(sport: string): void {
-        this.sport = sport;
     }
 
     getAssociation(): Association {

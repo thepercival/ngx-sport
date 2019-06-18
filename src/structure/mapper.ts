@@ -20,7 +20,7 @@ export class StructureMapper {
     }
 
     protected setRefereePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
-        if (roundNumber.getConfig().getSelfReferee()) {
+        if (roundNumber.getPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             const games = roundNumber.getGames();
             jsonRound.poules.forEach(jsonPoule => jsonPoule.games.forEach(jsonGame => {

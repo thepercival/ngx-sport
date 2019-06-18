@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { Association } from '../association';
 import { AssociationMapper, JsonAssociation } from '../association/mapper';
-import { SportCache } from '../cache';
+import { TheCache } from '../cache';
 import { SportRepository } from '../repository';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class AssociationRepository extends SportRepository {
         const url = this.url + '/' + association.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((json: JsonAssociation) => {
-                SportCache.associations[association.getId()] = undefined;
+                TheCache.associations[association.getId()] = undefined;
                 return json;
             }),
             catchError((err) => this.handleError(err))

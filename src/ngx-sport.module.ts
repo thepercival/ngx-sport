@@ -7,7 +7,7 @@ import { CompetitionMapper } from './competition/mapper';
 import { CompetitionRepository } from './competition/repository';
 import { Competitor } from './competitor';
 import { CompetitorRepository } from './competitor/repository';
-import { SportConfig } from './sportconfig';
+import { APIConfig } from './apiconfig';
 import { ExternalObject } from './external/object';
 import { ExternalObjectRepository } from './external/object/repository';
 import { ExternalSystem } from './external/system';
@@ -42,11 +42,14 @@ import { RefereeRepository } from './referee/repository';
 import { SportRepository } from './repository';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
-import { Config } from './config';
-import { ConfigMapper } from './config/mapper';
-import { ConfigRepository } from './config/repository';
-import { ConfigScore } from './config/score';
-import { ConfigService } from './config/service';
+import { CountConfig } from './config/count';
+import { PlanningConfig } from './config/planning';
+import { PlanningConfigMapper } from './config/planning/mapper';
+import { PlanningConfigRepository } from './config/planning/repository';
+import { PlanningConfigService } from './config/planning/service';
+import { CountConfigMapper } from './config/count/mapper';
+import { CountConfigRepository } from './config/count/repository';
+import { ConfigScore } from './config/count/score';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
@@ -58,22 +61,22 @@ import { StructureService } from './structure/service';
     imports: [
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PlaceRepository, QualifyService, RefereeRepository,
-        RoundRepository, ConfigRepository, ConfigService,
+        RoundRepository, CountConfigRepository, PlanningConfigRepository, PlanningConfigService,
         SeasonRepository, StructureRepository, StructureService, Structure,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, ConfigMapper
+        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, CountConfigMapper, PlanningConfigMapper
     ],
     exports: [
-        Association, League, Competition, SportConfig, Field, Game, GameScore, GamePlace, HorizontalPoule,
+        Association, League, Competition, APIConfig, Field, Game, GameScore, GamePlace, HorizontalPoule,
         Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee, SportRepository,
-        Round, RoundNumber, Config, ConfigScore,
+        Round, RoundNumber, CountConfig, PlanningConfig, ConfigScore,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
-        ConfigRepository, ConfigService,
+        CountConfigRepository, PlanningConfigRepository, PlanningConfigService,
         SeasonRepository, StructureRepository, StructureService,
         CompetitorRepository,
         PlanningRepository, NameService,

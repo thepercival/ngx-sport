@@ -57,7 +57,7 @@ export class PlanningService {
     }
 
     canCalculateStartDateTime(roundNumber: RoundNumber) {
-        const config = roundNumber.getConfig();
+        const config = roundNumber.getPlanningConfig();
         if (config.getEnableTime() === false) {
             return false;
         }
@@ -72,14 +72,14 @@ export class PlanningService {
     }
 
     calculateStartDateTime(roundNumber: RoundNumber) {
-        if (roundNumber.getConfig().getEnableTime() === false) {
+        if (roundNumber.getPlanningConfig().getEnableTime() === false) {
             return undefined;
         }
         if (roundNumber.isFirst()) {
             return this.getStartDateTime();
         }
         const previousEndDateTime = this.calculateEndDateTime(roundNumber.getPrevious());
-        const aPreviousConfig = roundNumber.getPrevious().getConfig();
+        const aPreviousConfig = roundNumber.getPrevious().getPlanningConfig();
         return this.addMinutes(previousEndDateTime, aPreviousConfig.getMinutesAfter());
     }
 
@@ -92,7 +92,7 @@ export class PlanningService {
     }
 
     protected calculateEndDateTime(roundNumber: RoundNumber) {
-        const config = roundNumber.getConfig();
+        const config = roundNumber.getPlanningConfig();
         if (config.getEnableTime() === false) {
             return undefined;
         }
@@ -117,7 +117,7 @@ export class PlanningService {
     }
 
     protected createHelper(roundNumber: RoundNumber) {
-        const config = roundNumber.getConfig();
+        const config = roundNumber.getPlanningConfig();
         roundNumber.getPoules().forEach((poule) => {
             const generator = new GameGenerator(poule);
             const gameRounds = generator.generate(config.getTeamup());
@@ -145,13 +145,13 @@ export class PlanningService {
         const referees = this.getReferees(roundNumber);
         const nextDateTime = this.assignResourceBatchToGames(roundNumber, dateTime, fields, referees);
         if (nextDateTime !== undefined) {
-            nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getConfig().getMinutesAfter());
+            nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getPlanningConfig().getMinutesAfter());
         }
         return nextDateTime;
     }
 
     protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
-        if (roundNumber.getConfig().getSelfReferee()) {
+        if (roundNumber.getPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             return places.map(place => new PlanningReferee(undefined, place));
         }
@@ -164,8 +164,9 @@ export class PlanningService {
         fields: Field[],
         referees: PlanningReferee[]): Date {
         const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-        const resourceService = new PlanningResourceService(roundNumber.getConfig(), dateTime);
+        const resourceService = new PlanningResourceService(roundNumber.getPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
+        resourceService.setNrOfPoules( roundNumber.getPoules().length );
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
         return resourceService.assign(games);
@@ -188,10 +189,10 @@ export class PlanningService {
                 games = games.concat(poule.getGames());
             });
         });
-        return this.orderGames(games, order);
+        return this.orderGames(games, order, roundNumber.getPlanningConfig().getEnableTime() );
     }
 
-    protected orderGames(games: Game[], order: number): Game[] {
+    protected orderGames(games: Game[], order: number, enableTime: boolean): Game[] {
         if (order === Game.ORDER_BYNUMBER) {
             games.sort((g1, g2) => {
                 if (g1.getRoundNumber() === g2.getRoundNumber()) {
@@ -202,7 +203,7 @@ export class PlanningService {
             return games;
         }
         games.sort((g1, g2) => {
-            if (g1.getConfig().getEnableTime()) {
+            if (enableTime) {
                 if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {
                     return g1.getStartDateTime().getTime() - g2.getStartDateTime().getTime();
                 }

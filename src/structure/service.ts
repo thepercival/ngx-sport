@@ -8,7 +8,10 @@ import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { ConfigService } from '../config/service';
+import { CountConfig } from '../config/count';
+import { ConfigScore } from '../config/count/score';
+import { PlanningConfig } from '../config/planning';
+import { PlanningConfigService } from '../config/planning/service';
 import { Structure } from '../structure';
 
 export interface CompetitorRange {
@@ -17,17 +20,19 @@ export interface CompetitorRange {
 }
 
 export class StructureService {
-    private configService: ConfigService;
+    private planningConfigService: PlanningConfigService;
 
     constructor(
         private competitorRange?: CompetitorRange
     ) {
-        this.configService = new ConfigService();
+        this.planningConfigService = new PlanningConfigService();
     }
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        this.configService.createDefault(firstRoundNumber);
+        const countConfig = competition.getLeague().getAssociation().getCountConfig();
+        firstRoundNumber.getCountConfigs().push( countConfig );
+        this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
@@ -368,8 +373,64 @@ export class StructureService {
 
     createRoundNumber(parentRound: Round): RoundNumber {
         const roundNumber = parentRound.getNumber().createNext();
-        this.configService.createFromPrevious(roundNumber);
+        this.createConfigsFromPrevious(roundNumber);
         return roundNumber;
+    }
+
+    private createConfigsFromPrevious(roundNumber: RoundNumber) {
+        this.createCountConfigsFromPrevious(roundNumber);
+        this.createPlanningConfigFromPrevious(roundNumber);
+    }
+
+    // je hebt straks een aantal sporten per toernooi
+    // per rondenumber kun je dan weer aantal countconfigs hebben(de sporten die je die ronde wilt doen en hoe ze tellen)
+    // dus een sport heeft een defaultcountconfig
+
+    private createCountConfigsFromPrevious(roundNumber: RoundNumber) {
+        const previousConfig = roundNumber.getPrevious().getCountConfig();
+        const config = new CountConfig(previousConfig.getSport(), roundNumber);
+        config.setQualifyRule(previousConfig.getQualifyRule());
+        config.setWinPoints(previousConfig.getWinPoints());
+        config.setDrawPoints(previousConfig.getDrawPoints());
+        config.setWinPointsExt(previousConfig.getWinPointsExt());
+        config.setDrawPointsExt(previousConfig.getDrawPointsExt());
+
+        this.createScoreConfigFromPrevious(config, previousConfig.getScore());
+        config.setPointsCalculation(previousConfig.getPointsCalculation());
+    }
+
+    protected createScoreConfigFromPrevious(config: CountConfig, previousScoreConfig: ConfigScore) {
+
+        const newScoreConfig = new ConfigScore(config, parent);
+        newScoreConfig.setName(scoreConfig.getName());
+        newScoreConfig.setDirection(scoreConfig.getDirection());
+        newScoreConfig.setMaximum(scoreConfig.getMaximum());    
+
+        const previousUnitScoreConfig = this.createScoreConfigFromPrevious(config, previousScoreConfig );
+        if( previousScoreConfig.getChild() ) {
+            const newScoreConfig = new ConfigScore(config, parent);
+            newScoreConfig.setName(scoreConfig.getName());
+            newScoreConfig.setDirection(scoreConfig.getDirection());
+            newScoreConfig.setMaximum(scoreConfig.getMaximum());    
+        }
+        
+        
+        return previousScoreConfig;
+    }
+
+    private createPlanningConfigFromPrevious(roundNumber: RoundNumber): PlanningConfig {
+        const previousConfig = roundNumber.getPrevious().getPlanningConfig();
+        const config = new PlanningConfig(roundNumber);
+        config.setNrOfHeadtoheadMatches(previousConfig.getNrOfHeadtoheadMatches());
+        config.setHasExtension(previousConfig.getHasExtension());
+        config.setMinutesPerGameExt(previousConfig.getMinutesPerGameExt());
+        config.setEnableTime(previousConfig.getEnableTime());
+        config.setMinutesPerGame(previousConfig.getMinutesPerGame());
+        config.setMinutesBetweenGames(previousConfig.getMinutesBetweenGames());
+        config.setMinutesAfter(previousConfig.getMinutesAfter());
+        config.setTeamup(previousConfig.getTeamup());
+        config.setSelfReferee(previousConfig.getSelfReferee());
+        return config;
     }
 
     private refillRound(round: Round, nrOfPlaces: number, nrOfPoules: number): Round {
