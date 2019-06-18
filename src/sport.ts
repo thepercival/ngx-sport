@@ -10,6 +10,7 @@ export class Sport {
     protected scoreUnitName: string;
     protected scoreSubUnitName: string;
     protected teamup: boolean;
+    protected customId: number;
 
     constructor(name: string) {
         this.setName(name);
@@ -73,5 +74,13 @@ export class Sport {
 
     setTeamup(teamup: boolean): void {
         this.teamup = teamup;
+    }
+
+    getCustomId(): number {
+        return this.customId;
+    }
+
+    setCustomId(id: number): void {
+        this.customId = id;
     }
 }
