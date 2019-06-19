@@ -7,7 +7,7 @@ import { JsonCountConfig, CountConfigMapper } from '../config/count/mapper';
 @Injectable()
 export class AssociationMapper {
 
-    constructor( private sportMapper: SportMapper, private countConfigMapper: CountConfigMapper) {}
+    constructor( private sportMapper: SportMapper) {}
 
     toObject(json: JsonAssociation, association?: Association): Association {
         if (association === undefined && json.id !== undefined) {
@@ -46,4 +46,5 @@ export interface JsonAssociation {
     sport: JsonSport;
     countConfig: JsonCountConfig;
     parent?: JsonAssociation;
+    verplaats naar sport!
 }

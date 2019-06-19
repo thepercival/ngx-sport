@@ -45,7 +45,7 @@ export function getMapper(mapper: string) {
     } else if (mapper === 'planningconfig') {
         return new PlanningConfigMapper();
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper(getMapper('sport'), getMapper('countconfig'), getMapper('planningconfig'));
+        return new RoundNumberMapper(getMapper('countconfig'), getMapper('planningconfig'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
     } else if (mapper === 'place') {

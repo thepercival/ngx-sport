@@ -6,6 +6,8 @@ export class CountConfig {
 
     static readonly DEFAULTWINPOINTS = 3;
     static readonly DEFAULTDRAWPOINTS = 1;
+    static readonly DEFAULTWINPOINTSEXT = 2;
+    static readonly DEFAULTDRAWPOINTSEXT = 1;
     static readonly POINTS_CALC_GAMEPOINTS = 0;
     static readonly POINTS_CALC_SCOREPOINTS = 1;
     static readonly POINTS_CALC_BOTH = 2;
@@ -21,12 +23,6 @@ export class CountConfig {
 
     constructor(protected sport: Sport, protected supplier: CountConfigSupplier ) {
         this.supplier.setCountConfig(this);
-        // this.winPoints = this.sport.getDefaultWinPoints();
-        // this.drawPoints = this.sport.getDefaultDrawPoints();
-        // this.winPointsExt = this.sport.getDefaultWinPointsExt();
-        // this.drawPointsExt = this.sport.getDefaultDrawPointsExt;
-        // this.setScore(this.createScoreConfig(config));
-        this.pointsCalculation = CountConfig.POINTS_CALC_GAMEPOINTS;
     }
 
     getId(): number {

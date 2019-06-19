@@ -394,9 +394,8 @@ export class StructureService {
         config.setDrawPoints(previousConfig.getDrawPoints());
         config.setWinPointsExt(previousConfig.getWinPointsExt());
         config.setDrawPointsExt(previousConfig.getDrawPointsExt());
-
-        this.createScoreConfigFromPrevious(config, previousConfig.getScore());
         config.setPointsCalculation(previousConfig.getPointsCalculation());
+        this.createScoreConfigFromPrevious(config, previousConfig.getScore());
     }
 
     protected createScoreConfigFromPrevious(config: CountConfig, previousScoreConfig: ConfigScore) {

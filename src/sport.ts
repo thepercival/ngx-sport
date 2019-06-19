@@ -52,22 +52,6 @@ export class Sport {
         return this.scoreSubUnitName === undefined;
     }
 
-    createScoreConfig(config: CountConfig): ConfigScore {
-
-        const unitScoreConfig = new ConfigScore(config, undefined);
-        unitScoreConfig.setName(this.getScoreUnitName());
-        unitScoreConfig.setDirection(ConfigScore.UPWARDS);
-        unitScoreConfig.setMaximum(0);
-
-        if ( this.hasScoreSubUnitName() ) {
-            const subUnitScoreConfig = new ConfigScore(config, unitScoreConfig);
-            subUnitScoreConfig.setName(this.getScoreSubUnitName());
-            subUnitScoreConfig.setDirection(ConfigScore.UPWARDS);
-            subUnitScoreConfig.setMaximum(0);
-        }
-        return unitScoreConfig;
-    }
-
     getTeamup(): boolean {
         return this.teamup;
     }
