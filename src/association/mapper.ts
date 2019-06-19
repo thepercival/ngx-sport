@@ -20,7 +20,7 @@ export class AssociationMapper {
         }
         association.setDescription(json.description);
         association.setSport(this.sportMapper.toObject(json.sport));
-        association.setCountConfig(this.countConfigMapper.toObject(json.countConfig, association));
+        // association.setCountConfig(this.countConfigMapper.toObject(json.countConfig, association));
         if (json.parent !== undefined) {
             association.setParent(this.toObject(json.parent, association ? association.getParent() : undefined));
         }
@@ -33,9 +33,9 @@ export class AssociationMapper {
             name: association.getName(),
             description: association.getDescription(),
             sport: this.sportMapper.toJson(association.getSport()),
-            countConfig: this.countConfigMapper.toJson(association.getCountConfig()),
             parent: association.getParent() ? this.toJson(association.getParent()) : undefined
         };
+        // countConfig: this.countConfigMapper.toJson(association.getCountConfig()),
     }
 }
 
@@ -44,7 +44,7 @@ export interface JsonAssociation {
     name: string;
     description?: string;
     sport: JsonSport;
-    countConfig: JsonCountConfig;
+    // countConfig: JsonCountConfig;
     parent?: JsonAssociation;
-    verplaats naar sport!
+    // verplaats naar sport!
 }
