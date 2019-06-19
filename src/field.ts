@@ -1,5 +1,5 @@
 import { Competition } from './competition';
-
+import { Sport } from './sport';
 
 export class Field {
     static readonly MIN_LENGTH_NAME = 1;
@@ -9,6 +9,7 @@ export class Field {
     protected competition: Competition;
     protected number: number;
     protected name: string;
+    protected sport: Sport;
 
     constructor(competition: Competition, number: number) {
         this.setCompetition(competition);
@@ -46,5 +47,13 @@ export class Field {
 
     setName(name: string): void {
         this.name = name;
+    }
+
+    getSport(): Sport {
+        return this.sport;
+    }
+
+    setSport(sport: Sport): void {
+        this.sport = sport;
     }
 }

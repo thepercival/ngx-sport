@@ -30,7 +30,7 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        const countConfig = competition.getLeague().getAssociation().getCountConfig();
+        const countConfig = competition.getLeague().getAssociation().getSport().getCountConfig();
         firstRoundNumber.getCountConfigs().push( countConfig );
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);

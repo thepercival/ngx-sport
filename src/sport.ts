@@ -1,7 +1,7 @@
-import { ConfigScore } from './config/count/score';
+import { CountConfigSupplier } from './config/supplier';
 import { CountConfig } from './config/count';
 
-export class Sport {
+export class Sport implements CountConfigSupplier {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
 
@@ -11,6 +11,7 @@ export class Sport {
     protected scoreSubUnitName: string;
     protected teamup: boolean;
     protected customId: number;
+    protected countConfig: CountConfig;
 
     constructor(name: string) {
         this.setName(name);
@@ -66,5 +67,13 @@ export class Sport {
 
     setCustomId(id: number): void {
         this.customId = id;
+    }
+
+    getCountConfig(sport?: Sport): CountConfig {
+        return this.countConfig;
+    }
+
+    setCountConfig(countConfig: CountConfig) {
+        this.countConfig = countConfig;
     }
 }
