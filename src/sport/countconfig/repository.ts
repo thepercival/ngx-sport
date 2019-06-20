@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
-import { SportRepository } from '../repository';
+import { SportRepository } from '../../repository';
 import { CountConfig } from '../countconfig';
 import { CountConfigSupplier } from './supplier';
 import { JsonCountConfig, CountConfigMapper } from './mapper';

@@ -1,7 +1,7 @@
 import { Sport } from '../sport';
 import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
-import { JsonCountConfig, CountConfigMapper } from '../countconfig/mapper';
+import { JsonCountConfig, CountConfigMapper } from './countconfig/mapper';
 
 @Injectable()
 export class SportMapper {

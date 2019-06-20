@@ -1,6 +1,6 @@
 import { Competitor } from './competitor';
 import { Sport } from './sport';
-import { CountConfig } from './countconfig';
+import { CountConfig } from './sport/countconfig';
 
 export class Association {
     static readonly MIN_LENGTH_NAME = 2;

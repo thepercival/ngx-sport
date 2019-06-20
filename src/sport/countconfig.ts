@@ -1,6 +1,6 @@
 import { CountConfigSupplier } from './countconfig/supplier';
 import { ConfigScore } from './countconfig/score';
-import { Sport } from './sport';
+import { Sport } from '../sport';
 
 export class CountConfig {
 

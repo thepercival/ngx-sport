@@ -4,8 +4,8 @@ import { Competition } from '../../competition';
 import { RoundNumber } from '../number';
 import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
 import { JsonSport, SportMapper } from '../../sport/mapper';
-import { JsonCountConfig, CountConfigMapper } from '../../countconfig/mapper';
-import { CountConfig } from '../../countconfig';
+import { JsonCountConfig, CountConfigMapper } from '../../sport/countconfig/mapper';
+import { CountConfig } from '../../sport/countconfig';
 
 @Injectable()
 export class RoundNumberMapper {

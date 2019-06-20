@@ -1,5 +1,5 @@
-import { CountConfig } from './countconfig';
-import { CountConfigSupplier } from './countconfig/supplier';
+import { CountConfig } from './sport/countconfig';
+import { CountConfigSupplier } from './sport/countconfig/supplier';
 
 export class Sport implements CountConfigSupplier {
     static readonly MIN_LENGTH_NAME = 3;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { CountConfigSupplier } from './supplier';
 import { CountConfig } from '../countconfig';
-import { TheCache } from '../cache';
+import { TheCache } from '../../cache';
 import { JsonConfigScore, ConfigScoreMapper } from './score/mapper';
 
 @Injectable()

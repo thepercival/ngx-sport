@@ -1,5 +1,5 @@
 import { CountConfig } from '../countconfig';
-import { Sport } from '../sport';
+import { Sport } from '../../sport';
 
 export interface CountConfigSupplier {
     setCountConfig(config: CountConfig);
