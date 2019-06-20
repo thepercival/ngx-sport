@@ -14,6 +14,10 @@ export class RoundNumberMapper {
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
         roundNumber.setId(json.id);
+
+        // roundNumber.getFields().forEach( field => {
+        //     field.getSport();
+        //  });
         json.countConfigs.forEach( jsonCountConfig => {
             this.countConfigMapper.toObject(jsonCountConfig, roundNumber);
         });

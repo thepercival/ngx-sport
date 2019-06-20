@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { TheCache } from '../cache';
 import { Competition } from '../competition';
 import { Field } from '../field';
 
@@ -14,6 +15,7 @@ export class FieldMapper {
         }
         field.setId(json.id);
         field.setName(json.name);
+        field.setSport(TheCache[json.sportName]);
         return field;
     }
 
@@ -21,7 +23,8 @@ export class FieldMapper {
         return {
             id: field.getId(),
             number: field.getNumber(),
-            name: field.getName()
+            name: field.getName(),
+            sportName: field.getSport().getName()
         };
     }
 }
@@ -30,4 +33,5 @@ export interface JsonField {
     id?: number;
     number: number;
     name: string;
+    sportName: string;
 }

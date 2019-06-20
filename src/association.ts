@@ -14,7 +14,6 @@ export class Association {
     protected parent: Association;
     protected children: Association[];
     protected competitors: Competitor[] = [];
-    protected countConfig: CountConfig;
 
     constructor(name: string, parent?: Association) {
         this.children = [];

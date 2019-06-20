@@ -8,18 +8,18 @@ export class SportMapper {
     constructor( private countConfigMapper: CountConfigMapper) {}
 
     toObject(json: JsonSport, sport?: Sport): Sport {
-        if (sport === undefined && json.id !== undefined) {
-            sport = TheCache.sports[json.id];
+        if (sport === undefined) {
+            sport = TheCache.sports[json.name];
         }
         if (sport === undefined) {
             sport = new Sport(json.name);
             sport.setId(json.id);
-            TheCache.sports[sport.getId()] = sport;
+            TheCache.sports[sport.getName()] = sport;
         }
         sport.setScoreUnitName(json.scoreUnitName);
         sport.setScoreSubUnitName(json.scoreSubUnitName);
         sport.setCustomId(json.customId);
-        this.countConfigMapper.toObject( json.countConfig, sport );
+        sport.setCountConfig(this.countConfigMapper.toObject(json.countConfig, sport));
         return sport;
     }
 
@@ -30,7 +30,7 @@ export class SportMapper {
             scoreUnitName: sport.getScoreUnitName(),
             scoreSubUnitName: sport.getScoreSubUnitName(),
             customId: sport.getCustomId(),
-            countConfig: this.countConfigMapper.toJson( sport.getCountConfig() )
+            countConfig: this.countConfigMapper.toJson(sport.getCountConfig()),
         };
     }
 }
