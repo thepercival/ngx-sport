@@ -1,7 +1,7 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
 import { Place } from '../../place';
-import { PlanningConfig } from '../../config/planning';
+import { PlanningConfig } from '../config';
 import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
 

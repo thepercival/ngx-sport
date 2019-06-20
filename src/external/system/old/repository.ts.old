@@ -398,7 +398,7 @@ export class ExternalsssSystemBetFairRepository {
 
             const rounds: Round[] = [];
             const firstroundNumber = 1;
-            const round = new Round(competitionseason, null, Round.WINNERS);
+            const round = new Round(competitionseason, undefined, Round.WINNERS);
             {
                 round.setId(firstroundNumber);
                 // @TODO CALCULATE WITH NROFTEAMS AND NROFGAMEROUNDS

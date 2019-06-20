@@ -1,5 +1,5 @@
-import { PlanningConfig } from '../planning';
-import { PlanningConfigSupplier } from '../supplier';
+import { PlanningConfig } from '../config';
+import { PlanningConfigSupplier } from './supplier';
 
 export class PlanningConfigService {
 

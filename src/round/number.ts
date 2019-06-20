@@ -5,9 +5,10 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { Round } from '../round';
 import { Sport } from '../sport';
-import { CountConfig } from '../config/count';
-import { PlanningConfig,  } from '../config/planning';
-import { CountConfigSupplier, PlanningConfigSupplier } from '../config/supplier';
+import { CountConfig } from '../countconfig';
+import { PlanningConfig,  } from '../planning/config';
+import { CountConfigSupplier } from '../countconfig/supplier';
+import { PlanningConfigSupplier } from '../planning/config/supplier';
 
 import { State } from '../state';
 

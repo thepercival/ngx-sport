@@ -8,10 +8,10 @@ import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { CountConfig } from '../config/count';
-import { ConfigScore } from '../config/count/score';
-import { PlanningConfig } from '../config/planning';
-import { PlanningConfigService } from '../config/planning/service';
+import { CountConfig } from '../countconfig';
+import { ConfigScore } from '../countconfig/score';
+import { PlanningConfig } from '../planning/config';
+import { PlanningConfigService } from '../planning/config/service';
 import { Structure } from '../structure';
 
 export interface CompetitorRange {
@@ -30,7 +30,7 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        const countConfig = competition.getLeague().getAssociation().getCountConfig();
+        const countConfig = competition.getLeague().getAssociation().getSport().getCountConfig();
         firstRoundNumber.getCountConfigs().push( countConfig );
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
@@ -382,10 +382,6 @@ export class StructureService {
         this.createPlanningConfigFromPrevious(roundNumber);
     }
 
-    // je hebt straks een aantal sporten per toernooi
-    // per rondenumber kun je dan weer aantal countconfigs hebben(de sporten die je die ronde wilt doen en hoe ze tellen)
-    // dus een sport heeft een defaultcountconfig
-
     private createCountConfigsFromPrevious(roundNumber: RoundNumber) {
         const previousConfig = roundNumber.getPrevious().getCountConfig();
         const config = new CountConfig(previousConfig.getSport(), roundNumber);
@@ -400,15 +396,13 @@ export class StructureService {
 
     protected createScoreConfigFromPrevious(config: CountConfig, previousScoreConfig: ConfigScore) {
 
-        const newScoreConfig = new ConfigScore(config, null);
-        newScoreConfig.setName(previousScoreConfig.getName());
+        const newScoreConfig = new ConfigScore(config, undefined);
         newScoreConfig.setDirection(previousScoreConfig.getDirection());
         newScoreConfig.setMaximum(previousScoreConfig.getMaximum());
 
         const previousSubScoreConfig = previousScoreConfig.getChild();
         if ( previousSubScoreConfig ) {
             const newSubScoreConfig = new ConfigScore(config, newScoreConfig);
-            newSubScoreConfig.setName(previousSubScoreConfig.getName());
             newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
             newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
         }

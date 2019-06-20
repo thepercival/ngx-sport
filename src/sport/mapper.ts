@@ -1,10 +1,11 @@
 import { Sport } from '../sport';
 import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
+import { JsonCountConfig, CountConfigMapper } from '../countconfig/mapper';
 
 @Injectable()
 export class SportMapper {
-    constructor() {}
+    constructor( private countConfigMapper: CountConfigMapper) {}
 
     toObject(json: JsonSport, sport?: Sport): Sport {
         if (sport === undefined && json.id !== undefined) {
@@ -18,6 +19,7 @@ export class SportMapper {
         sport.setScoreUnitName(json.scoreUnitName);
         sport.setScoreSubUnitName(json.scoreSubUnitName);
         sport.setCustomId(json.customId);
+        this.countConfigMapper.toObject( json.countConfig, sport );
         return sport;
     }
 
@@ -27,7 +29,8 @@ export class SportMapper {
             name: sport.getName(),
             scoreUnitName: sport.getScoreUnitName(),
             scoreSubUnitName: sport.getScoreSubUnitName(),
-            customId: sport.getCustomId()
+            customId: sport.getCustomId(),
+            countConfig: this.countConfigMapper.toJson( sport.getCountConfig() )
         };
     }
 }
@@ -38,4 +41,5 @@ export interface JsonSport {
     scoreUnitName: string;
     scoreSubUnitName?: string;
     customId: number;
+    countConfig: JsonCountConfig;
 }

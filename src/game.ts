@@ -6,7 +6,7 @@ import { Poule } from './poule';
 import { Place } from './place';
 import { Referee } from './referee';
 import { Round } from './round';
-import { CountConfig } from './config/count';
+import { CountConfig } from './countconfig';
 import { State } from './state';
 
 export class Game {

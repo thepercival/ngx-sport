@@ -1,7 +1,7 @@
 import { Poule } from '../poule';
 import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
-import { PlanningConfig } from '../config/planning';
+import { PlanningConfig } from './config';
 import { PlanningGameRound } from './gameround';
 
 export class GameGenerator {

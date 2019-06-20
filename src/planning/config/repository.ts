@@ -6,8 +6,8 @@ import { forkJoin, Observable } from 'rxjs';
 
 import { SportRepository } from '../../repository';
 import { RoundNumber } from '../../round/number';
-import { PlanningConfig } from '../planning';
-import { JsonPlanningConfig, PlanningConfigMapper } from '../planning/mapper';
+import { PlanningConfig } from '../config';
+import { JsonPlanningConfig, PlanningConfigMapper } from './mapper';
 
 @Injectable()
 export class PlanningConfigRepository extends SportRepository {

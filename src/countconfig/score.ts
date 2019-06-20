@@ -1,4 +1,4 @@
-import { CountConfig } from '../count';
+import { CountConfig } from '../countconfig';
 
 export class ConfigScore {
     static readonly UPWARDS = 1;
@@ -7,7 +7,6 @@ export class ConfigScore {
     protected id: number;
     protected countConfig: CountConfig;
     protected parent: ConfigScore;
-    protected name: string;
     protected direction: number;
     protected maximum: number;
     protected child: ConfigScore;
@@ -30,11 +29,8 @@ export class ConfigScore {
     }
 
     getName(): string {
-        return this.name;
-    }
-
-    setName(name: string): void {
-        this.name = name;
+        const sport = this.getCountConfig().getSport();
+        return this.hasParent() ? sport.getScoreSubUnitName() : sport.getScoreUnitName();
     }
 
     getNameSingle(): string {
@@ -66,6 +62,10 @@ export class ConfigScore {
 
     private setCountConfig(countConfig: CountConfig) {
         this.countConfig = countConfig;
+    }
+
+    hasParent(): boolean {
+        return this.parent !== undefined;
     }
 
     getParent(): ConfigScore {

@@ -1,4 +1,4 @@
-import { CountConfig } from '../../count';
+import { CountConfig } from '../../countconfig';
 import { ConfigScore } from '../score';
 import { Injectable } from '@angular/core';
 
@@ -15,7 +15,6 @@ export class ConfigScoreMapper {
         }
         const roundScoreConfig = new ConfigScore(countConfig, parent);
         roundScoreConfig.setId(json.id);
-        roundScoreConfig.setName(json.name);
         roundScoreConfig.setDirection(json.direction);
         roundScoreConfig.setMaximum(json.maximum);
         return roundScoreConfig;
@@ -24,7 +23,6 @@ export class ConfigScoreMapper {
     toJson(scoreConfig: ConfigScore): JsonConfigScore {
         return {
             id: scoreConfig.getId(),
-            name: scoreConfig.getName(),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
             parent: scoreConfig.getParent() !== undefined ? this.toJson(scoreConfig.getParent()) : undefined
@@ -34,7 +32,6 @@ export class ConfigScoreMapper {
 
 export interface JsonConfigScore {
     id?: number;
-    name: string;
     direction: number;
     maximum: number;
     parent?: JsonConfigScore;

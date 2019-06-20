@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { PlanningConfigSupplier } from '../supplier';
-import { PlanningConfig } from '../planning';
+import { PlanningConfigSupplier } from './supplier';
+import { PlanningConfig } from '../config';
 
 @Injectable()
 export class PlanningConfigMapper {

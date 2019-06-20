@@ -1,4 +1,4 @@
-import { PlanningConfigSupplier } from './supplier';
+import { PlanningConfigSupplier } from './config/supplier';
 
 export class PlanningConfig {
 

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../../competition';
 import { RoundNumber } from '../number';
-import { JsonPlanningConfig, PlanningConfigMapper } from '../../config/planning/mapper';
+import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
 import { JsonSport, SportMapper } from '../../sport/mapper';
-import { JsonCountConfig, CountConfigMapper } from '../../config/count/mapper';
-import { CountConfig } from '../../config/count';
+import { JsonCountConfig, CountConfigMapper } from '../../countconfig/mapper';
+import { CountConfig } from '../../countconfig';
 
 @Injectable()
 export class RoundNumberMapper {
