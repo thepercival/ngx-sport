@@ -2,12 +2,11 @@ import { Association } from '../association';
 import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
 import { SportMapper, JsonSport } from '../sport/mapper';
-import { JsonCountConfig, CountConfigMapper } from '../sport/countconfig/mapper';
 
 @Injectable()
 export class AssociationMapper {
 
-    constructor( private sportMapper: SportMapper) {}
+    constructor() {}
 
     toObject(json: JsonAssociation, association?: Association): Association {
         if (association === undefined && json.id !== undefined) {
@@ -19,7 +18,6 @@ export class AssociationMapper {
             TheCache.associations[association.getId()] = association;
         }
         association.setDescription(json.description);
-        association.setSport(this.sportMapper.toObject(json.sport));
         if (json.parent !== undefined) {
             association.setParent(this.toObject(json.parent, association ? association.getParent() : undefined));
         }
@@ -31,7 +29,6 @@ export class AssociationMapper {
             id: association.getId(),
             name: association.getName(),
             description: association.getDescription(),
-            sport: this.sportMapper.toJson(association.getSport()),
             parent: association.getParent() ? this.toJson(association.getParent()) : undefined
         };
     }
@@ -41,6 +38,5 @@ export interface JsonAssociation {
     id?: number;
     name: string;
     description?: string;
-    sport: JsonSport;
     parent?: JsonAssociation;
 }

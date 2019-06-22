@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { CountConfigSupplier } from './supplier';
-import { CountConfig } from '../countconfig';
+import { SportConfigSupplier } from './supplier';
+import { SportConfig } from '../config';
 import { TheCache } from '../../cache';
-import { JsonConfigScore, ConfigScoreMapper } from './score/mapper';
+import { JsonSportConfigScore, ConfigScoreMapper } from './score/mapper';
 
 @Injectable()
-export class CountConfigMapper {
+export class SportConfigMapper {
     constructor(private scoreConfigMapper: ConfigScoreMapper) { }
 
-    toObject(json: JsonCountConfig, supplier: CountConfigSupplier, config?: CountConfig): CountConfig {
+    toObject(json: JsonSportConfig, supplier: SportConfigSupplier, config?: SportConfig): SportConfig {
         if (config === undefined) {
             const sport = TheCache.sports[json.sportId];
-            config = new CountConfig( sport, supplier);
+            config = new SportConfig( sport, supplier);
         }
         config.setId(json.id);
         config.setQualifyRule(json.qualifyRule);
@@ -25,7 +25,7 @@ export class CountConfigMapper {
         return config;
     }
 
-    toJson(config: CountConfig): JsonCountConfig {
+    toJson(config: SportConfig): JsonSportConfig {
         return {
             id: config.getId(),
             sportId: config.getSport().getId(),
@@ -40,7 +40,7 @@ export class CountConfigMapper {
     }
 }
 
-export interface JsonCountConfig {
+export interface JsonSportConfig {
     id?: number;
     sportId: number;
     qualifyRule: number;
@@ -48,6 +48,6 @@ export interface JsonCountConfig {
     drawPoints: number;
     winPointsExt: number;
     drawPointsExt: number;
-    score: JsonConfigScore;
+    score: JsonSportConfigScore;
     pointsCalculation: number;
 }

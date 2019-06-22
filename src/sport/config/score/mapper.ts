@@ -1,5 +1,5 @@
-import { CountConfig } from '../../countconfig';
-import { ConfigScore } from '../score';
+import { SportConfig } from '../../config';
+import { SportConfigScore } from '../score';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -8,19 +8,19 @@ export class ConfigScoreMapper {
     constructor() {
     }
 
-    toObject(json: JsonConfigScore, countConfig: CountConfig): ConfigScore {
+    toObject(json: JsonSportConfigScore, countConfig: SportConfig): SportConfigScore {
         let parent;
         if (json.parent !== undefined) {
             parent = this.toObject(json.parent, countConfig);
         }
-        const roundScoreConfig = new ConfigScore(countConfig, parent);
+        const roundScoreConfig = new SportConfigScore(countConfig, parent);
         roundScoreConfig.setId(json.id);
         roundScoreConfig.setDirection(json.direction);
         roundScoreConfig.setMaximum(json.maximum);
         return roundScoreConfig;
     }
 
-    toJson(scoreConfig: ConfigScore): JsonConfigScore {
+    toJson(scoreConfig: SportConfigScore): JsonSportConfigScore {
         return {
             id: scoreConfig.getId(),
             direction: scoreConfig.getDirection(),
@@ -30,9 +30,9 @@ export class ConfigScoreMapper {
     }
 }
 
-export interface JsonConfigScore {
+export interface JsonSportConfigScore {
     id?: number;
     direction: number;
     maximum: number;
-    parent?: JsonConfigScore;
+    parent?: JsonSportConfigScore;
 }

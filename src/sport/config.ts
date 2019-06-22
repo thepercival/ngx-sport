@@ -1,13 +1,9 @@
-import { CountConfigSupplier } from './countconfig/supplier';
-import { ConfigScore } from './countconfig/score';
+import { SportConfigSupplier } from './config/supplier';
+import { SportConfigScore } from './config/score';
 import { Sport } from '../sport';
 
-export class CountConfig {
+export class SportConfig {
 
-    static readonly DEFAULTWINPOINTS = 3;
-    static readonly DEFAULTDRAWPOINTS = 1;
-    static readonly DEFAULTWINPOINTSEXT = 2;
-    static readonly DEFAULTDRAWPOINTSEXT = 1;
     static readonly POINTS_CALC_GAMEPOINTS = 0;
     static readonly POINTS_CALC_SCOREPOINTS = 1;
     static readonly POINTS_CALC_BOTH = 2;
@@ -18,11 +14,11 @@ export class CountConfig {
     protected drawPoints: number;
     protected winPointsExt: number;
     protected drawPointsExt: number;
-    protected score: ConfigScore;
+    protected score: SportConfigScore;
     protected pointsCalculation: number;
 
-    constructor(protected sport: Sport, protected supplier: CountConfigSupplier ) {
-        this.supplier.setCountConfig(this);
+    constructor(protected sport: Sport, protected supplier: SportConfigSupplier ) {
+        this.supplier.setSportConfig(this);
     }
 
     getId(): number {
@@ -81,16 +77,16 @@ export class CountConfig {
         this.pointsCalculation = pointsCalculation;
     }
 
-    getScore(): ConfigScore {
+    getScore(): SportConfigScore {
         return this.score;
     }
 
-    setScore(score: ConfigScore) {
+    setScore(score: SportConfigScore) {
         this.score = score;
     }
 
-    getInputScore(): ConfigScore {
-        let parentScoreConfig: ConfigScore = this.getScore().getRoot();
+    getInputScore(): SportConfigScore {
+        let parentScoreConfig: SportConfigScore = this.getScore().getRoot();
         let childScoreConfig = parentScoreConfig.getChild();
         while (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || parentScoreConfig.getMaximum() === 0)) {
             parentScoreConfig = childScoreConfig;
@@ -99,8 +95,8 @@ export class CountConfig {
         return parentScoreConfig;
     }
 
-    getCalculateScore(): ConfigScore {
-        let scoreConfig: ConfigScore = this.getScore().getRoot();
+    getCalculateScore(): SportConfigScore {
+        let scoreConfig: SportConfigScore = this.getScore().getRoot();
         while (scoreConfig.getMaximum() === 0 && scoreConfig.getChild() !== undefined) {
             scoreConfig = scoreConfig.getChild();
         }
@@ -115,7 +111,7 @@ export class CountConfig {
         return this.sport;
     }
 
-    getSupplier(): CountConfigSupplier {
+    getSupplier(): SportConfigSupplier {
         return this.supplier;
     }
 }

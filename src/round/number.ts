@@ -5,20 +5,20 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { Round } from '../round';
 import { Sport } from '../sport';
-import { CountConfig } from '../sport/countconfig';
+import { SportConfig } from '../sport/config';
 import { PlanningConfig,  } from '../planning/config';
-import { CountConfigSupplier } from '../sport/countconfig/supplier';
+import { SportConfigSupplier } from '../sport/config/supplier';
 import { PlanningConfigSupplier } from '../planning/config/supplier';
 
 import { State } from '../state';
 
-export class RoundNumber implements PlanningConfigSupplier, CountConfigSupplier {
+export class RoundNumber implements PlanningConfigSupplier, SportConfigSupplier {
     protected competition: Competition;
     protected number: number;
     protected previous: RoundNumber;
     protected next: RoundNumber;
     protected rounds: Round[] = [];
-    protected countConfigs: CountConfig[] = [];
+    protected sportConfigs: SportConfig[] = [];
     protected planningConfig: PlanningConfig;
     protected id: number;
 
@@ -170,15 +170,15 @@ export class RoundNumber implements PlanningConfigSupplier, CountConfigSupplier 
         return this.planningConfig;
     }
 
-    getCountConfigs(): CountConfig[] {
-        return this.countConfigs;
+    getSportConfigs(): SportConfig[] {
+        return this.sportConfigs;
     }
 
-    getCountConfig(sport?: Sport): CountConfig {
-        return this.countConfigs.find( countConfig => countConfig.getSport() === sport );
+    getSportConfig(sport?: Sport): SportConfig {
+        return this.sportConfigs.find( sportConfig => sportConfig.getSport() === sport );
     }
 
-    setCountConfig(countConfig: CountConfig) {
-        this.countConfigs.push( countConfig );
+    setSportConfig(sportConfig: SportConfig) {
+        this.sportConfigs.push( sportConfig );
     }
 }

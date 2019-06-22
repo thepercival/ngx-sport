@@ -1,23 +1,23 @@
-import { CountConfig } from '../countconfig';
+import { SportConfig } from '../config';
 
-export class ConfigScore {
+export class SportConfigScore {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected countConfig: CountConfig;
-    protected parent: ConfigScore;
+    protected countConfig: SportConfig;
+    protected parent: SportConfigScore;
     protected direction: number;
     protected maximum: number;
-    protected child: ConfigScore;
+    protected child: SportConfigScore;
 
-    constructor(countConfig: CountConfig, parent: ConfigScore) {
+    constructor(countConfig: SportConfig, parent: SportConfigScore) {
         this.setCountConfig(countConfig);
         this.setParent(parent);
     }
 
     static getDirectionDescription(direction: number) {
-        return direction === ConfigScore.UPWARDS ? 'naar' : 'vanaf';
+        return direction === SportConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     getId(): number {
@@ -56,11 +56,11 @@ export class ConfigScore {
         this.maximum = maximum;
     }
 
-    getCountConfig(): CountConfig {
+    getCountConfig(): SportConfig {
         return this.countConfig;
     }
 
-    private setCountConfig(countConfig: CountConfig) {
+    private setCountConfig(countConfig: SportConfig) {
         this.countConfig = countConfig;
     }
 
@@ -68,11 +68,11 @@ export class ConfigScore {
         return this.parent !== undefined;
     }
 
-    getParent(): ConfigScore {
+    getParent(): SportConfigScore {
         return this.parent;
     }
 
-    private setParent(parent: ConfigScore) {
+    private setParent(parent: SportConfigScore) {
         this.parent = parent;
         if (this.parent !== undefined) {
             this.parent.setChild(this);
@@ -87,11 +87,11 @@ export class ConfigScore {
         return this;
     }
 
-    getChild(): ConfigScore {
+    getChild(): SportConfigScore {
         return this.child;
     }
 
-    setChild(child: ConfigScore) {
+    setChild(child: SportConfigScore) {
         this.child = child;
     }
 

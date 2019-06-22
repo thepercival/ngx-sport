@@ -28,7 +28,7 @@ export class RankingItemsGetter {
             }
             const finalScore = game.getFinalScore();
             [Game.HOME, Game.AWAY].forEach(homeAway => {
-                const points = this.getNrOfPoints(finalScore, homeAway, game.getScoresMoment());
+                const points = this.getNrOfPoints(finalScore, homeAway, game);
                 const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, false);
                 const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, false);
                 const subScored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, true);
@@ -48,12 +48,13 @@ export class RankingItemsGetter {
         return items;
     }
 
-    private getNrOfPoints(finalScore: GameScoreHomeAway, homeAway: boolean, scoresMoment: number): number {
+    private getNrOfPoints(finalScore: GameScoreHomeAway, homeAway: boolean, game: Game): number {
         let points = 0;
         if (finalScore === undefined) {
             return points;
         }
-        const config = this.round.getNumber().getCountConfig();
+        const scoresMoment: number = game.getScoresMoment();
+        const config = game.getSportConfig();
         if (this.getGameScorePart(finalScore, homeAway) > this.getGameScorePart(finalScore, !homeAway)) {
             if (scoresMoment === Game.MOMENT_EXTRATIME) {
                 points += config.getWinPointsExt();

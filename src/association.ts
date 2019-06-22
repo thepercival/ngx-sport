@@ -1,6 +1,4 @@
 import { Competitor } from './competitor';
-import { Sport } from './sport';
-import { CountConfig } from './sport/countconfig';
 
 export class Association {
     static readonly MIN_LENGTH_NAME = 2;
@@ -10,7 +8,6 @@ export class Association {
     protected id: number;
     protected name: string;
     protected description: string;
-    protected sport: Sport;
     protected parent: Association;
     protected children: Association[];
     protected competitors: Competitor[] = [];
@@ -81,13 +78,5 @@ export class Association {
 
     getCompetitors(): Competitor[] {
         return this.competitors;
-    }
-
-    getSport(): Sport {
-        return this.sport;
-    }
-
-    setSport(sport: Sport): void {
-        this.sport = sport;
     }
 }

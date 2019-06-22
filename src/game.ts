@@ -6,7 +6,7 @@ import { Poule } from './poule';
 import { Place } from './place';
 import { Referee } from './referee';
 import { Round } from './round';
-import { CountConfig } from './sport/countconfig';
+import { CountConfig } from './sport/config';
 import { State } from './state';
 
 export class Game {
@@ -168,7 +168,7 @@ export class Game {
         }
         let home = this.getScores()[0].getHome();
         let away = this.getScores()[0].getAway();
-        const config = this.getCountConfig();
+        const config = this.getSportConfig();
         if (config.getCalculateScore() !== config.getInputScore()) {
             home = 0;
             away = 0;
@@ -193,8 +193,8 @@ export class Game {
         return new GameScoreHomeAway(home, away);
     }
 
-    getCountConfig(): CountConfig {
-        return this.getRound().getNumber().getCountConfig();
+    getSportConfig(): CountConfig {
+        return this.getRound().getNumber().getSportConfig( this.getField().getSport() );
     }
 
     getScoresMoment(): number {

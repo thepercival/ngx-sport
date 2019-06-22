@@ -5,16 +5,16 @@ import { catchError, map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 
 import { SportRepository } from '../../repository';
-import { CountConfig } from '../countconfig';
-import { CountConfigSupplier } from './supplier';
-import { JsonCountConfig, CountConfigMapper } from './mapper';
+import { SportConfig } from '../config';
+import { SportConfigSupplier } from './supplier';
+import { JsonSportConfig, SportConfigMapper } from './mapper';
 
 @Injectable()
-export class CountConfigRepository extends SportRepository {
+export class SportConfigRepository extends SportRepository {
     private url: string;
 
     constructor(
-        private mapper: CountConfigMapper,
+        private mapper: SportConfigMapper,
         private http: HttpClient,
         router: Router) {
         super(router);

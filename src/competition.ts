@@ -3,6 +3,7 @@ import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
 import { State } from './state';
+import { Sport } from './sport';
 
 export class Competition {
     protected id: number;
@@ -13,6 +14,7 @@ export class Competition {
     protected state: number;
     protected referees: Referee[] = [];
     protected fields: Field[] = [];
+    protected sports: Sport[] = [];
 
     constructor(league: League, season: Season) {
         this.setLeague(league);
@@ -100,5 +102,9 @@ export class Competition {
         if (index > -1) {
             this.referees.splice(index, 1);
         }
+    }
+
+    getSports(): Sport[] {
+        return this.sports;
     }
 }

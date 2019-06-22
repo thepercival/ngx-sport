@@ -4,12 +4,12 @@ import { Competition } from '../../competition';
 import { RoundNumber } from '../number';
 import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
 import { JsonSport, SportMapper } from '../../sport/mapper';
-import { JsonCountConfig, CountConfigMapper } from '../../sport/countconfig/mapper';
-import { CountConfig } from '../../sport/countconfig';
+import { JsonSportConfig, SportConfigMapper } from '../../sport/config/mapper';
+import { SportConfig } from '../../sport/config';
 
 @Injectable()
 export class RoundNumberMapper {
-    constructor(private countConfigMapper: CountConfigMapper, private planningConfigMapper: PlanningConfigMapper) { }
+    constructor(private sportConfigMapper: SportConfigMapper, private planningConfigMapper: PlanningConfigMapper) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
@@ -18,8 +18,8 @@ export class RoundNumberMapper {
         // roundNumber.getFields().forEach( field => {
         //     field.getSport();
         //  });
-        json.countConfigs.forEach( jsonCountConfig => {
-            this.countConfigMapper.toObject(jsonCountConfig, roundNumber);
+        json.sportConfigs.forEach( jsonSportConfig => {
+            this.sportConfigMapper.toObject(jsonSportConfig, roundNumber);
         });
 
         this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
@@ -33,7 +33,7 @@ export class RoundNumberMapper {
         return {
             id: roundNumber.getId(),
             number: roundNumber.getNumber(),
-            countConfigs: roundNumber.getCountConfigs().map( config => this.countConfigMapper.toJson(config)),
+            sportConfigs: roundNumber.getSportConfigs().map( config => this.sportConfigMapper.toJson(config)),
             planningConfig: this.planningConfigMapper.toJson(roundNumber.getPlanningConfig()),
             next: roundNumber.hasNext() ? this.toJson(roundNumber.getNext()) : undefined
         };
@@ -43,7 +43,7 @@ export class RoundNumberMapper {
 export interface JsonRoundNumber {
     id?: number;
     number: number;
-    countConfigs: JsonCountConfig[];
+    sportConfigs: JsonSportConfig[];
     planningConfig: JsonPlanningConfig;
     next?: JsonRoundNumber;
 }

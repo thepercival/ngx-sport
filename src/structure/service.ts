@@ -8,8 +8,9 @@ import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { CountConfig } from '../sport/countconfig';
-import { ConfigScore } from '../sport/countconfig/score';
+import { SportConfig } from '../sport/config';
+import { SportConfigScore } from '../sport/config/score';
+import { SportConfigService } from '../sport/config/service';
 import { PlanningConfig } from '../planning/config';
 import { PlanningConfigService } from '../planning/config/service';
 import { Structure } from '../structure';
@@ -30,8 +31,8 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        const countConfig = competition.getLeague().getAssociation().getSport().getCountConfig();
-        firstRoundNumber.getCountConfigs().push( countConfig );
+        const sportConfigService = new SportConfigService();
+        firstRoundNumber.getSportConfigs().push( sportConfigService.createDefault( competition.getSports()[0] ) );
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
@@ -373,11 +374,11 @@ export class StructureService {
 
     createRoundNumber(parentRound: Round): RoundNumber {
         const roundNumber = parentRound.getNumber().createNext();
-        this.createConfigsFromPrevious(roundNumber);
+        // this.createConfigsFromPrevious(roundNumber);
         return roundNumber;
     }
 
-    private createConfigsFromPrevious(roundNumber: RoundNumber) {
+    /*private createConfigsFromPrevious(roundNumber: RoundNumber) {
         this.createCountConfigsFromPrevious(roundNumber);
         this.createPlanningConfigFromPrevious(roundNumber);
     }
@@ -422,7 +423,7 @@ export class StructureService {
         config.setTeamup(previousConfig.getTeamup());
         config.setSelfReferee(previousConfig.getSelfReferee());
         return config;
-    }
+    }*/
 
     private refillRound(round: Round, nrOfPlaces: number, nrOfPoules: number): Round {
         if (nrOfPlaces <= 0) {
