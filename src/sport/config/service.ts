@@ -1,40 +1,95 @@
 import { SportConfig } from '../config';
+import { SportConfigScore } from '../config/score';
+import { SportConfigSupplier } from '../config/supplier';
+import { Sport } from '../../sport';
+import { SportCustomId } from '../../sport/customid';
 import { RankingService } from '../../ranking/service';
 
-export class SportConfigService {
-
-    protected defaultWinPoints = 3;
-    protected defaultWinPoints = 3;
-    protected defaultWinPointsExt = 3;
-    protected defaultWinPointsExt = 3;
-    static readonly DEFAULTDRAWPOINTS = 1;
-    static readonly DEFAULTWINPOINTSEXT = 2;
-    static readonly DEFAULTDRAWPOINTSEXT = 1;
+export class SportConfigService { 
 
     constructor() {
     }
+
+    
 
     copy( sport: Sport, supplier: SportConfigSupplier, sourceSportConfig: SportConfig ): SportConfig {
     }
 
     createDefault( sport: Sport, supplier: SportConfigSupplier ): SportConfig {
-    
+
         const config = new SportConfig(sport, supplier);
         config.setQualifyRule(RankingService.RULESSET_WC);
-        
+
         config.setWinPoints(this.getDefaultWinPoints(sport));
-        config.setDrawPoints(previousConfig.getDrawPoints());
-        config.setWinPointsExt(previousConfig.getWinPointsExt());
-        config.setDrawPointsExt(previousConfig.getDrawPointsExt());
-        config.setPointsCalculation(SportConfig. POINTS_CALC_GAMEPOINTS);
-        this.createDefaultScore(config, previousConfig.getScore());
+        config.setDrawPoints(this.getDefaultDrawPoints(sport));
+        config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
+        config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
+        config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
+        this.createDefaultScore(config);
+        return config;
     }
 
     protected getDefaultWinPoints( sport: Sport): number {
-        return sport.getCustomId() === Sport::Chess ? 1 : 0.5; 
+        return sport.getCustomId() === SportCustomId.Chess ? 3 : 1;
+    }
+
+    protected getDefaultDrawPoints( sport: Sport): number {
+        return sport.getCustomId() === SportCustomId.Chess ? 1 : 0.5;
+    }
+    
+    protected getDefaultWinPointsExt( sport: Sport): number {
+        return sport.getCustomId() === SportCustomId.Chess ? 2 : 1;
+    }
+
+    protected getDefaultDrawPointsExt( sport: Sport): number {
+        return sport.getCustomId() === SportCustomId.Chess ? 1 : 0.5;
     }
 
     protected createDefaultScore(config: SportConfig) {
+
+        //        $unitName = 'punten'; $parentUnitName = null;
+//        if ($sport === SportConfig::Darts) {
+//            $unitName = 'legs';
+//            $parentUnitName = 'sets';
+//        } else if ($sport === SportConfig::Tennis) {
+//            $unitName = 'games';
+//            $parentUnitName = 'sets';
+
+//        } else if ($sport === SportConfig::Squash || $sport === SportConfig::TableTennis
+//            || $sport === SportConfig::Volleyball || $sport === SportConfig::Badminton) {
+//            $parentUnitName = 'sets';
+
+//        } else if ($sport === SportConfig::Football || $sport === SportConfig::Hockey) {
+//            $unitName = 'goals';
+//        }
+
+Badminton = 1,
+Basketball = 2,
+Darts = 3,
+ESports = 4,
+Hockey = 5,
+Korfball = 6,
+Chess = 7,
+Squash = 8,
+TableTennis = 9,
+Tennis = 10,
+Football = 11,
+Voleyball = 12
+
+
+
+update sports set customId = 1, scoreUnitName = 'sets' where name = 'badminton';
+update sports set customId = 2, teamup = false where name = 'basketbal';
+update sports set customId = 3, scoreUnitName = 'sets', scoreSubUnitName = 'legs' where name = 'darten';
+update sports set customId = 4 where name = 'e-sporten';
+update sports set customId = 5, scoreUnitName = 'goals', teamup = false where name = 'hockey';
+update sports set customId = 6, teamup = false where name = 'korfbal';
+update sports set customId = 7 where name = 'schaken';
+update sports set customId = 8, scoreUnitName = 'sets' where name = 'squash';
+update sports set customId = 9, scoreUnitName = 'sets' where name = 'tafeltennis';
+update sports set customId = 10, scoreUnitName = 'sets', scoreSubUnitName = 'games' where name = 'tennis';
+update sports set customId = 11, scoreUnitName = 'goals', teamup = false where name = 'voetbal';
+update sports set customId = 12, scoreUnitName = 'sets', teamup = false where name = 'volleybal';
 
         // const newScoreConfig = new ConfigScore(config, undefined);
         // newScoreConfig.setDirection(previousScoreConfig.getDirection());
@@ -64,6 +119,23 @@ export class SportConfigService {
         // return newScoreConfig;
     }
 
+    move to nameservice?
+
+    static getDirectionDescription(direction: number) {
+        return direction === SportConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    }
+
+    getName(): string {
+        const sport = this.getCountConfig().getSport();
+        return this.hasParent() ? sport.getScoreSubUnitName() : sport.getScoreUnitName();
+    }
+
+    getNameSingle(): string {
+        if (this.getName().endsWith('en')) {
+            return this.getName().substring(0, this.getName().length - 2);
+        }
+        return this.getName().substring(0, this.getName().length - 1);
+    }
     
 }
 

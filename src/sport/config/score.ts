@@ -16,28 +16,12 @@ export class SportConfigScore {
         this.setParent(parent);
     }
 
-    static getDirectionDescription(direction: number) {
-        return direction === SportConfigScore.UPWARDS ? 'naar' : 'vanaf';
-    }
-
     getId(): number {
         return this.id;
     }
 
     setId(id: number) {
         this.id = id;
-    }
-
-    getName(): string {
-        const sport = this.getCountConfig().getSport();
-        return this.hasParent() ? sport.getScoreSubUnitName() : sport.getScoreUnitName();
-    }
-
-    getNameSingle(): string {
-        if (this.getName().endsWith('en')) {
-            return this.getName().substring(0, this.getName().length - 2);
-        }
-        return this.getName().substring(0, this.getName().length - 1);
     }
 
     getDirection(): number {
