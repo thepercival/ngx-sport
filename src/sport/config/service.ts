@@ -5,7 +5,7 @@ import { Sport } from '../../sport';
 import { SportCustomId } from '../../sport/customid';
 import { RankingService } from '../../ranking/service';
 
-export class SportConfigService { 
+export class SportConfigService {
 
     constructor() {
     }
