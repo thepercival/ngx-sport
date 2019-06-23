@@ -10,9 +10,9 @@ import { PouleMapper } from '../src/poule/mapper';
 import { PlaceMapper } from '../src/place/mapper';
 import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
-import { CountConfigMapper } from '../src/sport/config/mapper';
+import { SportConfigMapper } from '../src/sport/config/mapper';
 import { PlanningConfigMapper } from '../src/planning/config/mapper';
-import { ConfigScoreMapper } from '../src/sport/config/score/mapper';
+import { SportConfigScoreMapper } from '../src/sport/config/score/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
@@ -20,9 +20,9 @@ import { SportMapper } from '../src/sport/mapper';
 
 export function getMapper(mapper: string) {
     if (mapper === 'sport') {
-        return new SportMapper(getMapper('countconfig'));
+        return new SportMapper();
     } else if (mapper === 'association') {
-        return new AssociationMapper(getMapper('sport'));
+        return new AssociationMapper();
     } else if (mapper === 'league') {
         return new LeagueMapper(getMapper('association'));
     } else if (mapper === 'season') {
@@ -36,16 +36,17 @@ export function getMapper(mapper: string) {
             getMapper('league'),
             getMapper('season'),
             getMapper('referee'),
-            getMapper('field')
+            getMapper('field'),
+            getMapper('sport')
         );
-    } else if (mapper === 'configscore') {
-        return new ConfigScoreMapper();
-    } else if (mapper === 'countconfig') {
-        return new CountConfigMapper(getMapper('configscore'));
+    } else if (mapper === 'sportconfigscore') {
+        return new SportConfigScoreMapper();
+    } else if (mapper === 'sportconfig') {
+        return new SportConfigMapper(getMapper('sportconfigscore'));
     } else if (mapper === 'planningconfig') {
         return new PlanningConfigMapper();
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper(getMapper('countconfig'), getMapper('planningconfig'));
+        return new RoundNumberMapper(getMapper('sportconfig'), getMapper('planningconfig'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
     } else if (mapper === 'place') {

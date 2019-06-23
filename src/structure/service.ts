@@ -32,7 +32,7 @@ export class StructureService {
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
         const sportConfigService = new SportConfigService();
-        firstRoundNumber.getSportConfigs().push( sportConfigService.createDefault( competition.getSports()[0] ) );
+        competition.getSports().forEach( sport => sportConfigService.createDefault( sport, firstRoundNumber ) );
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
@@ -373,42 +373,10 @@ export class StructureService {
     }
 
     createRoundNumber(parentRound: Round): RoundNumber {
-        const roundNumber = parentRound.getNumber().createNext();
-        // this.createConfigsFromPrevious(roundNumber);
-        return roundNumber;
+        return parentRound.getNumber().createNext();
     }
 
-    /*private createConfigsFromPrevious(roundNumber: RoundNumber) {
-        this.createCountConfigsFromPrevious(roundNumber);
-        this.createPlanningConfigFromPrevious(roundNumber);
-    }
-
-    private createCountConfigsFromPrevious(roundNumber: RoundNumber) {
-        const previousConfig = roundNumber.getPrevious().getCountConfig();
-        const config = new CountConfig(previousConfig.getSport(), roundNumber);
-        config.setQualifyRule(previousConfig.getQualifyRule());
-        config.setWinPoints(previousConfig.getWinPoints());
-        config.setDrawPoints(previousConfig.getDrawPoints());
-        config.setWinPointsExt(previousConfig.getWinPointsExt());
-        config.setDrawPointsExt(previousConfig.getDrawPointsExt());
-        config.setPointsCalculation(previousConfig.getPointsCalculation());
-        this.createScoreConfigFromPrevious(config, previousConfig.getScore());
-    }
-
-    protected createScoreConfigFromPrevious(config: CountConfig, previousScoreConfig: ConfigScore) {
-
-        const newScoreConfig = new ConfigScore(config, undefined);
-        newScoreConfig.setDirection(previousScoreConfig.getDirection());
-        newScoreConfig.setMaximum(previousScoreConfig.getMaximum());
-
-        const previousSubScoreConfig = previousScoreConfig.getChild();
-        if ( previousSubScoreConfig ) {
-            const newSubScoreConfig = new ConfigScore(config, newScoreConfig);
-            newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
-            newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
-        }
-        return newScoreConfig;
-    }
+    /*maak hier service voor net zoals voor sportconfig
 
     private createPlanningConfigFromPrevious(roundNumber: RoundNumber): PlanningConfig {
         const previousConfig = roundNumber.getPrevious().getPlanningConfig();

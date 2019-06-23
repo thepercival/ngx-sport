@@ -3,21 +3,20 @@ import { SportConfigScore } from '../score';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class ConfigScoreMapper {
+export class SportConfigScoreMapper {
 
     constructor() {
     }
 
-    toObject(json: JsonSportConfigScore, countConfig: SportConfig): SportConfigScore {
-        let parent;
-        if (json.parent !== undefined) {
-            parent = this.toObject(json.parent, countConfig);
+    toObject(json: JsonSportConfigScore, sportConfig: SportConfig, parentConfigScore?: SportConfigScore): SportConfigScore {
+        const scoreConfig = new SportConfigScore(sportConfig, parentConfigScore);
+        scoreConfig.setId(json.id);
+        scoreConfig.setDirection(json.direction);
+        scoreConfig.setMaximum(json.maximum);
+        if (json.child !== undefined) {
+            this.toObject(json.child, sportConfig, scoreConfig);
         }
-        const roundScoreConfig = new SportConfigScore(countConfig, parent);
-        roundScoreConfig.setId(json.id);
-        roundScoreConfig.setDirection(json.direction);
-        roundScoreConfig.setMaximum(json.maximum);
-        return roundScoreConfig;
+        return scoreConfig;
     }
 
     toJson(scoreConfig: SportConfigScore): JsonSportConfigScore {
@@ -25,7 +24,7 @@ export class ConfigScoreMapper {
             id: scoreConfig.getId(),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
-            parent: scoreConfig.getParent() !== undefined ? this.toJson(scoreConfig.getParent()) : undefined
+            child: scoreConfig.getChild() !== undefined ? this.toJson(scoreConfig.getChild()) : undefined
         };
     }
 }
@@ -34,5 +33,5 @@ export interface JsonSportConfigScore {
     id?: number;
     direction: number;
     maximum: number;
-    parent?: JsonSportConfigScore;
+    child?: JsonSportConfigScore;
 }

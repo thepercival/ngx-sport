@@ -17,7 +17,7 @@ export class SportMapper {
         }
         sport.setScoreUnitName(json.scoreUnitName);
         sport.setScoreSubUnitName(json.scoreSubUnitName);
-        sport.getNrOfGameCompetitors(json.nrOfGameCompetitors),
+        sport.setNrOfGameCompetitors(json.nrOfGameCompetitors),
         sport.setCustomId(json.customId);
         return sport;
     }

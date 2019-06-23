@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { SportConfigSupplier } from './supplier';
 import { SportConfig } from '../config';
 import { TheCache } from '../../cache';
-import { JsonSportConfigScore, ConfigScoreMapper } from './score/mapper';
+import { JsonSportConfigScore, SportConfigScoreMapper } from './score/mapper';
 
 @Injectable()
 export class SportConfigMapper {
-    constructor(private scoreConfigMapper: ConfigScoreMapper) { }
+    constructor(private scoreConfigMapper: SportConfigScoreMapper) { }
 
     toObject(json: JsonSportConfig, supplier: SportConfigSupplier, config?: SportConfig): SportConfig {
         if (config === undefined) {

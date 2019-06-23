@@ -25,15 +25,15 @@ export class SportConfigRepository extends SportRepository {
         return 'configs';
     }
 
-    /*editObject(supplier: CountConfigSupplier, config: JsonCountConfig): Observable<CountConfig[][]> {
+    /*editObject(supplier: SportConfigSupplier, config: JsonSportConfig): Observable<SportConfig[][]> {
         return forkJoin(this.getUpdates(supplier, config));
     }
 
-    getUpdates(roundNumber: RoundNumber, config: JsonCountConfig): Observable<CountConfig[]>[] {
+    getUpdates(roundNumber: RoundNumber, config: JsonSportConfig): Observable<SportConfig[]>[] {
         let reposUpdates: Observable<Config[]>[] = [];
         const options = this.getOptions(roundNumber);
         reposUpdates.push(
-            this.http.put(this.url + '/' + roundNumber.getCountConfig().getId(), config, options).pipe(
+            this.http.put(this.url + '/' + roundNumber.getSportConfig().getId(), config, options).pipe(
                 map((json: JsonConfig) => this.mapper.toObject(json, roundNumber)),
                 catchError((err) => this.handleError(err))
             )

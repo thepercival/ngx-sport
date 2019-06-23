@@ -6,7 +6,7 @@ import { Poule } from './poule';
 import { Place } from './place';
 import { Referee } from './referee';
 import { Round } from './round';
-import { CountConfig } from './sport/config';
+import { SportConfig } from './sport/config';
 import { State } from './state';
 
 export class Game {
@@ -193,7 +193,7 @@ export class Game {
         return new GameScoreHomeAway(home, away);
     }
 
-    getSportConfig(): CountConfig {
+    getSportConfig(): SportConfig {
         return this.getRound().getNumber().getSportConfig( this.getField().getSport() );
     }
 

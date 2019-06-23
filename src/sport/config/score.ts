@@ -5,14 +5,14 @@ export class SportConfigScore {
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected countConfig: SportConfig;
+    protected sportConfig: SportConfig;
     protected parent: SportConfigScore;
     protected direction: number;
     protected maximum: number;
     protected child: SportConfigScore;
 
-    constructor(countConfig: SportConfig, parent: SportConfigScore) {
-        this.setCountConfig(countConfig);
+    constructor(sportConfig: SportConfig, parent: SportConfigScore) {
+        this.setSportConfig(sportConfig);
         this.setParent(parent);
     }
 
@@ -40,12 +40,12 @@ export class SportConfigScore {
         this.maximum = maximum;
     }
 
-    getCountConfig(): SportConfig {
-        return this.countConfig;
+    getSportConfig(): SportConfig {
+        return this.sportConfig;
     }
 
-    private setCountConfig(countConfig: SportConfig) {
-        this.countConfig = countConfig;
+    private setSportConfig(sportConfig: SportConfig) {
+        this.sportConfig = sportConfig;
     }
 
     hasParent(): boolean {
