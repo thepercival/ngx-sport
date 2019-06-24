@@ -15,8 +15,9 @@ export class SportMapper {
             sport.setId(json.id);
             TheCache.sports[sport.getName()] = sport;
         }
-        sport.setScoreUnitName(json.scoreUnitName);
-        sport.setScoreSubUnitName(json.scoreSubUnitName);
+        // sport.setScoreUnitName(json.scoreUnitName);
+        // sport.setScoreSubUnitName(json.scoreSubUnitName);
+        sport.setTeam(json.team),
         sport.setNrOfGameCompetitors(json.nrOfGameCompetitors),
         sport.setCustomId(json.customId);
         return sport;
@@ -26,8 +27,9 @@ export class SportMapper {
         return {
             id: sport.getId(),
             name: sport.getName(),
-            scoreUnitName: sport.getScoreUnitName(),
-            scoreSubUnitName: sport.getScoreSubUnitName(),
+            // scoreUnitName: sport.getScoreUnitName(),
+            // scoreSubUnitName: sport.getScoreSubUnitName(),
+            team: sport.getTeam(),
             nrOfGameCompetitors: sport.getNrOfGameCompetitors(),
             customId: sport.getCustomId()
         };
@@ -37,8 +39,9 @@ export class SportMapper {
 export interface JsonSport {
     id?: number;
     name: string;
-    scoreUnitName: string;
-    scoreSubUnitName?: string;
+    // scoreUnitName: string;
+    // scoreSubUnitName?: string;
+    team: boolean;
     nrOfGameCompetitors: number;
     customId: number;
 }

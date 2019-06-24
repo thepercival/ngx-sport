@@ -15,7 +15,7 @@ export class FieldMapper {
         }
         field.setId(json.id);
         field.setName(json.name);
-        field.setSport(TheCache[json.sportName]);
+        field.setSport(TheCache.sports[json.sportId]);
         return field;
     }
 
@@ -24,7 +24,7 @@ export class FieldMapper {
             id: field.getId(),
             number: field.getNumber(),
             name: field.getName(),
-            sportName: field.getSport().getName()
+            sportId: field.getSport().getId()
         };
     }
 }
@@ -33,5 +33,5 @@ export interface JsonField {
     id?: number;
     number: number;
     name: string;
-    sportName: string;
+    sportId: number;
 }

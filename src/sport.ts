@@ -5,9 +5,9 @@ export class Sport {
 
     protected id: number;
     protected name: string;
-    protected scoreUnitName: string;
-    protected scoreSubUnitName: string;
-    protected teamup: boolean;
+    // protected scoreUnitName: string;
+    // protected scoreSubUnitName: string;
+    protected team: boolean;
     protected nrOfGameCompetitors: number;
     protected customId: number;
 
@@ -31,32 +31,32 @@ export class Sport {
         this.name = name;
     }
 
-    getScoreUnitName(): string {
-        return this.scoreUnitName;
+    // getScoreUnitName(): string {
+    //     return this.scoreUnitName;
+    // }
+
+    // setScoreUnitName(name: string): void {
+    //     this.scoreUnitName = name;
+    // }
+
+    // getScoreSubUnitName(): string {
+    //     return this.scoreSubUnitName;
+    // }
+
+    // setScoreSubUnitName(name: string): void {
+    //     this.scoreSubUnitName = name;
+    // }
+
+    // hasScoreSubUnitName(): boolean {
+    //     return this.scoreSubUnitName === undefined;
+    // }
+
+    getTeam(): boolean {
+        return this.team;
     }
 
-    setScoreUnitName(name: string): void {
-        this.scoreUnitName = name;
-    }
-
-    getScoreSubUnitName(): string {
-        return this.scoreSubUnitName;
-    }
-
-    setScoreSubUnitName(name: string): void {
-        this.scoreSubUnitName = name;
-    }
-
-    hasScoreSubUnitName(): boolean {
-        return this.scoreSubUnitName === undefined;
-    }
-
-    getTeamup(): boolean {
-        return this.teamup;
-    }
-
-    setTeamup(teamup: boolean): void {
-        this.teamup = teamup;
+    setTeam(team: boolean): void {
+        this.team = team;
     }
 
     getCustomId(): number {

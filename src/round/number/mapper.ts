@@ -21,8 +21,10 @@ export class RoundNumberMapper {
         json.sportConfigs.forEach( jsonSportConfig => {
             this.sportConfigMapper.toObject(jsonSportConfig, roundNumber);
         });
+        if ( json.planningConfig !== undefined ) {
+            this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
+        }
 
-        this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
         if (json.next !== undefined) {
             this.toObject(json.next, competition, roundNumber);
         }
@@ -44,6 +46,6 @@ export interface JsonRoundNumber {
     id?: number;
     number: number;
     sportConfigs: JsonSportConfig[];
-    planningConfig: JsonPlanningConfig;
+    planningConfig?: JsonPlanningConfig;
     next?: JsonRoundNumber;
 }

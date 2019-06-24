@@ -6,16 +6,25 @@ export const jsonCompetition: JsonCompetition = {
         'name': 'ssaxasx',
         'association': {
             'name': 'username'
-        },
-        'sport': 'voetbal'
+        }
     },
     'season': {
         'name': '123',
         'startDateTime': '2018-12-17T11:33:15.710Z',
         'endDateTime': '2018-12-17T11:33:15.710Z'
     },
+    'sports': [
+        {
+            'id': 2,
+            'name': 'voetbal',
+            'team': true,
+            'customId': 11,
+            'nrOfGameCompetitors': 2
+        }
+    ],
     'fields': [
         {
+            'sportId': 2,
             'number': 1,
             'name': '1'
         }

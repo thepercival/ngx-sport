@@ -15,78 +15,33 @@ export const jsonStructure332a: JsonStructure = {
             'next': {
                 'id': 8122,
                 'number': 3,
-                'config': {
-                    'id': 10201,
-                    'qualifyRule': 1,
-                    'nrOfHeadtoheadMatches': 1,
-                    'winPoints': 3.0,
-                    'drawPoints': 1.0,
-                    'hasExtension': false,
-                    'winPointsExt': 2.0,
-                    'drawPointsExt': 1.0,
-                    'minutesPerGameExt': 0,
-                    'enableTime': true,
-                    'minutesPerGame': 20,
-                    'minutesBetweenGames': 5,
-                    'minutesAfter': 5,
-                    'score': {
-                        'id': 13392,
-                        'name': 'punten',
-                        'direction': 1,
-                        'maximum': 0
-                    },
-                    'teamup': false,
-                    'pointsCalculation': 0,
-                    'selfReferee': false
-                }
+                'sportConfigs': []
             },
-            'config': {
-                'id': 10200,
-                'qualifyRule': 1,
-                'nrOfHeadtoheadMatches': 1,
-                'winPoints': 3.0,
-                'drawPoints': 1.0,
-                'hasExtension': false,
-                'winPointsExt': 2.0,
-                'drawPointsExt': 1.0,
-                'minutesPerGameExt': 0,
-                'enableTime': true,
-                'minutesPerGame': 20,
-                'minutesBetweenGames': 5,
-                'minutesAfter': 5,
-                'score': {
-                    'id': 13391,
-                    'name': 'punten',
-                    'direction': 1,
-                    'maximum': 0
-                },
-                'teamup': false,
-                'pointsCalculation': 0,
-                'selfReferee': false
-            }
+            'sportConfigs': []
         },
-        'config': {
-            'id': 10199,
+        'sportConfigs': [
+            {
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 1,
             'winPoints': 3.0,
             'drawPoints': 1.0,
-            'hasExtension': false,
             'winPointsExt': 2.0,
             'drawPointsExt': 1.0,
+            'score': {
+                'direction': 1,
+                'maximum': 0
+            },
+            'pointsCalculation': 0,
+            'sportId': 2
+        }],
+        'planningConfig': {
+            'nrOfHeadtoheadMatches': 1,
+            'hasExtension': false,
             'minutesPerGameExt': 0,
             'enableTime': true,
             'minutesPerGame': 20,
             'minutesBetweenGames': 5,
             'minutesAfter': 5,
-            'score': {
-                'id': 13390,
-                'name': 'punten',
-                'direction': 1,
-                'maximum': 0
-            },
             'teamup': false,
-            'pointsCalculation': 0,
             'selfReferee': false
         }
     },

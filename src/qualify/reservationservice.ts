@@ -25,9 +25,9 @@ export class QualifyReservationService {
 
     /**
      * 
-     * @param toPouleNumber 
-     * @param fromRound 
-     * @param fromPlaceLocations 
+     * @param toPouleNumber
+     * @param fromRound
+     * @param fromPlaceLocations
      */
     getFreeAndLeastAvailabe(toPouleNumber: number, fromRound: Round, fromPlaceLocations: PlaceLocation[]): PlaceLocation {
         let retPlaceLocation: PlaceLocation;
