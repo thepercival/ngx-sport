@@ -53,6 +53,7 @@ import { SportConfigScore } from './sport/config/score';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
+import { SportMapper } from './sport/mapper';
 import { Structure } from './structure';
 import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
@@ -62,6 +63,7 @@ import { StructureService } from './structure/service';
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PlaceRepository, QualifyService, RefereeRepository,
         RoundRepository, SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
+        SportMapper,
         SeasonRepository, StructureRepository, StructureService, Structure,
         CompetitorRepository,
         PlanningRepository, NameService,
@@ -78,6 +80,7 @@ import { StructureService } from './structure/service';
         PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
         SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
         SeasonRepository, StructureRepository, StructureService,
+        SportMapper,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,

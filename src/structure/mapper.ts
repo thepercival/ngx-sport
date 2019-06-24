@@ -20,7 +20,7 @@ export class StructureMapper {
     }
 
     protected setRefereePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
-        if (roundNumber.getPlanningConfig().getSelfReferee()) {
+        if (roundNumber.getValidPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             const games = roundNumber.getGames();
             jsonRound.poules.forEach(jsonPoule => jsonPoule.games.forEach(jsonGame => {
@@ -28,7 +28,7 @@ export class StructureMapper {
                     return;
                 }
                 const refereePlace = places.find(place => place.getId() === jsonGame.refereePlaceId);
-                const game = games.find(game => game.getId() === jsonGame.id);
+                const game = games.find(gameIt => gameIt.getId() === jsonGame.id);
                 game.setRefereePlace(refereePlace);
             }));
         }

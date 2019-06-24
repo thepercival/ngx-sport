@@ -167,10 +167,14 @@ export class RoundNumber implements PlanningConfigSupplier, SportConfigSupplier 
     }
 
     getPlanningConfig(): PlanningConfig {
+        return this.getPlanningConfig();
+    }
+
+    getValidPlanningConfig(): PlanningConfig {
         if ( this.planningConfig !== undefined ) {
             return this.planningConfig;
         }
-        return this.getPrevious().getPlanningConfig();
+        return this.getPrevious().getValidPlanningConfig();
     }
 
     getSportConfigs(): SportConfig[] {
@@ -178,7 +182,7 @@ export class RoundNumber implements PlanningConfigSupplier, SportConfigSupplier 
     }
 
     getSportConfig(sport?: Sport): SportConfig {
-        const sportConfig = this.sportConfigs.find( sportConfig => sportConfig.getSport() === sport );
+        const sportConfig = this.sportConfigs.find( sportConfigIt => sportConfigIt.getSport() === sport );
         if ( sportConfig !== undefined ) {
             return sportConfig;
         }

@@ -57,7 +57,7 @@ export class PlanningService {
     }
 
     canCalculateStartDateTime(roundNumber: RoundNumber) {
-        const config = roundNumber.getPlanningConfig();
+        const config = roundNumber.getValidPlanningConfig();
         if (config.getEnableTime() === false) {
             return false;
         }
@@ -72,14 +72,14 @@ export class PlanningService {
     }
 
     calculateStartDateTime(roundNumber: RoundNumber) {
-        if (roundNumber.getPlanningConfig().getEnableTime() === false) {
+        if (roundNumber.getValidPlanningConfig().getEnableTime() === false) {
             return undefined;
         }
         if (roundNumber.isFirst()) {
             return this.getStartDateTime();
         }
         const previousEndDateTime = this.calculateEndDateTime(roundNumber.getPrevious());
-        const aPreviousConfig = roundNumber.getPrevious().getPlanningConfig();
+        const aPreviousConfig = roundNumber.getPrevious().getValidPlanningConfig();
         return this.addMinutes(previousEndDateTime, aPreviousConfig.getMinutesAfter());
     }
 
@@ -92,7 +92,7 @@ export class PlanningService {
     }
 
     protected calculateEndDateTime(roundNumber: RoundNumber) {
-        const config = roundNumber.getPlanningConfig();
+        const config = roundNumber.getValidPlanningConfig();
         if (config.getEnableTime() === false) {
             return undefined;
         }
@@ -117,7 +117,7 @@ export class PlanningService {
     }
 
     protected createHelper(roundNumber: RoundNumber) {
-        const config = roundNumber.getPlanningConfig();
+        const config = roundNumber.getValidPlanningConfig();
         roundNumber.getPoules().forEach((poule) => {
             const generator = new GameGenerator(poule);
             const gameRounds = generator.generate(config.getTeamup());
@@ -145,13 +145,13 @@ export class PlanningService {
         const referees = this.getReferees(roundNumber);
         const nextDateTime = this.assignResourceBatchToGames(roundNumber, dateTime, fields, referees);
         if (nextDateTime !== undefined) {
-            nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getPlanningConfig().getMinutesAfter());
+            nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getValidPlanningConfig().getMinutesAfter());
         }
         return nextDateTime;
     }
 
     protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
-        if (roundNumber.getPlanningConfig().getSelfReferee()) {
+        if (roundNumber.getValidPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
             return places.map(place => new PlanningReferee(undefined, place));
         }
@@ -164,7 +164,7 @@ export class PlanningService {
         fields: Field[],
         referees: PlanningReferee[]): Date {
         const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-        const resourceService = new PlanningResourceService(roundNumber.getPlanningConfig(), dateTime);
+        const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setNrOfPoules( roundNumber.getPoules().length );
         resourceService.setFields(fields);

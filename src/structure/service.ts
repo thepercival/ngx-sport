@@ -376,23 +376,6 @@ export class StructureService {
         return parentRound.getNumber().createNext();
     }
 
-    /*maak hier service voor net zoals voor sportconfig
-
-    private createPlanningConfigFromPrevious(roundNumber: RoundNumber): PlanningConfig {
-        const previousConfig = roundNumber.getPrevious().getPlanningConfig();
-        const config = new PlanningConfig(roundNumber);
-        config.setNrOfHeadtoheadMatches(previousConfig.getNrOfHeadtoheadMatches());
-        config.setHasExtension(previousConfig.getHasExtension());
-        config.setMinutesPerGameExt(previousConfig.getMinutesPerGameExt());
-        config.setEnableTime(previousConfig.getEnableTime());
-        config.setMinutesPerGame(previousConfig.getMinutesPerGame());
-        config.setMinutesBetweenGames(previousConfig.getMinutesBetweenGames());
-        config.setMinutesAfter(previousConfig.getMinutesAfter());
-        config.setTeamup(previousConfig.getTeamup());
-        config.setSelfReferee(previousConfig.getSelfReferee());
-        return config;
-    }*/
-
     private refillRound(round: Round, nrOfPlaces: number, nrOfPoules: number): Round {
         if (nrOfPlaces <= 0) {
             return;
