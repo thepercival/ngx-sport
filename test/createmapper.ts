@@ -12,7 +12,7 @@ import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
 import { SportConfigMapper } from '../src/sport/config/mapper';
 import { PlanningConfigMapper } from '../src/planning/config/mapper';
-import { SportConfigScoreMapper } from '../src/sport/config/score/mapper';
+import { SportScoreConfigMapper } from '../src/sport/scoreconfig/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
@@ -39,10 +39,10 @@ export function getMapper(mapper: string) {
             getMapper('field'),
             getMapper('sport')
         );
-    } else if (mapper === 'sportconfigscore') {
-        return new SportConfigScoreMapper();
+    } else if (mapper === 'sportscoreconfig') {
+        return new SportScoreConfigMapper();
     } else if (mapper === 'sportconfig') {
-        return new SportConfigMapper(getMapper('sportconfigscore'));
+        return new SportConfigMapper(getMapper('sportcscoreonfig'));
     } else if (mapper === 'planningconfig') {
         return new PlanningConfigMapper();
     } else if (mapper === 'roundnumber') {

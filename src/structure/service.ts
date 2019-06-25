@@ -9,8 +9,8 @@ import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { SportConfig } from '../sport/config';
-import { SportConfigScore } from '../sport/config/score';
-import { SportConfigService } from '../sport/config/service';
+import { SportScoreConfig } from '../sport/scoreconfig';
+import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { PlanningConfig } from '../planning/config';
 import { PlanningConfigService } from '../planning/config/service';
 import { Structure } from '../structure';
@@ -31,8 +31,10 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        const sportConfigService = new SportConfigService();
-        competition.getSports().forEach( sport => sportConfigService.createDefault( sport, firstRoundNumber ) );
+        const sportScoreConfigService = new SportScoreConfigService();
+        competition.getSportConfigs().forEach( sportConfig => {
+            sportScoreConfigService.createDefault( sportConfig.getSport(), firstRoundNumber );
+        });
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);

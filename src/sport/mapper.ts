@@ -8,17 +8,16 @@ export class SportMapper {
 
     toObject(json: JsonSport, sport?: Sport): Sport {
         if (sport === undefined) {
-            sport = TheCache.sports[json.name];
+            sport = TheCache.sports[json.id];
         }
         if (sport === undefined) {
             sport = new Sport(json.name);
             sport.setId(json.id);
-            TheCache.sports[sport.getName()] = sport;
+            TheCache.sports[sport.getId()] = sport;
         }
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
         sport.setTeam(json.team),
-        sport.setNrOfGameCompetitors(json.nrOfGameCompetitors),
         sport.setCustomId(json.customId);
         return sport;
     }
@@ -30,7 +29,6 @@ export class SportMapper {
             // scoreUnitName: sport.getScoreUnitName(),
             // scoreSubUnitName: sport.getScoreSubUnitName(),
             team: sport.getTeam(),
-            nrOfGameCompetitors: sport.getNrOfGameCompetitors(),
             customId: sport.getCustomId()
         };
     }
@@ -42,6 +40,5 @@ export interface JsonSport {
     // scoreUnitName: string;
     // scoreSubUnitName?: string;
     team: boolean;
-    nrOfGameCompetitors: number;
     customId: number;
 }

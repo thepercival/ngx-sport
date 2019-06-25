@@ -1,5 +1,4 @@
-import { SportConfigSupplier } from './config/supplier';
-import { SportConfigScore } from './config/score';
+import { Competition } from '../competition';
 import { Sport } from '../sport';
 
 export class SportConfig {
@@ -7,18 +6,18 @@ export class SportConfig {
     static readonly POINTS_CALC_GAMEPOINTS = 0;
     static readonly POINTS_CALC_SCOREPOINTS = 1;
     static readonly POINTS_CALC_BOTH = 2;
+    static readonly DEFAULT_NROFGAMECOMPETITORS = 2;
 
     protected id: number;
-    protected qualifyRule: number;
     protected winPoints: number;
     protected drawPoints: number;
     protected winPointsExt: number;
     protected drawPointsExt: number;
-    protected score: SportConfigScore;
     protected pointsCalculation: number;
+    protected nrOfGameCompetitors: number;
 
-    constructor(protected sport: Sport, protected supplier: SportConfigSupplier ) {
-        this.supplier.setSportConfig(this);
+    constructor(protected sport: Sport, protected competition: Competition ) {
+        this.competition.setSportConfig(this);
     }
 
     getId(): number {
@@ -27,14 +26,6 @@ export class SportConfig {
 
     setId(id: number) {
         this.id = id;
-    }
-
-    getQualifyRule(): number {
-        return this.qualifyRule;
-    }
-
-    setQualifyRule(qualifyRule: number) {
-        this.qualifyRule = qualifyRule;
     }
 
     getWinPoints(): number {
@@ -77,41 +68,19 @@ export class SportConfig {
         this.pointsCalculation = pointsCalculation;
     }
 
-    getScore(): SportConfigScore {
-        return this.score;
+    getNrOfGameCompetitors(): number {
+        return this.nrOfGameCompetitors;
     }
 
-    setScore(score: SportConfigScore) {
-        this.score = score;
-    }
-
-    getInputScore(): SportConfigScore {
-        let parentScoreConfig: SportConfigScore = this.getScore().getRoot();
-        let childScoreConfig = parentScoreConfig.getChild();
-        while (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || parentScoreConfig.getMaximum() === 0)) {
-            parentScoreConfig = childScoreConfig;
-            childScoreConfig = childScoreConfig.getChild();
-        }
-        return parentScoreConfig;
-    }
-
-    getCalculateScore(): SportConfigScore {
-        let scoreConfig: SportConfigScore = this.getScore().getRoot();
-        while (scoreConfig.getMaximum() === 0 && scoreConfig.getChild() !== undefined) {
-            scoreConfig = scoreConfig.getChild();
-        }
-        return scoreConfig;
-    }
-
-    hasMultipleScores(): boolean {
-        return this.getScore().getRoot() !== this.getScore();
+    setNrOfGameCompetitors(nrOfGameCompetitors: number): void {
+        this.nrOfGameCompetitors = nrOfGameCompetitors;
     }
 
     getSport(): Sport {
         return this.sport;
     }
 
-    getSupplier(): SportConfigSupplier {
-        return this.supplier;
+    getCompetition(): Competition {
+        return this.competition;
     }
 }

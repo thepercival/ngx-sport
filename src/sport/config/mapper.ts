@@ -1,53 +1,48 @@
 import { Injectable } from '@angular/core';
 
-import { SportConfigSupplier } from './supplier';
+import { Competition } from '../../competition';
 import { SportConfig } from '../config';
-import { TheCache } from '../../cache';
-import { JsonSportConfigScore, SportConfigScoreMapper } from './score/mapper';
+import { JsonSport, SportMapper } from '../mapper';
 
 @Injectable()
 export class SportConfigMapper {
-    constructor(private scoreConfigMapper: SportConfigScoreMapper) { }
+    constructor(private sportMapper: SportMapper) { }
 
-    toObject(json: JsonSportConfig, supplier: SportConfigSupplier, config?: SportConfig): SportConfig {
+    toObject(json: JsonSportConfig, competition: Competition, config?: SportConfig): SportConfig {
         if (config === undefined) {
-            const sport = TheCache.sports[json.sportId];
-            config = new SportConfig( sport, supplier);
+            config = new SportConfig( this.sportMapper.toObject(json.sport), competition);
         }
         config.setId(json.id);
-        config.setQualifyRule(json.qualifyRule);
         config.setWinPoints(json.winPoints);
         config.setDrawPoints(json.drawPoints);
         config.setWinPointsExt(json.winPointsExt);
         config.setDrawPointsExt(json.drawPointsExt);
-        config.setScore(this.scoreConfigMapper.toObject(json.score, config));
         config.setPointsCalculation(json.pointsCalculation);
+        config.setNrOfGameCompetitors(json.nrOfGameCompetitors);
         return config;
     }
 
     toJson(config: SportConfig): JsonSportConfig {
         return {
             id: config.getId(),
-            sportId: config.getSport().getId(),
-            qualifyRule: config.getQualifyRule(),
+            sport: this.sportMapper.toJson(config.getSport()),
             winPoints: config.getWinPoints(),
             drawPoints: config.getDrawPoints(),
             winPointsExt: config.getWinPointsExt(),
             drawPointsExt: config.getDrawPointsExt(),
-            score: this.scoreConfigMapper.toJson(config.getScore()),
             pointsCalculation: config.getPointsCalculation(),
+            nrOfGameCompetitors: config.getNrOfGameCompetitors()
         };
     }
 }
 
 export interface JsonSportConfig {
     id?: number;
-    sportId: number;
-    qualifyRule: number;
+    sport: JsonSport;
     winPoints: number;
     drawPoints: number;
     winPointsExt: number;
     drawPointsExt: number;
-    score: JsonSportConfigScore;
     pointsCalculation: number;
+    nrOfGameCompetitors: number;
 }

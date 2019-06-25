@@ -6,7 +6,6 @@ import { forkJoin, Observable } from 'rxjs';
 
 import { SportRepository } from '../../repository';
 import { SportConfig } from '../config';
-import { SportConfigSupplier } from './supplier';
 import { JsonSportConfig, SportConfigMapper } from './mapper';
 
 @Injectable()

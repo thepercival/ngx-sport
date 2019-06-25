@@ -49,7 +49,7 @@ import { PlanningConfigRepository } from './planning/config/repository';
 import { PlanningConfigService } from './planning/config/service';
 import { SportConfigMapper } from './sport/config/mapper';
 import { SportConfigRepository } from './sport/config/repository';
-import { SportConfigScore } from './sport/config/score';
+import { SportScoreConfig } from './sport/scoreconfig';
 import { RoundRepository } from './round/repository';
 import { Season } from './season';
 import { SeasonRepository } from './season/repository';
@@ -73,7 +73,7 @@ import { StructureService } from './structure/service';
     exports: [
         Association, League, Competition, APIConfig, Field, Game, GameScore, GamePlace, HorizontalPoule,
         Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee, SportRepository,
-        Round, RoundNumber, SportConfig, PlanningConfig, SportConfigScore,
+        Round, RoundNumber, SportConfig, PlanningConfig, SportScoreConfig,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,

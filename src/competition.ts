@@ -3,6 +3,7 @@ import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
 import { State } from './state';
+import { SportConfig } from './sport/config';
 import { Sport } from './sport';
 
 export class Competition {
@@ -14,7 +15,7 @@ export class Competition {
     protected state: number;
     protected referees: Referee[] = [];
     protected fields: Field[] = [];
-    protected sports: Sport[] = [];
+    protected sportConfigs: SportConfig[] = [];
 
     constructor(league: League, season: Season) {
         this.setLeague(league);
@@ -104,7 +105,27 @@ export class Competition {
         }
     }
 
-    getSports(): Sport[] {
-        return this.sports;
+    getSportConfigs(): SportConfig[] {
+        return this.sportConfigs;
+    }
+
+    setSportConfig(sportConfig: SportConfig) {
+        this.sportConfigs.push( sportConfig );
+    }
+
+    getSportConfig(sport?: Sport): SportConfig {
+        const sportConfig = this.sportConfigs.find( sportConfigIt => sportConfigIt.getSport() === sport );
+        if ( sportConfig !== undefined ) {
+            return sportConfig;
+        }
+        return this.getFirstSportConfig();
+    }
+
+    hasMultipleSportConfigs(): boolean {
+        return this.sportConfigs.length > 1;
+    }
+
+    getFirstSportConfig(): SportConfig {
+        return this.sportConfigs[0];
     }
 }

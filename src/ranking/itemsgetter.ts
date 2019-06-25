@@ -3,15 +3,20 @@ import { GameScore } from '../game/score';
 import { GameScoreHomeAway } from '../game/score/homeaway';
 import { Place } from '../place';
 import { Round } from '../round';
+import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { UnrankedRoundItem } from './item';
 
 /* tslint:disable:no-bitwise */
 
 export class RankingItemsGetter {
+    private sportScoreConfigService: SportScoreConfigService;
+    private sportConfigs = {};
+
     constructor(
         private round: Round,
         private gameStates: number
     ) {
+        this.sportScoreConfigService = new SportScoreConfigService();
     }
 
     static getIndex(place: Place): string {
@@ -26,7 +31,7 @@ export class RankingItemsGetter {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const finalScore = game.getFinalScore();
+            const finalScore = this.sportScoreConfigService.getFinalScore(game);
             [Game.HOME, Game.AWAY].forEach(homeAway => {
                 const points = this.getNrOfPoints(finalScore, homeAway, game);
                 const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, false);

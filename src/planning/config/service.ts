@@ -1,10 +1,10 @@
 import { PlanningConfig } from '../config';
-import { PlanningConfigSupplier } from './supplier';
+import { RoundNumber } from '../../round/number';
 
 export class PlanningConfigService {
 
-    createDefault(supplier: PlanningConfigSupplier): PlanningConfig {
-        const config = new PlanningConfig(supplier);
+    createDefault(roundNumber: RoundNumber): PlanningConfig {
+        const config = new PlanningConfig(roundNumber);
         config.setNrOfHeadtoheadMatches(PlanningConfig.DEFAULTNROFHEADTOHEADMATCHES);
         config.setHasExtension(PlanningConfig.DEFAULTHASEXTENSION);
         config.setMinutesPerGameExt(0);

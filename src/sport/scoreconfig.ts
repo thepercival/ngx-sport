@@ -1,18 +1,17 @@
-import { SportConfig } from '../config';
+import { Sport } from '../sport';
+import { RoundNumber } from '../round/number';
 
-export class SportConfigScore {
+export class SportScoreConfig {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected sportConfig: SportConfig;
-    protected parent: SportConfigScore;
+    protected parent: SportScoreConfig;
     protected direction: number;
     protected maximum: number;
-    protected child: SportConfigScore;
+    protected child: SportScoreConfig;
 
-    constructor(sportConfig: SportConfig, parent: SportConfigScore) {
-        this.setSportConfig(sportConfig);
+    constructor(protected sport: Sport, protected roundNumber: RoundNumber, parent: SportScoreConfig) {
         this.setParent(parent);
     }
 
@@ -40,23 +39,23 @@ export class SportConfigScore {
         this.maximum = maximum;
     }
 
-    getSportConfig(): SportConfig {
-        return this.sportConfig;
+    getSport(): Sport {
+        return this.sport;
     }
 
-    private setSportConfig(sportConfig: SportConfig) {
-        this.sportConfig = sportConfig;
+    getRoundNumber(): RoundNumber {
+        return this.roundNumber;
     }
 
     hasParent(): boolean {
         return this.parent !== undefined;
     }
 
-    getParent(): SportConfigScore {
+    getParent(): SportScoreConfig {
         return this.parent;
     }
 
-    private setParent(parent: SportConfigScore) {
+    private setParent(parent: SportScoreConfig) {
         this.parent = parent;
         if (this.parent !== undefined) {
             this.parent.setChild(this);
@@ -71,11 +70,11 @@ export class SportConfigScore {
         return this;
     }
 
-    getChild(): SportConfigScore {
+    getChild(): SportScoreConfig {
         return this.child;
     }
 
-    setChild(child: SportConfigScore) {
+    setChild(child: SportScoreConfig) {
         this.child = child;
     }
 

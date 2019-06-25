@@ -5,20 +5,18 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { Round } from '../round';
 import { Sport } from '../sport';
-import { SportConfig } from '../sport/config';
 import { PlanningConfig,  } from '../planning/config';
-import { SportConfigSupplier } from '../sport/config/supplier';
-import { PlanningConfigSupplier } from '../planning/config/supplier';
+import { SportScoreConfig } from '../sport/scoreconfig';
 
 import { State } from '../state';
 
-export class RoundNumber implements PlanningConfigSupplier, SportConfigSupplier {
+export class RoundNumber {
     protected competition: Competition;
     protected number: number;
     protected previous: RoundNumber;
     protected next: RoundNumber;
     protected rounds: Round[] = [];
-    protected sportConfigs: SportConfig[] = [];
+    protected sportScoreConfigs: SportScoreConfig[] = [];
     protected planningConfig: PlanningConfig;
     protected id: number;
 
@@ -177,19 +175,27 @@ export class RoundNumber implements PlanningConfigSupplier, SportConfigSupplier 
         return this.getPrevious().getValidPlanningConfig();
     }
 
-    getSportConfigs(): SportConfig[] {
-        return this.sportConfigs;
+    hasMultipleSportScoreConfigs(): boolean {
+        return this.sportScoreConfigs.length > 1;
     }
 
-    getSportConfig(sport?: Sport): SportConfig {
-        const sportConfig = this.sportConfigs.find( sportConfigIt => sportConfigIt.getSport() === sport );
-        if ( sportConfig !== undefined ) {
-            return sportConfig;
+    getFirstSportScoreConfig(): SportScoreConfig {
+        return this.sportScoreConfigs[0];
+    }
+
+    getSportScoreConfigs(): SportScoreConfig[] {
+        return this.sportScoreConfigs;
+    }
+
+    getSportScoreConfig(sport?: Sport): SportScoreConfig {
+        const sportScoreConfig = this.sportScoreConfigs.find( sportScoreConfigIt => sportScoreConfigIt.getSport() === sport );
+        if ( sportScoreConfig !== undefined ) {
+            return sportScoreConfig;
         }
-        return this.getPrevious().getSportConfig( sport );
+        return this.getPrevious().getSportScoreConfig( sport );
     }
 
-    setSportConfig(sportConfig: SportConfig) {
-        this.sportConfigs.push( sportConfig );
+    setSportScoreConfig(sportScoreConfig: SportScoreConfig) {
+        this.sportScoreConfigs.push( sportScoreConfig );
     }
 }

@@ -159,42 +159,20 @@ export class Game {
         return this.scores;
     }
 
-    getFinalScore(sub?: boolean): GameScoreHomeAway {
-        if (this.getScores().length === 0) {
-            return undefined;
-        }
-        if (sub === true) {
-            return this.getSubScore();
-        }
-        let home = this.getScores()[0].getHome();
-        let away = this.getScores()[0].getAway();
-        const config = this.getSportConfig();
-        if (config.getCalculateScore() !== config.getInputScore()) {
-            home = 0;
-            away = 0;
-            this.getScores().forEach(score => {
-                if (score.getHome() > score.getAway()) {
-                    home++;
-                } else if (score.getHome() < score.getAway()) {
-                    away++;
-                }
-            });
-        }
-        return new GameScoreHomeAway(home, away);
-    }
-
-    private getSubScore(): GameScoreHomeAway {
-        let home = 0;
-        let away = 0;
-        this.getScores().forEach(score => {
-            home += score.getHome();
-            away += score.getAway();
-        });
-        return new GameScoreHomeAway(home, away);
-    }
-
     getSportConfig(): SportConfig {
-        return this.getRound().getNumber().getSportConfig( this.getField().getSport() );
+        const field = this.getField();
+        if ( field === undefined ) {
+            return this.getRound().getNumber().getCompetition().getFirstSportConfig();
+        }
+        return this.getRound().getNumber().getCompetition().getSportConfig( field.getSport() );
+    }
+
+    getSportScoreConfig() {
+        const field = this.getField();
+        if ( field === undefined ) {
+            return this.getRound().getNumber().getFirstSportScoreConfig();
+        }
+        return this.getRound().getNumber().getSportScoreConfig( field.getSport() );
     }
 
     getScoresMoment(): number {

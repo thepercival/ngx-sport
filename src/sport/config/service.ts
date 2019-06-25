@@ -1,25 +1,23 @@
 import { SportConfig } from '../config';
-import { SportConfigScore } from '../config/score';
-import { SportConfigSupplier } from '../config/supplier';
+import { SportScoreConfig } from '../scoreconfig';
 import { Sport } from '../../sport';
+import { Competition } from '../../competition';
+import { RoundNumber } from '../../round/number';
 import { SportCustomId } from '../../sport/customid';
-import { RankingService } from '../../ranking/service';
 
 export class SportConfigService {
 
     constructor() {
     }
 
-    createDefault( sport: Sport, supplier: SportConfigSupplier ): SportConfig {
-        const config = new SportConfig(sport, supplier);
-        config.setQualifyRule(RankingService.RULESSET_WC);
-
+    createDefault( sport: Sport, competition: Competition ): SportConfig {
+        const config = new SportConfig(sport, competition);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
         config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
         config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
-        this.createDefaultScore(config);
+        config.setNrOfGameCompetitors(SportConfig.DEFAULT_NROFGAMECOMPETITORS);
         return config;
     }
 
@@ -39,42 +37,37 @@ export class SportConfigService {
         return sport.getCustomId() === SportCustomId.Chess ? 1 : 0.5;
     }
 
-    protected createDefaultScore(config: SportConfig) {
-        const scoreConfig = new SportConfigScore(config, undefined);
-        scoreConfig.setDirection(SportConfigScore.UPWARDS);
-        scoreConfig.setMaximum(0);
-
-        const sport = config.getSport();
-        if ( sport.getCustomId() === SportCustomId.Darts || sport.getCustomId() === SportCustomId.Tennis ) {
-            const subScoreConfig = new SportConfigScore(config, scoreConfig);
-            subScoreConfig.setDirection(SportConfigScore.UPWARDS);
-            subScoreConfig.setMaximum(0);
-        }
-        return scoreConfig;
-    }
-
-    copy( sourceConfig: SportConfig, newSupplier: SportConfigSupplier ): SportConfig {
-        const newConfig = new SportConfig(sourceConfig.getSport(), newSupplier);
-        newConfig.setQualifyRule(sourceConfig.getQualifyRule());
+    copy( sourceConfig: SportConfig, competition: Competition ): SportConfig {
+        const newConfig = new SportConfig(sourceConfig.getSport(), competition);
         newConfig.setWinPoints(sourceConfig.getWinPoints());
         newConfig.setDrawPoints(sourceConfig.getDrawPoints());
         newConfig.setWinPointsExt(sourceConfig.getWinPointsExt());
         newConfig.setDrawPointsExt(sourceConfig.getDrawPointsExt());
         newConfig.setPointsCalculation(sourceConfig.getPointsCalculation());
-        this.copyScore(newConfig, sourceConfig.getScore());
+        newConfig.setNrOfGameCompetitors(sourceConfig.getNrOfGameCompetitors());
         return newConfig;
     }
 
-    protected copyScore(config: SportConfig, sourceScoreConfig: SportConfigScore) {
-        const newScoreConfig = new SportConfigScore(config, undefined);
-        newScoreConfig.setDirection(sourceScoreConfig.getDirection());
-        newScoreConfig.setMaximum(sourceScoreConfig.getMaximum());
-        const previousSubScoreConfig = sourceScoreConfig.getChild();
-        if ( previousSubScoreConfig ) {
-            const newSubScoreConfig = new SportConfigScore(config, newScoreConfig);
-            newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
-            newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
-        }
+    isDefault( sportConfig: SportConfig ): boolean {
+        const sport = sportConfig.getSport();
+        return ( sportConfig.getWinPoints() !== this.getDefaultWinPoints(sport)
+            || sportConfig.getDrawPoints() !== this.getDefaultDrawPoints(sport)
+            || sportConfig.getWinPointsExt() !== this.getDefaultWinPointsExt(sport)
+            || sportConfig.getDrawPointsExt() !== this.getDefaultDrawPointsExt(sport)
+            || sportConfig.getPointsCalculation() !== SportConfig.POINTS_CALC_GAMEPOINTS
+            || sportConfig.getNrOfGameCompetitors() !== SportConfig.DEFAULT_NROFGAMECOMPETITORS
+        );
+    }
+
+    areEqual( sportConfigA: SportConfig, sportConfigB: SportConfig ): boolean {
+        return ( sportConfigA.getSport() !== sportConfigB.getSport()
+            || sportConfigA.getWinPoints() !== sportConfigB.getWinPoints()
+            || sportConfigA.getDrawPoints() !== sportConfigB.getDrawPoints()
+            || sportConfigA.getWinPointsExt() !== sportConfigB.getWinPointsExt()
+            || sportConfigA.getDrawPointsExt() !== sportConfigB.getDrawPointsExt()
+            || sportConfigA.getPointsCalculation() !== sportConfigB.getPointsCalculation()
+            || sportConfigA.getNrOfGameCompetitors() !== sportConfigB.getNrOfGameCompetitors()
+        );
     }
 }
 
@@ -122,13 +115,13 @@ export class SportConfigService {
 // update sports set customId = 11, scoreUnitName = 'goals', teamup = false where name = 'voetbal';
 // update sports set customId = 12, scoreUnitName = 'sets', teamup = false where name = 'volleybal';
 
-        // const newScoreConfig = new ConfigScore(config, undefined);
+        // const newScoreConfig = new SportScoreConfig(config, undefined);
         // newScoreConfig.setDirection(previousScoreConfig.getDirection());
         // newScoreConfig.setMaximum(previousScoreConfig.getMaximum());
 
         // const previousSubScoreConfig = previousScoreConfig.getChild();
         // if ( previousSubScoreConfig ) {
-        //     const newSubScoreConfig = new ConfigScore(config, newScoreConfig);
+        //     const newSubScoreConfig = new SportScoreConfig(config, newScoreConfig);
         //     newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
         //     newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
         // }
@@ -137,7 +130,7 @@ export class SportConfigService {
     // move to nameservice?
 
     // static getDirectionDescription(direction: number) {
-    //     return direction === SportConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    //     return direction === SportScoreConfig.UPWARDS ? 'naar' : 'vanaf';
     // }
 
     // getName(): string {

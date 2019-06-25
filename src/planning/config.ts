@@ -1,4 +1,4 @@
-import { PlanningConfigSupplier } from './config/supplier';
+import { RoundNumber } from '../round/number';
 
 export class PlanningConfig {
 
@@ -19,8 +19,8 @@ export class PlanningConfig {
     protected teamup: boolean;
     protected selfReferee: boolean;
 
-    constructor(protected configSupplier: PlanningConfigSupplier) {
-        this.configSupplier.setPlanningConfig(this);
+    constructor(protected roundNumber: RoundNumber) {
+        this.roundNumber.setPlanningConfig(this);
     }
 
     getId(): number {
@@ -111,8 +111,8 @@ export class PlanningConfig {
         return nrOfMinutes;
     }
 
-    getSupplier(): PlanningConfigSupplier {
-        return this.configSupplier;
+    getRoundNumber(): RoundNumber {
+        return this.roundNumber;
     }
 
     getNrOfCompetitorsPerGame(): number {

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { PlanningConfigSupplier } from './supplier';
+import { RoundNumber } from '../../round/number';
 import { PlanningConfig } from '../config';
 
 @Injectable()
 export class PlanningConfigMapper {
     constructor() { }
 
-    toObject(json: JsonPlanningConfig, supplier: PlanningConfigSupplier, config?: PlanningConfig): PlanningConfig {
+    toObject(json: JsonPlanningConfig, roundNumber: RoundNumber, config?: PlanningConfig): PlanningConfig {
         if (config === undefined) {
-            config = new PlanningConfig(supplier);
+            config = new PlanningConfig(roundNumber);
         }
         config.setId(json.id);
         config.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
