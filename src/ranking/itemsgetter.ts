@@ -10,7 +10,6 @@ import { UnrankedRoundItem } from './item';
 
 export class RankingItemsGetter {
     private sportScoreConfigService: SportScoreConfigService;
-    private sportConfigs = {};
 
     constructor(
         private round: Round,
