@@ -31,7 +31,7 @@ export class RankingItemsGetter {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const finalScore = this.sportScoreConfigService.getFinalScore(game);
+            const finalScore = this.sportScoreConfigService.getFinal(game);
             [Game.HOME, Game.AWAY].forEach(homeAway => {
                 const points = this.getNrOfPoints(finalScore, homeAway, game);
                 const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, false);

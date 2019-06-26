@@ -24,7 +24,6 @@ export class QualifyReservationService {
     }
 
     /**
-     * 
      * @param toPouleNumber
      * @param fromRound
      * @param fromPlaceLocations

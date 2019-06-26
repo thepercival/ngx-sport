@@ -12,7 +12,6 @@ export class PlanningConfigMapper {
             config = new PlanningConfig(roundNumber);
         }
         config.setId(json.id);
-        config.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
         config.setHasExtension(json.hasExtension);
         config.setMinutesPerGameExt(json.minutesPerGameExt);
         config.setEnableTime(json.enableTime);
@@ -27,7 +26,6 @@ export class PlanningConfigMapper {
     toJson(config: PlanningConfig): JsonPlanningConfig {
         return {
             id: config.getId(),
-            nrOfHeadtoheadMatches: config.getNrOfHeadtoheadMatches(),
             hasExtension: config.getHasExtension(),
             minutesPerGameExt: config.getMinutesPerGameExt(),
             enableTime: config.getEnableTime(),
@@ -42,7 +40,6 @@ export class PlanningConfigMapper {
 
 export interface JsonPlanningConfig {
     id?: number;
-    nrOfHeadtoheadMatches: number;
     hasExtension: boolean;
     minutesPerGameExt: number;
     enableTime: boolean;

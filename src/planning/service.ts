@@ -118,25 +118,27 @@ export class PlanningService {
 
     protected createHelper(roundNumber: RoundNumber) {
         const config = roundNumber.getValidPlanningConfig();
-        roundNumber.getPoules().forEach((poule) => {
-            const generator = new GameGenerator(poule);
-            const gameRounds = generator.generate(config.getTeamup());
-            // if (poule.getPlaces().length === 8) {
-            //     gameRounds = generator.generateBen();
-            // }
-            for (let headToHead = 1; headToHead <= config.getNrOfHeadtoheadMatches(); headToHead++) {
-                const reverseHomeAway = (headToHead % 2) === 0;
+        console.log('@TODO');
+        // @TODO gamegeneratorshould take sports into account!
+        // roundNumber.getPoules().forEach((poule) => {
+        //     const generator = new GameGenerator(poule);
+        //     const gameRounds = generator.generate(config.getTeamup());
+        //     // if (poule.getPlaces().length === 8) {
+        //     //     gameRounds = generator.generateBen();
+        //     // }
+        //     for (let headToHead = 1; headToHead <= config.getNrOfHeadtoheadMatches(); headToHead++) {
+        //         const reverseHomeAway = (headToHead % 2) === 0;
 
-                const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
-                gameRounds.forEach(gameRound => {
-                    let subNumber = 1;
-                    gameRound.getCombinations().forEach(combination => {
-                        const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
-                        game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
-                    });
-                });
-            }
-        });
+        //         const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
+        //         gameRounds.forEach(gameRound => {
+        //             let subNumber = 1;
+        //             gameRound.getCombinations().forEach(combination => {
+        //                 const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+        //                 game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
+        //             });
+        //         });
+        //     }
+        // });
     }
 
     protected rescheduleHelper(roundNumber: RoundNumber, pStartDateTime: Date): Date {

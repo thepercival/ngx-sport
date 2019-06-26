@@ -5,7 +5,6 @@ export class PlanningConfigService {
 
     createDefault(roundNumber: RoundNumber): PlanningConfig {
         const config = new PlanningConfig(roundNumber);
-        config.setNrOfHeadtoheadMatches(PlanningConfig.DEFAULTNROFHEADTOHEADMATCHES);
         config.setHasExtension(PlanningConfig.DEFAULTHASEXTENSION);
         config.setMinutesPerGameExt(0);
         config.setEnableTime(PlanningConfig.DEFAULTENABLETIME);

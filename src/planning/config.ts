@@ -1,15 +1,12 @@
 import { RoundNumber } from '../round/number';
 
 export class PlanningConfig {
-
-    static readonly DEFAULTNROFHEADTOHEADMATCHES = 1;
     static readonly DEFAULTHASEXTENSION = false;
     static readonly DEFAULTENABLETIME = false;
     static readonly TEAMUP_MIN = 4;
     static readonly TEAMUP_MAX = 6;
 
     protected id: number;
-    protected nrOfHeadtoheadMatches: number;
     protected hasExtension: boolean;
     protected minutesPerGameExt: number;
     protected enableTime: boolean;
@@ -29,14 +26,6 @@ export class PlanningConfig {
 
     setId(id: number) {
         this.id = id;
-    }
-
-    getNrOfHeadtoheadMatches(): number {
-        return this.nrOfHeadtoheadMatches;
-    }
-
-    setNrOfHeadtoheadMatches(nrOfHeadtoheadMatches: number) {
-        this.nrOfHeadtoheadMatches = nrOfHeadtoheadMatches;
     }
 
     getHasExtension(): boolean {

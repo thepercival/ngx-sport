@@ -7,6 +7,7 @@ import { Round } from '../round';
 import { Sport } from '../sport';
 import { PlanningConfig,  } from '../planning/config';
 import { SportScoreConfig } from '../sport/scoreconfig';
+import { SportPlanningConfig } from '../sport/planningconfig';
 
 import { State } from '../state';
 
@@ -18,6 +19,7 @@ export class RoundNumber {
     protected rounds: Round[] = [];
     protected sportScoreConfigs: SportScoreConfig[] = [];
     protected planningConfig: PlanningConfig;
+    protected sportPlanningConfigs: SportPlanningConfig[] = [];
     protected id: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {
@@ -173,6 +175,30 @@ export class RoundNumber {
             return this.planningConfig;
         }
         return this.getPrevious().getValidPlanningConfig();
+    }
+
+    hasMultipleSportPlanningConfigs(): boolean {
+        return this.sportPlanningConfigs.length > 1;
+    }
+
+    getFirstSportPlanningConfig(): SportPlanningConfig {
+        return this.sportPlanningConfigs[0];
+    }
+
+    getSportPlanningConfigs(): SportPlanningConfig[] {
+        return this.sportPlanningConfigs;
+    }
+
+    getSportPlanningConfig(sport?: Sport): SportPlanningConfig {
+        const sportPlanningConfig = this.sportPlanningConfigs.find( sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport );
+        if ( sportPlanningConfig !== undefined ) {
+            return sportPlanningConfig;
+        }
+        return this.getPrevious().getSportPlanningConfig( sport );
+    }
+
+    setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
+        this.sportPlanningConfigs.push( sportPlanningConfig );
     }
 
     hasMultipleSportScoreConfigs(): boolean {
