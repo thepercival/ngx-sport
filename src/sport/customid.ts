@@ -10,5 +10,6 @@ export enum SportCustomId {
     TableTennis = 9,
     Tennis = 10,
     Football = 11,
-    Voleyball = 12
+    Voleyball = 12,
+    Baseball = 13
 }
