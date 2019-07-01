@@ -105,12 +105,12 @@ export class Competition {
         }
     }
 
-    getSportConfigs(): SportConfig[] {
-        return this.sportConfigs;
+    getSports() {
+        return this.sportConfigs.map( sportConfig => sportConfig.getSport() );
     }
 
-    setSportConfig(sportConfig: SportConfig) {
-        this.sportConfigs.push( sportConfig );
+    getSportConfigs(): SportConfig[] {
+        return this.sportConfigs;
     }
 
     getSportConfig(sport?: Sport): SportConfig {

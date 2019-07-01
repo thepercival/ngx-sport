@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Competition } from '../../competition';
 import { SportConfig } from '../config';
 import { JsonSport, SportMapper } from '../mapper';
+import { TheCache } from '../../cache';
 
 @Injectable()
 export class SportConfigMapper {
@@ -10,7 +11,7 @@ export class SportConfigMapper {
 
     toObject(json: JsonSportConfig, competition: Competition, config?: SportConfig): SportConfig {
         if (config === undefined) {
-            config = new SportConfig( this.sportMapper.toObject(json.sport), competition);
+            config = new SportConfig( TheCache.sports[json.sportId], competition);
         }
         config.setId(json.id);
         config.setWinPoints(json.winPoints);
@@ -25,7 +26,7 @@ export class SportConfigMapper {
     toJson(config: SportConfig): JsonSportConfig {
         return {
             id: config.getId(),
-            sport: this.sportMapper.toJson(config.getSport()),
+            sportId: config.getSport().getId(),
             winPoints: config.getWinPoints(),
             drawPoints: config.getDrawPoints(),
             winPointsExt: config.getWinPointsExt(),
@@ -38,7 +39,7 @@ export class SportConfigMapper {
 
 export interface JsonSportConfig {
     id?: number;
-    sport: JsonSport;
+    sportId: number;
     winPoints: number;
     drawPoints: number;
     winPointsExt: number;

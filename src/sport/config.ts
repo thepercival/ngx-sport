@@ -17,7 +17,7 @@ export class SportConfig {
     protected nrOfGameCompetitors: number;
 
     constructor(protected sport: Sport, protected competition: Competition ) {
-        this.competition.setSportConfig(this);
+        this.competition.getSportConfigs().push(this);
     }
 
     getId(): number {

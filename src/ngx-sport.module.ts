@@ -80,7 +80,7 @@ import { StructureService } from './structure/service';
         PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
         SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
         SeasonRepository, StructureRepository, StructureService,
-        SportMapper,
+        SportMapper, SportConfigMapper,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
