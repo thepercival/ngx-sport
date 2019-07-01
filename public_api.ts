@@ -81,6 +81,7 @@ export * from './src/season/mapper';
 export * from './src/sport';
 export * from './src/sport/mapper';
 export * from './src/sport/config/service';
+export * from './src/sport/config/repository';
 export * from './src/sport/customid';
 export * from './src/structure';
 export * from './src/state';
