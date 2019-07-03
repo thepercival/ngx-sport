@@ -25,6 +25,20 @@ export class SportConfigRepository extends APIRepository {
         return 'sportconfigs';
     }
 
+    saveObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
+        if (sportConfig.getId() === undefined) {
+            return this.createObject(sportConfig, competition);
+        }
+        return this.editObject(sportConfig, competition);
+    }
+
+    createObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
+        return this.http.post(this.url, this.mapper.toJson(sportConfig), this.getOptions(competition)).pipe(
+            map((res: JsonSportConfig) => this.mapper.toObject(res, competition, sportConfig)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     editObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
         return this.http.put(this.url + '/' + sportConfig.getId(), this.mapper.toJson(sportConfig), this.getOptions(competition)).pipe(
             map((res: JsonSportConfig) => this.mapper.toObject(res, competition, sportConfig)),

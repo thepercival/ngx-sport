@@ -377,7 +377,7 @@ describe('NameService', () => {
             expect(nameService.getRefereeName(game, false)).to.equal('CDK');
             expect(nameService.getRefereeName(game, true)).to.equal('Co Du');
 
-            rootRound.getNumber().getConfig().setSelfReferee(true);
+            rootRound.getNumber().getPlanningConfig().setSelfReferee(true);
             planningService.create(rootRound.getNumber());
 
             const gameSelf = rootRound.getGames()[0];
