@@ -1,16 +1,14 @@
-import { SportConfig } from '../config';
-import { SportScoreConfig } from '../scoreconfig';
-import { Sport } from '../../sport';
 import { Competition } from '../../competition';
-import { RoundNumber } from '../../round/number';
-import { SportCustomId } from '../../sport/customid';
+import { Sport } from '../../sport';
+import { SportConfig } from '../config';
+import { SportCustom } from '../custom';
 
 export class SportConfigService {
 
     constructor() {
     }
 
-    createDefault( sport: Sport, competition: Competition ): SportConfig {
+    createDefault(sport: Sport, competition: Competition): SportConfig {
         const config = new SportConfig(sport, competition);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
@@ -21,23 +19,23 @@ export class SportConfigService {
         return config;
     }
 
-    protected getDefaultWinPoints( sport: Sport): number {
-        return sport.getCustomId() === SportCustomId.Chess ? 3 : 1;
+    protected getDefaultWinPoints(sport: Sport): number {
+        return sport.getCustomId() !== SportCustom.Chess ? 3 : 1;
     }
 
-    protected getDefaultDrawPoints( sport: Sport): number {
-        return sport.getCustomId() === SportCustomId.Chess ? 1 : 0.5;
+    protected getDefaultDrawPoints(sport: Sport): number {
+        return sport.getCustomId() !== SportCustom.Chess ? 1 : 0.5;
     }
 
-    protected getDefaultWinPointsExt( sport: Sport): number {
-        return sport.getCustomId() === SportCustomId.Chess ? 2 : 1;
+    protected getDefaultWinPointsExt(sport: Sport): number {
+        return sport.getCustomId() !== SportCustom.Chess ? 2 : 1;
     }
 
-    protected getDefaultDrawPointsExt( sport: Sport): number {
-        return sport.getCustomId() === SportCustomId.Chess ? 1 : 0.5;
+    protected getDefaultDrawPointsExt(sport: Sport): number {
+        return sport.getCustomId() !== SportCustom.Chess ? 1 : 0.5;
     }
 
-    copy( sourceConfig: SportConfig, competition: Competition ): SportConfig {
+    copy(sourceConfig: SportConfig, competition: Competition): SportConfig {
         const newConfig = new SportConfig(sourceConfig.getSport(), competition);
         newConfig.setWinPoints(sourceConfig.getWinPoints());
         newConfig.setDrawPoints(sourceConfig.getDrawPoints());
@@ -48,9 +46,9 @@ export class SportConfigService {
         return newConfig;
     }
 
-    isDefault( sportConfig: SportConfig ): boolean {
+    isDefault(sportConfig: SportConfig): boolean {
         const sport = sportConfig.getSport();
-        return ( sportConfig.getWinPoints() !== this.getDefaultWinPoints(sport)
+        return (sportConfig.getWinPoints() !== this.getDefaultWinPoints(sport)
             || sportConfig.getDrawPoints() !== this.getDefaultDrawPoints(sport)
             || sportConfig.getWinPointsExt() !== this.getDefaultWinPointsExt(sport)
             || sportConfig.getDrawPointsExt() !== this.getDefaultDrawPointsExt(sport)
@@ -59,8 +57,8 @@ export class SportConfigService {
         );
     }
 
-    areEqual( sportConfigA: SportConfig, sportConfigB: SportConfig ): boolean {
-        return ( sportConfigA.getSport() !== sportConfigB.getSport()
+    areEqual(sportConfigA: SportConfig, sportConfigB: SportConfig): boolean {
+        return (sportConfigA.getSport() !== sportConfigB.getSport()
             || sportConfigA.getWinPoints() !== sportConfigB.getWinPoints()
             || sportConfigA.getDrawPoints() !== sportConfigB.getDrawPoints()
             || sportConfigA.getWinPointsExt() !== sportConfigB.getWinPointsExt()

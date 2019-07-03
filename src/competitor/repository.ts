@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { APIRepository } from '../api/repository';
 import { Association } from '../association';
 import { TheCache } from '../cache';
 import { Competition } from '../competition';
 import { Competitor } from '../competitor';
 import { CompetitorMapper, JsonCompetitor } from '../competitor/mapper';
-import { SportRepository } from '../repository';
 
 @Injectable()
-export class CompetitorRepository extends SportRepository {
+export class CompetitorRepository extends APIRepository {
 
     private url: string;
     private mapper: CompetitorMapper;

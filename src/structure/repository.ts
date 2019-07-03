@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Competition } from '../competition';
-import { SportRepository } from '../repository';
+import { APIRepository } from '../api/repository';
 import { Structure } from '../structure';
 import { StructureMapper } from '../structure/mapper';
 import { JsonStructure } from './mapper';
 
 @Injectable()
-export class StructureRepository extends SportRepository {
+export class StructureRepository extends APIRepository {
     private url: string;
 
     constructor(

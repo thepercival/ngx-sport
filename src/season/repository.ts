@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { SportRepository } from '../repository';
+import { APIRepository } from '../api/repository';
 import { Season } from '../season';
 import { JsonSeason, SeasonMapper } from '../season/mapper';
 import { TheCache } from '../cache';
 
 
 @Injectable()
-export class SeasonRepository extends SportRepository {
+export class SeasonRepository extends APIRepository {
 
     private url: string;
 

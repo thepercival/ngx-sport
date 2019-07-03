@@ -1,15 +1,16 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
 
-import { SportRepository } from '../../repository';
+import { APIRepository } from '../../api/repository';
+import { Competition } from '../../competition';
 import { SportConfig } from '../config';
 import { JsonSportConfig, SportConfigMapper } from './mapper';
 
 @Injectable()
-export class SportConfigRepository extends SportRepository {
+export class SportConfigRepository extends APIRepository {
     private url: string;
 
     constructor(
@@ -21,35 +22,22 @@ export class SportConfigRepository extends SportRepository {
     }
 
     getUrlpostfix(): string {
-        return 'configs';
+        return 'sportconfigs';
     }
 
-    /*editObject(supplier: SportConfigSupplier, config: JsonSportConfig): Observable<SportConfig[][]> {
-        return forkJoin(this.getUpdates(supplier, config));
-    }
-
-    getUpdates(roundNumber: RoundNumber, config: JsonSportConfig): Observable<SportConfig[]>[] {
-        let reposUpdates: Observable<Config[]>[] = [];
-        const options = this.getOptions(roundNumber);
-        reposUpdates.push(
-            this.http.put(this.url + '/' + roundNumber.getSportConfig().getId(), config, options).pipe(
-                map((json: JsonConfig) => this.mapper.toObject(json, roundNumber)),
-                catchError((err) => this.handleError(err))
-            )
+    editObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
+        return this.http.put(this.url + '/' + sportConfig.getId(), this.mapper.toJson(sportConfig), this.getOptions(competition)).pipe(
+            map((res: JsonSportConfig) => this.mapper.toObject(res, competition, sportConfig)),
+            catchError((err) => this.handleError(err))
         );
-        if ( roundNumber.hasNext() ) {
-            reposUpdates = reposUpdates.concat( this.getUpdates(roundNumber.getNext(), config) );
-        }
-        return reposUpdates;
     }
 
-    protected getOptions(roundNumber: RoundNumber): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(competition: Competition): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
-        httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
-        httpParams = httpParams.set('roundnumberid', roundNumber.getId().toString());
+        httpParams = httpParams.set('competitionid', competition.getId().toString());
         return {
             headers: super.getHeaders(),
             params: httpParams
         };
-    }*/
+    }
 }

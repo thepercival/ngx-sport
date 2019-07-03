@@ -2,9 +2,9 @@ import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 
-import { APIConfig } from './apiconfig';
+import { APIConfig } from './config';
 
-export class SportRepository {
+export class APIRepository {
 
     constructor(protected router: Router) {
     }

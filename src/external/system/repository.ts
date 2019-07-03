@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { SportRepository } from '../../repository';
+import { APIRepository } from '../../api/repository';
 import { ExternalSystem } from '../system';
-import { JsonExternalSystem, ExternalSystemMapper } from './mapper';
+import { ExternalSystemMapper, JsonExternalSystem } from './mapper';
 
 // import { ExternalSystemSoccerOdds } from './soccerodds';
 // import { ExternalSystemSoccerSports } from './soccersports';
 
 @Injectable()
-export class ExternalSystemRepository extends SportRepository {
+export class ExternalSystemRepository extends APIRepository {
 
     private url: string;
     // private objects: ExternalSystem[];
@@ -36,7 +36,7 @@ export class ExternalSystemRepository extends SportRepository {
         //     });
         // }
         return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
-            map((jsonSystems: JsonExternalSystem[]) => jsonSystems.map( jsonSystem => this.mapper.toObject(jsonSystem))),
+            map((jsonSystems: JsonExternalSystem[]) => jsonSystems.map(jsonSystem => this.mapper.toObject(jsonSystem))),
             catchError((err) => this.handleError(err))
         );
     }

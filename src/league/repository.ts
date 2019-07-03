@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { APIRepository } from '../api/repository';
 import { TheCache } from '../cache';
 import { League } from '../league';
-import { SportRepository } from '../repository';
 import { JsonLeague, LeagueMapper } from './mapper';
 
 @Injectable()
-export class LeagueRepository extends SportRepository {
+export class LeagueRepository extends APIRepository {
 
     private url: string;
 

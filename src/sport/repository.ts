@@ -5,17 +5,15 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../api/repository';
-import { Game } from '../game';
-import { GameMapper, JsonGame } from '../game/mapper';
-import { Poule } from '../poule';
+import { Sport } from '../sport';
+import { JsonSport, SportMapper } from './mapper';
 
 @Injectable()
-export class GameRepository extends APIRepository {
-
+export class SportRepository extends APIRepository {
     private url: string;
 
     constructor(
-        private mapper: GameMapper,
+        private mapper: SportMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -23,24 +21,21 @@ export class GameRepository extends APIRepository {
     }
 
     getUrlpostfix(): string {
-        return 'games';
+        return 'sports';
     }
 
-    editObject(game: Game, poule: Poule): Observable<Game> {
-        return this.http.put(this.url + '/' + game.getId(), this.mapper.toJson(game), this.getOptions(poule)).pipe(
-            map((json: JsonGame) => this.mapper.toObject(json, game.getPoule(), game)),
+    createObject(json: JsonSport): Observable<Sport> {
+        return this.http.post(this.url, json, this.getOptions()).pipe(
+            map((jsonRes: JsonSport) => this.mapper.toObject(jsonRes)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    protected getOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
-        httpParams = httpParams.set('pouleid', poule.getId().toString());
-        httpParams = httpParams.set('competitionid', poule.getRound().getCompetition().getId().toString());
         return {
             headers: super.getHeaders(),
             params: httpParams
         };
     }
 }
-

@@ -12,7 +12,8 @@
  * @description
  * Entry point for all public APIs of this package.
  */
-export * from './src/apiconfig';
+export * from './src/api/config';
+export * from './src/api/repository';
 export * from './src/association';
 export * from './src/association/repository';
 export * from './src/association/mapper';
@@ -69,7 +70,7 @@ export * from './src/ranking/end/service';
 export * from './src/referee';
 export * from './src/referee/repository';
 export * from './src/referee/mapper';
-export * from './src/repository';
+export * from './src/api/repository';
 export * from './src/round/number';
 export * from './src/round';
 export * from './src/round/mapper';
@@ -83,7 +84,8 @@ export * from './src/sport/mapper';
 export * from './src/sport/config/service';
 export * from './src/sport/config/repository';
 export * from './src/sport/config/mapper';
-export * from './src/sport/customid';
+export * from './src/sport/custom';
+export * from './src/sport/repository';
 export * from './src/structure';
 export * from './src/state';
 export * from './src/structure/repository';

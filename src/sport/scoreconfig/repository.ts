@@ -1,20 +1,16 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
 
 import { APIRepository } from '../../api/repository';
-import { RoundNumber } from '../../round/number';
-import { PlanningConfig } from '../config';
-import { JsonPlanningConfig, PlanningConfigMapper } from './mapper';
+import { SportScoreConfigMapper } from './mapper';
 
 @Injectable()
-export class PlanningConfigRepository extends APIRepository {
+export class SportScoreConfigRepository extends APIRepository {
     private url: string;
 
     constructor(
-        private mapper: PlanningConfigMapper,
+        private mapper: SportScoreConfigMapper,
         private http: HttpClient,
         router: Router) {
         super(router);
@@ -22,19 +18,19 @@ export class PlanningConfigRepository extends APIRepository {
     }
 
     getUrlpostfix(): string {
-        return 'configs';
+        return 'sportscoreconfigs';
     }
 
-    editObject(roundNumber: RoundNumber, config: JsonPlanningConfig): Observable<PlanningConfig[][]> {
-        return forkJoin(this.getUpdates(roundNumber, config));
+    /*editObject(supplier: SportConfigSupplier, config: JsonSportConfig): Observable<SportConfig[][]> {
+        return forkJoin(this.getUpdates(supplier, config));
     }
 
-    getUpdates(roundNumber: RoundNumber, config: JsonPlanningConfig): Observable<PlanningConfig[]>[] {
-        let reposUpdates: Observable<PlanningConfig[]>[] = [];
+    getUpdates(roundNumber: RoundNumber, config: JsonSportConfig): Observable<SportConfig[]>[] {
+        let reposUpdates: Observable<Config[]>[] = [];
         const options = this.getOptions(roundNumber);
         reposUpdates.push(
-            this.http.put(this.url + '/' + roundNumber.getPlanningConfig().getId(), config, options).pipe(
-                map((json: JsonPlanningConfig) => this.mapper.toObject(json, roundNumber)),
+            this.http.put(this.url + '/' + roundNumber.getSportConfig().getId(), config, options).pipe(
+                map((json: JsonConfig) => this.mapper.toObject(json, roundNumber)),
                 catchError((err) => this.handleError(err))
             )
         );
@@ -52,5 +48,5 @@ export class PlanningConfigRepository extends APIRepository {
             headers: super.getHeaders(),
             params: httpParams
         };
-    }
+    }*/
 }

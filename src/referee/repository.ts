@@ -7,10 +7,10 @@ import { catchError, map } from 'rxjs/operators';
 import { Competition } from '../competition';
 import { Referee } from '../referee';
 import { RefereeMapper, JsonReferee } from '../referee/mapper';
-import { SportRepository } from '../repository';
+import { APIRepository } from '../api/repository';
 
 @Injectable()
-export class RefereeRepository extends SportRepository {
+export class RefereeRepository extends APIRepository {
 
     private url: string;
 

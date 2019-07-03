@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { APIRepository } from '../api/repository';
 import { Game } from '../game';
 import { GameMapper, JsonGame } from '../game/mapper';
 import { Poule } from '../poule';
-import { SportRepository } from '../repository';
 import { RoundNumber } from '../round/number';
 
 @Injectable()
-export class PlanningRepository extends SportRepository {
+export class PlanningRepository extends APIRepository {
 
     private url: string;
 

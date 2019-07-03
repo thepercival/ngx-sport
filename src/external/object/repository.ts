@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { SportRepository } from '../../repository';
+import { APIRepository } from '../../api/repository';
+import { TheCache } from '../../cache';
 import { ExternalObject, ImportableObject } from '../object';
 import { ExternalSystem } from '../system';
 import { ExternalObjectMapper, JsonExternalObject } from './mapper';
-import { TheCache } from '../../cache';
 
 @Injectable()
-export class ExternalObjectRepository extends SportRepository {
+export class ExternalObjectRepository extends APIRepository {
 
     private urlPostfix;
 

@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Poule } from '../poule';
+import { APIRepository } from '../api/repository';
 import { Place } from '../place';
-import { SportRepository } from '../repository';
+import { Poule } from '../poule';
 import { JsonPlace, PlaceMapper } from './mapper';
 
 @Injectable()
-export class PlaceRepository extends SportRepository {
+export class PlaceRepository extends APIRepository {
 
     private url: string;
 

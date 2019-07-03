@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SportRepository } from '../repository';
+import { APIRepository } from '../api/repository';
 
 @Injectable()
-export class RoundRepository extends SportRepository {
+export class RoundRepository extends APIRepository {
 
     private url: string;
 

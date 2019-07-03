@@ -1,9 +1,9 @@
-import { GameScoreHomeAway } from '../../game/score/homeaway';
-import { SportScoreConfig } from '../scoreconfig';
-import { Sport } from '../../sport';
 import { Game } from '../../game';
+import { GameScoreHomeAway } from '../../game/score/homeaway';
 import { RoundNumber } from '../../round/number';
-import { SportCustomId } from '../customid';
+import { Sport } from '../../sport';
+import { SportCustom } from '../custom';
+import { SportScoreConfig } from '../scoreconfig';
 
 export class SportScoreConfigService {
 
@@ -15,7 +15,7 @@ export class SportScoreConfigService {
         scoreConfig.setDirection(SportScoreConfig.UPWARDS);
         scoreConfig.setMaximum(0);
 
-        if ( sport.getCustomId() === SportCustomId.Darts || sport.getCustomId() === SportCustomId.Tennis ) {
+        if (sport.getCustomId() === SportCustom.Darts || sport.getCustomId() === SportCustom.Tennis) {
             const subScoreConfig = new SportScoreConfig(sport, roundNumber, scoreConfig);
             subScoreConfig.setDirection(SportScoreConfig.UPWARDS);
             subScoreConfig.setMaximum(0);
@@ -28,33 +28,33 @@ export class SportScoreConfigService {
         newScoreConfig.setDirection(sourceScoreConfig.getDirection());
         newScoreConfig.setMaximum(sourceScoreConfig.getMaximum());
         const previousSubScoreConfig = sourceScoreConfig.getChild();
-        if ( previousSubScoreConfig ) {
+        if (previousSubScoreConfig) {
             const newSubScoreConfig = new SportScoreConfig(sport, roundNumber, newScoreConfig);
             newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
             newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
         }
     }
 
-    isDefault( sportScoreConfig: SportScoreConfig ): boolean {
-        if ( sportScoreConfig.getDirection() !== SportScoreConfig.UPWARDS
+    isDefault(sportScoreConfig: SportScoreConfig): boolean {
+        if (sportScoreConfig.getDirection() !== SportScoreConfig.UPWARDS
             || sportScoreConfig.getMaximum() !== 0
         ) {
             return false;
         }
-        if ( sportScoreConfig.getChild() === undefined ) {
+        if (sportScoreConfig.getChild() === undefined) {
             return true;
         }
-        return this.isDefault( sportScoreConfig.getChild() );
+        return this.isDefault(sportScoreConfig.getChild());
     }
 
-    areEqual( sportScoreConfigA: SportScoreConfig, sportScoreConfigB: SportScoreConfig ): boolean {
-        if ( sportScoreConfigA.getDirection() !== sportScoreConfigB.getDirection()
+    areEqual(sportScoreConfigA: SportScoreConfig, sportScoreConfigB: SportScoreConfig): boolean {
+        if (sportScoreConfigA.getDirection() !== sportScoreConfigB.getDirection()
             || sportScoreConfigA.getMaximum() !== sportScoreConfigB.getMaximum()
         ) {
             return false;
         }
-        if ( sportScoreConfigA.getChild() !== undefined && sportScoreConfigB.getChild() !== undefined ) {
-            return this.areEqual( sportScoreConfigA.getChild(), sportScoreConfigB.getChild() );
+        if (sportScoreConfigA.getChild() !== undefined && sportScoreConfigB.getChild() !== undefined) {
+            return this.areEqual(sportScoreConfigA.getChild(), sportScoreConfigB.getChild());
         }
         return sportScoreConfigA.getChild() === sportScoreConfigB.getChild();
     }
