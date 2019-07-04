@@ -5,7 +5,6 @@ import { Poule } from '../poule';
 import { Referee } from '../referee';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { GameGenerator } from './gamegenerator';
 import { PlanningReferee } from './referee';
 import { PlanningResourceService } from './resource/service';
 
@@ -65,10 +64,6 @@ export class PlanningService {
             return this.canCalculateStartDateTime(roundNumber.getPrevious());
         }
         return true;
-    }
-
-    isStarted(roundNumber: RoundNumber) {
-        return roundNumber.getRounds().some(round => round.isStarted());
     }
 
     calculateStartDateTime(roundNumber: RoundNumber) {
@@ -168,7 +163,7 @@ export class PlanningService {
         const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
         const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
-        resourceService.setNrOfPoules( roundNumber.getPoules().length );
+        resourceService.setNrOfPoules(roundNumber.getPoules().length);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
         return resourceService.assign(games);
@@ -191,7 +186,7 @@ export class PlanningService {
                 games = games.concat(poule.getGames());
             });
         });
-        return this.orderGames(games, order, roundNumber.getPlanningConfig().getEnableTime() );
+        return this.orderGames(games, order, roundNumber.getPlanningConfig().getEnableTime());
     }
 
     protected orderGames(games: Game[], order: number, enableTime: boolean): Game[] {

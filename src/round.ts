@@ -1,10 +1,10 @@
 import { Competition } from './competition';
 import { Competitor } from './competitor';
 import { Game } from './game';
+import { Place } from './place';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { Place } from './place';
 import { QualifyGroup } from './qualify/group';
 import { RoundNumber } from './round/number';
 import { State } from './state';
@@ -150,7 +150,7 @@ export class Round {
     }
 
     getHorizontalPoule(winnersOrLosers: number, number: number): HorizontalPoule {
-        return this.getHorizontalPoules(winnersOrLosers).find( horPoule => horPoule.getNumber() === number );
+        return this.getHorizontalPoules(winnersOrLosers).find(horPoule => horPoule.getNumber() === number);
     }
 
     getFirstPlace(winnersOrLosers: number): Place {
@@ -222,7 +222,7 @@ export class Round {
         return State.Created;
     }
 
-    isStarted(): boolean {
+    hasBegun(): boolean {
         return this.getState() > State.Created;
     }
 

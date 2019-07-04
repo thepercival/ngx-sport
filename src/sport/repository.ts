@@ -24,6 +24,14 @@ export class SportRepository extends APIRepository {
         return 'sports';
     }
 
+    getObject(customId: number): Observable<Sport> {
+        const url = this.url + '/' + customId;
+        return this.http.get(url).pipe(
+            map((json: JsonSport) => this.mapper.toObject(json)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     createObject(json: JsonSport): Observable<Sport> {
         return this.http.post(this.url, json, this.getOptions()).pipe(
             map((jsonRes: JsonSport) => this.mapper.toObject(jsonRes)),

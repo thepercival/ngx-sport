@@ -1,14 +1,13 @@
 import { Competition } from '../competition';
 import { Competitor } from '../competitor';
 import { Game } from '../game';
-import { Poule } from '../poule';
 import { Place } from '../place';
+import { PlanningConfig } from '../planning/config';
+import { Poule } from '../poule';
 import { Round } from '../round';
 import { Sport } from '../sport';
-import { PlanningConfig,  } from '../planning/config';
-import { SportScoreConfig } from '../sport/scoreconfig';
 import { SportPlanningConfig } from '../sport/planningconfig';
-
+import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
 
 export class RoundNumber {
@@ -127,7 +126,7 @@ export class RoundNumber {
 
     getCompetitors(): Competitor[] {
         let competitors = [];
-        this.getRounds().forEach( round => {
+        this.getRounds().forEach(round => {
             competitors = competitors.concat(round.getCompetitors());
         });
         return competitors;
@@ -158,8 +157,8 @@ export class RoundNumber {
         return State.Created;
     }
 
-    isStarted(): boolean {
-        return this.getState() > State.Created;
+    hasBegun(): boolean {
+        return this.getRounds().some(round => round.hasBegun());
     }
 
     setPlanningConfig(config: PlanningConfig) {
@@ -171,7 +170,7 @@ export class RoundNumber {
     }
 
     getValidPlanningConfig(): PlanningConfig {
-        if ( this.planningConfig !== undefined ) {
+        if (this.planningConfig !== undefined) {
             return this.planningConfig;
         }
         return this.getPrevious().getValidPlanningConfig();
@@ -190,15 +189,15 @@ export class RoundNumber {
     }
 
     getSportPlanningConfig(sport?: Sport): SportPlanningConfig {
-        const sportPlanningConfig = this.sportPlanningConfigs.find( sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport );
-        if ( sportPlanningConfig !== undefined ) {
+        const sportPlanningConfig = this.sportPlanningConfigs.find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
+        if (sportPlanningConfig !== undefined) {
             return sportPlanningConfig;
         }
-        return this.getPrevious().getSportPlanningConfig( sport );
+        return this.getPrevious().getSportPlanningConfig(sport);
     }
 
     setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
-        this.sportPlanningConfigs.push( sportPlanningConfig );
+        this.sportPlanningConfigs.push(sportPlanningConfig);
     }
 
     hasMultipleSportScoreConfigs(): boolean {
@@ -214,14 +213,14 @@ export class RoundNumber {
     }
 
     getSportScoreConfig(sport?: Sport): SportScoreConfig {
-        const sportScoreConfig = this.sportScoreConfigs.find( sportScoreConfigIt => sportScoreConfigIt.getSport() === sport );
-        if ( sportScoreConfig !== undefined ) {
+        const sportScoreConfig = this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
+        if (sportScoreConfig !== undefined) {
             return sportScoreConfig;
         }
-        return this.getPrevious().getSportScoreConfig( sport );
+        return this.getPrevious().getSportScoreConfig(sport);
     }
 
     setSportScoreConfig(sportScoreConfig: SportScoreConfig) {
-        this.sportScoreConfigs.push( sportScoreConfig );
+        this.sportScoreConfigs.push(sportScoreConfig);
     }
 }

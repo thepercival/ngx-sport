@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { APIRepository } from '../api/repository';
 import { Competition } from '../competition';
 import { Referee } from '../referee';
-import { RefereeMapper, JsonReferee } from '../referee/mapper';
-import { APIRepository } from '../api/repository';
+import { JsonReferee, RefereeMapper } from '../referee/mapper';
 
 @Injectable()
 export class RefereeRepository extends APIRepository {
@@ -42,6 +42,9 @@ export class RefereeRepository extends APIRepository {
     removeObject(referee: Referee, competition: Competition): Observable<void> {
         const url = this.url + '/' + referee.getId();
         return this.http.delete(url, this.getOptions(competition)).pipe(
+            map((res) => {
+                competition.removeReferee(referee);
+            }),
             catchError((err) => this.handleError(err))
         );
     }

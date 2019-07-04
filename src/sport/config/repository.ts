@@ -8,6 +8,7 @@ import { APIRepository } from '../../api/repository';
 import { Competition } from '../../competition';
 import { SportConfig } from '../config';
 import { JsonSportConfig, SportConfigMapper } from './mapper';
+import { SportConfigService } from './service';
 
 @Injectable()
 export class SportConfigRepository extends APIRepository {
@@ -42,6 +43,17 @@ export class SportConfigRepository extends APIRepository {
     editObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
         return this.http.put(this.url + '/' + sportConfig.getId(), this.mapper.toJson(sportConfig), this.getOptions(competition)).pipe(
             map((res: JsonSportConfig) => this.mapper.toObject(res, competition, sportConfig)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    removeObject(sportConfig: SportConfig, competition: Competition): Observable<void> {
+        const url = this.url + '/' + sportConfig.getId();
+        return this.http.delete(url, this.getOptions(competition)).pipe(
+            map((res) => {
+                const sportConfigService = new SportConfigService();
+                sportConfigService.remove(sportConfig);
+            }),
             catchError((err) => this.handleError(err))
         );
     }

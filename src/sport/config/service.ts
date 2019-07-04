@@ -46,6 +46,20 @@ export class SportConfigService {
         return newConfig;
     }
 
+    remove(config: SportConfig) {
+        const competition = config.getCompetition();
+        const sportConfigs = competition.getSportConfigs();
+        const index = sportConfigs.indexOf(config);
+        if (index > -1) {
+            sportConfigs.splice(index, 1);
+        }
+        const fields = competition.getFields();
+        fields.filter(field => field.getSport() === config.getSport()).forEach(field => {
+            competition.removeField(field);
+        });
+        // sportplanningconfig and sportscoreconfig will be removed by backend
+    }
+
     isDefault(sportConfig: SportConfig): boolean {
         const sport = sportConfig.getSport();
         return (sportConfig.getWinPoints() !== this.getDefaultWinPoints(sport)
