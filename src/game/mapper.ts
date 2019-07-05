@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Game } from '../game';
-import { GamePlaceMapper, JsonGamePlace } from './place/mapper';
 import { Poule } from '../poule';
+import { GamePlaceMapper, JsonGamePlace } from './place/mapper';
 import { GameScoreMapper, JsonGameScore } from './score/mapper';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class GameMapper {
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         game.setScoresMoment(json.scoresMoment);
-        game.setField(json.fieldNr !== undefined ? poule.getCompetition().getField(json.fieldNr) : undefined);
+        game.setField(poule.getCompetition().getField(json.fieldNr));
         game.setReferee(json.refereeInitials !== undefined ? poule.getCompetition().getReferee(json.refereeInitials) : undefined);
 
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
@@ -50,7 +50,7 @@ export class GameMapper {
             roundNumber: game.getRoundNumber(),
             subNumber: game.getSubNumber(),
             resourceBatch: game.getResourceBatch(),
-            fieldNr: game.getField() ? game.getField().getNumber() : undefined,
+            fieldNr: game.getField().getNumber(),
             state: game.getState(),
             refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
             refereePlaceId: game.getRefereePlace() ? game.getRefereePlace().getId() : undefined,

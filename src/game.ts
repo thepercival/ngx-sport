@@ -1,9 +1,8 @@
 import { Field } from './field';
 import { GamePlace } from './game/place';
 import { GameScore } from './game/score';
-import { GameScoreHomeAway } from './game/score/homeaway';
-import { Poule } from './poule';
 import { Place } from './place';
+import { Poule } from './poule';
 import { Referee } from './referee';
 import { Round } from './round';
 import { SportConfig } from './sport/config';
@@ -160,19 +159,11 @@ export class Game {
     }
 
     getSportConfig(): SportConfig {
-        const field = this.getField();
-        if ( field === undefined ) {
-            return this.getRound().getNumber().getCompetition().getFirstSportConfig();
-        }
-        return this.getRound().getNumber().getCompetition().getSportConfig( field.getSport() );
+        return this.getRound().getNumber().getCompetition().getSportConfig(this.getField().getSport());
     }
 
     getSportScoreConfig() {
-        const field = this.getField();
-        if ( field === undefined ) {
-            return this.getRound().getNumber().getFirstSportScoreConfig();
-        }
-        return this.getRound().getNumber().getSportScoreConfig( field.getSport() );
+        return this.getRound().getNumber().getSportScoreConfig(this.getField().getSport());
     }
 
     getScoresMoment(): number {
