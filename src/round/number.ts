@@ -166,7 +166,7 @@ export class RoundNumber {
     }
 
     getPlanningConfig(): PlanningConfig {
-        return this.getPlanningConfig();
+        return this.planningConfig;
     }
 
     getValidPlanningConfig(): PlanningConfig {
