@@ -7,6 +7,7 @@ import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { PlanningReferee } from './referee';
 import { PlanningResourceService } from './resource/service';
+import { GameGenerator } from './gamegenerator';
 
 export class PlanningService {
 
@@ -122,54 +123,60 @@ export class PlanningService {
      */
     protected createHelper(roundNumber: RoundNumber) {
         const config = roundNumber.getValidPlanningConfig();
-        console.log('@TODO');
-        // @TODO gamegeneratorshould take sports into account!
-        // roundNumber.getPoules().forEach((poule) => {
-        //     const generator = new GameGenerator(poule);
-        //     const gameRounds = generator.generate(config.getTeamup());
-        //     // if (poule.getPlaces().length === 8) {
-        //     //     gameRounds = generator.generateBen();
-        //     // }
-        //     for (let headToHead = 1; headToHead <= config.getNrOfHeadtohead(); headToHead++) {
-        //         const reverseHomeAway = (headToHead % 2) === 0;
+        roundNumber.getPoules().forEach((poule) => {
+            const generator = new GameGenerator(poule);
+            const gameRounds = generator.generate(config.getTeamup());
+            for (let headToHead = 1; headToHead <= config.getNrOfHeadtohead(); headToHead++) {
+                const reverseHomeAway = (headToHead % 2) === 0;
 
-        //         const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
-        //         gameRounds.forEach(gameRound => {
-        //             let subNumber = 1;
-        //             gameRound.getCombinations().forEach(combination => {
-        //                 const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
-        //                 game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
-        //             });
-        //         });
-        //     }
-        // });
+                const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
+                gameRounds.forEach(gameRound => {
+                    let subNumber = 1;
+                    gameRound.getCombinations().forEach(combination => {
+                        const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+                        game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
+                    });
+                });
+            }
+        });
     }
 
     protected rescheduleHelper(roundNumber: RoundNumber, pStartDateTime: Date): Date {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
         const fields = this.competition.getFields();
-        const referees = this.getReferees(roundNumber);
-        const nextDateTime = this.assignResourceBatchToGames(roundNumber, dateTime, fields, referees);
+        const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
+        const referees = this.getReferees(roundNumber, games);
+        const nextDateTime = this.assignResourceBatchToGames(games, roundNumber, dateTime, fields, referees);
         if (nextDateTime !== undefined) {
             nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getValidPlanningConfig().getMinutesAfter());
         }
         return nextDateTime;
     }
 
-    protected getReferees(roundNumber: RoundNumber): PlanningReferee[] {
-        if (roundNumber.getValidPlanningConfig().getSelfReferee()) {
-            const places = roundNumber.getPlaces();
-            return places.map(place => new PlanningReferee(undefined, place));
+    protected getReferees(roundNumber: RoundNumber, games: Game[]): PlanningReferee[] {
+        if (!roundNumber.getValidPlanningConfig().getSelfReferee()) {
+            return this.competition.getReferees().map(referee => new PlanningReferee(referee, undefined));
         }
-        return this.competition.getReferees().map(referee => new PlanningReferee(referee, undefined));
+        const nrOfPlacesToFill = roundNumber.getNrOfPlaces();
+        const places = [];
+        const gamesCopy = games.slice();
+        while ( places.length < nrOfPlacesToFill ) {
+            const game = gamesCopy.shift();
+            game.getPlaces().map( gamePlace => gamePlace.getPlace() ).forEach( place => {
+                if ( places.find( placeIt => place === placeIt ) === undefined ) {
+                    places.unshift(place);
+                }
+            });
+        }
+        return places.map(place => new PlanningReferee(undefined, place));
     }
 
     protected assignResourceBatchToGames(
+        games: Game[],
         roundNumber: RoundNumber,
         dateTime: Date,
         fields: Field[],
         referees: PlanningReferee[]): Date {
-        const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
         const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setNrOfPoules(roundNumber.getPoules().length);
@@ -179,54 +186,44 @@ export class PlanningService {
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
-        const rounds = roundNumber.getRounds().slice();
-        if (!roundNumber.isFirst()) {
-            rounds.sort((r1, r2) => r1.getStructureNumber() - r2.getStructureNumber());
-        }
-        let games = [];
-        rounds.forEach(round => {
-            const poules = round.getPoules().slice();
-            if (roundNumber.isFirst()) {
-                poules.sort((p1, p2) => p1.getNumber() - p2.getNumber());
-            } else {
-                poules.sort((p1, p2) => p2.getNumber() - p1.getNumber());
-            }
-            poules.forEach(poule => {
-                games = games.concat(poule.getGames());
-            });
-        });
-        return this.orderGames(games, order, roundNumber.getPlanningConfig().getEnableTime());
-    }
+        const games = roundNumber.getGames();
 
-    protected orderGames(games: Game[], order: number, enableTime: boolean): Game[] {
-        if (order === Game.ORDER_BYNUMBER) {
-            games.sort((g1, g2) => {
-                if (g1.getRoundNumber() === g2.getRoundNumber()) {
-                    return g1.getSubNumber() - g2.getSubNumber();
-                }
+        const orderByNumber = ( g1: Game, g2: Game ): number => {
+            if (g1.getRoundNumber() !== g2.getRoundNumber()) {
                 return g1.getRoundNumber() - g2.getRoundNumber();
-            });
-            return games;
-        }
-        games.sort((g1, g2) => {
-            if (enableTime) {
-                if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {
-                    return g1.getStartDateTime().getTime() - g2.getStartDateTime().getTime();
-                }
-            } else {
-                if (g1.getResourceBatch() !== g2.getResourceBatch()) {
-                    return g1.getResourceBatch() - g2.getResourceBatch();
-                }
             }
-            // like order === Game.ORDER_BYNUMBER
-            if (g1.getRoundNumber() === g2.getRoundNumber()) {
-                if (g1.getSubNumber() === g2.getSubNumber()) {
-                    return g1.getPoule().getNumber() - g2.getPoule().getNumber();
-                }
+            if (g1.getSubNumber() !== g2.getSubNumber()) {
                 return g1.getSubNumber() - g2.getSubNumber();
             }
-            return g1.getRoundNumber() - g2.getRoundNumber();
-        });
+            const poule1 = g1.getPoule();
+            const poule2 = g2.getPoule();
+            if (poule1.getNumber() !== poule2.getNumber()) {
+                const resultPoule = poule1.getNumber() - poule2.getNumber();
+                return roundNumber.isFirst() ? resultPoule : -resultPoule;
+            }
+            const resultRound = poule1.getRound().getStructureNumber() - g2.getRound().getStructureNumber();
+            return !roundNumber.isFirst() ? resultRound : -resultRound;
+        };
+
+        if (order === Game.ORDER_BYNUMBER) {
+            games.sort((g1, g2) => {
+                return orderByNumber(g1, g2);
+            });
+        } else {
+            const enableTime = roundNumber.getPlanningConfig().getEnableTime();
+            games.sort((g1, g2) => {
+                if (enableTime) {
+                    if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {
+                        return g1.getStartDateTime().getTime() - g2.getStartDateTime().getTime();
+                    }
+                } else {
+                    if (g1.getResourceBatch() !== g2.getResourceBatch()) {
+                        return g1.getResourceBatch() - g2.getResourceBatch();
+                    }
+                }
+                return orderByNumber(g1, g2);
+            });
+        }
         return games;
     }
 

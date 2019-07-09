@@ -43,9 +43,6 @@ export class PlanningResourceService {
 
     setReferees(referees: PlanningReferee[]) {
         this.availableReferees = referees;
-        if (this.config.getSelfReferee()) {
-            this.availableReferees.reverse();
-        }
         this.fillAssignableReferees();
     }
 

@@ -40,7 +40,7 @@ export const jsonCompetition: JsonCompetition = {
         }
     ],
     'referees': [],
-    'startDateTime': '2018-12-17T12:00:00.000Z',
+    'startDateTime': '2030-01-01T12:00:00.000Z',
     'state': 1,
     'ruleSet': RankingService.RULESSET_WC
 };
