@@ -14,25 +14,10 @@ export const jsonStructure332a: JsonStructure = {
             'number': 2,
             'next': {
                 'id': 8122,
-                'number': 3,
-                'sportConfigs': []
-            },
-            'sportConfigs': []
+                'number': 3
+            }
         },
-        'sportConfigs': [
-            {
-            'qualifyRule': 1,
-            'winPoints': 3.0,
-            'drawPoints': 1.0,
-            'winPointsExt': 2.0,
-            'drawPointsExt': 1.0,
-            'score': {
-                'direction': 1,
-                'maximum': 0
-            },
-            'pointsCalculation': 0,
-            'sportId': 2
-        }],
+        'sportScoreConfigs': [],
         'planningConfig': {
             'nrOfHeadtohead': 1,
             'hasExtension': false,
@@ -43,7 +28,8 @@ export const jsonStructure332a: JsonStructure = {
             'minutesAfter': 5,
             'teamup': false,
             'selfReferee': false
-        }
+        },
+        'sportPlanningConfigs': []
     },
     'rootRound': {
         'id': 12647,

@@ -8,7 +8,7 @@ import { jsonCompetition } from '../../data/competition';
 
 describe('Planning/Service', () => {
 
-    it('game creation', () => {
+    it('game creation default', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 

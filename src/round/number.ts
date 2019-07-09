@@ -16,9 +16,9 @@ export class RoundNumber {
     protected previous: RoundNumber;
     protected next: RoundNumber;
     protected rounds: Round[] = [];
-    protected sportScoreConfigs: SportScoreConfig[] = [];
     protected planningConfig: PlanningConfig;
     protected sportPlanningConfigs: SportPlanningConfig[] = [];
+    protected sportScoreConfigs: SportScoreConfig[] = [];
     protected id: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {

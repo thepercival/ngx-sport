@@ -1,5 +1,6 @@
 import { JsonCompetition } from '../../src/competition/mapper';
 import { RankingService } from '../../src/ranking/service';
+import { SportConfig } from '../../src/sport/config';
 
 export const jsonCompetition: JsonCompetition = {
     'league': {
@@ -18,10 +19,19 @@ export const jsonCompetition: JsonCompetition = {
             'id': 2,
             'name': 'voetbal',
             'team': true,
-            'customId': 11,
-            'nrOfGameCompetitors': 2
+            'customId': 11
         }
     ],
+    'sportConfigs': [
+        {
+        'winPoints': 3.0,
+        'drawPoints': 1.0,
+        'winPointsExt': 2.0,
+        'drawPointsExt': 1.0,
+        'nrOfGameCompetitors': SportConfig.DEFAULT_NROFGAMECOMPETITORS,
+        'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
+        'sportId': 2
+    }],
     'fields': [
         {
             'sportId': 2,

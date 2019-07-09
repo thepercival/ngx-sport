@@ -12,6 +12,7 @@ import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
 import { SportConfigMapper } from '../src/sport/config/mapper';
 import { PlanningConfigMapper } from '../src/planning/config/mapper';
+import { SportPlanningConfigMapper } from '../src/sport/planningconfig/mapper';
 import { SportScoreConfigMapper } from '../src/sport/scoreconfig/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
@@ -35,18 +36,21 @@ export function getMapper(mapper: string) {
         return new CompetitionMapper(
             getMapper('league'),
             getMapper('season'),
+            getMapper('sport'),
             getMapper('referee'),
             getMapper('field'),
-            getMapper('sport')
+            getMapper('sportconfig')
         );
-    } else if (mapper === 'sportscoreconfig') {
-        return new SportScoreConfigMapper();
     } else if (mapper === 'sportconfig') {
         return new SportConfigMapper(getMapper('sportcscoreonfig'));
     } else if (mapper === 'planningconfig') {
         return new PlanningConfigMapper();
+    } else if (mapper === 'sportplanningconfig') {
+        return new SportPlanningConfigMapper();
+    } else if (mapper === 'sportscoreconfig') {
+        return new SportScoreConfigMapper();
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper(getMapper('sportconfig'), getMapper('planningconfig'));
+        return new RoundNumberMapper( getMapper('planningconfig'), getMapper('sportplanningconfig'), getMapper('sportscoreconfig'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
     } else if (mapper === 'place') {
