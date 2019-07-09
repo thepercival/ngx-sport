@@ -20,6 +20,7 @@ export class PlanningConfigMapper {
         config.setMinutesAfter(json.minutesAfter);
         config.setTeamup(json.teamup);
         config.setSelfReferee(json.selfReferee);
+        config.setNrOfHeadtohead(json.nrOfHeadtohead);
         return config;
     }
 
@@ -33,7 +34,8 @@ export class PlanningConfigMapper {
             minutesBetweenGames: config.getMinutesBetweenGames(),
             minutesAfter: config.getMinutesAfter(),
             teamup: config.getTeamup(),
-            selfReferee: config.getSelfReferee()
+            selfReferee: config.getSelfReferee(),
+            nrOfHeadtohead: config.getNrOfHeadtohead()
         };
     }
 }
@@ -48,4 +50,5 @@ export interface JsonPlanningConfig {
     minutesAfter: number;
     teamup: boolean;
     selfReferee: boolean;
+    nrOfHeadtohead: number;
 }

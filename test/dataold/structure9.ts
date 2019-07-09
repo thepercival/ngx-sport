@@ -13,7 +13,7 @@ export const jsonStructure9: JsonStructure = {
                 'config': {
                     'id': 3980,
                     'qualifyRule': 1,
-                    'nrOfHeadtoheadMatches': 1,
+                    'nrOfHeadtohead': 1,
                     'winPoints': 3,
                     'drawPoints': 1,
                     'hasExtension': false,
@@ -38,7 +38,7 @@ export const jsonStructure9: JsonStructure = {
             'config': {
                 'id': 3979,
                 'qualifyRule': 1,
-                'nrOfHeadtoheadMatches': 1,
+                'nrOfHeadtohead': 1,
                 'winPoints': 3,
                 'drawPoints': 1,
                 'hasExtension': false,
@@ -63,7 +63,7 @@ export const jsonStructure9: JsonStructure = {
         'config': {
             'id': 3978,
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 1,
+            'nrOfHeadtohead': 1,
             'winPoints': 3,
             'drawPoints': 1,
             'hasExtension': false,

@@ -17,6 +17,7 @@ export class PlanningConfigService {
         config.setMinutesAfter(this.getDefaultMinutesAfter());
         config.setTeamup(false);
         config.setSelfReferee(false);
+        config.setNrOfHeadtohead(PlanningConfig.DEFAULTNROFHEADTOHEAD);
         return config;
     }
 

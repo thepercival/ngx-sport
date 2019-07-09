@@ -10,7 +10,7 @@ export const jsonStructure15: JsonStructure = {
             'config': {
                 'id': 4276,
                 'qualifyRule': 1,
-                'nrOfHeadtoheadMatches': 1,
+                'nrOfHeadtohead': 1,
                 'winPoints': 3,
                 'drawPoints': 1,
                 'hasExtension': false,
@@ -35,7 +35,7 @@ export const jsonStructure15: JsonStructure = {
         'config': {
             'id': 4275,
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 1,
+            'nrOfHeadtohead': 1,
             'winPoints': 3,
             'drawPoints': 1,
             'hasExtension': false,

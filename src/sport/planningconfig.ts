@@ -2,10 +2,10 @@ import { Sport } from '../sport';
 import { RoundNumber } from '../round/number';
 
 export class SportPlanningConfig {
-    static readonly DEFAULTNROFHEADTOHEADMATCHES = 1;
+    static readonly DEFAULTNROFGAMES = 1;
 
     protected id: number;
-    protected nrOfHeadtoheadMatches: number;
+    protected nrOfGames: number;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber) {
     }
@@ -18,12 +18,12 @@ export class SportPlanningConfig {
         this.id = id;
     }
 
-    getNrOfHeadtoheadMatches(): number {
-        return this.nrOfHeadtoheadMatches;
+    getNrOfGames(): number {
+        return this.nrOfGames;
     }
 
-    setNrOfHeadtoheadMatches(nrOfHeadtoheadMatches: number) {
-        this.nrOfHeadtoheadMatches = nrOfHeadtoheadMatches;
+    setNrOfGames(nrOfGames: number) {
+        this.nrOfGames = nrOfGames;
     }
 
     getSport(): Sport {

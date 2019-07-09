@@ -11,7 +11,7 @@
                 "config": {
                     "id": 10174,
                     "qualifyRule": 1,
-                    "nrOfHeadtoheadMatches": 1,
+                    "nrOfHeadtohead": 1,
                     "winPoints": 3.0,
                     "drawPoints": 1.0,
                     "hasExtension": false,
@@ -42,7 +42,7 @@
             "config": {
                 "id": 10173,
                 "qualifyRule": 1,
-                "nrOfHeadtoheadMatches": 1,
+                "nrOfHeadtohead": 1,
                 "winPoints": 3.0,
                 "drawPoints": 1.0,
                 "hasExtension": false,
@@ -73,7 +73,7 @@
         "config": {
             "id": 10172,
             "qualifyRule": 1,
-            "nrOfHeadtoheadMatches": 1,
+            "nrOfHeadtohead": 1,
             "winPoints": 3.0,
             "drawPoints": 1.0,
             "hasExtension": false,

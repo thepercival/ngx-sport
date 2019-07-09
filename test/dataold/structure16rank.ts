@@ -13,7 +13,7 @@ export const jsonStructure16rank: JsonStructure = {
                 'config': {
                     'id': 4138,
                     'qualifyRule': 1,
-                    'nrOfHeadtoheadMatches': 1,
+                    'nrOfHeadtohead': 1,
                     'winPoints': 3,
                     'drawPoints': 1,
                     'hasExtension': false,
@@ -38,7 +38,7 @@ export const jsonStructure16rank: JsonStructure = {
             'config': {
                 'id': 4137,
                 'qualifyRule': 1,
-                'nrOfHeadtoheadMatches': 1,
+                'nrOfHeadtohead': 1,
                 'winPoints': 3,
                 'drawPoints': 1,
                 'hasExtension': false,
@@ -63,7 +63,7 @@ export const jsonStructure16rank: JsonStructure = {
         'config': {
             'id': 4136,
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 1,
+            'nrOfHeadtohead': 1,
             'winPoints': 3,
             'drawPoints': 1,
             'hasExtension': false,

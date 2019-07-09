@@ -34,7 +34,7 @@ export const jsonStructure332a: JsonStructure = {
             'sportId': 2
         }],
         'planningConfig': {
-            'nrOfHeadtoheadMatches': 1,
+            'nrOfHeadtohead': 1,
             'hasExtension': false,
             'minutesPerGameExt': 0,
             'enableTime': true,

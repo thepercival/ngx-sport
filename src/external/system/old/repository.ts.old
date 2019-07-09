@@ -402,7 +402,7 @@ export class ExternalsssSystemBetFairRepository {
             {
                 round.setId(firstroundNumber);
                 // @TODO CALCULATE WITH NROFTEAMS AND NROFGAMEROUNDS
-                // round.setNrofheadtoheadmatches(2);
+                // round.setNrofheadtohead(2);
 
                 const firstpouleNumber = 1;
                 const poule = new Poule(round, firstpouleNumber);

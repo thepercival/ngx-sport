@@ -7,7 +7,7 @@ export const jsonStructure4rankteamup: JsonStructure = {
         'config': {
             'id': 4770,
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 2,
+            'nrOfHeadtohead': 2,
             'winPoints': 3.0,
             'drawPoints': 1.0,
             'hasExtension': false,

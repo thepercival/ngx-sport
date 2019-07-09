@@ -8,21 +8,21 @@ export class SportPlanningConfigService {
     }
 
     createDefault(sport: Sport, roundNumber: RoundNumber) {
-        const sportPlanningConfig = new SportPlanningConfig(sport, roundNumber);
-        sportPlanningConfig.setNrOfHeadtoheadMatches(SportPlanningConfig.DEFAULTNROFHEADTOHEADMATCHES);
-        return sportPlanningConfig;
+        const config = new SportPlanningConfig(sport, roundNumber);
+        config.setNrOfGames(SportPlanningConfig.DEFAULTNROFGAMES);
+        return config;
     }
 
     copy(sport: Sport, roundNumber: RoundNumber, sourceConfig: SportPlanningConfig) {
         const newConfig = new SportPlanningConfig(sport, roundNumber);
-        newConfig.setNrOfHeadtoheadMatches(sourceConfig.getNrOfHeadtoheadMatches());
+        newConfig.setNrOfGames(sourceConfig.getNrOfGames());
     }
 
-    isDefault( config: SportPlanningConfig ): boolean {
-        return config.getNrOfHeadtoheadMatches() === SportPlanningConfig.DEFAULTNROFHEADTOHEADMATCHES;
-    }
+    /*isDefault( config: SportPlanningConfig ): boolean {
+        return config.getNrOfGames() === SportPlanningConfig.DEFAULTNROFGAMES;
+    }*/
 
-    areEqual( configA: SportPlanningConfig, configB: SportPlanningConfig ): boolean {
-        return configA.getNrOfHeadtoheadMatches() === configB.getNrOfHeadtoheadMatches();
-    }
+    /*areEqual( configA: SportPlanningConfig, configB: SportPlanningConfig ): boolean {
+        return configA.getNrOfGames() === configB.getNrOfGames();
+    }*/
 }

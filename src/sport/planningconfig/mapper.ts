@@ -12,15 +12,15 @@ export class SportPlanningConfigMapper {
     toObject(json: JsonSportPlanningConfig, sport: Sport, roundNumber: RoundNumber): SportPlanningConfig {
         const sportPlanningConfig = new SportPlanningConfig(sport, roundNumber);
         sportPlanningConfig.setId(json.id);
-        sportPlanningConfig.setNrOfHeadtoheadMatches(json.nrOfHeadtoheadMatches);
+        sportPlanningConfig.setNrOfGames(json.nrOfGames);
         return sportPlanningConfig;
     }
 
-    toJson(sportPlanningConfig: SportPlanningConfig): JsonSportPlanningConfig {
+    toJson(config: SportPlanningConfig): JsonSportPlanningConfig {
         return {
-            id: sportPlanningConfig.getId(),
-            sportId: sportPlanningConfig.getSport().getId(),
-            nrOfHeadtoheadMatches: sportPlanningConfig.getNrOfHeadtoheadMatches()
+            id: config.getId(),
+            sportId: config.getSport().getId(),
+            nrOfGames: config.getNrOfGames()
         };
     }
 }
@@ -28,5 +28,5 @@ export class SportPlanningConfigMapper {
 export interface JsonSportPlanningConfig {
     id?: number;
     sportId: number;
-    nrOfHeadtoheadMatches: number;
+    nrOfGames: number;
 }

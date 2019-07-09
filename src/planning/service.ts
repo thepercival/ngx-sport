@@ -111,6 +111,15 @@ export class PlanningService {
         return endDateTime;
     }
 
+    /**
+     *
+     * iedereen x keer elke sport( bij meerdere sporten, probeer iedereen even vaak tegen elkaar te laten spelen )
+     * bij enkele sport iedereen x keer tegen elkaar
+     * dus nrOfHeadtoHeadMatches hoort bij planning en geldt alleen voor enkele sport
+     * nrOfGames hoort bij sportplanning
+     *
+     * @param roundNumber
+     */
     protected createHelper(roundNumber: RoundNumber) {
         const config = roundNumber.getValidPlanningConfig();
         console.log('@TODO');
@@ -121,7 +130,7 @@ export class PlanningService {
         //     // if (poule.getPlaces().length === 8) {
         //     //     gameRounds = generator.generateBen();
         //     // }
-        //     for (let headToHead = 1; headToHead <= config.getNrOfHeadtoheadMatches(); headToHead++) {
+        //     for (let headToHead = 1; headToHead <= config.getNrOfHeadtohead(); headToHead++) {
         //         const reverseHomeAway = (headToHead % 2) === 0;
 
         //         const headToHeadNumber = ((headToHead - 1) * gameRounds.length);

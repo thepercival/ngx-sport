@@ -46,7 +46,7 @@ describe('Planning/Service', () => {
 
         const planningService = new PlanningService(competition);
         const firstRoundNumber = structure.getFirstRoundNumber();
-        firstRoundNumber.getConfig().setNrOfHeadtoheadMatches(2);
+        firstRoundNumber.getConfig().setNrOfHeadtohead(2);
         planningService.create(firstRoundNumber, competition.getStartDateTime());
         const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_BYNUMBER);
         expect(games.length).to.equal(12);
@@ -76,7 +76,7 @@ describe('Planning/Service', () => {
 
         const planningService = new PlanningService(competition);
         const firstRoundNumber = structure.getFirstRoundNumber();
-        firstRoundNumber.getConfig().setNrOfHeadtoheadMatches(2);
+        firstRoundNumber.getConfig().setNrOfHeadtohead(2);
         structure.getFirstRoundNumber().getConfig().setTeamup(true);
         planningService.create(firstRoundNumber, competition.getStartDateTime());
         const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_BYNUMBER);

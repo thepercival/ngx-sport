@@ -10,7 +10,7 @@ export const jsonStructure163poules: JsonStructure = {
             'config': {
                 'id': 4141,
                 'qualifyRule': 1,
-                'nrOfHeadtoheadMatches': 1,
+                'nrOfHeadtohead': 1,
                 'winPoints': 3,
                 'drawPoints': 1,
                 'hasExtension': false,
@@ -41,7 +41,7 @@ export const jsonStructure163poules: JsonStructure = {
         'config': {
             'id': 4140,
             'qualifyRule': 1,
-            'nrOfHeadtoheadMatches': 1,
+            'nrOfHeadtohead': 1,
             'winPoints': 3,
             'drawPoints': 1,
             'hasExtension': false,

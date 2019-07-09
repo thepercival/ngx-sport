@@ -10,7 +10,7 @@ export const jsonStructureCompetitorAsReferee: JsonStructure = {
             "config": {
                 "id": 5691,
                 "qualifyRule": 1,
-                "nrOfHeadtoheadMatches": 1,
+                "nrOfHeadtohead": 1,
                 "winPoints": 2.0,
                 "drawPoints": 1.0,
                 "hasExtension": false,
@@ -41,7 +41,7 @@ export const jsonStructureCompetitorAsReferee: JsonStructure = {
         "config": {
             "id": 5690,
             "qualifyRule": 1,
-            "nrOfHeadtoheadMatches": 1,
+            "nrOfHeadtohead": 1,
             "winPoints": 2.0,
             "drawPoints": 1.0,
             "hasExtension": false,
