@@ -61,11 +61,11 @@ export class PlanningResourceService {
                 continue;
             }
             console.log('not assigned');
-            this.addToUnassignable(game);
-            if (games.length === 0 || this.shouldGoToNextResourceBatch()) {
+            this.addToResources(game, this.unassignables);
+            if (games.length === 0 || this.shouldGoToNextBatch(selfRefereeSamePouleCheck)) {
                 console.log('to next resoursebatch', selfRefereeSamePouleCheck );
-                games = this.unassignableGames.concat( games );
-                this.resetUnassignable();
+                games = this.unassignables.games.concat( games );
+                this.resetResources(this.unassignables);
                 if ( !selfRefereeSamePouleCheck) {
                     this.nextResourceBatch();
                     selfRefereeSamePouleCheck = this.config.getSelfReferee();
@@ -79,31 +79,46 @@ export class PlanningResourceService {
     }
 
     protected assignGame(game: Game) {
-        this.batch.games.push(game);
+        this.addToResources(game, this.batch);
         game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
         game.setResourceBatch(this.batchNr);
         this.assignField(game);
-        this.assignPlaces(game);
-        if (this.areRefereesAvailable()) {
-            this.assignReferee(game);
-        }
+        this.assignReferee(game);
     }
 
     protected isPouleAssigned(poule: Poule ): boolean {
         return this.batch.poules.some( pouleIt => pouleIt === poule );
     }
 
-    protected shouldGoToNextResourceBatch(selfRefereeSamePouleCheck: boolean): boolean {
-        if( selfRefereeSamePouleCheck && this.nrOfPoules === poules zijn bezet ) {
+    private isGameAssignable(game: Game, selfRefereeSamePouleCheck: boolean): boolean {
+        if ( selfRefereeSamePouleCheck && this.nrOfPoules > 1 && this.isPouleAssigned(game.getPoule()) ) {
+            return false;
+        }
+        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
+            return false;
+        }
+        if (this.areRefereesAvailable() && !this.isSomeRefereeAssignable(game)) {
+            return false;
+        }
+        return this.areAllPlacesAssignable(this.getPlaces(game));
+    }
+
+    protected shouldGoToNextBatch(selfRefereeSamePouleCheck: boolean): boolean {
+        if ( selfRefereeSamePouleCheck && this.nrOfPoules > 1 && this.batch.poules.length === this.nrOfPoules ) {
             return true;
         }
         if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
             return true;
         }
+        // deze goed over nadenken, 
+        stel er is nog een scheidsrechter vrij van poule A, maar er is ook alleen nog een wedstrijd van poule A
+        dan is er dus verschil wanneer selfRefereeSamePouleCheck is waar of niet waar
         if (this.areRefereesAvailable() && this.unassignables.games.length === this.availableReferees.length) {
             return true;
         }
 
+        qua aantal plekken moet er dus nog net 1 beschikbaar zijn, binnen de batch
+        dat moet echt per wedstrijd bekeken worden, deze check zou hier dan niet hoeven??
         if ( this.unassignablePlaces.length + 1 >= this.nrOfPlaces ) {
             return true;
         }
@@ -118,11 +133,11 @@ export class PlanningResourceService {
 
     protected addToResources(game: Game, resources: Resources) {
         resources.games.push(game);
-        if ( resources.poules.find( unassignedPoule => game.getPoule() === unassignedPoule ) === undefined ) {
+        if ( resources.poules.find( pouleIt => game.getPoule() === pouleIt ) === undefined ) {
             resources.poules.push(game.getPoule());
         }
         this.getPlaces(game).forEach( place => {
-            if ( resources.places.find( unassignedPlace => place === unassignedPlace ) === undefined ) {
+            if ( resources.places.find( placeIt => place === placeIt ) === undefined ) {
                 resources.places.push(place);
             }
         });
@@ -146,10 +161,10 @@ export class PlanningResourceService {
     }
 
     protected assignReferee(game: Game) {
-        const referee = this.getAssignableReferee(game);
-        if (referee === undefined) {
+        if (this.availableReferees.length === 0 ) {
             return;
         }
+        const referee = this.getAssignableReferee(game);
         this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         referee.assign(game);
         if (referee.isSelf()) {
@@ -158,7 +173,7 @@ export class PlanningResourceService {
     }
 
     protected assignField(game: Game) {
-        if( this.availableFields.length === 0 ) {
+        if ( this.availableFields.length === 0 ) {
             return;
         }
         const field = this.getAssignableField();
@@ -281,20 +296,6 @@ export class PlanningResourceService {
             dateTime = new Date(this.blockedPeriod.end.getTime());
         }
         return dateTime;
-    }
-
-    private isGameAssignable(game: Game, selfRefereeSamePouleCheck: boolean): boolean {
-        if ( selfRefereeSamePouleCheck && this.nrOfPoules > 1
-            && this.batch.games.some( gameIt => gameIt.getPoule() === game.getPoule() ) ) {
-            return false;
-        }
-        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
-            return false;
-        }
-        if (this.areRefereesAvailable() && !this.isSomeRefereeAssignable(game)) {
-            return false;
-        }
-        return this.areAllPlacesAssignable(this.getPlaces(game));
     }
 
     protected getPlaces(game: Game): Place[] {
