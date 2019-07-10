@@ -4,18 +4,21 @@ import { Place } from '../../place';
 import { PlanningConfig } from '../config';
 import { PlanningReferee } from '../referee';
 import { BlockedPeriod } from '../service';
+import { Poule } from '../../poule';
 
 export class PlanningResourceService {
-    private assignedPlaces: Place[] = [];
     private availableReferees: PlanningReferee[] = [];
     private assignableReferees: PlanningReferee[] = [];
     private availableFields: Field[] = [];
     private assignableFields: Field[] = [];
-    private resourceBatch = 1;
+    private batchNr = 1;
     private blockedPeriod;
     private currentGameStartDate: Date;
     private nrOfPoules: number;
+    private nrOfPlaces: number;
     // private assignedPlacesPerField = {};
+    private batch: Resources;
+    private unassignables: Resources;
 
     constructor(
         private config: PlanningConfig,
@@ -32,13 +35,16 @@ export class PlanningResourceService {
         this.nrOfPoules = nrOfPoules;
     }
 
+    setNrOfPlaces(nrOfPlaces: number) {
+        this.nrOfPlaces = nrOfPlaces;
+    }
+
     setFields(fields: Field[]) {
         this.availableFields = fields;
         this.fillAssignableFields();
         // fields.forEach(field => {
         //     this.assignedPlacesPerField[field.getId()] = [];
         // });
-
     }
 
     setReferees(referees: PlanningReferee[]) {
@@ -46,41 +52,88 @@ export class PlanningResourceService {
         this.fillAssignableReferees();
     }
 
-    getAssignableGame(gamesToProcess: Game[]): Game {
-        return gamesToProcess.find(game => this.isGameAssignable(game));
-    }
-
-    assign(games: Game[]): Date {
+    assign(games: Game[], selfRefereeSamePouleCheck: boolean): Date {
         while (games.length > 0) {
-            let game = this.getAssignableGame(games);
-            if (game === undefined) {
-                this.nextResourceBatch();
-                game = this.getAssignableGame(games);
+            const game = games.shift();
+            if ( this.isGameAssignable(game, selfRefereeSamePouleCheck) ) {
+                console.log('assigned');
+                this.assignGame(game);
+                continue;
             }
-            this.assignGame(game);
-            games.splice(games.indexOf(game), 1);
+            console.log('not assigned');
+            this.addToUnassignable(game);
+            if (games.length === 0 || this.shouldGoToNextResourceBatch()) {
+                console.log('to next resoursebatch', selfRefereeSamePouleCheck );
+                games = this.unassignableGames.concat( games );
+                this.resetUnassignable();
+                if ( !selfRefereeSamePouleCheck) {
+                    this.nextResourceBatch();
+                    selfRefereeSamePouleCheck = this.config.getSelfReferee();
+                } else {
+                    selfRefereeSamePouleCheck = false;
+                }
+                return this.assign(games, selfRefereeSamePouleCheck );
+            }
         }
         return this.getEndDateTime();
     }
 
     protected assignGame(game: Game) {
+        this.batch.games.push(game);
         game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
-        game.setResourceBatch(this.resourceBatch);
-        if (this.areFieldsAvailable()) {
-            this.assignField(game);
-        }
+        game.setResourceBatch(this.batchNr);
+        this.assignField(game);
         this.assignPlaces(game);
         if (this.areRefereesAvailable()) {
             this.assignReferee(game);
         }
     }
 
+    protected isPouleAssigned(poule: Poule ): boolean {
+        return this.batch.poules.some( pouleIt => pouleIt === poule );
+    }
+
+    protected shouldGoToNextResourceBatch(selfRefereeSamePouleCheck: boolean): boolean {
+        if( selfRefereeSamePouleCheck && this.nrOfPoules === poules zijn bezet ) {
+            return true;
+        }
+        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
+            return true;
+        }
+        if (this.areRefereesAvailable() && this.unassignables.games.length === this.availableReferees.length) {
+            return true;
+        }
+
+        if ( this.unassignablePlaces.length + 1 >= this.nrOfPlaces ) {
+            return true;
+        }
+        return false;
+    }
+
+    private resetResources(resources: Resources) {
+        resources.games = [];
+        resources.poules = [];
+        resources.places = [];
+    }
+
+    protected addToResources(game: Game, resources: Resources) {
+        resources.games.push(game);
+        if ( resources.poules.find( unassignedPoule => game.getPoule() === unassignedPoule ) === undefined ) {
+            resources.poules.push(game.getPoule());
+        }
+        this.getPlaces(game).forEach( place => {
+            if ( resources.places.find( unassignedPlace => place === unassignedPlace ) === undefined ) {
+                resources.places.push(place);
+            }
+        });
+    }
+
     nextResourceBatch() {
+        this.resetResources(this.batch);
         this.fillAssignableFields();
         this.fillAssignableReferees();
-        this.resourceBatch++;
+        this.batchNr++;
         this.setNextGameStartDateTime();
-        this.resetPlaces();
     }
 
     private getEndDateTime(): Date {
@@ -92,16 +145,6 @@ export class PlanningResourceService {
         return endDateTime;
     }
 
-    private assignPlaces(game: Game) {
-        game.getPlaces().forEach(gamePlace => {
-            const place = gamePlace.getPlace();
-            this.assignedPlaces.push(place);
-            // if (game.getField() !== undefined) {
-            //     this.assignedPlacesPerField[game.getField().getId()].push(place);
-            // }
-        });
-    }
-
     protected assignReferee(game: Game) {
         const referee = this.getAssignableReferee(game);
         if (referee === undefined) {
@@ -110,11 +153,14 @@ export class PlanningResourceService {
         this.assignableReferees.splice(this.assignableReferees.indexOf(referee), 1);
         referee.assign(game);
         if (referee.isSelf()) {
-            this.assignedPlaces.push(referee.getPlace());
+            this.batch.places.push(referee.getPlace());
         }
     }
 
     protected assignField(game: Game) {
+        if( this.availableFields.length === 0 ) {
+            return;
+        }
         const field = this.getAssignableField();
         this.assignableFields.splice(this.assignableFields.indexOf(field), 1);
         game.setField(field);
@@ -174,7 +220,7 @@ export class PlanningResourceService {
         return this.availableFields.length > 0;
     }
 
-    private isSomeFieldAssignable(game: Game): boolean {
+    private isSomeFieldAssignable(): boolean {
         return this.assignableFields.length > 0 /*&& this.getAssignableField(game) !== undefined*/;
     }
 
@@ -237,15 +283,17 @@ export class PlanningResourceService {
         return dateTime;
     }
 
-    /** bij echte scheidsrechters mag isGameAssignable wel van scheidsrechters afhangen  */
-    private isGameAssignable(game: Game): boolean {
-        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable(game)) {
+    private isGameAssignable(game: Game, selfRefereeSamePouleCheck: boolean): boolean {
+        if ( selfRefereeSamePouleCheck && this.nrOfPoules > 1
+            && this.batch.games.some( gameIt => gameIt.getPoule() === game.getPoule() ) ) {
+            return false;
+        }
+        if (this.areFieldsAvailable() && !this.isSomeFieldAssignable()) {
             return false;
         }
         if (this.areRefereesAvailable() && !this.isSomeRefereeAssignable(game)) {
             return false;
         }
-
         return this.areAllPlacesAssignable(this.getPlaces(game));
     }
 
@@ -258,14 +306,16 @@ export class PlanningResourceService {
     }
 
     protected isPlaceAssignable(place: Place): boolean {
-        return !this.hasPlace(this.assignedPlaces, place);
+        return !this.hasPlace(this.batch.places, place);
     }
 
     protected hasPlace(places: Place[], placeToFind: Place): boolean {
         return places.find(placeIt => placeIt === placeToFind) !== undefined;
     }
+}
 
-    private resetPlaces() {
-        this.assignedPlaces = [];
-    }
+interface Resources {
+    games: Game[];
+    poules: Poule[];
+    places: Place[];
 }

@@ -180,9 +180,10 @@ export class PlanningService {
         const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setNrOfPoules(roundNumber.getPoules().length);
+        resourceService.setNrOfPlaces(roundNumber.getNrOfPlaces());
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
-        return resourceService.assign(games);
+        return resourceService.assign(games, roundNumber.getValidPlanningConfig().getSelfReferee() );
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
