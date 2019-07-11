@@ -90,45 +90,45 @@ describe('Planning/Service', () => {
         expect(games.pop().getResourceBatch()).to.be.lessThan(10);
     });
 
-    it('recursive', () => {
-        const numbers = [1, 2, 3, 4, 5, 6];
-        const nrOfItemsPerBatch = 3;
+    // it('recursive', () => {
+    //     const numbers = [1, 2, 3, 4, 5, 6];
+    //     const nrOfItemsPerBatch = 3;
 
-        const itemSuccess = (newNumber: number): boolean => {
-            return (newNumber % 2) === 1;
-        };
-        const endSuccess = (batch: number[]): boolean => {
-            if (nrOfItemsPerBatch < batch.length) {
-                return false;
-            }
-            let sum = 0;
-            batch.forEach(number => sum += number);
-            return sum === 9;
-        };
+    //     const itemSuccess = (newNumber: number): boolean => {
+    //         return (newNumber % 2) === 1;
+    //     };
+    //     const endSuccess = (batch: number[]): boolean => {
+    //         if (nrOfItemsPerBatch < batch.length) {
+    //             return false;
+    //         }
+    //         let sum = 0;
+    //         batch.forEach(number => sum += number);
+    //         return sum === 9;
+    //     };
 
-        const showC = (list: number[], batch: number[] = []): boolean => {
-            if (endSuccess(batch)) {
-                console.log(batch);
-                return true;
-            }
-            if (list.length + batch.length < nrOfItemsPerBatch) {
-                return false;
-            }
-            const numberToTry = list.shift();
-            if (itemSuccess(numberToTry)) {
-                batch.push(numberToTry);
-                if (showC(list.slice(), batch) === true) {
-                    return true;
-                }
-                batch.pop();
-                return showC(list, batch);
+    //     const showC = (list: number[], batch: number[] = []): boolean => {
+    //         if (endSuccess(batch)) {
+    //             console.log(batch);
+    //             return true;
+    //         }
+    //         if (list.length + batch.length < nrOfItemsPerBatch) {
+    //             return false;
+    //         }
+    //         const numberToTry = list.shift();
+    //         if (itemSuccess(numberToTry)) {
+    //             batch.push(numberToTry);
+    //             if (showC(list.slice(), batch) === true) {
+    //                 return true;
+    //             }
+    //             batch.pop();
+    //             return showC(list, batch);
 
-            }
-            return showC(list, batch);
-        };
+    //         }
+    //         return showC(list, batch);
+    //     };
 
-        if (!showC(numbers)) {
-            console.log('no combinations found');
-        };
-    });
+    //     if (!showC(numbers)) {
+    //         console.log('no combinations found');
+    //     };
+    // });
 });
