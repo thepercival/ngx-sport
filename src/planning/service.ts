@@ -1,13 +1,11 @@
 import { Competition } from '../competition';
 import { Field } from '../field';
 import { Game } from '../game';
-import { Poule } from '../poule';
+import { Place } from '../place';
 import { Referee } from '../referee';
-import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { PlanningReferee } from './referee';
-import { PlanningResourceService } from './resource/service';
 import { GameGenerator } from './gamegenerator';
+import { PlanningResourceService } from './resource/service';
 
 export class PlanningService {
 
@@ -30,15 +28,11 @@ export class PlanningService {
         if (startDateTime === undefined) {
             startDateTime = this.calculateStartDateTime(roundNumber);
         }
-        try {
-            this.removeNumber(roundNumber);
-            this.createHelper(roundNumber);
-            const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
-            if (roundNumber.hasNext()) {
-                this.create(roundNumber.getNext(), startNextRound);
-            }
-        } catch (e) {
-            console.error(e.message);
+        this.removeNumber(roundNumber);
+        this.createHelper(roundNumber);
+        const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
+        if (roundNumber.hasNext()) {
+            this.create(roundNumber.getNext(), startNextRound);
         }
     }
 
@@ -145,30 +139,28 @@ export class PlanningService {
         const dateTime = (pStartDateTime !== undefined) ? new Date(pStartDateTime.getTime()) : undefined;
         const fields = this.competition.getFields();
         const games = this.getGamesForRoundNumber(roundNumber, Game.ORDER_BYNUMBER);
-        const referees = this.getReferees(roundNumber, games);
-        const nextDateTime = this.assignResourceBatchToGames(games, roundNumber, dateTime, fields, referees);
+        const referees = this.competition.getReferees();
+        const refereePlaces = this.getRefereePlaces(roundNumber, games);
+        const nextDateTime = this.assignResourceBatchToGames(games, roundNumber, dateTime, fields, referees, refereePlaces);
         if (nextDateTime !== undefined) {
             nextDateTime.setMinutes(nextDateTime.getMinutes() + roundNumber.getValidPlanningConfig().getMinutesAfter());
         }
         return nextDateTime;
     }
 
-    protected getReferees(roundNumber: RoundNumber, games: Game[]): PlanningReferee[] {
-        if (!roundNumber.getValidPlanningConfig().getSelfReferee()) {
-            return this.competition.getReferees().map(referee => new PlanningReferee(referee, undefined));
-        }
+    protected getRefereePlaces(roundNumber: RoundNumber, games: Game[]): Place[] {
         const nrOfPlacesToFill = roundNumber.getNrOfPlaces();
         const places = [];
         const gamesCopy = games.slice();
-        while ( places.length < nrOfPlacesToFill ) {
+        while (places.length < nrOfPlacesToFill) {
             const game = gamesCopy.shift();
-            game.getPlaces().map( gamePlace => gamePlace.getPlace() ).forEach( place => {
-                if ( places.find( placeIt => place === placeIt ) === undefined ) {
+            game.getPlaces().map(gamePlace => gamePlace.getPlace()).forEach(place => {
+                if (places.find(placeIt => place === placeIt) === undefined) {
                     places.unshift(place);
                 }
             });
         }
-        return places.map(place => new PlanningReferee(undefined, place));
+        return places;
     }
 
     protected assignResourceBatchToGames(
@@ -176,20 +168,22 @@ export class PlanningService {
         roundNumber: RoundNumber,
         dateTime: Date,
         fields: Field[],
-        referees: PlanningReferee[]): Date {
+        referees: Referee[],
+        refereePlaces: Place[]): Date {
         const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setNrOfPoules(roundNumber.getPoules().length);
         resourceService.setNrOfPlaces(roundNumber.getNrOfPlaces());
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
-        return resourceService.assign(games, roundNumber.getValidPlanningConfig().getSelfReferee() );
+        resourceService.setRefereePlaces(refereePlaces);
+        return resourceService.assign(games);
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
         const games = roundNumber.getGames();
 
-        const orderByNumber = ( g1: Game, g2: Game ): number => {
+        const orderByNumber = (g1: Game, g2: Game): number => {
             if (g1.getRoundNumber() !== g2.getRoundNumber()) {
                 return g1.getRoundNumber() - g2.getRoundNumber();
             }
@@ -228,18 +222,6 @@ export class PlanningService {
         return games;
     }
 
-    protected getMaxNrOfGamesSimultaneously(roundNumber: RoundNumber) { // misschien ook nog per gameroundnumber
-        let nrOfGames = 0;
-        const rounds = roundNumber.getRounds();
-        rounds.forEach(round => {
-            round.getPoules().forEach(poule => {
-                const nrOfRestingPlaces = poule.getPlaces().length % 2;
-                nrOfGames += (poule.getPlaces().length - nrOfRestingPlaces) / 2;
-            });
-        });
-        return nrOfGames;
-    }
-
     protected removeNumber(roundNumber: RoundNumber) {
         const rounds = roundNumber.getRounds();
         rounds.forEach(round => {
@@ -248,26 +230,9 @@ export class PlanningService {
             });
         });
     }
-
-    remove(round: Round) {
-        round.getPoules().forEach(poule => {
-            poule.getGames().splice(0, poule.getGames().length);
-        });
-    }
-}
-
-export interface PoulesFields {
-    poules: Poule[];
-    fields: Field[];
-}
-
-export interface PoulesReferees {
-    poules: Poule[];
-    referees: Referee[];
 }
 
 export interface BlockedPeriod {
     start: Date;
     end: Date;
 }
-
