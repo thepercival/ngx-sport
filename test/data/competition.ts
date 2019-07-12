@@ -16,7 +16,7 @@ export const jsonCompetition: JsonCompetition = {
     },
     'sports': [
         {
-            'id': 2,
+            'id': 1,
             'name': 'voetbal',
             'team': true,
             'customId': 11
@@ -30,11 +30,11 @@ export const jsonCompetition: JsonCompetition = {
         'drawPointsExt': 1.0,
         'nrOfGameCompetitors': SportConfig.DEFAULT_NROFGAMECOMPETITORS,
         'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
-        'sportId': 2
+        'sportId': 1
     }],
     'fields': [
         {
-            'sportId': 2,
+            'sportId': 1,
             'number': 1,
             'name': '1'
         }

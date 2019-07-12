@@ -8,6 +8,7 @@ export class SportPlanningConfig {
     protected nrOfGames: number;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber) {
+        roundNumber.getSportPlanningConfigs().push(this);
     }
 
     getId(): number {

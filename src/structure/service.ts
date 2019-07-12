@@ -11,6 +11,7 @@ import { RoundNumber } from '../round/number';
 import { SportConfig } from '../sport/config';
 import { SportScoreConfig } from '../sport/scoreconfig';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
+import { SportPlanningConfigService } from '../sport/planningconfig/service';
 import { PlanningConfig } from '../planning/config';
 import { PlanningConfigService } from '../planning/config/service';
 import { Structure } from '../structure';
@@ -32,8 +33,10 @@ export class StructureService {
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
         const sportScoreConfigService = new SportScoreConfigService();
+        const sportPlanningConfigService = new SportPlanningConfigService();
         competition.getSportConfigs().forEach( sportConfig => {
             sportScoreConfigService.createDefault( sportConfig.getSport(), firstRoundNumber );
+            sportPlanningConfigService.createDefault( sportConfig.getSport(), firstRoundNumber );
         });
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);

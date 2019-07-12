@@ -3,16 +3,38 @@ import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
 import { PlanningConfig } from './config';
 import { PlanningGameRound } from './gameround';
+import { RoundNumber } from '../round/number';
+import { Game } from '../game';
+import { SportConfig } from '../sport/config';
+import { Sport } from '../sport';
 
 export class GameGenerator {
-    public constructor(private poule: Poule) {
+    public constructor() {
     }
 
-    public generate(teamUp: boolean): PlanningGameRound[] {
-        const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(this.poule.getPlaces().slice());
+    /**
+     * 
+     * @param roundNumber 
+     */
+    create(roundNumber: RoundNumber) {
+        roundNumber.getPoules().forEach((poule) => {
+            this.createSports(roundNumber);
+        });
+        //     if ( roundNumber.getSportConfigs().length > 0 ) {
+        //         this.createSports(roundNumber);
+        //     } else {
+        //         const config = roundNumber.getValidPlanningConfig();
+        //         const gameRounds = this.createPoule(poule, config.getTeamup());
+        //         this.createPouleMultiply(poule, gameRounds, config.getNrOfHeadtohead());
+        //     }
+        // });
+    }
 
-        const nrOfPlaces = this.poule.getPlaces().length;
-        if (teamUp !== true || nrOfPlaces < PlanningConfig.TEAMUP_MIN || nrOfPlaces > PlanningConfig.TEAMUP_MAX) {
+    protected createPoule(poule: Poule, teamup: boolean): PlanningGameRound[] {
+        const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(poule.getPlaces().slice());
+
+        const nrOfPlaces = poule.getPlaces().length;
+        if (teamup !== true || nrOfPlaces < PlanningConfig.TEAMUP_MIN || nrOfPlaces > PlanningConfig.TEAMUP_MAX) {
             return gameRoundsSingle;
         }
         const teams: Place[][] = [];
@@ -23,7 +45,7 @@ export class GameGenerator {
         const gameRoundsTmp: PlanningGameRound[] = [];
         // teams are all possible combinations of two places
         teams.forEach(team => {
-            const opponents = this.getCombinationsWithOut(team);
+            const opponents = this.getCombinationsWithOut(poule, team);
             for (let nr = 1; nr <= opponents.length; nr++) {
                 let gameRoundIt = gameRoundsTmp.find(gameRoundItIt => nr === gameRoundItIt.getNumber());
                 if (gameRoundIt === undefined) {
@@ -69,6 +91,63 @@ export class GameGenerator {
         return gameRounds;
     }
 
+    // protected createPouleMultiply(poule: Poule, gameRounds: PlanningGameRound[], nrOfHeadtoHead: number) {
+    //     for (let headToHead = 1; headToHead <= nrOfHeadtoHead; headToHead++) {
+    //         const reverseHomeAway = (headToHead % 2) === 0;
+
+    //         const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
+    //         gameRounds.forEach(gameRound => {
+    //             let subNumber = 1;
+    //             gameRound.getCombinations().forEach(combination => {
+    //                 const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+    //                 game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
+    //             });
+    //         });
+    //     }
+    // }
+
+    protected createSports(roundNumber: RoundNumber) {
+        const sportPlanningConfigs = roundNumber.getValidSportPlanningConfigs();
+        const getNrOfPouleGamesNeeded = (nrOfPlaces: number): number => {
+            let nrOfPouleGamesNeeded = 0;
+            sportPlanningConfigs.forEach((sportPlanningConfig) => {
+                const sportConfig = roundNumber.getSportConfig(sportPlanningConfig.getSport() );
+                nrOfPouleGamesNeeded += Math.ceil( nrOfPlaces / sportConfig.getNrOfGameCompetitors() );
+            });
+            return nrOfPouleGamesNeeded;
+        };
+        roundNumber.getPoules().forEach( poule => {
+            const nrOfPlaces = poule.getPlaces().length;
+            let nrOfPouleGamesNeeded;
+            if ( sportPlanningConfigs.length > 1 ) {
+                nrOfPouleGamesNeeded = getNrOfPouleGamesNeeded(nrOfPlaces);
+            } else {
+                nrOfPouleGamesNeeded = roundNumber.getValidPlanningConfig().getNrOfHeadtohead() * iets;
+                (nrOfPlaces - 1) * (nrOfPlaces / 2)  * nrOfHeadtohead
+                // vermenigvuldig  portConfig.getNrOfGameCompetitors()
+            }
+            this.createPouleSports(poule, roundNumber.getPlanningConfig(), nrOfPouleGamesNeeded);
+        });
+    }
+
+    protected createPouleSports(poule: Poule, config: PlanningConfig, nrOfPouleGamesNeeded: number) {
+        let headToHead = 1;
+        const gameRounds = this.createPoule(poule, config.getTeamup());
+        while (nrOfPouleGamesNeeded > 0) {
+            const reverseHomeAway = (headToHead % 2) === 0;
+            const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
+            gameRounds.every(gameRound => {
+                let subNumber = 1;
+                return gameRound.getCombinations().every(combination => {
+                    const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+                    game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
+                    return (--nrOfPouleGamesNeeded > 0);
+                });
+            });
+            headToHead++;
+        }
+    }
+
     protected getUniqueGames(games: PlaceCombination[]): PlaceCombination[] {
         const combinationNumbers: PlaceCombinationNumber[] = [];
         const uniqueGames: PlaceCombination[] = [];
@@ -104,8 +183,8 @@ export class GameGenerator {
         return 1;
     }
 
-    protected getCombinationsWithOut(team: Place[]): PlaceCombination[] {
-        const opponents = this.poule.getPlaces().filter(placeIt => {
+    protected getCombinationsWithOut(poule: Poule, team: Place[]): PlaceCombination[] {
+        const opponents = poule.getPlaces().filter(placeIt => {
             return team.find(place => place === placeIt) === undefined;
         });
         return this.flattenGameRounds(this.generateRRSchedule(opponents.slice()));

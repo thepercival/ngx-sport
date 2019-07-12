@@ -29,7 +29,12 @@ export const jsonStructure332a: JsonStructure = {
             'teamup': false,
             'selfReferee': false
         },
-        'sportPlanningConfigs': []
+        'sportPlanningConfigs': [
+            {
+                'sportId': 1,
+                'nrOfGames': 1
+            }
+        ]
     },
     'rootRound': {
         'id': 12647,

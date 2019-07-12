@@ -6,6 +6,7 @@ import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
 import { Round } from '../round';
 import { Sport } from '../sport';
+import { SportConfig } from '../sport/config';
 import { SportPlanningConfig } from '../sport/planningconfig';
 import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
@@ -161,6 +162,14 @@ export class RoundNumber {
         return this.getRounds().some(round => round.hasBegun());
     }
 
+    getSportConfigs(): SportConfig[] {
+        return this.getCompetition().getSportConfigs();
+    }
+
+    getSportConfig(sport: Sport ): SportConfig {
+        return this.getCompetition().getSportConfig(sport);
+    }
+
     setPlanningConfig(config: PlanningConfig) {
         this.planningConfig = config;
     }
@@ -194,6 +203,13 @@ export class RoundNumber {
             return sportPlanningConfig;
         }
         return this.getPrevious().getSportPlanningConfig(sport);
+    }
+
+    getValidSportPlanningConfigs(): SportPlanningConfig[] {
+        if (this.sportPlanningConfigs.length === 0) {
+            return this.getPrevious().getValidSportPlanningConfigs();
+        }
+        return this.sportPlanningConfigs;
     }
 
     setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {

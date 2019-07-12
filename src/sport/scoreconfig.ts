@@ -12,6 +12,7 @@ export class SportScoreConfig {
     protected child: SportScoreConfig;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber, parent: SportScoreConfig) {
+        roundNumber.getSportScoreConfigs().push(this);
         this.setParent(parent);
     }
 

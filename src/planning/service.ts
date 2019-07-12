@@ -9,9 +9,11 @@ import { PlanningResourceService } from './resource/service';
 
 export class PlanningService {
 
+    private gameGenerator: GameGenerator;
     private blockedPeriod: BlockedPeriod;
 
     constructor(private competition: Competition) {
+        this.gameGenerator = new GameGenerator();
     }
 
     setBlockedPeriod(startDateTime: Date, durationInMinutes: number) {
@@ -29,7 +31,7 @@ export class PlanningService {
             startDateTime = this.calculateStartDateTime(roundNumber);
         }
         this.removeNumber(roundNumber);
-        this.createHelper(roundNumber);
+        this.gameGenerator.create(roundNumber);
         const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
         if (roundNumber.hasNext()) {
             this.create(roundNumber.getNext(), startNextRound);
@@ -104,35 +106,6 @@ export class PlanningService {
         const nrOfMinutes = config.getMaximalNrOfMinutesPerGame();
         endDateTime.setMinutes(endDateTime.getMinutes() + nrOfMinutes);
         return endDateTime;
-    }
-
-    /**
-     *
-     * iedereen x keer elke sport( bij meerdere sporten, probeer iedereen even vaak tegen elkaar te laten spelen )
-     * bij enkele sport iedereen x keer tegen elkaar
-     * dus nrOfHeadtoHeadMatches hoort bij planning en geldt alleen voor enkele sport
-     * nrOfGames hoort bij sportplanning
-     *
-     * @param roundNumber
-     */
-    protected createHelper(roundNumber: RoundNumber) {
-        const config = roundNumber.getValidPlanningConfig();
-        roundNumber.getPoules().forEach((poule) => {
-            const generator = new GameGenerator(poule);
-            const gameRounds = generator.generate(config.getTeamup());
-            for (let headToHead = 1; headToHead <= config.getNrOfHeadtohead(); headToHead++) {
-                const reverseHomeAway = (headToHead % 2) === 0;
-
-                const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
-                gameRounds.forEach(gameRound => {
-                    let subNumber = 1;
-                    gameRound.getCombinations().forEach(combination => {
-                        const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
-                        game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
-                    });
-                });
-            }
-        });
     }
 
     protected rescheduleHelper(roundNumber: RoundNumber, pStartDateTime: Date): Date {

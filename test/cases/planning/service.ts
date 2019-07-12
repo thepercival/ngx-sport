@@ -14,12 +14,12 @@ describe('Planning/Service', () => {
 
         const structureService = new StructureService();
         const structure = structureService.create(competition, 9, 3);
-        const rootRound = structure.getRootRound();
+        const firstRoundNumber = structure.getFirstRoundNumber();
 
         const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
+        planningService.create(firstRoundNumber);
 
-        expect(rootRound.getGames().length).to.equal(9);
+        expect(firstRoundNumber.getGames().length).to.equal(9);
     });
 
     /**
@@ -32,13 +32,13 @@ describe('Planning/Service', () => {
 
         const structureService = new StructureService();
         const structure = structureService.create(competition, 3, 1);
-        const rootRound = structure.getRootRound();
-        rootRound.getNumber().getPlanningConfig().setSelfReferee(true);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        firstRoundNumber.getPlanningConfig().setSelfReferee(true);
 
         const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
+        planningService.create(firstRoundNumber);
 
-        const games = planningService.getGamesForRoundNumber(rootRound.getNumber(), Game.ORDER_RESOURCEBATCH);
+        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
 
         expect(games.length).to.equal(3);
         const firstGame = games.shift();
@@ -92,7 +92,7 @@ describe('Planning/Service', () => {
         // do this for two roundnumbers!!
         // 'startDateTime': '2030-01-01T12:00:00.000Z',
         // PlanningConfigService.getDefaultMinutesPerGame() : 20
-        // PlanningConfigService.getDefaultMinutesPerGameExt(): 
+        // PlanningConfigService.getDefaultMinutesPerGameExt():
         // PlanningConfigService.getDefaultMinutesBetweenGames(): 5
         // (8 * 20) + ((8-1) * 5) = 195 min. => '2030-01-01T15:15:00.000Z'
         // const expectedEndDate = new Date('2030-01-01T15:15:00.000Z');
