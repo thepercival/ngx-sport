@@ -2,6 +2,9 @@ import { Game } from '../game';
 import { GamePlace } from '../game/place';
 import { Place } from '../place';
 
+/* tslint:disable:no-bitwise */
+/* tslint:disable:no-use-before-declare */
+
 export class PlaceCombination {
     public constructor(
         private home: Place[], private away: Place[],
