@@ -186,20 +186,6 @@ export class GameGenerator {
         return gameRoundCombinations.some(combination => combination.hasOverlap(game));
     }
 
-    /*
-    t       r1  r2  r3
-    1-2     3-4 3-5 4-5
-    1-3     2-4 2-5 4-5
-    1-4     2-3 2-5 3-5
-    1-5     2-3 2-4 4-5
-    2-3     1-4 1-5 4-5
-    2-4     1-3 1-5 3-5
-    2-5     1-3 1-4 1-5
-    3-4     1-2 1-5 2-5
-    3-5     1-2 1-4 2-4
-    4-5     1-2 1-3 2-3
-    */
-
     private generateRRSchedule(places: Place[]): PlanningGameRound[] {
         let nrOfPlaces = places.length;
         if (nrOfPlaces === 0) {
