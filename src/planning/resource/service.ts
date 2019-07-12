@@ -98,7 +98,7 @@ export class PlanningResourceService {
                 this.assignReferee(game);
             }
         } else {
-            this.assignRefereePlaces(game);
+            this.assignRefereePlace(batch, game);
         }
         batch.add(game);
     }
@@ -127,9 +127,6 @@ export class PlanningResourceService {
             this.fields.push(game.getField());
             if (game.getRefereePlace()) {
                 this.refereePlaces.push(game.getRefereePlace());
-                this.getPlaces(game).forEach(place => {
-                    this.refereePlaces.push(place);
-                });
             }
             if (game.getReferee()) {
                 this.referees.push(game.getReferee());
@@ -146,7 +143,7 @@ export class PlanningResourceService {
         if (!this.isSomeFieldAssignable()) {
             return true;
         }
-        if (!this.isSomeRefereeAssignable()) {
+        if (!this.isSomeRefereeAssignable(batch)) {
             return true;
         }
         let minNrNeeded = this.config.getNrOfCompetitorsPerGame();
@@ -158,7 +155,7 @@ export class PlanningResourceService {
         if (!this.isSomeFieldAssignable()) {
             return false;
         }
-        if (!this.isSomeRefereeAssignable(game)) {
+        if (!this.isSomeRefereeAssignable(batch, game)) {
             return false;
         }
         return !batch.hasSomePlace(this.getPlaces(game));
@@ -168,7 +165,7 @@ export class PlanningResourceService {
         return this.fields.length > 0;
     }
 
-    private isSomeRefereeAssignable(game?: Game): boolean {
+    private isSomeRefereeAssignable(batch: PlanningResourceBatch, game?: Game): boolean {
         if (!this.config.getSelfReferee()) {
             if (!this.areRefereesEnabled) {
                 return true;
@@ -179,8 +176,14 @@ export class PlanningResourceService {
             return this.refereePlaces.length > 0;
         }
 
-        return this.refereePlaces.some(refereePlace => {
-            return !game.isParticipating(refereePlace) && (this.nrOfPoules === 1 || refereePlace.getPoule() !== game.getPoule());
+        return this.refereePlaces.some(refereePlaceIt => {
+            if (game.isParticipating(refereePlaceIt) || batch.isParticipating(refereePlaceIt)) {
+                return false;
+            }
+            if (this.nrOfPoules === 1) {
+                return true;
+            }
+            return refereePlaceIt.getPoule() !== game.getPoule();
         });
     }
 
@@ -205,15 +208,15 @@ export class PlanningResourceService {
         game.setReferee(undefined);
     }
 
-    private assignRefereePlaces(game: Game) {
-        this.getPlaces(game).forEach(place => {
-            const idx = this.refereePlaces.indexOf(place);
-            if (idx >= 0) {
-                this.refereePlaces.splice(idx, 1);
-            }
-        });
+    private assignRefereePlace(batch: PlanningResourceBatch, game: Game) {
         const refereePlace = this.refereePlaces.find(refereePlaceIt => {
-            return (this.nrOfPoules === 1 || refereePlaceIt.getPoule() !== game.getPoule());
+            if (game.isParticipating(refereePlaceIt) || batch.isParticipating(refereePlaceIt)) {
+                return false;
+            }
+            if (this.nrOfPoules === 1) {
+                return true;
+            }
+            return refereePlaceIt.getPoule() !== game.getPoule();
         });
         if (refereePlace) {
             game.setRefereePlace(this.refereePlaces.splice(this.refereePlaces.indexOf(refereePlace), 1).pop());
@@ -221,9 +224,6 @@ export class PlanningResourceService {
     }
 
     private releaseRefereePlaces(game: Game) {
-        this.getPlaces(game).reverse().forEach(place => {
-            this.refereePlaces.unshift(place);
-        });
         this.refereePlaces.unshift(game.getRefereePlace());
         game.setRefereePlace(undefined);
     }

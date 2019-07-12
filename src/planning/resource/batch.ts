@@ -64,5 +64,16 @@ export class PlanningResourceBatch {
     hasPlace(place: Place): boolean {
         return this.places.some(placeIt => placeIt === place);
     }
+
+    getLastAssignedRefereePlace(): Place {
+        if (this.games.length === 0) {
+            return undefined;
+        }
+        return this.games[this.games.length - 1].getRefereePlace();
+    }
+
+    isParticipating(place: Place): boolean {
+        return this.getGames().some(game => game.isParticipating(place));
+    }
 }
 

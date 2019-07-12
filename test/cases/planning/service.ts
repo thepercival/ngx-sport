@@ -17,9 +17,9 @@ describe('Planning/Service', () => {
         const rootRound = structure.getRootRound();
 
         const planningService = new PlanningService(competition);
-        // planningService.create(rootRound.getNumber());
+        planningService.create(rootRound.getNumber());
 
-        // expect(rootRound.getGames().length).to.equal(9);
+        expect(rootRound.getGames().length).to.equal(9);
     });
 
     /**
@@ -36,16 +36,16 @@ describe('Planning/Service', () => {
         rootRound.getNumber().getPlanningConfig().setSelfReferee(true);
 
         const planningService = new PlanningService(competition);
-        // planningService.create(rootRound.getNumber());
+        planningService.create(rootRound.getNumber());
 
-        // const games = planningService.getGamesForRoundNumber(rootRound.getNumber(), Game.ORDER_RESOURCEBATCH);
+        const games = planningService.getGamesForRoundNumber(rootRound.getNumber(), Game.ORDER_RESOURCEBATCH);
 
-        // expect(games.length).to.equal(3);
-        // const firstGame = games.shift();
-        // expect(firstGame.getResourceBatch()).to.equal(1);
-        // expect(firstGame.getRefereePlace()).to.equal(firstGame.getPoule().getPlace(1));
-        // expect(games.shift().getResourceBatch()).to.equal(2);
-        // expect(games.shift().getResourceBatch()).to.equal(3);
+        expect(games.length).to.equal(3);
+        const firstGame = games.shift();
+        expect(firstGame.getResourceBatch()).to.equal(1);
+        expect(firstGame.getRefereePlace()).to.equal(firstGame.getPoule().getPlace(1));
+        expect(games.shift().getResourceBatch()).to.equal(2);
+        expect(games.shift().getResourceBatch()).to.equal(3);
     });
 
     /**
@@ -63,14 +63,14 @@ describe('Planning/Service', () => {
 
         const structureService = new StructureService();
         const structure = structureService.create(competition, 12, 2);
-        const rootRound = structure.getRootRound();
-        rootRound.getNumber().getPlanningConfig().setSelfReferee(true);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        firstRoundNumber.getPlanningConfig().setSelfReferee(true);
 
         const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
+        planningService.create(firstRoundNumber);
 
         const nameService = new NameService();
-        const games = planningService.getGamesForRoundNumber(rootRound.getNumber(), Game.ORDER_RESOURCEBATCH);
+        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
         games.forEach(game => {
             console.log(game.getResourceBatch() + ' '
                 + ' poule ' + game.getPoule().getNumber() + ', '
@@ -87,7 +87,16 @@ describe('Planning/Service', () => {
         expect(games.shift().getResourceBatch()).to.equal(1);
         expect(games.shift().getResourceBatch()).to.equal(1);
         expect(games.shift().getResourceBatch()).to.equal(1);
-        expect(games.pop().getResourceBatch()).to.be.lessThan(10);
+        expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+
+        // do this for two roundnumbers!!
+        // 'startDateTime': '2030-01-01T12:00:00.000Z',
+        // PlanningConfigService.getDefaultMinutesPerGame() : 20
+        // PlanningConfigService.getDefaultMinutesPerGameExt(): 
+        // PlanningConfigService.getDefaultMinutesBetweenGames(): 5
+        // (8 * 20) + ((8-1) * 5) = 195 min. => '2030-01-01T15:15:00.000Z'
+        // const expectedEndDate = new Date('2030-01-01T15:15:00.000Z');
+        // expect(planningService.calculateStartDateTime(firstRoundNumber).getTime()).to.equal(expectedEndDate.getTime());
     });
 
     // it('recursive', () => {
