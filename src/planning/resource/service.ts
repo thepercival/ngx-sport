@@ -9,7 +9,7 @@ import { PlanningResourceBatch } from './batch';
 export class PlanningResourceService {
     private referees: Referee[];
     private refereePlaces: Place[];
-    private areRefereesEnabled: boolean = false;
+    private areRefereesEnabled = false;
     private fields: Field[] = [];
 
     private blockedPeriod;
@@ -65,7 +65,7 @@ export class PlanningResourceService {
                 nrOfGamesPerBatch--;
                 this.rollbackBatch(batch);
                 batch = new PlanningResourceBatch();
-            };
+            }
             this.toNextBatch(batch, games, batchNr++);
         }
         return this.getEndDateTime();
@@ -89,7 +89,7 @@ export class PlanningResourceService {
             return this.isBatchCompleted(games, nrOfGamesPerBatch, batch);
         }
         return this.isBatchCompleted(games, nrOfGamesPerBatch, batch);
-    };
+    }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game) {
         this.assignField(game);

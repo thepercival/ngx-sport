@@ -117,7 +117,7 @@ describe('Planning/GameGenerator', () => {
         expect(firstRoundNumber.getGames().length).to.equal(6);
     });
 
-    // @TODO 
+    // @TODO
     // wat te doen als sommige deelnemers meer als 1x een sport moeten doen
     // om iedereen ook elke sport 1x te laten doen???
     // bijvoorbeeld met teamup of met een oneven aantal deelnemers per team????
