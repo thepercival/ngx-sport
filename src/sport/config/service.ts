@@ -15,7 +15,7 @@ export class SportConfigService {
         config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
         config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
-        config.setNrOfGameCompetitors(SportConfig.DEFAULT_NROFGAMECOMPETITORS);
+        config.setNrOfGamePlaces(SportConfig.DEFAULT_NROFGAMEPLACES);
         return config;
     }
 
@@ -42,7 +42,7 @@ export class SportConfigService {
         newConfig.setWinPointsExt(sourceConfig.getWinPointsExt());
         newConfig.setDrawPointsExt(sourceConfig.getDrawPointsExt());
         newConfig.setPointsCalculation(sourceConfig.getPointsCalculation());
-        newConfig.setNrOfGameCompetitors(sourceConfig.getNrOfGameCompetitors());
+        newConfig.setNrOfGamePlaces(sourceConfig.getNrOfGamePlaces());
         return newConfig;
     }
 
@@ -67,7 +67,7 @@ export class SportConfigService {
             || sportConfig.getWinPointsExt() !== this.getDefaultWinPointsExt(sport)
             || sportConfig.getDrawPointsExt() !== this.getDefaultDrawPointsExt(sport)
             || sportConfig.getPointsCalculation() !== SportConfig.POINTS_CALC_GAMEPOINTS
-            || sportConfig.getNrOfGameCompetitors() !== SportConfig.DEFAULT_NROFGAMECOMPETITORS
+            || sportConfig.getNrOfGamePlaces() !== SportConfig.DEFAULT_NROFGAMEPLACES
         );
     }
 
@@ -78,7 +78,7 @@ export class SportConfigService {
             || sportConfigA.getWinPointsExt() !== sportConfigB.getWinPointsExt()
             || sportConfigA.getDrawPointsExt() !== sportConfigB.getDrawPointsExt()
             || sportConfigA.getPointsCalculation() !== sportConfigB.getPointsCalculation()
-            || sportConfigA.getNrOfGameCompetitors() !== sportConfigB.getNrOfGameCompetitors()
+            || sportConfigA.getNrOfGamePlaces() !== sportConfigB.getNrOfGamePlaces()
         );
     }
 }

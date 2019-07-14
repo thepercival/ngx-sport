@@ -9,13 +9,13 @@ export class SportPlanningConfigService {
 
     createDefault(sport: Sport, roundNumber: RoundNumber) {
         const config = new SportPlanningConfig(sport, roundNumber);
-        config.setNrOfGames(SportPlanningConfig.DEFAULTNROFGAMES);
+        config.setMinNrOfGames(SportPlanningConfig.DEFAULTNROFGAMES);
         return config;
     }
 
     copy(sport: Sport, roundNumber: RoundNumber, sourceConfig: SportPlanningConfig) {
         const newConfig = new SportPlanningConfig(sport, roundNumber);
-        newConfig.setNrOfGames(sourceConfig.getNrOfGames());
+        newConfig.setMinNrOfGames(sourceConfig.getMinNrOfGames());
     }
 
     /*isDefault( config: SportPlanningConfig ): boolean {

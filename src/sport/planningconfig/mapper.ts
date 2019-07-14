@@ -12,7 +12,7 @@ export class SportPlanningConfigMapper {
     toObject(json: JsonSportPlanningConfig, sport: Sport, roundNumber: RoundNumber): SportPlanningConfig {
         const sportPlanningConfig = new SportPlanningConfig(sport, roundNumber);
         sportPlanningConfig.setId(json.id);
-        sportPlanningConfig.setNrOfGames(json.nrOfGames);
+        sportPlanningConfig.setMinNrOfGames(json.minNrOfGames);
         return sportPlanningConfig;
     }
 
@@ -20,7 +20,7 @@ export class SportPlanningConfigMapper {
         return {
             id: config.getId(),
             sportId: config.getSport().getId(),
-            nrOfGames: config.getNrOfGames()
+            minNrOfGames: config.getMinNrOfGames()
         };
     }
 }
@@ -28,5 +28,5 @@ export class SportPlanningConfigMapper {
 export interface JsonSportPlanningConfig {
     id?: number;
     sportId: number;
-    nrOfGames: number;
+    minNrOfGames: number;
 }

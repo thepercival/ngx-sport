@@ -7,6 +7,7 @@ import { RoundNumber } from '../round/number';
 import { Game } from '../game';
 import { SportConfig } from '../sport/config';
 import { Sport } from '../sport';
+import { doesNotReject } from 'assert';
 
 export class GameGenerator {
     public constructor() {
@@ -27,49 +28,48 @@ export class GameGenerator {
     //     }
     // }
 
+
+
     create(roundNumber: RoundNumber) {
         const sportPlanningConfigs = roundNumber.getValidSportPlanningConfigs();
-        const getNrOfPouleGamesNeeded = (nrOfPlaces: number): number => {
+
+        // per sport kijken hoeveel gamecompetitors nodig
+        // dan het totaal van de deelnemers
+        const getSportsNrOfHeadtohead = (nrOfPoulePlaces: number): number => {
             let nrOfPouleGamesNeeded = 0;
             sportPlanningConfigs.forEach((sportPlanningConfig) => {
                 const sportConfig = roundNumber.getSportConfig(sportPlanningConfig.getSport() );
-                nrOfPouleGamesNeeded += Math.ceil( nrOfPlaces / sportConfig.getNrOfGameCompetitors() );
+                const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
+                nrOfPouleGamesNeeded += Math.ceil( nrOfPoulePlaces / ( sportConfig.getNrOfGamePlaces( teamup ) * minNrOfGames ) );
             });
+            // berekenAantalHeadtohead obv nrOfPouleGamesNeeded 
             return nrOfPouleGamesNeeded;
         };
+
         roundNumber.getPoules().forEach( poule => {
-            const nrOfPlaces = poule.getPlaces().length;
-            let nrOfPouleGamesNeeded;
+            let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
             if ( sportPlanningConfigs.length > 1 ) {
-                nrOfPouleGamesNeeded = getNrOfPouleGamesNeeded(nrOfPlaces);
-            } else {
-                nrOfPouleGamesNeeded = this.getTotalNrOfCombinations(nrOfPlaces);
-                if ( roundNumber.getValidPlanningConfig().getTeamup() ) {
-                    nrOfPouleGamesNeeded /= 2;
+                const sportsNrOfHeadtohead = getSportsNrOfHeadtohead(poule.getPlaces().length);
+                if ( nrOfHeadtohead < sportsNrOfHeadtohead) {
+                    nrOfHeadtohead = sportsNrOfHeadtohead;
                 }
-                nrOfPouleGamesNeeded *= roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
-                // (nrOfPlaces - 1) * (nrOfPlaces / 2)  * nrOfHeadtohead
-                // vermenigvuldig  sportConfig.getNrOfGameCompetitors()
             }
-            this.createPouleSports(poule, roundNumber.getPlanningConfig(), nrOfPouleGamesNeeded);
+            this.createPouleSports(poule, roundNumber.getPlanningConfig(), nrOfHeadtohead );
         });
     }
 
-    protected createPouleSports(poule: Poule, config: PlanningConfig, nrOfPouleGamesNeeded: number) {
-        let headToHead = 1;
+    protected createPouleSports(poule: Poule, config: PlanningConfig, nrOfHeadtohead: number) {
         const gameRounds = this.createPoule(poule, config.getTeamup());
-        while (nrOfPouleGamesNeeded > 0) {
-            const reverseHomeAway = (headToHead % 2) === 0;
-            const headToHeadNumber = ((headToHead - 1) * gameRounds.length);
-            gameRounds.every(gameRound => {
+        for (let headtohead = 1; headtohead <= nrOfHeadtohead; headtohead++) {
+            const reverseHomeAway = (headtohead % 2) === 0;
+            const startGameRoundNumber = ((headtohead - 1) * gameRounds.length);
+            gameRounds.forEach(gameRound => {
                 let subNumber = 1;
-                return gameRound.getCombinations().every(combination => {
-                    const game = new Game(poule, headToHeadNumber + gameRound.getNumber(), subNumber++);
+                gameRound.getCombinations().forEach(combination => {
+                    const game = new Game(poule, startGameRoundNumber + gameRound.getNumber(), subNumber++);
                     game.setPlaces(combination.getGamePlaces(game, reverseHomeAway/*, reverseCombination*/));
-                    return (--nrOfPouleGamesNeeded > 0);
                 });
             });
-            headToHead++;
         }
     }
 

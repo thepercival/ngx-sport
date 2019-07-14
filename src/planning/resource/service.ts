@@ -5,6 +5,7 @@ import { Referee } from '../../referee';
 import { PlanningConfig } from '../config';
 import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
+import { Sport } from '../../../tmp/esm2015/src/sport';
 
 export class PlanningResourceService {
     private referees: Referee[];
@@ -61,7 +62,7 @@ export class PlanningResourceService {
         while (games.length > 0) {
             let nrOfGamesPerBatch = this.getMaxNrOfGamesPerBatch();
             let batch = new PlanningResourceBatch();
-            while (!this.isBatchCompleted(games.slice(), nrOfGamesPerBatch, batch)) {
+            while (!this.assignBatch(games.slice(), nrOfGamesPerBatch, batch)) {
                 nrOfGamesPerBatch--;
                 this.rollbackBatch(batch);
                 batch = new PlanningResourceBatch();
@@ -71,8 +72,13 @@ export class PlanningResourceService {
         return this.getEndDateTime();
     }
 
-    protected isBatchCompleted(games: Game[], nrOfGamesPerBatch: number, batch: PlanningResourceBatch): boolean {
-        if (batch.getGames().length === nrOfGamesPerBatch) { // endsuccess
+    // maybe use this function as seconds parameter of assignBatch
+    // protected isBatchCompleted( batch: PlanningResourceBatch, nrOfGames: number ): boolean {
+    //     return batch.getGames().length === nrOfGames;
+    // }
+
+    protected assignBatch(games: Game[], nrOfGames: number, batch: PlanningResourceBatch): boolean {
+        if ( batch.getGames().length === nrOfGames) { // endsuccess
             return true;
         }
         if (games.length === 0) {
@@ -81,14 +87,14 @@ export class PlanningResourceService {
         const game = games.shift();
         if (this.isGameAssignable(batch, game)) {
             this.assignGame(batch, game);
-            if (this.isBatchCompleted(games.slice(), nrOfGamesPerBatch, batch) === true) {
+            if (this.assignBatch(games.slice(), nrOfGames, batch) === true) {
                 return true;
             }
             this.releaseGame(batch, game);
 
-            return this.isBatchCompleted(games, nrOfGamesPerBatch, batch);
+            return this.assignBatch(games, nrOfGames, batch);
         }
-        return this.isBatchCompleted(games, nrOfGamesPerBatch, batch);
+        return this.assignBatch(games, nrOfGames, batch);
     }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game) {
@@ -136,7 +142,7 @@ export class PlanningResourceService {
         this.setNextGameStartDateTime();
     }
 
-    protected shouldGoToNextBatch(batch: PlanningResourceBatch): boolean {
+    /*protected shouldGoToNextBatch(batch: PlanningResourceBatch): boolean {
         if (this.config.getSelfReferee() && this.nrOfPoules > 1 && batch.getNrOfPoules() === this.nrOfPoules) {
             return true;
         }
@@ -146,10 +152,10 @@ export class PlanningResourceService {
         if (!this.isSomeRefereeAssignable(batch)) {
             return true;
         }
-        let minNrNeeded = this.config.getNrOfCompetitorsPerGame();
+        let minNrNeeded = this.config.getNrOfGamePlaces();
         minNrNeeded += this.config.getSelfReferee() ? 1 : 0;
         return batch.getNrOfPlaces() + minNrNeeded > this.nrOfPlaces;
-    }
+    }*/
 
     private isGameAssignable(batch: PlanningResourceBatch, game: Game): boolean {
         if (!this.isSomeFieldAssignable()) {
@@ -237,11 +243,38 @@ export class PlanningResourceService {
             return this.maxNrOfGamesPerBatch;
         }
         this.maxNrOfGamesPerBatch = this.fields.length;
+
         if (!this.config.getSelfReferee() && this.referees.length > 0 && this.referees.length < this.maxNrOfGamesPerBatch) {
             this.maxNrOfGamesPerBatch = this.referees.length;
         }
 
-        let nrOfPlacesPerGame = this.config.getNrOfCompetitorsPerGame();
+        // 1 sort sports by nrofgameplaces
+        // 2 sum sports->nrofgameplaces
+        dit ook inzetten bij genereren van wedstrijden!!!
+
+        
+        const nrOfGames = 0;
+        const nrOfGamePlaces = this.nrOfPlaces;
+        while ( nrOfGames < this.maxNrOfGamesPerBatch && nrOfGamePlaces > 0 ) {
+            orderedFieldsBySportsByNrOfGameCompetitors
+        }
+        // 3 if too little places,  walkthough fields until places or 
+        , maar misschien zijn er niet genoeg deelnemers om alle wedstrijden te vullen,
+        dan dus eerst de sporten met zo min mogelijk deelnemers, zodat je zoveel mogelijk wedstrijden in het begin 
+        kan plannen? 
+        // per veld kijken welke sport er is en hoeveel deelnemers per wedstrijd hier deze sport heeft!
+        let maxNrOfCompetitors = 0;
+        this.fields.forEach( field => {
+            maxNrOfCompetitors += field.getSport().getNrOfGamePlaces();
+        });
+        
+        if ( nrOfGames < this.maxNrOfGamesPerBatch) {
+            this.maxNrOfGamesPerBatch = nrOfGames;
+        }
+        return this.maxNrOfGamesPerBatch;
+        // 
+
+        let nrOfPlacesPerGame = this.config.getNrOfGamePlaces();
         if (this.config.getSelfReferee()) {
             nrOfPlacesPerGame++;
         }

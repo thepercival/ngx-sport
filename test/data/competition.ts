@@ -28,7 +28,7 @@ export const jsonCompetition: JsonCompetition = {
         'drawPoints': 1.0,
         'winPointsExt': 2.0,
         'drawPointsExt': 1.0,
-        'nrOfGameCompetitors': SportConfig.DEFAULT_NROFGAMECOMPETITORS,
+        'nrOfGamePlaces': SportConfig.DEFAULT_NROFGAMEPLACES,
         'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
         'sportId': 1
     }],

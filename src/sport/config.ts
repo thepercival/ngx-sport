@@ -6,7 +6,7 @@ export class SportConfig {
     static readonly POINTS_CALC_GAMEPOINTS = 0;
     static readonly POINTS_CALC_SCOREPOINTS = 1;
     static readonly POINTS_CALC_BOTH = 2;
-    static readonly DEFAULT_NROFGAMECOMPETITORS = 2;
+    static readonly DEFAULT_NROFGAMEPLACES = 2;
 
     protected id: number;
     protected winPoints: number;
@@ -14,7 +14,7 @@ export class SportConfig {
     protected winPointsExt: number;
     protected drawPointsExt: number;
     protected pointsCalculation: number;
-    protected nrOfGameCompetitors: number;
+    protected nrOfGamePlaces: number;
 
     constructor(protected sport: Sport, protected competition: Competition ) {
         this.competition.getSportConfigs().push(this);
@@ -68,12 +68,12 @@ export class SportConfig {
         this.pointsCalculation = pointsCalculation;
     }
 
-    getNrOfGameCompetitors(): number {
-        return this.nrOfGameCompetitors;
+    getNrOfGamePlaces(): number {
+        return this.nrOfGamePlaces;
     }
 
-    setNrOfGameCompetitors(nrOfGameCompetitors: number): void {
-        this.nrOfGameCompetitors = nrOfGameCompetitors;
+    setNrOfGamePlaces(nrOfGamePlaces: number): void {
+        this.nrOfGamePlaces = nrOfGamePlaces;
     }
 
     getSport(): Sport {

@@ -113,9 +113,5 @@ export class PlanningConfig {
     getRoundNumber(): RoundNumber {
         return this.roundNumber;
     }
-
-    getNrOfCompetitorsPerGame(): number {
-        return this.getTeamup() ? 4 : 2;
-    }
 }
 
