@@ -3,6 +3,8 @@ export class Sport {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
 
+    static readonly TEMPDEFAULT = 2;
+
     protected id: number;
     protected name: string;
     // protected scoreUnitName: string;

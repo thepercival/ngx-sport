@@ -1,15 +1,16 @@
-import { Poule } from '../poule';
+import { Sport } from '../../tmp/src/sport';
+import { Game } from '../game';
 import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
+import { Poule } from '../poule';
+import { RoundNumber } from '../round/number';
+import { SportPlanningConfig } from '../sport/planningconfig';
 import { PlanningConfig } from './config';
 import { PlanningGameRound } from './gameround';
-import { RoundNumber } from '../round/number';
-import { Game } from '../game';
-import { SportConfig } from '../sport/config';
-import { Sport } from '../sport';
-import { doesNotReject } from 'assert';
 
 export class GameGenerator {
+    private sportPlanningConfigs: SportPlanningConfig[];
+
     public constructor() {
     }
 
@@ -31,35 +32,15 @@ export class GameGenerator {
 
 
     create(roundNumber: RoundNumber) {
-        const sportPlanningConfigs = roundNumber.getValidSportPlanningConfigs();
-
-        // per sport kijken hoeveel gamecompetitors nodig
-        // dan het totaal van de deelnemers
-        const getSportsNrOfHeadtohead = (nrOfPoulePlaces: number): number => {
-            let nrOfPouleGamesNeeded = 0;
-            sportPlanningConfigs.forEach((sportPlanningConfig) => {
-                const sportConfig = roundNumber.getSportConfig(sportPlanningConfig.getSport() );
-                const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
-                nrOfPouleGamesNeeded += Math.ceil( nrOfPoulePlaces / ( sportConfig.getNrOfGamePlaces( teamup ) * minNrOfGames ) );
-            });
-            // berekenAantalHeadtohead obv nrOfPouleGamesNeeded 
-            return nrOfPouleGamesNeeded;
-        };
-
-        roundNumber.getPoules().forEach( poule => {
-            let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
-            if ( sportPlanningConfigs.length > 1 ) {
-                const sportsNrOfHeadtohead = getSportsNrOfHeadtohead(poule.getPlaces().length);
-                if ( nrOfHeadtohead < sportsNrOfHeadtohead) {
-                    nrOfHeadtohead = sportsNrOfHeadtohead;
-                }
-            }
-            this.createPouleSports(poule, roundNumber.getPlanningConfig(), nrOfHeadtohead );
+        this.setSportPlanningConfigs(roundNumber);
+        roundNumber.getPoules().forEach(poule => {
+            this.createPoule(poule, roundNumber.getPlanningConfig());
         });
     }
 
-    protected createPouleSports(poule: Poule, config: PlanningConfig, nrOfHeadtohead: number) {
-        const gameRounds = this.createPoule(poule, config.getTeamup());
+    protected createPoule(poule: Poule, config: PlanningConfig) {
+        const nrOfHeadtohead = this.getNrOfHeadtoheadNeeded(poule);
+        const gameRounds = this.createPouleGameRounds(poule, config.getTeamup());
         for (let headtohead = 1; headtohead <= nrOfHeadtohead; headtohead++) {
             const reverseHomeAway = (headtohead % 2) === 0;
             const startGameRoundNumber = ((headtohead - 1) * gameRounds.length);
@@ -73,7 +54,51 @@ export class GameGenerator {
         }
     }
 
-    createPoule(poule: Poule, teamup: boolean): PlanningGameRound[] {
+    // 1 per sport kijk je hoeveel wedstrijden je minimaal nodig bent om iedereen het vereiste aantal voor de sport te laten spelen
+    // 2 je telt alle wedstrijden bij elkaar op
+    // dan kun je obv bepalen hoeveel nrOfHeadtohead je nodig bent!!
+
+    // voor 1 sport moet is minNrOfGames = 
+
+    //     { 
+    //     pouleA: 12 placegames needed
+    //     pouleB: 12 placegames needed
+    //     pouleC: 16 placegames needed
+    // }
+
+    protected getNrOfHeadtoheadNeeded(poule: Poule): number {
+        const nrOfPouleGamesNeeded = this.getNrOfPouleGamesNeeded(poule);
+        const config = poule.getRound().getNumber().getValidPlanningConfig();
+
+        const nrOfCombinations = this.getUniqueNrOfCombinations(poule.getPlaces().length, config.getTeamup());
+        let nrOfHeadtoheadNeeded = Math.ceil(nrOfPouleGamesNeeded / nrOfCombinations);
+        if (config.getNrOfHeadtohead() > nrOfHeadtoheadNeeded) {
+            return config.getNrOfHeadtohead();
+        }
+        return nrOfHeadtoheadNeeded;
+    }
+
+    protected getNrOfPouleGamesNeeded(poule: Poule): number {
+
+        const roundNumber = poule.getRound().getNumber();
+        const config = roundNumber.getValidPlanningConfig();
+        // multiple sports
+        let nrOfPouleGamesNeeded = 0;
+        this.sportPlanningConfigs.forEach((sportPlanningConfig) => {
+            const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
+            nrOfPouleGamesNeeded += Math.ceil((poule.getPlaces().length / sportPlanningConfig.getNrOfGamePlaces(config.getTeamup()) * minNrOfGames));
+        });
+        return nrOfPouleGamesNeeded;
+    }
+
+    protected setSportPlanningConfigs(roundNumber: RoundNumber) {
+        const usedSports = roundNumber.getCompetition().getFields().map(field => field.getSport());
+        this.sportPlanningConfigs = roundNumber.getSportPlanningConfigs().filter(config => {
+            return usedSports.some(sport => config.getSport() === sport);
+        });
+    }
+
+    createPouleGameRounds(poule: Poule, teamup: boolean): PlanningGameRound[] {
         const gameRoundsSingle: PlanningGameRound[] = this.generateRRSchedule(poule.getPlaces().slice());
 
         const nrOfPlaces = poule.getPlaces().length;
@@ -102,7 +127,7 @@ export class GameGenerator {
 
         const games = this.flattenGameRounds(gameRoundsTmp);
 
-        const totalNrOfCombinations = this.getTotalNrOfCombinations(nrOfPlaces);
+        const totalNrOfCombinations = this.getNrOfCombinations(nrOfPlaces, true);
         if (totalNrOfCombinations !== games.length) {
             console.error('not correct permu');
         }
@@ -151,8 +176,20 @@ export class GameGenerator {
         return uniqueGames;
     }
 
-    protected getTotalNrOfCombinations(nrOfPlaces: number): number {
-        return this.above(nrOfPlaces, 2) * this.above(nrOfPlaces - 2, 2);
+    protected getNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {
+        let nrOfCombinations = this.above(nrOfPlaces, Sport.TEMPDEFAULT);
+        if (teamup === true) {
+            nrOfCombinations *= this.above(nrOfPlaces - Sport.TEMPDEFAULT, Sport.TEMPDEFAULT);
+        }
+        return nrOfCombinations;
+    }
+
+    protected getUniqueNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {
+        let nrOfCombinations = this.getNrOfCombinations(nrOfPlaces, teamup);
+        if (teamup === true) {
+            nrOfCombinations /= Sport.TEMPDEFAULT;
+        }
+        return nrOfCombinations;
     }
 
     protected above(top: number, bottom: number): number {

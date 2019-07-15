@@ -6,7 +6,10 @@ import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../api/repository';
 import { Competition } from '../../competition';
+import { Structure } from '../../structure';
 import { SportConfig } from '../config';
+import { SportPlanningConfigService } from '../planningconfig/service';
+import { SportScoreConfigService } from '../scoreconfig/service';
 import { JsonSportConfig, SportConfigMapper } from './mapper';
 import { SportConfigService } from './service';
 
@@ -47,12 +50,14 @@ export class SportConfigRepository extends APIRepository {
         );
     }
 
-    removeObject(sportConfig: SportConfig, competition: Competition): Observable<void> {
+    removeObject(sportConfig: SportConfig, competition: Competition, structure: Structure): Observable<void> {
         const url = this.url + '/' + sportConfig.getId();
         return this.http.delete(url, this.getOptions(competition)).pipe(
             map((res) => {
-                const sportConfigService = new SportConfigService();
-                sportConfigService.remove(sportConfig);
+                const sportConfigService = new SportConfigService(
+                    new SportScoreConfigService(), new SportPlanningConfigService()
+                );
+                sportConfigService.remove(sportConfig, structure);
             }),
             catchError((err) => this.handleError(err))
         );

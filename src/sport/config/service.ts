@@ -1,14 +1,21 @@
 import { Competition } from '../../competition';
+import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
+import { Structure } from '../../structure';
 import { SportConfig } from '../config';
 import { SportCustom } from '../custom';
+import { SportPlanningConfigService } from '../planningconfig/service';
+import { SportScoreConfigService } from '../scoreconfig/service';
 
 export class SportConfigService {
 
-    constructor() {
+    constructor(
+        private scoreConfigService: SportScoreConfigService,
+        private planningConfigService: SportPlanningConfigService
+    ) {
     }
 
-    createDefault(sport: Sport, competition: Competition): SportConfig {
+    createDefault(sport: Sport, competition: Competition, firstRoundNumber?: RoundNumber): SportConfig {
         const config = new SportConfig(sport, competition);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
@@ -16,6 +23,9 @@ export class SportConfigService {
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
         config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
         config.setNrOfGamePlaces(SportConfig.DEFAULT_NROFGAMEPLACES);
+        if (firstRoundNumber) {
+            this.addToRoundNumber(config, firstRoundNumber);
+        }
         return config;
     }
 
@@ -46,7 +56,12 @@ export class SportConfigService {
         return newConfig;
     }
 
-    remove(config: SportConfig) {
+    addToRoundNumber(config: SportConfig, firstRoundNumber: RoundNumber) {
+        this.scoreConfigService.createDefault(config.getSport(), firstRoundNumber);
+        this.planningConfigService.createDefault(config.getSport(), firstRoundNumber);
+    }
+
+    remove(config: SportConfig, structure: Structure) {
         const competition = config.getCompetition();
         const sportConfigs = competition.getSportConfigs();
         const index = sportConfigs.indexOf(config);
@@ -57,7 +72,23 @@ export class SportConfigService {
         fields.filter(field => field.getSport() === config.getSport()).forEach(field => {
             competition.removeField(field);
         });
-        // sportplanningconfig and sportscoreconfig will be removed by backend
+        let roundNumber = structure.getFirstRoundNumber();
+        const sport = config.getSport();
+        while (roundNumber) {
+            const planningConfigs = roundNumber.getSportPlanningConfigs();
+            const planningConfig = planningConfigs.find(planningConfigIt => planningConfigIt.getSport() === sport);
+            const idxPlanning = planningConfigs.indexOf(planningConfig);
+            if (idxPlanning >= 0) {
+                planningConfigs.splice(idxPlanning, 1);
+            }
+            const scoreConfigs = roundNumber.getSportScoreConfigs();
+            const scoreConfig = scoreConfigs.find(scoreConfigIt => scoreConfigIt.getSport() === sport);
+            const idxScore = scoreConfigs.indexOf(scoreConfig);
+            if (idxScore >= 0) {
+                planningConfigs.splice(idxScore, 1);
+            }
+            roundNumber = roundNumber.getNext();
+        }
     }
 
     isDefault(sportConfig: SportConfig): boolean {

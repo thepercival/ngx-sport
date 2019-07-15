@@ -1,19 +1,17 @@
 import { QualifyGroup } from '../../src/qualify/group';
 import { Competition } from '../competition';
+import { Place } from '../place';
+import { PlanningConfigService } from '../planning/config/service';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { HorizontalPouleService } from '../poule/horizontal/service';
-import { Place } from '../place';
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
-import { SportConfig } from '../sport/config';
-import { SportScoreConfig } from '../sport/scoreconfig';
-import { SportScoreConfigService } from '../sport/scoreconfig/service';
+import { SportConfigService } from '../sport/config/service';
 import { SportPlanningConfigService } from '../sport/planningconfig/service';
-import { PlanningConfig } from '../planning/config';
-import { PlanningConfigService } from '../planning/config/service';
+import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { Structure } from '../structure';
 
 export interface CompetitorRange {
@@ -23,20 +21,19 @@ export interface CompetitorRange {
 
 export class StructureService {
     private planningConfigService: PlanningConfigService;
+    private sportConfigService: SportConfigService;
 
     constructor(
         private competitorRange?: CompetitorRange
     ) {
         this.planningConfigService = new PlanningConfigService();
+        this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
     }
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        const sportScoreConfigService = new SportScoreConfigService();
-        const sportPlanningConfigService = new SportPlanningConfigService();
-        competition.getSportConfigs().forEach( sportConfig => {
-            sportScoreConfigService.createDefault( sportConfig.getSport(), firstRoundNumber );
-            sportPlanningConfigService.createDefault( sportConfig.getSport(), firstRoundNumber );
+        competition.getSportConfigs().forEach(sportConfig => {
+            this.sportConfigService.addToRoundNumber(sportConfig, firstRoundNumber);
         });
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
@@ -93,7 +90,7 @@ export class StructureService {
 
         if (newNrOfPlaces < round.getNrOfPlacesChildren()) {
             throw new Error('de poule kan niet verwijderd worden, omdat er te weinig deelnemers '
-            + 'overblijven om naar de volgende ronde gaan');
+                + 'overblijven om naar de volgende ronde gaan');
         }
 
         this.updateRound(round, newNrOfPlaces, poules.length - 1);
@@ -144,14 +141,14 @@ export class StructureService {
         structure.setStructureNumbers();
     }
 
-    addQualifiers(round: Round, winnersOrLosers: number, nrOfQualifiers: number ) {
-        if ( round.getBorderQualifyGroup(winnersOrLosers) === undefined  ) {
-            if ( nrOfQualifiers < 2) {
-                throw Error('Voeg miniaal 2 gekwalificeerden toe' );
+    addQualifiers(round: Round, winnersOrLosers: number, nrOfQualifiers: number) {
+        if (round.getBorderQualifyGroup(winnersOrLosers) === undefined) {
+            if (nrOfQualifiers < 2) {
+                throw Error('Voeg miniaal 2 gekwalificeerden toe');
             }
             nrOfQualifiers--;
         }
-        for ( let qualifier = 0 ; qualifier < nrOfQualifiers ; qualifier++ ) {
+        for (let qualifier = 0; qualifier < nrOfQualifiers; qualifier++) {
             this.addQualifier(round, winnersOrLosers);
         }
     }
@@ -422,17 +419,17 @@ export class StructureService {
     getDefaultNrOfPoules(nrOfPlaces): number {
         const min = this.competitorRange ? this.competitorRange.min : 2;
         const max = this.competitorRange ? this.competitorRange.max : undefined;
-        if ( nrOfPlaces < min ) {
-                throw new Error('Het aantal deelnemers is kleiner dan ' + min);
+        if (nrOfPlaces < min) {
+            throw new Error('Het aantal deelnemers is kleiner dan ' + min);
         } else if (max && nrOfPlaces > max) {
             throw new Error('Het aantal deelnemers is groter dan ' + max);
         }
-        switch ( nrOfPlaces) {
+        switch (nrOfPlaces) {
             case 2:
             case 3:
             case 4:
             case 5:
-            case 7:  {
+            case 7: {
                 return 1;
             }
             case 6:

@@ -2,42 +2,40 @@ import { Field } from '../../field';
 import { Game } from '../../game';
 import { Place } from '../../place';
 import { Referee } from '../../referee';
+import { RoundNumber } from '../../round/number';
+import { Sport } from '../../sport';
 import { PlanningConfig } from '../config';
+import { GameGenerator } from '../gamegenerator';
 import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
-import { Sport } from '../../../tmp/esm2015/src/sport';
 
 export class PlanningResourceService {
     private referees: Referee[];
     private refereePlaces: Place[];
     private areRefereesEnabled = false;
     private fields: Field[] = [];
+    private planningConfig: PlanningConfig;
+    private gameGenerator: GameGenerator;
 
     private blockedPeriod;
     private currentGameStartDate: Date;
     private nrOfPoules: number;
-    private nrOfPlaces: number;
     private maxNrOfGamesPerBatch: number;
     // private assignedPlacesPerField = {};
     // private batch: Resources;
 
     constructor(
-        private config: PlanningConfig,
+        private roundNumber: RoundNumber,
         dateTime: Date
     ) {
         this.currentGameStartDate = this.cloneDateTime(dateTime);
+        this.gameGenerator = new GameGenerator();
+        this.planningConfig = this.roundNumber.getValidPlanningConfig();
+        this.nrOfPoules = this.roundNumber.getPoules().length;
     }
 
     setBlockedPeriod(blockedPeriod: BlockedPeriod) {
         this.blockedPeriod = blockedPeriod;
-    }
-
-    setNrOfPoules(nrOfPoules: number) {
-        this.nrOfPoules = nrOfPoules;
-    }
-
-    setNrOfPlaces(nrOfPlaces: number) {
-        this.nrOfPlaces = nrOfPlaces;
     }
 
     setFields(fields: Field[]) {
@@ -78,7 +76,7 @@ export class PlanningResourceService {
     // }
 
     protected assignBatch(games: Game[], nrOfGames: number, batch: PlanningResourceBatch): boolean {
-        if ( batch.getGames().length === nrOfGames) { // endsuccess
+        if (batch.getGames().length === nrOfGames) { // endsuccess
             return true;
         }
         if (games.length === 0) {
@@ -99,7 +97,7 @@ export class PlanningResourceService {
 
     protected assignGame(batch: PlanningResourceBatch, game: Game) {
         this.assignField(game);
-        if (!this.config.getSelfReferee()) {
+        if (!this.planningConfig.getSelfReferee()) {
             if (this.referees.length > 0) {
                 this.assignReferee(game);
             }
@@ -172,7 +170,7 @@ export class PlanningResourceService {
     }
 
     private isSomeRefereeAssignable(batch: PlanningResourceBatch, game?: Game): boolean {
-        if (!this.config.getSelfReferee()) {
+        if (!this.planningConfig.getSelfReferee()) {
             if (!this.areRefereesEnabled) {
                 return true;
             }
@@ -244,43 +242,20 @@ export class PlanningResourceService {
         }
         this.maxNrOfGamesPerBatch = this.fields.length;
 
-        if (!this.config.getSelfReferee() && this.referees.length > 0 && this.referees.length < this.maxNrOfGamesPerBatch) {
+        if (!this.planningConfig.getSelfReferee() && this.referees.length > 0 && this.referees.length < this.maxNrOfGamesPerBatch) {
             this.maxNrOfGamesPerBatch = this.referees.length;
         }
 
-        // 1 sort sports by nrofgameplaces
-        // 2 sum sports->nrofgameplaces
-        dit ook inzetten bij genereren van wedstrijden!!!
-
-        
-        const nrOfGames = 0;
-        const nrOfGamePlaces = this.nrOfPlaces;
-        while ( nrOfGames < this.maxNrOfGamesPerBatch && nrOfGamePlaces > 0 ) {
-            orderedFieldsBySportsByNrOfGameCompetitors
+        let nrOfGamePlaces = Sport.TEMPDEFAULT;
+        if (this.planningConfig.getTeamup()) {
+            nrOfGamePlaces *= 2;
         }
-        // 3 if too little places,  walkthough fields until places or 
-        , maar misschien zijn er niet genoeg deelnemers om alle wedstrijden te vullen,
-        dan dus eerst de sporten met zo min mogelijk deelnemers, zodat je zoveel mogelijk wedstrijden in het begin 
-        kan plannen? 
-        // per veld kijken welke sport er is en hoeveel deelnemers per wedstrijd hier deze sport heeft!
-        let maxNrOfCompetitors = 0;
-        this.fields.forEach( field => {
-            maxNrOfCompetitors += field.getSport().getNrOfGamePlaces();
-        });
-        
-        if ( nrOfGames < this.maxNrOfGamesPerBatch) {
-            this.maxNrOfGamesPerBatch = nrOfGames;
+        if (this.planningConfig.getSelfReferee()) {
+            nrOfGamePlaces++;
         }
-        return this.maxNrOfGamesPerBatch;
-        // 
-
-        let nrOfPlacesPerGame = this.config.getNrOfGamePlaces();
-        if (this.config.getSelfReferee()) {
-            nrOfPlacesPerGame++;
-        }
-        const nrOfGames = (this.nrOfPlaces - (this.nrOfPlaces % nrOfPlacesPerGame)) / nrOfPlacesPerGame;
-        if (nrOfGames < this.maxNrOfGamesPerBatch) {
-            this.maxNrOfGamesPerBatch = nrOfGames;
+        const nrOfGamesSimultaneously = Math.ceil(this.roundNumber.getNrOfPlaces() / nrOfGamePlaces);
+        if (nrOfGamesSimultaneously < this.maxNrOfGamesPerBatch) {
+            this.maxNrOfGamesPerBatch = nrOfGamesSimultaneously;
         }
         return this.maxNrOfGamesPerBatch;
     }
@@ -292,7 +267,7 @@ export class PlanningResourceService {
             return undefined;
         }
         const endDateTime = new Date(this.currentGameStartDate.getTime());
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.config.getMaximalNrOfMinutesPerGame());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.planningConfig.getMaximalNrOfMinutesPerGame());
         return endDateTime;
     }
 
@@ -307,7 +282,7 @@ export class PlanningResourceService {
         if (this.currentGameStartDate === undefined) {
             return;
         }
-        const add = this.config.getMaximalNrOfMinutesPerGame() + this.config.getMinutesBetweenGames();
+        const add = this.planningConfig.getMaximalNrOfMinutesPerGame() + this.planningConfig.getMinutesBetweenGames();
         this.currentGameStartDate = this.addMinutes(this.currentGameStartDate, add);
     }
 
@@ -317,7 +292,7 @@ export class PlanningResourceService {
             return dateTime;
         }
         const endDateTime = this.cloneDateTime(dateTime);
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.config.getMaximalNrOfMinutesPerGame());
+        endDateTime.setMinutes(endDateTime.getMinutes() + this.planningConfig.getMaximalNrOfMinutesPerGame());
         if (endDateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
             dateTime = new Date(this.blockedPeriod.end.getTime());
         }

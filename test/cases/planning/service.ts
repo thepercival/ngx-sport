@@ -72,13 +72,14 @@ describe('Planning/Service', () => {
         const nameService = new NameService();
         const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
         games.forEach(game => {
-            console.log(game.getResourceBatch() + ' '
-                + ' poule ' + game.getPoule().getNumber() + ', '
-                + nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, false)
+            console.log(
+                'poule ' + game.getPoule().getNumber()
+                + ', ' + nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, false)
                 + ' vs ' + nameService.getPlacesFromName(game.getPlaces(Game.AWAY), false, false)
-                + ' r ' + (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '')
-                + ' batch ' + game.getResourceBatch()
-                + ' field ' + game.getField().getNumber()
+                + ' , ref ' + (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '')
+                + ', batch ' + game.getResourceBatch()
+                + ', field ' + game.getField().getNumber()
+                + ', sport ' + game.getField().getSport().getCustomId()
             );
         });
         expect(games.length).to.equal(30);
@@ -98,6 +99,10 @@ describe('Planning/Service', () => {
         // const expectedEndDate = new Date('2030-01-01T15:15:00.000Z');
         // expect(planningService.calculateStartDateTime(firstRoundNumber).getTime()).to.equal(expectedEndDate.getTime());
     });
+
+
+
+    // ga hier 2 sporten test en nog meer om de planningservice coverage 100 % te krijgen!!
 
     // it('recursive', () => {
     //     const numbers = [1, 2, 3, 4, 5, 6];

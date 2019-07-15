@@ -143,10 +143,8 @@ export class PlanningService {
         fields: Field[],
         referees: Referee[],
         refereePlaces: Place[]): Date {
-        const resourceService = new PlanningResourceService(roundNumber.getValidPlanningConfig(), dateTime);
+        const resourceService = new PlanningResourceService(roundNumber, dateTime);
         resourceService.setBlockedPeriod(this.blockedPeriod);
-        resourceService.setNrOfPoules(roundNumber.getPoules().length);
-        resourceService.setNrOfPlaces(roundNumber.getNrOfPlaces());
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
         resourceService.setRefereePlaces(refereePlaces);

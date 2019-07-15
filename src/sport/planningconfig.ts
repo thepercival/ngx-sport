@@ -1,5 +1,5 @@
-import { Sport } from '../sport';
 import { RoundNumber } from '../round/number';
+import { Sport } from '../sport';
 
 export class SportPlanningConfig {
     static readonly DEFAULTNROFGAMES = 1;
@@ -35,7 +35,7 @@ export class SportPlanningConfig {
         return this.roundNumber;
     }
 
-    getNrOfGamePlaces( teamup: boolean ): number {
+    getNrOfGamePlaces(teamup: boolean): number {
         const nrOfGamePlaces = this.roundNumber.getSportConfig(this.getSport()).getNrOfGamePlaces();
         return teamup ? nrOfGamePlaces * 2 : nrOfGamePlaces;
     }

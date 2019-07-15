@@ -1,13 +1,20 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Place, Field, Game, Sport, NameService,
-    PlanningService, StructureService, SportConfigService } from '../../../public_api';
-import { getMapper } from '../../createmapper';
-import { jsonCompetition } from '../../data/competition';
+import {
+    Field,
+    Place,
+    Sport,
+    SportConfigService,
+    SportPlanningConfigService,
+    SportScoreConfigService,
+    StructureService,
+} from '../../../public_api';
+import { PlaceCombination } from '../../../src/place/combination';
 import { GameGenerator } from '../../../src/planning/gamegenerator';
 import { PlanningGameRound } from '../../../src/planning/gameround';
-import { PlaceCombination } from '../../../src/place/combination';
+import { getMapper } from '../../createmapper';
+import { jsonCompetition } from '../../data/competition';
 
 
 describe('Planning/GameGenerator', () => {
@@ -22,7 +29,7 @@ describe('Planning/GameGenerator', () => {
 
         const gameGenerator = new GameGenerator();
         const firstPoule = structure.getRootRound().getPoule(1);
-        const gameRounds = gameGenerator.createPoule(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup() );
+        const gameRounds = gameGenerator.createPouleGameRounds(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup());
 
         let roundNr = 1; let subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [1], [4]); subNr++;
@@ -62,7 +69,7 @@ describe('Planning/GameGenerator', () => {
 
         const gameGenerator = new GameGenerator();
         const firstPoule = structure.getRootRound().getPoule(1);
-        const gameRounds = gameGenerator.createPoule(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup() );
+        const gameRounds = gameGenerator.createPouleGameRounds(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup());
 
         let roundNr = 1; const subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [1, 4], [2, 3]); roundNr++;
@@ -80,7 +87,7 @@ describe('Planning/GameGenerator', () => {
         firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
         const gameGenerator = new GameGenerator();
-        gameGenerator.create(firstRoundNumber );
+        gameGenerator.create(firstRoundNumber);
 
         expect(firstRoundNumber.getGames().length).to.equal(15);
     });
@@ -95,48 +102,53 @@ describe('Planning/GameGenerator', () => {
         firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
         const gameGenerator = new GameGenerator();
-        gameGenerator.create(firstRoundNumber );
+        gameGenerator.create(firstRoundNumber);
 
         expect(firstRoundNumber.getGames().length).to.equal(45);
+
+        check if every place has the same amount of games
+        check if one place is not two times in one game
+        // for planning : add selfreferee if is this enables
+
     });
 
-    it('two sports 6', () => {
+    it('two sports(sport2 => minNrOfGames = 3), 4', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
         const sport2 = new Sport('sport2');
-        const sportConfigService = new SportConfigService();
+        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
         sportConfigService.createDefault(sport2, competition);
+        const field2 = new Field(competition, 2); field2.setSport(sport2);
 
         const structureService = new StructureService();
-        const structure = structureService.create(competition, 6, 1);
+        const structure = structureService.create(competition, 4, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
+        firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(3);
 
         const gameGenerator = new GameGenerator();
-        gameGenerator.create(firstRoundNumber );
+        gameGenerator.create(firstRoundNumber);
 
-        expect(firstRoundNumber.getGames().length).to.equal(6);
+        expect(firstRoundNumber.getGames().length).to.equal(12);
     });
 
-    // @TODO
-    // wat te doen als sommige deelnemers meer als 1x een sport moeten doen
-    // om iedereen ook elke sport 1x te laten doen???
-    // bijvoorbeeld met teamup of met een oneven aantal deelnemers per team????
-    it('two sports 6 teamup', () => {
-        // const competitionMapper = getMapper('competition');
-        // const competition = competitionMapper.toObject(jsonCompetition);
-        // const sport2 = new Sport('sport2');
-        // const sportConfigService = new SportConfigService();
-        // sportConfigService.createDefault(sport2, competition);
+    it('two sports(sport2 => minNrOfGames = 2), teamup, 4', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const sport2 = new Sport('sport2');
+        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+        sportConfigService.createDefault(sport2, competition);
+        const field2 = new Field(competition, 2); field2.setSport(sport2);
 
-        // const structureService = new StructureService();
-        // const structure = structureService.create(competition, 6, 1);
-        // const firstRoundNumber = structure.getFirstRoundNumber();
-        // firstRoundNumber.getValidPlanningConfig().setTeamup(true);
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 4, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(2);
+        firstRoundNumber.getPlanningConfig().setTeamup(true);
 
-        // const gameGenerator = new GameGenerator();
-        // gameGenerator.create(firstRoundNumber );
+        const gameGenerator = new GameGenerator();
+        gameGenerator.create(firstRoundNumber);
 
-        // expect(firstRoundNumber.getGames().length).to.equal(6);
+        expect(firstRoundNumber.getGames().length).to.equal(3);
     });
 });
 
