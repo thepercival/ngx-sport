@@ -87,9 +87,38 @@ describe('Planning/GameGenerator', () => {
         firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
         const gameGenerator = new GameGenerator();
-        gameGenerator.create(firstRoundNumber);
+        const firstPoule = structure.getRootRound().getPoule(1);
+        const gameRounds = gameGenerator.createPouleGameRounds(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup());
 
-        expect(firstRoundNumber.getGames().length).to.equal(15);
+        // gameRounds.forEach( gameRound => {
+        //     const out = '';
+        //     gameRound.getCombinations().forEach( combination => {
+        //         console.log(
+        //             combination.getHome().map( homePlace => homePlace.getNumber() ).join(' & ')
+        //             + ' vs ' +
+        //             combination.getAway().map( homePlace => homePlace.getNumber() ).join(' & ')
+        //         );
+        //     });
+        // });
+
+        let roundNr = 1; const subNr = 1;
+        this.assertSameGame(gameRounds, roundNr, subNr, [2, 5], [3, 4]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [1, 2], [4, 5]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [5, 4], [2, 3]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [1, 3], [4, 5]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [4, 2], [3, 5]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [4, 1], [3, 5]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [5, 1], [3, 4]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [2, 5], [1, 3]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [3, 4], [1, 2]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [1, 3], [2, 4]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [4, 1], [2, 3]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [3, 5], [1, 2]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [5, 1], [2, 3]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [2, 5], [4, 1]); roundNr++;
+        this.assertSameGame(gameRounds, roundNr, subNr, [4, 2], [5, 1]);
+
+        expect(gameRounds.length).to.equal(15);
     });
 
     it('one sport 6 teamup', () => {
@@ -106,8 +135,8 @@ describe('Planning/GameGenerator', () => {
 
         expect(firstRoundNumber.getGames().length).to.equal(45);
 
-        check if every place has the same amount of games
-        check if one place is not two times in one game
+        // check if every place has the same amount of games
+        // check if one place is not two times in one game
         // for planning : add selfreferee if is this enables
 
     });

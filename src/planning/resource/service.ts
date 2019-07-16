@@ -5,9 +5,10 @@ import { Referee } from '../../referee';
 import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
 import { PlanningConfig } from '../config';
-import { GameGenerator } from '../gamegenerator';
 import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
+import { SportPlanningConfigService } from '../../sport/planningconfig/service';
+import { SportCounter } from '../../sport/counter';
 
 export class PlanningResourceService {
     private referees: Referee[];
@@ -15,21 +16,20 @@ export class PlanningResourceService {
     private areRefereesEnabled = false;
     private fields: Field[] = [];
     private planningConfig: PlanningConfig;
-    private gameGenerator: GameGenerator;
 
     private blockedPeriod;
     private currentGameStartDate: Date;
     private nrOfPoules: number;
     private maxNrOfGamesPerBatch: number;
-    // private assignedPlacesPerField = {};
-    // private batch: Resources;
+
+    private sportCounter: LocationIdToSportCounterMap;
+    // de wedstrijd is assignbaar als alle plekken, van een wedstrijd, de sport nog niet vaak genoeg gedaan heeft of alle sporten al gedaan
 
     constructor(
         private roundNumber: RoundNumber,
         dateTime: Date
     ) {
         this.currentGameStartDate = this.cloneDateTime(dateTime);
-        this.gameGenerator = new GameGenerator();
         this.planningConfig = this.roundNumber.getValidPlanningConfig();
         this.nrOfPoules = this.roundNumber.getPoules().length;
     }
@@ -55,7 +55,24 @@ export class PlanningResourceService {
         this.refereePlaces = places;
     }
 
+    protected initSportsCounter() {
+        const sportPlanningConfigService = new SportPlanningConfigService();
+        const sportPlanningConfigs = sportPlanningConfigService.getUsed(this.roundNumber);
+
+        // het minimale aantal wedstrijden per sport moet je weten
+        // per plaats bijhouden: het aantal wedstrijden voor elke sport
+        // per plaats bijhouden: als alle sporten klaar
+        this.sportCounter = {};
+        this.roundNumber.getPoules().forEach( poule => {
+            const minNrOfGames = sportPlanningConfigService.getMinNrOfGames(sportPlanningConfigs, poule);
+            poule.getPlaces().forEach( (place: Place) => {
+                this.sportCounter[place.getLocationId()] = new SportCounter( minNrOfGames );
+            });
+        });
+    }
+
     assign(games: Game[]): Date {
+        this.initSportsCounter();
         let batchNr = 1;
         while (games.length > 0) {
             let nrOfGamesPerBatch = this.getMaxNrOfGamesPerBatch();
@@ -298,4 +315,8 @@ export class PlanningResourceService {
         }
         return dateTime;
     }
+}
+
+interface LocationIdToSportCounterMap {
+    [locationId: string]: SportCounter;
 }

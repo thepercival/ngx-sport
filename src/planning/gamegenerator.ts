@@ -1,4 +1,4 @@
-import { Sport } from '../../tmp/src/sport';
+import { Sport } from '../sport';
 import { Game } from '../game';
 import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
@@ -7,6 +7,7 @@ import { RoundNumber } from '../round/number';
 import { SportPlanningConfig } from '../sport/planningconfig';
 import { PlanningConfig } from './config';
 import { PlanningGameRound } from './gameround';
+import { SportPlanningConfigService } from '../sport/planningconfig/service';
 
 export class GameGenerator {
     private sportPlanningConfigs: SportPlanningConfig[];
@@ -54,24 +55,12 @@ export class GameGenerator {
         }
     }
 
-    // 1 per sport kijk je hoeveel wedstrijden je minimaal nodig bent om iedereen het vereiste aantal voor de sport te laten spelen
-    // 2 je telt alle wedstrijden bij elkaar op
-    // dan kun je obv bepalen hoeveel nrOfHeadtohead je nodig bent!!
-
-    // voor 1 sport moet is minNrOfGames = 
-
-    //     { 
-    //     pouleA: 12 placegames needed
-    //     pouleB: 12 placegames needed
-    //     pouleC: 16 placegames needed
-    // }
-
     protected getNrOfHeadtoheadNeeded(poule: Poule): number {
         const nrOfPouleGamesNeeded = this.getNrOfPouleGamesNeeded(poule);
         const config = poule.getRound().getNumber().getValidPlanningConfig();
 
-        const nrOfCombinations = this.getUniqueNrOfCombinations(poule.getPlaces().length, config.getTeamup());
-        let nrOfHeadtoheadNeeded = Math.ceil(nrOfPouleGamesNeeded / nrOfCombinations);
+        const nrOfCombinations = this.getNrOfGamesPerPlace(poule.getPlaces().length, config.getTeamup());
+        const nrOfHeadtoheadNeeded = Math.ceil(nrOfPouleGamesNeeded / nrOfCombinations);
         if (config.getNrOfHeadtohead() > nrOfHeadtoheadNeeded) {
             return config.getNrOfHeadtohead();
         }
@@ -86,16 +75,15 @@ export class GameGenerator {
         let nrOfPouleGamesNeeded = 0;
         this.sportPlanningConfigs.forEach((sportPlanningConfig) => {
             const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
-            nrOfPouleGamesNeeded += Math.ceil((poule.getPlaces().length / sportPlanningConfig.getNrOfGamePlaces(config.getTeamup()) * minNrOfGames));
+            const nrOfGamePlaces = sportPlanningConfig.getNrOfGamePlaces(config.getTeamup());
+            nrOfPouleGamesNeeded += Math.ceil((poule.getPlaces().length / nrOfGamePlaces * minNrOfGames));
         });
         return nrOfPouleGamesNeeded;
     }
 
     protected setSportPlanningConfigs(roundNumber: RoundNumber) {
-        const usedSports = roundNumber.getCompetition().getFields().map(field => field.getSport());
-        this.sportPlanningConfigs = roundNumber.getSportPlanningConfigs().filter(config => {
-            return usedSports.some(sport => config.getSport() === sport);
-        });
+        const sportPlanningConfigService = new SportPlanningConfigService();
+        this.sportPlanningConfigs = sportPlanningConfigService.getUsed(roundNumber);
     }
 
     createPouleGameRounds(poule: Poule, teamup: boolean): PlanningGameRound[] {
@@ -184,7 +172,7 @@ export class GameGenerator {
         return nrOfCombinations;
     }
 
-    protected getUniqueNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {
+    getNrOfGamesPerPlace(nrOfPlaces: number, teamup: boolean): number {
         let nrOfCombinations = this.getNrOfCombinations(nrOfPlaces, teamup);
         if (teamup === true) {
             nrOfCombinations /= Sport.TEMPDEFAULT;

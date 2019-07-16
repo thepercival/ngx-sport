@@ -12,6 +12,7 @@ export class Place {
     protected poule: Poule;
     protected number: number;
     protected structureNumber: number;
+    protected locationId: string;
     protected penaltyPoints = 0;
     protected name: string;
     protected competitor: Competitor;
@@ -26,6 +27,7 @@ export class Place {
         }
         this.setNumber(number);
         poule.addPlace(this);
+        this.locationId = poule.getRound().getNumber() +  '.' + poule.getNumber() + '.' + number;
     }
 
     getId(): number {
@@ -106,8 +108,18 @@ export class Place {
         });
     }
 
+    /**
+     * within round
+     */
     getLocation(): PlaceLocation {
         return new PlaceLocation(this.getPoule().getNumber(), this.getNumber());
+    }
+
+    /**
+     * within roundnumber
+     */
+    getLocationId(): string {
+        return this.locationId;
     }
 
     setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {
