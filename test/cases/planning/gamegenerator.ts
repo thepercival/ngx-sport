@@ -38,6 +38,8 @@ describe('Planning/GameGenerator', () => {
         this.assertSameGame(gameRounds, roundNr, subNr, [4], [3]); roundNr++; subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [3], [1]); subNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [4], [2]);
+
+        firstPoule.getPlaces().forEach(place => this.assertValidGamesParticipations(place, gameRounds));
     });
 
     /**
@@ -185,4 +187,32 @@ export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number,
     const combination: PlaceCombination = gameRounds[roundNr - 1].getCombinations()[subNr - 1];
     expect(combination.getHome().map(place => place.getNumber())).to.deep.equal(home);
     expect(combination.getAway().map(place => place.getNumber())).to.deep.equal(away);
+}
+
+/**
+ * check if every place has the same amount of games
+ * check if one place is not two times in one game
+ * for planning : add selfreferee if is this enables
+ * 
+ * @param place 
+ * @param game 
+ */
+export function assertValidGamesParticipations(place: Place, gameRounds: PlanningGameRound[]) {
+    const sportPlanningConfigService = new SportPlanningConfigService();
+    let nrOfGames = 0;
+    gameRounds.forEach(gameRound => gameRound.getCombinations().forEach(combination => {
+        // combination is game
+        let nrOfSingleGameParticipations = 0;
+        combination.get().forEach(placeIt => {
+            if (placeIt === place) {
+                nrOfSingleGameParticipations++;
+            }
+        });
+        if (nrOfSingleGameParticipations === 1) {
+            nrOfGames++;
+        }
+        expect(nrOfSingleGameParticipations).to.be.lessThan(2);
+    }));
+    const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), true);
+    expect(nrOfGamesPerPlace).to.equal(nrOfGames);
 }

@@ -1,18 +1,19 @@
-import { Sport } from '../sport';
 import { Game } from '../game';
 import { Place } from '../place';
 import { PlaceCombination, PlaceCombinationNumber } from '../place/combination';
 import { Poule } from '../poule';
 import { RoundNumber } from '../round/number';
 import { SportPlanningConfig } from '../sport/planningconfig';
+import { SportPlanningConfigService } from '../sport/planningconfig/service';
 import { PlanningConfig } from './config';
 import { PlanningGameRound } from './gameround';
-import { SportPlanningConfigService } from '../sport/planningconfig/service';
 
 export class GameGenerator {
+    private sportPlanningConfigService: SportPlanningConfigService;
     private sportPlanningConfigs: SportPlanningConfig[];
 
     public constructor() {
+        this.sportPlanningConfigService = new SportPlanningConfigService();
     }
 
     // protected createPouleMultiply(poule: Poule, gameRounds: PlanningGameRound[], nrOfHeadtoHead: number) {
@@ -59,7 +60,7 @@ export class GameGenerator {
         const nrOfPouleGamesNeeded = this.getNrOfPouleGamesNeeded(poule);
         const config = poule.getRound().getNumber().getValidPlanningConfig();
 
-        const nrOfCombinations = this.getNrOfGamesPerPlace(poule.getPlaces().length, config.getTeamup());
+        const nrOfCombinations = this.sportPlanningConfigService.getNrOfGamesPerPlace(poule, false);
         const nrOfHeadtoheadNeeded = Math.ceil(nrOfPouleGamesNeeded / nrOfCombinations);
         if (config.getNrOfHeadtohead() > nrOfHeadtoheadNeeded) {
             return config.getNrOfHeadtohead();
@@ -82,8 +83,7 @@ export class GameGenerator {
     }
 
     protected setSportPlanningConfigs(roundNumber: RoundNumber) {
-        const sportPlanningConfigService = new SportPlanningConfigService();
-        this.sportPlanningConfigs = sportPlanningConfigService.getUsed(roundNumber);
+        this.sportPlanningConfigs = this.sportPlanningConfigService.getUsed(roundNumber);
     }
 
     createPouleGameRounds(poule: Poule, teamup: boolean): PlanningGameRound[] {
@@ -115,7 +115,7 @@ export class GameGenerator {
 
         const games = this.flattenGameRounds(gameRoundsTmp);
 
-        const totalNrOfCombinations = this.getNrOfCombinations(nrOfPlaces, true);
+        const totalNrOfCombinations = this.sportPlanningConfigService.getNrOfCombinations(nrOfPlaces, true);
         if (totalNrOfCombinations !== games.length) {
             console.error('not correct permu');
         }
@@ -162,36 +162,6 @@ export class GameGenerator {
             uniqueGames.push(game);
         });
         return uniqueGames;
-    }
-
-    protected getNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {
-        let nrOfCombinations = this.above(nrOfPlaces, Sport.TEMPDEFAULT);
-        if (teamup === true) {
-            nrOfCombinations *= this.above(nrOfPlaces - Sport.TEMPDEFAULT, Sport.TEMPDEFAULT);
-        }
-        return nrOfCombinations;
-    }
-
-    getNrOfGamesPerPlace(nrOfPlaces: number, teamup: boolean): number {
-        let nrOfCombinations = this.getNrOfCombinations(nrOfPlaces, teamup);
-        if (teamup === true) {
-            nrOfCombinations /= Sport.TEMPDEFAULT;
-        }
-        return nrOfCombinations;
-    }
-
-    protected above(top: number, bottom: number): number {
-        const y = this.faculty(top);
-        const z = (this.faculty(top - bottom) * this.faculty(bottom));
-        const x = y / z;
-        return x;
-    }
-
-    protected faculty(x: number): number {
-        if (x > 1) {
-            return this.faculty(x - 1) * x;
-        }
-        return 1;
     }
 
     protected getCombinationsWithOut(poule: Poule, team: Place[]): PlaceCombination[] {
