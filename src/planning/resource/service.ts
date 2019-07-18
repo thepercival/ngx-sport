@@ -54,18 +54,18 @@ export class PlanningResourceService {
         this.refereePlaces = places;
     }
 
+    // het minimale aantal wedstrijden per sport moet je weten
+    // per plaats bijhouden: het aantal wedstrijden voor elke sport
+    // per plaats bijhouden: als alle sporten klaar
     protected initSportsCounter() {
         const sportPlanningConfigService = new SportPlanningConfigService();
         const sportPlanningConfigs = sportPlanningConfigService.getUsed(this.roundNumber);
 
-        // het minimale aantal wedstrijden per sport moet je weten
-        // per plaats bijhouden: het aantal wedstrijden voor elke sport
-        // per plaats bijhouden: als alle sporten klaar
         this.placesSportsCounter = {};
         this.roundNumber.getPoules().forEach(poule => {
-            const minNrOfGames = sportPlanningConfigService.getMinNrOfGamesMap(poule, sportPlanningConfigs);
+            const minNrOfGamesMap = sportPlanningConfigService.getMinNrOfGamesMap(poule, sportPlanningConfigs);
             poule.getPlaces().forEach((place: Place) => {
-                this.placesSportsCounter[place.getLocationId()] = new SportCounter(minNrOfGames);
+                this.placesSportsCounter[place.getLocationId()] = new SportCounter(minNrOfGamesMap, sportPlanningConfigs);
             });
         });
     }
@@ -121,10 +121,12 @@ export class PlanningResourceService {
             this.assignRefereePlace(batch, game);
         }
         batch.add(game);
+        this.assignSport(game, game.getField().getSport());
     }
 
     protected releaseGame(batch: PlanningResourceBatch, game: Game) {
         batch.remove(game);
+        this.releaseSport(game, game.getField().getSport());
         this.releaseField(game);
         this.releaseReferee(game);
         if (game.getRefereePlace()) {
@@ -172,7 +174,7 @@ export class PlanningResourceService {
     }*/
 
     private isGameAssignable(batch: PlanningResourceBatch, game: Game): boolean {
-        if (!this.isSomeFieldAssignable()) {
+        if (!this.isSomeFieldAssignable(game)) {
             return false;
         }
         if (!this.isSomeRefereeAssignable(batch, game)) {
@@ -191,21 +193,30 @@ export class PlanningResourceService {
      * @param game 
      */
     private areAllPlacesAssignable(batch: PlanningResourceBatch, game: Game): boolean {
-        je weet hier nog niet welk veld wordt toegekend aan de game, er wordt
-        alleen gekeken als het beschikbaar is
-
-        const sport = game.getField().getSport();
         return this.getPlaces(game).every(place => {
-            if (batch.hasPlace(place)) {
-                return false;
-            }
-            const sportCounter = this.placesSportsCounter[place.getLocationId()];
-            return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
+            return !batch.hasPlace(place);
+            // moved to isFieldAssignable
+            // const sportCounter = this.placesSportsCounter[place.getLocationId()];
+            // return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
         });
     }
 
-    private isSomeFieldAssignable(): boolean {
-        return this.fields.length > 0;
+    private assignSport(game: Game, sport: Sport) {
+        this.getPlaces(game).forEach(placeIt => {
+            this.placesSportsCounter[placeIt.getLocationId()].addGame(sport);
+        });
+    }
+
+    private releaseSport(game: Game, sport: Sport) {
+        this.getPlaces(game).forEach(placeIt => {
+            this.placesSportsCounter[placeIt.getLocationId()].removeGame(sport);
+        });
+    }
+
+    private isSomeFieldAssignable(game: Game): boolean {
+        return this.fields.some(fieldIt => {
+            return this.isSportAssignable(game, fieldIt.getSport());
+        });
     }
 
     private isSomeRefereeAssignable(batch: PlanningResourceBatch, game?: Game): boolean {
@@ -236,7 +247,19 @@ export class PlanningResourceService {
     }
 
     private assignField(game: Game) {
-        game.setField(this.fields.shift());
+        const field = this.fields.find(fieldIt => {
+            return this.isSportAssignable(game, fieldIt.getSport());
+        });
+        if (field) {
+            game.setField(this.fields.splice(this.fields.indexOf(field), 1).pop());
+        }
+    }
+
+    private isSportAssignable(game: Game, sport: Sport): boolean {
+        return this.getPlaces(game).every(place => {
+            const sportCounter = this.placesSportsCounter[place.getLocationId()];
+            return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
+        });
     }
 
     private assignReferee(game: Game) {

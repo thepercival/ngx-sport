@@ -1,12 +1,20 @@
 import { Sport } from '../sport';
+import { SportPlanningConfig } from './planningconfig';
 
 export class SportCounter {
     private done = false;
-    private nrOfGamesDone: SportIdToNumberMap;
+    private minNrOfGamesMap: SportIdToNumberMap = {}
+    private nrOfGamesDoneMap: SportIdToNumberMap = {};
 
     constructor(
-        private minNrOfGames: SportIdToNumberMap
+        minNrOfGamesMap: SportIdToNumberMap,
+        sportPlanningConfigs: SportPlanningConfig[]
     ) {
+        sportPlanningConfigs.forEach(sportPlanningConfig => {
+            const sportId = sportPlanningConfig.getSport().getId();
+            this.minNrOfGamesMap[sportId] = minNrOfGamesMap[sportId];
+            this.nrOfGamesDoneMap[sportId] = 0;
+        });
     }
 
     isDone(): boolean {
@@ -14,14 +22,18 @@ export class SportCounter {
     }
 
     isSportDone(sport: Sport): boolean {
-        return this.nrOfGamesDone[sport.getId()] >= this.minNrOfGames[sport.getId()];
+        return this.nrOfGamesDoneMap[sport.getId()] >= this.minNrOfGamesMap[sport.getId()];
     }
 
-    addGame(sportId: number) {
-        if (this.nrOfGamesDone[sportId] === undefined) {
-            this.nrOfGamesDone[sportId] = 0;
+    addGame(sport: Sport) {
+        if (this.nrOfGamesDoneMap[sport.getId()] === undefined) {
+            this.nrOfGamesDoneMap[sport.getId()] = 0;
         }
-        this.nrOfGamesDone[sportId]++;
+        this.nrOfGamesDoneMap[sport.getId()]++;
+    }
+
+    removeGame(sport: Sport) {
+        this.nrOfGamesDoneMap[sport.getId()]--;
     }
 }
 

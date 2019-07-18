@@ -23,23 +23,6 @@ describe('Planning/GameGenerator', () => {
         const firstPoule = structure.getRootRound().getPoule(1);
         const gameRounds = gameGenerator.createPouleGameRounds(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup());
 
-        // const planningCon
-        // getNrOfCombinations(nrOfPlaces: number, teamup: boolean):
-
-        // poule van 5, teamup
-        // 15 wedstrijden => 5 + 4 + 3 + 2 + 1
-        // 12 keer Z_DEFLATED
-
-        // poule van 4, geen teamup
-        // 6 wedstrijden 4 + 3 + 2 + 1
-
-
-        // poule van 5
-        // 5 + 4 + 3 + 2 + 1
-
-        // 6
-        // 21 wedstrijden
-
         let roundNr = 1; let subNr = 1;
         this.assertSameGame(gameRounds, roundNr, subNr, [1], [4]); subNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [2], [3]); roundNr++; subNr = 1;
@@ -67,7 +50,6 @@ describe('Planning/GameGenerator', () => {
         gameGenerator.create(firstRoundNumber);
         const games = firstRoundNumber.getGames();
         expect(games.length).to.equal(24);
-        // firstPoule.getPlaces().forEach(place => this.assertValidGamesParticipations(place, gameRounds, 3));
     });
 
     it('one sport 4 teamup', () => {
@@ -87,6 +69,7 @@ describe('Planning/GameGenerator', () => {
         this.assertSameGame(gameRounds, roundNr, subNr, [1, 4], [2, 3]); roundNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [2, 1], [3, 4]); roundNr++;
         this.assertSameGame(gameRounds, roundNr, subNr, [3, 1], [2, 4]);
+        firstPoule.getPlaces().forEach(place => this.assertValidGamesParticipations(place, gameRounds, 3));
     });
 
     it('one sport 5 teamup', () => {
@@ -131,6 +114,7 @@ describe('Planning/GameGenerator', () => {
         this.assertSameGame(gameRounds, roundNr, subNr, [4, 2], [5, 1]);
 
         expect(gameRounds.length).to.equal(15);
+        firstPoule.getPlaces().forEach(place => this.assertValidGamesParticipations(place, gameRounds, 12));
     });
 
     it('one sport 6 teamup', () => {
@@ -141,56 +125,15 @@ describe('Planning/GameGenerator', () => {
         const structure = structureService.create(competition, 6, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
         firstRoundNumber.getValidPlanningConfig().setTeamup(true);
+        const firstPoule = structure.getRootRound().getPoule(1);
 
         const gameGenerator = new GameGenerator();
-        gameGenerator.create(firstRoundNumber);
+        const gameRounds = gameGenerator.createPouleGameRounds(firstPoule, firstRoundNumber.getValidPlanningConfig().getTeamup());
 
-        expect(firstRoundNumber.getGames().length).to.equal(45);
+        expect(gameRounds.length).to.equal(45);
 
-        // check if every place has the same amount of games
-        // check if one place is not two times in one game
-        // for planning : add selfreferee if is this enables
-
+        firstPoule.getPlaces().forEach(place => this.assertValidGamesParticipations(place, gameRounds, 30));
     });
-
-    // it('two sports(sport2 => minNrOfGames = 3), 4', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 = new Sport('sport2');
-    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-    //     sportConfigService.createDefault(sport2, competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
-
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(3);
-
-    //     const gameGenerator = new GameGenerator();
-    //     gameGenerator.create(firstRoundNumber);
-
-    //     expect(firstRoundNumber.getGames().length).to.equal(12);
-    // });
-
-    // it('two sports(sport2 => minNrOfGames = 2), teamup, 4', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 = new Sport('sport2');
-    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-    //     sportConfigService.createDefault(sport2, competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
-
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(2);
-    //     firstRoundNumber.getPlanningConfig().setTeamup(true);
-
-    //     const gameGenerator = new GameGenerator();
-    //     gameGenerator.create(firstRoundNumber);
-
-    //     expect(firstRoundNumber.getGames().length).to.equal(3);
-    // });
 });
 
 export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number, subNr: number, home: Place[], away: Place[]) {
@@ -202,7 +145,6 @@ export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number,
 /**
  * check if every place has the same amount of games
  * check if one place is not two times in one game
- * for planning : add selfreferee if is this enables
  * 
  * @param place 
  * @param game 

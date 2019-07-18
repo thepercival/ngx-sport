@@ -27,7 +27,7 @@ export class Place {
         }
         this.setNumber(number);
         poule.addPlace(this);
-        this.locationId = poule.getRound().getNumber() +  '.' + poule.getNumber() + '.' + number;
+        this.locationId = poule.getRound().getNumberAsValue() + '.' + poule.getNumber() + '.' + number;
     }
 
     getId(): number {
