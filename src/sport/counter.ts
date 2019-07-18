@@ -1,3 +1,5 @@
+import { Sport } from '../sport';
+
 export class SportCounter {
     private done = false;
     private nrOfGamesDone: SportIdToNumberMap;
@@ -11,12 +13,12 @@ export class SportCounter {
         return this.done;
     }
 
-    isSportDone(sportId: number): boolean {
-        return this.nrOfGamesDone[sportId] >= this.minNrOfGames[sportId];
+    isSportDone(sport: Sport): boolean {
+        return this.nrOfGamesDone[sport.getId()] >= this.minNrOfGames[sport.getId()];
     }
 
     addGame(sportId: number) {
-        if ( this.nrOfGamesDone[sportId] === undefined ) {
+        if (this.nrOfGamesDone[sportId] === undefined) {
             this.nrOfGamesDone[sportId] = 0;
         }
         this.nrOfGamesDone[sportId]++;

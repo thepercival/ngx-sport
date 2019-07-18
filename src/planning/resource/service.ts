@@ -4,11 +4,11 @@ import { Place } from '../../place';
 import { Referee } from '../../referee';
 import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
+import { SportCounter } from '../../sport/counter';
+import { SportPlanningConfigService } from '../../sport/planningconfig/service';
 import { PlanningConfig } from '../config';
 import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
-import { SportPlanningConfigService } from '../../sport/planningconfig/service';
-import { SportCounter } from '../../sport/counter';
 
 export class PlanningResourceService {
     private referees: Referee[];
@@ -22,8 +22,7 @@ export class PlanningResourceService {
     private nrOfPoules: number;
     private maxNrOfGamesPerBatch: number;
 
-    private sportCounter: LocationIdToSportCounterMap;
-    // de wedstrijd is assignbaar als alle plekken, van een wedstrijd, de sport nog niet vaak genoeg gedaan heeft of alle sporten al gedaan
+    private placesSportsCounter: LocationIdToSportCounterMap;
 
     constructor(
         private roundNumber: RoundNumber,
@@ -62,11 +61,11 @@ export class PlanningResourceService {
         // het minimale aantal wedstrijden per sport moet je weten
         // per plaats bijhouden: het aantal wedstrijden voor elke sport
         // per plaats bijhouden: als alle sporten klaar
-        this.sportCounter = {};
-        this.roundNumber.getPoules().forEach( poule => {
-            const minNrOfGames = sportPlanningConfigService.getMinNrOfGames(sportPlanningConfigs, poule);
-            poule.getPlaces().forEach( (place: Place) => {
-                this.sportCounter[place.getLocationId()] = new SportCounter( minNrOfGames );
+        this.placesSportsCounter = {};
+        this.roundNumber.getPoules().forEach(poule => {
+            const minNrOfGames = sportPlanningConfigService.getMinNrOfGamesMap(poule, sportPlanningConfigs);
+            poule.getPlaces().forEach((place: Place) => {
+                this.placesSportsCounter[place.getLocationId()] = new SportCounter(minNrOfGames);
             });
         });
     }
@@ -179,7 +178,30 @@ export class PlanningResourceService {
         if (!this.isSomeRefereeAssignable(batch, game)) {
             return false;
         }
-        return !batch.hasSomePlace(this.getPlaces(game));
+        return this.areAllPlacesAssignable(batch, game);
+
+    }
+
+    /**
+     * de wedstrijd is assignbaar als 
+     * 1 alle plekken, van een wedstrijd, nog niet in de batch
+     * 2 alle plekken, van een wedstrijd, de sport nog niet vaak genoeg gedaan heeft of alle sporten al gedaan
+     * 
+     * @param batch 
+     * @param game 
+     */
+    private areAllPlacesAssignable(batch: PlanningResourceBatch, game: Game): boolean {
+        je weet hier nog niet welk veld wordt toegekend aan de game, er wordt
+        alleen gekeken als het beschikbaar is
+
+        const sport = game.getField().getSport();
+        return this.getPlaces(game).every(place => {
+            if (batch.hasPlace(place)) {
+                return false;
+            }
+            const sportCounter = this.placesSportsCounter[place.getLocationId()];
+            return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
+        });
     }
 
     private isSomeFieldAssignable(): boolean {

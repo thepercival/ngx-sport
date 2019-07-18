@@ -41,7 +41,7 @@ export class GameGenerator {
     }
 
     protected createPoule(poule: Poule, config: PlanningConfig) {
-        const nrOfHeadtohead = this.getNrOfHeadtoheadNeeded(poule);
+        const nrOfHeadtohead = this.sportPlanningConfigService.getNrOfHeadtohead(poule, this.sportPlanningConfigs);
         const gameRounds = this.createPouleGameRounds(poule, config.getTeamup());
         for (let headtohead = 1; headtohead <= nrOfHeadtohead; headtohead++) {
             const reverseHomeAway = (headtohead % 2) === 0;
@@ -54,32 +54,6 @@ export class GameGenerator {
                 });
             });
         }
-    }
-
-    protected getNrOfHeadtoheadNeeded(poule: Poule): number {
-        const nrOfPouleGamesNeeded = this.getNrOfPouleGamesNeeded(poule);
-        const config = poule.getRound().getNumber().getValidPlanningConfig();
-
-        const nrOfCombinations = this.sportPlanningConfigService.getNrOfGamesPerPlace(poule, false);
-        const nrOfHeadtoheadNeeded = Math.ceil(nrOfPouleGamesNeeded / nrOfCombinations);
-        if (config.getNrOfHeadtohead() > nrOfHeadtoheadNeeded) {
-            return config.getNrOfHeadtohead();
-        }
-        return nrOfHeadtoheadNeeded;
-    }
-
-    protected getNrOfPouleGamesNeeded(poule: Poule): number {
-
-        const roundNumber = poule.getRound().getNumber();
-        const config = roundNumber.getValidPlanningConfig();
-        // multiple sports
-        let nrOfPouleGamesNeeded = 0;
-        this.sportPlanningConfigs.forEach((sportPlanningConfig) => {
-            const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
-            const nrOfGamePlaces = sportPlanningConfig.getNrOfGamePlaces(config.getTeamup());
-            nrOfPouleGamesNeeded += Math.ceil((poule.getPlaces().length / nrOfGamePlaces * minNrOfGames));
-        });
-        return nrOfPouleGamesNeeded;
     }
 
     protected setSportPlanningConfigs(roundNumber: RoundNumber) {
@@ -114,11 +88,6 @@ export class GameGenerator {
         });
 
         const games = this.flattenGameRounds(gameRoundsTmp);
-
-        const totalNrOfCombinations = this.sportPlanningConfigService.getNrOfCombinations(nrOfPlaces, true);
-        if (totalNrOfCombinations !== games.length) {
-            console.error('not correct permu');
-        }
 
         const uniqueGames: PlaceCombination[] = this.getUniqueGames(games);
 
