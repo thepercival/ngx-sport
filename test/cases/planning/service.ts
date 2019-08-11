@@ -90,7 +90,7 @@ describe('Planning/Service', () => {
         planningService.create(firstRoundNumber);
 
         const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        //     consoleGames(games);
+        // consoleGames(games);
         expect(games.length).to.equal(30);
 
         expect(games.shift().getResourceBatch()).to.equal(1);
@@ -251,9 +251,9 @@ describe('Planning/Service', () => {
  * check if every place has the same amount of games
  * check if one place is not two times in one game
  * for planning : add selfreferee if is this enables
- * 
- * @param place 
- * @param game 
+ *
+ * @param place
+ * @param game
  */
 export function assertValidGamesParticipations(place: Place, games: Game[], expectedValue?: number) {
     const sportPlanningConfigService = new SportPlanningConfigService();

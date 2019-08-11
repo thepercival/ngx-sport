@@ -72,18 +72,37 @@ export class PlanningResourceService {
 
     assign(games: Game[]): Date {
         this.initSportsCounter();
+        let nrOfGamesPerBatch = this.getMaxNrOfGamesPerBatch();
+        while ( !this.assignHelper(games.slice(), nrOfGamesPerBatch) ) {
+            nrOfGamesPerBatch--;
+            if ( nrOfGamesPerBatch === 0 ) {
+                throw Error('cannot assign resources');
+            }
+        }
+        return this.getEndDateTime();
+    }
+
+    protected assignHelper(games: Game[], nrOfGamesPerBatch: number): boolean {
         let batchNr = 1;
         while (games.length > 0) {
-            let nrOfGamesPerBatch = this.getMaxNrOfGamesPerBatch();
-            let batch = new PlanningResourceBatch();
-            while (!this.assignBatch(games.slice(), nrOfGamesPerBatch, batch)) {
-                nrOfGamesPerBatch--;
-                this.rollbackBatch(batch);
-                batch = new PlanningResourceBatch();
+            const batch = this.assignBatch(games, nrOfGamesPerBatch );
+            if ( batch.getGames().length === 0 ) {
+                return false;
             }
             this.toNextBatch(batch, games, batchNr++);
         }
-        return this.getEndDateTime();
+        return true;
+    }
+
+    assignBatch(games: Game[], nrOfGamesPerBatch: number): PlanningResourceBatch {
+        const batch = new PlanningResourceBatch();
+
+        while (!this.assignBatchHelper(games.slice(), nrOfGamesPerBatch, batch)) {
+            nrOfGamesPerBatch--;
+            this.releaseBatch(batch);
+        }
+
+        return batch;
     }
 
     // maybe use this function as seconds parameter of assignBatch
@@ -91,7 +110,7 @@ export class PlanningResourceService {
     //     return batch.getGames().length === nrOfGames;
     // }
 
-    protected assignBatch(games: Game[], nrOfGames: number, batch: PlanningResourceBatch): boolean {
+    protected assignBatchHelper(games: Game[], nrOfGames: number, batch: PlanningResourceBatch): boolean {
         if (batch.getGames().length === nrOfGames) { // endsuccess
             return true;
         }
@@ -101,14 +120,14 @@ export class PlanningResourceService {
         const game = games.shift();
         if (this.isGameAssignable(batch, game)) {
             this.assignGame(batch, game);
-            if (this.assignBatch(games.slice(), nrOfGames, batch) === true) {
+            if (this.assignBatchHelper(games.slice(), nrOfGames, batch) === true) {
                 return true;
             }
             this.releaseGame(batch, game);
 
-            return this.assignBatch(games, nrOfGames, batch);
+            return this.assignBatchHelper(games, nrOfGames, batch);
         }
-        return this.assignBatch(games, nrOfGames, batch);
+        return this.assignBatchHelper(games, nrOfGames, batch);
     }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game) {
@@ -134,7 +153,7 @@ export class PlanningResourceService {
         }
     }
 
-    protected rollbackBatch(batch: PlanningResourceBatch) {
+    protected releaseBatch(batch: PlanningResourceBatch) {
         while (batch.getGames().length > 0) {
             this.releaseGame(batch, batch.getGames()[0]);
         }
@@ -185,12 +204,12 @@ export class PlanningResourceService {
     }
 
     /**
-     * de wedstrijd is assignbaar als 
+     * de wedstrijd is assignbaar als
      * 1 alle plekken, van een wedstrijd, nog niet in de batch
      * 2 alle plekken, van een wedstrijd, de sport nog niet vaak genoeg gedaan heeft of alle sporten al gedaan
-     * 
-     * @param batch 
-     * @param game 
+     *
+     * @param batch
+     * @param game
      */
     private areAllPlacesAssignable(batch: PlanningResourceBatch, game: Game): boolean {
         return this.getPlaces(game).every(place => {
