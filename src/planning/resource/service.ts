@@ -72,12 +72,8 @@ export class PlanningResourceService {
 
     assign(games: Game[]): Date {
         this.initSportsCounter();
-        let nrOfGamesPerBatch = this.getMaxNrOfGamesPerBatch();
-        while ( !this.assignHelper(games.slice(), nrOfGamesPerBatch) ) {
-            nrOfGamesPerBatch--;
-            if ( nrOfGamesPerBatch === 0 ) {
-                throw Error('cannot assign resources');
-            }
+        if ( !this.assignHelper(games.slice(), this.getMaxNrOfGamesPerBatch()) ) {
+            throw Error('cannot assign resources');
         }
         return this.getEndDateTime();
     }
@@ -87,6 +83,7 @@ export class PlanningResourceService {
         while (games.length > 0) {
             const batch = this.assignBatch(games, nrOfGamesPerBatch );
             if ( batch.getGames().length === 0 ) {
+                // probeer
                 return false;
             }
             this.toNextBatch(batch, games, batchNr++);
@@ -97,9 +94,13 @@ export class PlanningResourceService {
     assignBatch(games: Game[], nrOfGamesPerBatch: number): PlanningResourceBatch {
         const batch = new PlanningResourceBatch();
 
-        while (!this.assignBatchHelper(games.slice(), nrOfGamesPerBatch, batch)) {
+        let copiedGames = games.slice();
+        while (!this.assignBatchHelper(copiedGames, nrOfGamesPerBatch, batch)) {
+            // kijk als copiedGames anders terug komt
+            // zo ja dan kun je daar iets mee doen om vanaf dat moment verder te gaan!
             nrOfGamesPerBatch--;
             this.releaseBatch(batch);
+            copiedGames = games.slice();
         }
 
         return batch;
@@ -110,24 +111,23 @@ export class PlanningResourceService {
     //     return batch.getGames().length === nrOfGames;
     // }
 
-    protected assignBatchHelper(games: Game[], nrOfGames: number, batch: PlanningResourceBatch): boolean {
+    protected assignBatchHelper(games: Game[], nrOfGames: number, batch: PlanningResourceBatch, nrOfGamesTried: number = 0): boolean {
         if (batch.getGames().length === nrOfGames) { // endsuccess
             return true;
         }
-        if (games.length === 0) {
+        if (games.length === nrOfGamesTried ) {
             return false;
         }
         const game = games.shift();
         if (this.isGameAssignable(batch, game)) {
             this.assignGame(batch, game);
-            if (this.assignBatchHelper(games.slice(), nrOfGames, batch) === true) {
+            if (this.assignBatchHelper(games.slice(), nrOfGames, batch, 0) === true) {
                 return true;
             }
             this.releaseGame(batch, game);
-
-            return this.assignBatchHelper(games, nrOfGames, batch);
         }
-        return this.assignBatchHelper(games, nrOfGames, batch);
+        games.push(game);
+        return this.assignBatchHelper(games, nrOfGames, batch, ++nrOfGamesTried);
     }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game) {
