@@ -3,8 +3,8 @@ import { SportPlanningConfig } from './planningconfig';
 
 export class SportCounter {
     private nrOfSports: number;
-    private nrOfSportsDone: number = 0;
-    private minNrOfGamesMap: SportIdToNumberMap = {}
+    private nrOfSportsDone = 0;
+    private minNrOfGamesMap: SportIdToNumberMap = {};
     private nrOfGamesDoneMap: SportIdToNumberMap = {};
 
     constructor(

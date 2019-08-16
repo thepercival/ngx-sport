@@ -86,14 +86,9 @@ export class PlanningResourceService {
         const resources = { fields: this.fields.slice() };
         if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch(1)) === true) {
             return true;
-        };
+        }
         return this.assignBatch(games, nrOfGamesPerBatch - 1);
     }
-
-    // maybe use this function as seconds parameter of assignBatch
-    // protected isBatchCompleted( batch: PlanningResourceBatch, nrOfGames: number ): boolean {
-    //     return batch.getGames().length === nrOfGames;
-    // }
 
     protected assignBatchHelper(games: Game[], resources: Resources, nrOfGames: number, batch: PlanningResourceBatch
         , assignedBatches: PlanningResourceBatch[] = [], nrOfGamesTried: number = 0, iteration: number = 0): boolean {
@@ -116,7 +111,8 @@ export class PlanningResourceService {
             return false;
         }
         const game = games.shift();
-        console.log('trying   game .. ' + this.consoleGame(game) + ' => ' + (this.isGameAssignable(batch, game, resources) ? 'success' : 'fail'));
+        console.log('trying   game .. ' + this.consoleGame(game) + ' => ' +
+         (this.isGameAssignable(batch, game, resources) ? 'success' : 'fail'));
         if (this.isGameAssignable(batch, game, resources)) {
             this.assignGame(batch, game, resources);
             console.log('assigned game .. ' + this.consoleGame(game));
@@ -159,7 +155,8 @@ export class PlanningResourceService {
         }
     }
 
-    protected toNextBatch(batch: PlanningResourceBatch, assignedBatches: PlanningResourceBatch[], resources: Resources): PlanningResourceBatch {
+    protected toNextBatch(batch: PlanningResourceBatch, assignedBatches: PlanningResourceBatch[]
+        , resources: Resources): PlanningResourceBatch {
         batch.getGames().forEach(game => {
             game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
             game.setResourceBatch(batch.getNumber());
@@ -397,7 +394,8 @@ export class PlanningResourceService {
             + ' , ref ' + (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '')
             + ', batch ' + (game.getResourceBatch() ? game.getResourceBatch() : '?')
             + ', field ' + (game.getField() ? game.getField().getNumber() : '?')
-            + ', sport ' + (game.getField() ? game.getField().getSport().getName() + (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
+            + ', sport ' + (game.getField() ? game.getField().getSport().getName() +
+             (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
             ;
     }
 }
