@@ -39,8 +39,6 @@ export class SportPlanningConfigService {
         });
     }
 
-
-
     getMinNrOfGamesMap(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): SportIdToNumberMap {
         const minNrOfGames = {};
         if (sportPlanningConfigs.length === 1) { // bereken voor 1 sport

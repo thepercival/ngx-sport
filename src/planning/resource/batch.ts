@@ -8,7 +8,11 @@ export class PlanningResourceBatch {
     private poules: Poule[] = [];
     private places: Place[] = [];
 
-    constructor() {
+    constructor(private number: number) {
+    }
+
+    getNumber(): number {
+        return this.number;
     }
 
     add(game: Game) {

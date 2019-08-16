@@ -2,7 +2,8 @@ import { Sport } from '../sport';
 import { SportPlanningConfig } from './planningconfig';
 
 export class SportCounter {
-    private done = false;
+    private nrOfSports: number;
+    private nrOfSportsDone: number = 0;
     private minNrOfGamesMap: SportIdToNumberMap = {}
     private nrOfGamesDoneMap: SportIdToNumberMap = {};
 
@@ -15,10 +16,15 @@ export class SportCounter {
             this.minNrOfGamesMap[sportId] = minNrOfGamesMap[sportId];
             this.nrOfGamesDoneMap[sportId] = 0;
         });
+        this.nrOfSports = sportPlanningConfigs.length;
     }
 
     isDone(): boolean {
-        return this.done;
+        if (this.nrOfSportsDone > this.nrOfSports) {
+            throw Error('nrsportsdone cannot be greater than nrofsports,' +
+                'add PlanningResourceService.placesSportsCounter to Resources');
+        }
+        return this.nrOfSportsDone === this.nrOfSports;
     }
 
     isSportDone(sport: Sport): boolean {
@@ -30,9 +36,15 @@ export class SportCounter {
             this.nrOfGamesDoneMap[sport.getId()] = 0;
         }
         this.nrOfGamesDoneMap[sport.getId()]++;
+        if (this.nrOfGamesDoneMap[sport.getId()] === this.minNrOfGamesMap[sport.getId()]) {
+            this.nrOfSportsDone++;
+        }
     }
 
     removeGame(sport: Sport) {
+        if (this.nrOfGamesDoneMap[sport.getId()] === this.minNrOfGamesMap[sport.getId()]) {
+            this.nrOfSportsDone--;
+        }
         this.nrOfGamesDoneMap[sport.getId()]--;
     }
 }

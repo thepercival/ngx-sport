@@ -1,5 +1,6 @@
 import { Field } from '../../field';
 import { Game } from '../../game';
+import { NameService } from '../../nameservice';
 import { Place } from '../../place';
 import { Referee } from '../../referee';
 import { RoundNumber } from '../../round/number';
@@ -72,38 +73,21 @@ export class PlanningResourceService {
 
     assign(games: Game[]): Date {
         this.initSportsCounter();
-        if ( !this.assignHelper(games.slice(), this.getMaxNrOfGamesPerBatch()) ) {
+        if (!this.assignBatch(games.slice(), this.getMaxNrOfGamesPerBatch())) {
             throw Error('cannot assign resources');
         }
         return this.getEndDateTime();
     }
 
-    protected assignHelper(games: Game[], nrOfGamesPerBatch: number): boolean {
-        let batchNr = 1;
-        while (games.length > 0) {
-            const batch = this.assignBatch(games, nrOfGamesPerBatch );
-            if ( batch.getGames().length === 0 ) {
-                // probeer
-                return false;
-            }
-            this.toNextBatch(batch, games, batchNr++);
+    assignBatch(games: Game[], nrOfGamesPerBatch: number): boolean {
+        if (nrOfGamesPerBatch === 0) {
+            return false;
         }
-        return true;
-    }
-
-    assignBatch(games: Game[], nrOfGamesPerBatch: number): PlanningResourceBatch {
-        const batch = new PlanningResourceBatch();
-
-        let copiedGames = games.slice();
-        while (!this.assignBatchHelper(copiedGames, nrOfGamesPerBatch, batch)) {
-            // kijk als copiedGames anders terug komt
-            // zo ja dan kun je daar iets mee doen om vanaf dat moment verder te gaan!
-            nrOfGamesPerBatch--;
-            this.releaseBatch(batch);
-            copiedGames = games.slice();
-        }
-
-        return batch;
+        const resources = { fields: this.fields.slice() };
+        if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch(1)) === true) {
+            return true;
+        };
+        return this.assignBatch(games, nrOfGamesPerBatch - 1);
     }
 
     // maybe use this function as seconds parameter of assignBatch
@@ -111,27 +95,43 @@ export class PlanningResourceService {
     //     return batch.getGames().length === nrOfGames;
     // }
 
-    protected assignBatchHelper(games: Game[], nrOfGames: number, batch: PlanningResourceBatch, nrOfGamesTried: number = 0): boolean {
-        if (batch.getGames().length === nrOfGames) { // endsuccess
-            return true;
+    protected assignBatchHelper(games: Game[], resources: Resources, nrOfGames: number, batch: PlanningResourceBatch
+        , assignedBatches: PlanningResourceBatch[] = [], nrOfGamesTried: number = 0, iteration: number = 0): boolean {
+
+        if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
+            const nextBatch = this.toNextBatch(batch, assignedBatches, resources);
+            // if (batch.getNumber() < 4) {
+            console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
+            assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
+            console.log('-------------------');
+            // }
+            if (games.length === 0) { // endsuccess
+                return true;
+            }
+            return this.assignBatchHelper(games, resources, nrOfGames, nextBatch, assignedBatches, 0, iteration++);
         }
-        if (games.length === nrOfGamesTried ) {
+        if (games.length === nrOfGamesTried) {
+            // this.releaseBatch(batch);
+            batch = new PlanningResourceBatch(batch.getNumber());
             return false;
         }
         const game = games.shift();
-        if (this.isGameAssignable(batch, game)) {
-            this.assignGame(batch, game);
-            if (this.assignBatchHelper(games.slice(), nrOfGames, batch, 0) === true) {
+        console.log('trying   game .. ' + this.consoleGame(game) + ' => ' + (this.isGameAssignable(batch, game, resources) ? 'success' : 'fail'));
+        if (this.isGameAssignable(batch, game, resources)) {
+            this.assignGame(batch, game, resources);
+            console.log('assigned game .. ' + this.consoleGame(game));
+            const resourcesTmp = { fields: resources.fields.slice() };
+            if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch, assignedBatches.slice(), 0, iteration++) === true) {
                 return true;
             }
-            this.releaseGame(batch, game);
+            this.releaseGame(batch, game, resources);
         }
         games.push(game);
-        return this.assignBatchHelper(games, nrOfGames, batch, ++nrOfGamesTried);
+        return this.assignBatchHelper(games, resources, nrOfGames, batch, assignedBatches, ++nrOfGamesTried, iteration++);
     }
 
-    protected assignGame(batch: PlanningResourceBatch, game: Game) {
-        this.assignField(game);
+    protected assignGame(batch: PlanningResourceBatch, game: Game, resources: Resources) {
+        this.assignField(game, resources);
         if (!this.planningConfig.getSelfReferee()) {
             if (this.referees.length > 0) {
                 this.assignReferee(game);
@@ -143,38 +143,37 @@ export class PlanningResourceService {
         this.assignSport(game, game.getField().getSport());
     }
 
-    protected releaseGame(batch: PlanningResourceBatch, game: Game) {
+    protected releaseGame(batch: PlanningResourceBatch, game: Game, resources: Resources) {
         batch.remove(game);
         this.releaseSport(game, game.getField().getSport());
-        this.releaseField(game);
+        this.releaseField(game, resources);
         this.releaseReferee(game);
         if (game.getRefereePlace()) {
             this.releaseRefereePlaces(game);
         }
     }
 
-    protected releaseBatch(batch: PlanningResourceBatch) {
+    protected releaseBatch(batch: PlanningResourceBatch, resources: Resources) {
         while (batch.getGames().length > 0) {
-            this.releaseGame(batch, batch.getGames()[0]);
+            this.releaseGame(batch, batch.getGames()[0], resources);
         }
     }
 
-    protected toNextBatch(batch: PlanningResourceBatch, games: Game[], batchNr: number) {
-        const batchGames = batch.getGames();
-        while (batchGames.length > 0) {
-            const game = batchGames.shift();
+    protected toNextBatch(batch: PlanningResourceBatch, assignedBatches: PlanningResourceBatch[], resources: Resources): PlanningResourceBatch {
+        batch.getGames().forEach(game => {
             game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
-            game.setResourceBatch(batchNr);
-            this.fields.push(game.getField());
+            game.setResourceBatch(batch.getNumber());
+            resources.fields.push(game.getField());
             if (game.getRefereePlace()) {
                 this.refereePlaces.push(game.getRefereePlace());
             }
             if (game.getReferee()) {
                 this.referees.push(game.getReferee());
             }
-            games.splice(games.indexOf(game), 1);
-        }
+        });
         this.setNextGameStartDateTime();
+        assignedBatches.push(batch);
+        return new PlanningResourceBatch(batch.getNumber() + 1);
     }
 
     /*protected shouldGoToNextBatch(batch: PlanningResourceBatch): boolean {
@@ -192,8 +191,8 @@ export class PlanningResourceService {
         return batch.getNrOfPlaces() + minNrNeeded > this.nrOfPlaces;
     }*/
 
-    private isGameAssignable(batch: PlanningResourceBatch, game: Game): boolean {
-        if (!this.isSomeFieldAssignable(game)) {
+    private isGameAssignable(batch: PlanningResourceBatch, game: Game, resources: Resources): boolean {
+        if (!this.isSomeFieldAssignable(game, resources)) {
             return false;
         }
         if (!this.isSomeRefereeAssignable(batch, game)) {
@@ -232,8 +231,8 @@ export class PlanningResourceService {
         });
     }
 
-    private isSomeFieldAssignable(game: Game): boolean {
-        return this.fields.some(fieldIt => {
+    private isSomeFieldAssignable(game: Game, resources: Resources): boolean {
+        return resources.fields.some(fieldIt => {
             return this.isSportAssignable(game, fieldIt.getSport());
         });
     }
@@ -260,17 +259,17 @@ export class PlanningResourceService {
         });
     }
 
-    private releaseField(game: Game) {
-        this.fields.unshift(game.getField());
+    private releaseField(game: Game, resources: Resources) {
+        resources.fields.unshift(game.getField());
         game.setField(undefined);
     }
 
-    private assignField(game: Game) {
-        const field = this.fields.find(fieldIt => {
+    private assignField(game: Game, resources: Resources) {
+        const field = resources.fields.find(fieldIt => {
             return this.isSportAssignable(game, fieldIt.getSport());
         });
         if (field) {
-            game.setField(this.fields.splice(this.fields.indexOf(field), 1).pop());
+            game.setField(resources.fields.splice(resources.fields.indexOf(field), 1).pop());
         }
     }
 
@@ -379,8 +378,34 @@ export class PlanningResourceService {
         }
         return dateTime;
     }
+
+    /**
+     * @TODO REMOVE
+     */
+    private consoleGames(games: Game[]) {
+        games.forEach(game => console.log(this.consoleGame(game)));
+    }
+
+    /**
+     * @TODO REMOVE
+     */
+    private consoleGame(game: Game): string {
+        const nameService = new NameService();
+        return 'poule ' + game.getPoule().getNumber()
+            + ', ' + nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, false)
+            + ' vs ' + nameService.getPlacesFromName(game.getPlaces(Game.AWAY), false, false)
+            + ' , ref ' + (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '')
+            + ', batch ' + (game.getResourceBatch() ? game.getResourceBatch() : '?')
+            + ', field ' + (game.getField() ? game.getField().getNumber() : '?')
+            + ', sport ' + (game.getField() ? game.getField().getSport().getName() + (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
+            ;
+    }
 }
 
 interface LocationIdToSportCounterMap {
     [locationId: string]: SportCounter;
+}
+
+interface Resources {
+    fields: Field[];
 }
