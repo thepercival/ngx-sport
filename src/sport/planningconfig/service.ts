@@ -45,8 +45,15 @@ export class SportPlanningConfigService {
             const config = poule.getRound().getNumber().getValidPlanningConfig();
             minNrOfGames[sportPlanningConfigs[0].getSport().getId()] = this.getNrOfGamesPerPlace(poule, config.getNrOfHeadtohead());
         } else {
+            let nrOfGames = this.getNrOfGamesPerPoule(poule);
+            nrOfGames *= poule.getRound().getNumber().getValidPlanningConfig().getNrOfHeadtohead();
+            const nrOfGamesByConfigs = this.getMinNrOfPouleGames(poule, sportPlanningConfigs);
+            const factor = nrOfGames > nrOfGamesByConfigs ? Math.floor( nrOfGames / nrOfGamesByConfigs ) : 1;
+            // console.log('nrOfGames : ' + nrOfGames);
+            // console.log('nrOfGamesByConfigs : ' + nrOfGamesByConfigs);
+            // console.log('factor : ' + factor);
             sportPlanningConfigs.forEach(sportPlanningConfig => {
-                minNrOfGames[sportPlanningConfig.getSport().getId()] = sportPlanningConfig.getMinNrOfGames();
+                minNrOfGames[sportPlanningConfig.getSport().getId()] = sportPlanningConfig.getMinNrOfGames() * factor;
             });
         }
         return minNrOfGames;
@@ -69,13 +76,8 @@ export class SportPlanningConfigService {
 
     getNrOfHeadtohead(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): number {
         const minNrOfPouleGames = this.getMinNrOfPouleGames(poule, sportPlanningConfigs);
-        const config = poule.getRound().getNumber().getValidPlanningConfig();
-
         const nrOfPouleGames = this.getNrOfGamesPerPoule(poule);
         const nrOfHeadtoheadNeeded = Math.ceil(minNrOfPouleGames / nrOfPouleGames);
-        if (config.getNrOfHeadtohead() > nrOfHeadtoheadNeeded) {
-            return config.getNrOfHeadtohead();
-        }
         return nrOfHeadtoheadNeeded;
     }
 

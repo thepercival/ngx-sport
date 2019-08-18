@@ -25,13 +25,16 @@ export class RoundNumberMapper {
         if ( json.planningConfig !== undefined ) {
             this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
         }
-        json.sportScoreConfigs.forEach( jsonSportScoreConfig => {
-            this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, TheCache.sports[jsonSportScoreConfig.sportId], roundNumber);
-        });
-        json.sportPlanningConfigs.forEach( jsonSportPlanningConfig => {
-            this.sportPlanningConfigMapper.toObject(jsonSportPlanningConfig, TheCache.sports[jsonSportPlanningConfig.sportId], roundNumber);
-        });
-
+        if( json.sportScoreConfigs ) {
+            json.sportScoreConfigs.forEach( jsonSportScoreConfig => {
+                this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, TheCache.sports[jsonSportScoreConfig.sportId], roundNumber);
+            });
+        }
+        if( json.sportPlanningConfigs ) {
+            json.sportPlanningConfigs.forEach( jsonSportPlanningConfig => {
+                this.sportPlanningConfigMapper.toObject(jsonSportPlanningConfig, TheCache.sports[jsonSportPlanningConfig.sportId], roundNumber);
+            });
+        }
         if (json.next !== undefined) {
             this.toObject(json.next, competition, roundNumber);
         }

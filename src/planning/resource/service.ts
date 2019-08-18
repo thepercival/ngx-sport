@@ -96,9 +96,9 @@ export class PlanningResourceService {
         if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
             const nextBatch = this.toNextBatch(batch, assignedBatches, resources);
             // if (batch.getNumber() < 4) {
-            console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
-            assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
-            console.log('-------------------');
+            // console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
+            // assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
+            // console.log('-------------------');
             // }
             if (games.length === 0) { // endsuccess
                 return true;
@@ -111,11 +111,11 @@ export class PlanningResourceService {
             return false;
         }
         const game = games.shift();
-        console.log('trying   game .. ' + this.consoleGame(game) + ' => ' +
-         (this.isGameAssignable(batch, game, resources) ? 'success' : 'fail'));
+        // console.log('trying   game .. ' + this.consoleGame(game) + ' => ' +
+        // (this.isGameAssignable(batch, game, resources) ? 'success' : 'fail'));
         if (this.isGameAssignable(batch, game, resources)) {
             this.assignGame(batch, game, resources);
-            console.log('assigned game .. ' + this.consoleGame(game));
+            // console.log('assigned game .. ' + this.consoleGame(game));
             const resourcesTmp = { fields: resources.fields.slice() };
             if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch, assignedBatches.slice(), 0, iteration++) === true) {
                 return true;

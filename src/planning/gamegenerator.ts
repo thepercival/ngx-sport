@@ -36,12 +36,15 @@ export class GameGenerator {
     create(roundNumber: RoundNumber) {
         this.setSportPlanningConfigs(roundNumber);
         roundNumber.getPoules().forEach(poule => {
-            this.createPoule(poule, roundNumber.getPlanningConfig());
+            this.createPoule(poule, roundNumber.getValidPlanningConfig());
         });
     }
 
     protected createPoule(poule: Poule, config: PlanningConfig) {
-        const nrOfHeadtohead = this.sportPlanningConfigService.getNrOfHeadtohead(poule, this.sportPlanningConfigs);
+        let nrOfHeadtohead = this.sportPlanningConfigService.getNrOfHeadtohead(poule, this.sportPlanningConfigs);
+        if (config.getNrOfHeadtohead() > nrOfHeadtohead) {
+            nrOfHeadtohead = config.getNrOfHeadtohead();
+        }
         const gameRounds = this.createPouleGameRounds(poule, config.getTeamup());
         for (let headtohead = 1; headtohead <= nrOfHeadtohead; headtohead++) {
             const reverseHomeAway = (headtohead % 2) === 0;

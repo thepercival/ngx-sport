@@ -189,7 +189,7 @@ describe('Sport/PlanningConfig/Service', () => {
 
         firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(3);
         const nrOfHeadtohead3 = service.getNrOfHeadtohead(firstPoule, sportPlanningConfigs);
-        expect(nrOfHeadtohead3).to.equal(3);
+        expect(nrOfHeadtohead3).to.equal(2);
 
     });
 

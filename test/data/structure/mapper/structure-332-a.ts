@@ -32,7 +32,7 @@ export const jsonStructure332a: JsonStructure = {
         'sportPlanningConfigs': [
             {
                 'sportId': 1,
-                'nrOfGames': 1
+                'minNrOfGames': 1
             }
         ]
     },

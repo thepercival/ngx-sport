@@ -118,11 +118,6 @@ describe('Planning/Service', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
 
-        // elke sport moet minimaal 1 keer gedaan worden
-        // maar iedereen moet minimaal 2 keer tegen elkaar
-        // kan iedereen elke sport 2x doen wanneer iedereen 2x tegen elkaar speelt???
-        // dit moet eigenlijk berekent worden
-
         const planningService = new PlanningService(competition);
         planningService.create(firstRoundNumber);
 
