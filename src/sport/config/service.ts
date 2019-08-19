@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 import { Competition } from '../../competition';
 import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
@@ -7,6 +9,7 @@ import { SportCustom } from '../custom';
 import { SportPlanningConfigService } from '../planningconfig/service';
 import { SportScoreConfigService } from '../scoreconfig/service';
 
+@Injectable()
 export class SportConfigService {
 
     constructor(

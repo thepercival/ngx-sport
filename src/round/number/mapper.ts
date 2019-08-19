@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { TheCache } from '../../cache';
 import { Competition } from '../../competition';
-import { RoundNumber } from '../number';
 import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
 import { JsonSportPlanningConfig, SportPlanningConfigMapper } from '../../sport/planningconfig/mapper';
 import { JsonSportScoreConfig, SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
-import { TheCache } from '../../cache';
+import { RoundNumber } from '../number';
 
 @Injectable()
 export class RoundNumberMapper {
@@ -13,7 +13,7 @@ export class RoundNumberMapper {
         private planningConfigMapper: PlanningConfigMapper,
         private sportPlanningConfigMapper: SportPlanningConfigMapper,
         private sportScoreConfigMapper: SportScoreConfigMapper
-        ) { }
+    ) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
@@ -22,16 +22,16 @@ export class RoundNumberMapper {
         // roundNumber.getFields().forEach( field => {
         //     field.getSport();
         //  });
-        if ( json.planningConfig !== undefined ) {
+        if (json.planningConfig !== undefined) {
             this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
         }
-        if( json.sportScoreConfigs ) {
-            json.sportScoreConfigs.forEach( jsonSportScoreConfig => {
+        if (json.sportScoreConfigs) {
+            json.sportScoreConfigs.forEach(jsonSportScoreConfig => {
                 this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, TheCache.sports[jsonSportScoreConfig.sportId], roundNumber);
             });
         }
-        if( json.sportPlanningConfigs ) {
-            json.sportPlanningConfigs.forEach( jsonSportPlanningConfig => {
+        if (json.sportPlanningConfigs) {
+            json.sportPlanningConfigs.forEach(jsonSportPlanningConfig => {
                 this.sportPlanningConfigMapper.toObject(jsonSportPlanningConfig, TheCache.sports[jsonSportPlanningConfig.sportId], roundNumber);
             });
         }
@@ -45,9 +45,9 @@ export class RoundNumberMapper {
         return {
             id: roundNumber.getId(),
             number: roundNumber.getNumber(),
-            planningConfig: this.planningConfigMapper.toJson(roundNumber.getPlanningConfig()),
-            sportPlanningConfigs: roundNumber.getSportPlanningConfigs().map( config => this.sportPlanningConfigMapper.toJson(config)),
-            sportScoreConfigs: roundNumber.getSportScoreConfigs().map( config => this.sportScoreConfigMapper.toJson(config)),
+            planningConfig: roundNumber.getPlanningConfig() ? this.planningConfigMapper.toJson(roundNumber.getPlanningConfig()) : undefined,
+            sportPlanningConfigs: roundNumber.getSportPlanningConfigs().map(config => this.sportPlanningConfigMapper.toJson(config)),
+            sportScoreConfigs: roundNumber.getSportScoreConfigs().map(config => this.sportScoreConfigMapper.toJson(config)),
             next: roundNumber.hasNext() ? this.toJson(roundNumber.getNext()) : undefined
         };
     }

@@ -42,13 +42,9 @@ export class PlanningService {
         if (startDateTime === undefined && this.canCalculateStartDateTime(roundNumber)) {
             startDateTime = this.calculateStartDateTime(roundNumber);
         }
-        try {
-            const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
-            if (roundNumber.getNext() !== undefined) {
-                this.reschedule(roundNumber.getNext(), startNextRound);
-            }
-        } catch (e) {
-            console.error(e.message);
+        const startNextRound = this.rescheduleHelper(roundNumber, startDateTime);
+        if (roundNumber.getNext() !== undefined) {
+            this.reschedule(roundNumber.getNext(), startNextRound);
         }
     }
 
@@ -163,11 +159,11 @@ export class PlanningService {
             }
             const poule1 = g1.getPoule();
             const poule2 = g2.getPoule();
-            if (poule1.getNumber() !== poule2.getNumber()) {
-                const resultPoule = poule1.getNumber() - poule2.getNumber();
-                return roundNumber.isFirst() ? resultPoule : -resultPoule;
+            if (poule1.getRound() === poule2.getRound()) {
+                const resultPoule = poule2.getNumber() - poule1.getNumber();
+                return !roundNumber.isFirst() ? resultPoule : -resultPoule;
             }
-            const resultRound = poule1.getRound().getStructureNumber() - g2.getRound().getStructureNumber();
+            const resultRound = poule2.getRound().getStructureNumber() - poule1.getRound().getStructureNumber();
             return !roundNumber.isFirst() ? resultRound : -resultRound;
         };
 
@@ -176,7 +172,7 @@ export class PlanningService {
                 return orderByNumber(g1, g2);
             });
         } else {
-            const enableTime = roundNumber.getPlanningConfig().getEnableTime();
+            const enableTime = roundNumber.getValidPlanningConfig().getEnableTime();
             games.sort((g1, g2) => {
                 if (enableTime) {
                     if (g1.getStartDateTime().getTime() !== g2.getStartDateTime().getTime()) {

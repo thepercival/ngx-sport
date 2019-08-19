@@ -8,6 +8,7 @@ import {
     NameService,
     Place,
     PlanningService,
+    QualifyGroup,
     Sport,
     SportConfigService,
     SportPlanningConfigService,
@@ -155,73 +156,68 @@ describe('Planning/Service', () => {
 
     });
 
-    // it('self referee 2 fields 2 sports, 66', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 = addSport(competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    /**
+     * time disabled
+     */
+    it('time disabled 4', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 12, 2);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     firstRoundNumber.getPlanningConfig().setSelfReferee(true);
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 4, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        firstRoundNumber.getPlanningConfig().setEnableTime(false);
 
-    //     const planningService = new PlanningService(competition);
-    //     planningService.create(firstRoundNumber);
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+        planningService.reschedule(firstRoundNumber);
 
-    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-    //     consoleGames(games);
-    //     expect(games.length).to.equal(30);
+        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
 
-    //     // expect(games.shift().getResourceBatch()).to.equal(1);
-    //     // expect(games.shift().getResourceBatch()).to.equal(1);
-    //     // expect(games.shift().getResourceBatch()).to.equal(1);
-    //     // expect(games.shift().getResourceBatch()).to.equal(1);
-    //     // expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+        expect(games.length).to.equal(6);
 
-    //     // firstRoundNumber.getPlaces().forEach(place => {
-    //     //     this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 15);
-    //     // });
+        assertValidResourcesPerBatch(firstRoundNumber.getGames());
+        firstRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 3);
+        });
+    });
 
-    // });
+    /**
+     * time disabled
+     */
+    it('second roudn losers before winners, 44', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 8, 2);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        const rootRound = structure.getRootRound();
+
+        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 2);
+        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 2);
 
 
-    // it('two sports(sport2 => minNrOfGames = 3), 4', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 =addSport(competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+        planningService.reschedule(firstRoundNumber);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(3);
+        const secondRoundNumber = firstRoundNumber.getNext();
+        planningService.reschedule(secondRoundNumber);
+        const games = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
 
-    //     const gameGenerator = new GameGenerator();
-    //     gameGenerator.create(firstRoundNumber);
+        expect(games.length).to.equal(2);
+        consoleGames(games);
+        expect(games[0].getRound().getParentQualifyGroup().getWinnersOrLosers()).to.equal(QualifyGroup.LOSERS);
 
-    //     expect(firstRoundNumber.getGames().length).to.equal(12);
-    // });
+        assertValidResourcesPerBatch(secondRoundNumber.getGames());
+        secondRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, secondRoundNumber.getGames(), 1);
+        });
+    });
 
-    // it('two sports(sport2 => minNrOfGames = 2), teamup, 4', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 = addSport(competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(2);
-    //     firstRoundNumber.getPlanningConfig().setTeamup(true);
-
-    //     const gameGenerator = new GameGenerator();
-    //     gameGenerator.create(firstRoundNumber);
-
-    //     expect(firstRoundNumber.getGames().length).to.equal(3);
-    // });
-
-    // ga hier 2 sporten test en nog meer om de planningservice coverage 100 % te krijgen!!
 
     // it('recursive', () => {
     //     const numbers = [1, 2, 3, 4, 5, 6];
@@ -309,22 +305,22 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
 export function assertValidResourcesPerBatch(games: Game[]) {
     const batchResources = {};
     games.forEach(game => {
-        if( batchResources[game.getResourceBatch()] === undefined ) {
+        if (batchResources[game.getResourceBatch()] === undefined) {
             batchResources[game.getResourceBatch()] = { fields: [], referees: [], places: [] };
         }
         const batchResource = batchResources[game.getResourceBatch()];
         const places = game.getPlaces().map(gamePlace => gamePlace.getPlace());
-        if( game.getRefereePlace() !== undefined ) {
+        if (game.getRefereePlace() !== undefined) {
             places.push(game.getRefereePlace());
         }
         places.forEach(placeIt => {
-            expect(batchResource.places.find( place => place === placeIt )).to.equal(undefined);
+            expect(batchResource.places.find(place => place === placeIt)).to.equal(undefined);
             batchResource.places.push(placeIt);
         });
-        expect(batchResource.fields.find( field => field === game.getField() )).to.equal(undefined);
+        expect(batchResource.fields.find(field => field === game.getField())).to.equal(undefined);
         batchResource.fields.push(game.getField());
-        if( game.getReferee()) {
-            expect(batchResource.referees.find( referee => referee === game.getReferee() )).to.equal(undefined);
+        if (game.getReferee()) {
+            expect(batchResource.referees.find(referee => referee === game.getReferee())).to.equal(undefined);
             batchResource.fields.push(game.getReferee());
         }
     });
@@ -341,7 +337,7 @@ export function consoleGames(games: Game[]) {
             + ', batch ' + game.getResourceBatch()
             + ', field ' + game.getField().getNumber()
             + ', sport ' + game.getField().getSport().getName() + (game.getField().getSport().getCustomId() ?
-             '(' + game.getField().getSport().getCustomId() + ')' : '')
+                '(' + game.getField().getSport().getCustomId() + ')' : '')
         );
     });
 }
