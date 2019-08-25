@@ -18,7 +18,7 @@ export class SportConfigService {
     ) {
     }
 
-    createDefault(sport: Sport, competition: Competition, firstRoundNumber?: RoundNumber): SportConfig {
+    createDefault(sport: Sport, competition: Competition, structure?: Structure): SportConfig {
         const config = new SportConfig(sport, competition);
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
@@ -26,8 +26,8 @@ export class SportConfigService {
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
         config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
         config.setNrOfGamePlaces(SportConfig.DEFAULT_NROFGAMEPLACES);
-        if (firstRoundNumber) {
-            this.addToRoundNumber(config, firstRoundNumber);
+        if (structure) {
+            this.addToStructure(config, structure);
         }
         return config;
     }
@@ -59,9 +59,17 @@ export class SportConfigService {
         return newConfig;
     }
 
-    addToRoundNumber(config: SportConfig, firstRoundNumber: RoundNumber) {
-        this.scoreConfigService.createDefault(config.getSport(), firstRoundNumber);
-        this.planningConfigService.createDefault(config.getSport(), firstRoundNumber);
+    addToStructure(config: SportConfig, structure: Structure) {
+        let roundNumber: RoundNumber = structure.getFirstRoundNumber();
+        while ( roundNumber !== undefined ) {
+            if ( roundNumber.hasPrevious() === false || roundNumber.getSportScoreConfigs().length > 0 ) {
+                this.scoreConfigService.createDefault(config.getSport(), roundNumber);
+            }
+            if ( roundNumber.hasPrevious() === false || roundNumber.getSportPlanningConfigs().length > 0 ) {
+                this.planningConfigService.createDefault(config.getSport(), roundNumber);
+            }
+            roundNumber = roundNumber.getNext();
+        }
     }
 
     remove(config: SportConfig, structure: Structure) {

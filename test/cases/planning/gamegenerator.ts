@@ -145,9 +145,9 @@ export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number,
 /**
  * check if every place has the same amount of games
  * check if one place is not two times in one game
- * 
- * @param place 
- * @param game 
+ *
+ * @param place
+ * @param game
  */
 export function assertValidGamesParticipations(place: Place, gameRounds: PlanningGameRound[], expectedValue?: number) {
     const sportPlanningConfigService = new SportPlanningConfigService();

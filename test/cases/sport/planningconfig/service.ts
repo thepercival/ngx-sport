@@ -38,7 +38,7 @@ describe('Sport/PlanningConfig/Service', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         const service = new SportPlanningConfigService();
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
         const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 
@@ -59,7 +59,7 @@ describe('Sport/PlanningConfig/Service', () => {
 
         expect(service.getUsed(firstRoundNumber).length).to.equal(1);
 
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
         const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 
@@ -105,7 +105,7 @@ describe('Sport/PlanningConfig/Service', () => {
 
         const service = new SportPlanningConfigService();
 
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
         const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 
@@ -131,7 +131,7 @@ describe('Sport/PlanningConfig/Service', () => {
 
         const service = new SportPlanningConfigService();
 
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
         const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 
@@ -169,11 +169,11 @@ describe('Sport/PlanningConfig/Service', () => {
 
         const service = new SportPlanningConfigService();
 
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sportConfigService = new SportConfigService(
             new SportScoreConfigService(), new SportPlanningConfigService()
         );
-        sportConfigService.createDefault(sport2, competition, firstRoundNumber);
+        sportConfigService.createDefault(sport2, competition, structure);
         const field2 = new Field(competition, 2); field2.setSport(sport2);
         firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(2);
         const firstPoule = structure.getRootRound().getPoule(1);
@@ -204,7 +204,7 @@ describe('Sport/PlanningConfig/Service', () => {
 
         const service = new SportPlanningConfigService();
 
-        const sport2 = new Sport("sport 2");
+        const sport2 = new Sport('sport 2');
         const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
         const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 

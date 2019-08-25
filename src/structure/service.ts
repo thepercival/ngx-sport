@@ -32,14 +32,14 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        competition.getSportConfigs().forEach(sportConfig => {
-            this.sportConfigService.addToRoundNumber(sportConfig, firstRoundNumber);
-        });
         this.planningConfigService.createDefault(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
         const structure = new Structure(firstRoundNumber, rootRound);
+        competition.getSportConfigs().forEach(sportConfig => {
+            this.sportConfigService.addToStructure(sportConfig, structure);
+        });
         structure.setStructureNumbers();
         return structure;
     }
