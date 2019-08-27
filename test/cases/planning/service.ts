@@ -156,6 +156,30 @@ describe('Planning/Service', () => {
 
     });
 
+    it('2 fields 2 sports, 5', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+        const sport2 = addSport(competition);
+        const field2 = new Field(competition, 2); field2.setSport(sport2);
+
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 5, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+
+        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // consoleGames(games);
+        expect(games1.length).to.equal(10);
+        assertValidResourcesPerBatch(games1);
+        firstRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, games1, 4);
+        });
+        expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
+    });
+
     /**
      * time disabled
      */
@@ -174,7 +198,7 @@ describe('Planning/Service', () => {
         planningService.reschedule(firstRoundNumber);
 
         const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-
+        // consoleGames(games);
         expect(games.length).to.equal(6);
 
         assertValidResourcesPerBatch(firstRoundNumber.getGames());
@@ -208,7 +232,7 @@ describe('Planning/Service', () => {
         const games = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
 
         expect(games.length).to.equal(2);
-        consoleGames(games);
+        // consoleGames(games);
         expect(games[0].getRound().getParentQualifyGroup().getWinnersOrLosers()).to.equal(QualifyGroup.LOSERS);
 
         assertValidResourcesPerBatch(secondRoundNumber.getGames());
@@ -298,9 +322,9 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
 }
 
 /**
- * check if every batch has no double fields, referees or place 
- * 
- * @param games 
+ * check if every batch has no double fields, referees or place
+ *
+ * @param games
  */
 export function assertValidResourcesPerBatch(games: Game[]) {
     const batchResources = {};

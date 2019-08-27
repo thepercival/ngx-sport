@@ -29,13 +29,6 @@ export class SportConfigRepository extends APIRepository {
         return 'sportconfigs';
     }
 
-    saveObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
-        if (sportConfig.getId() === undefined) {
-            return this.createObject(sportConfig, competition);
-        }
-        return this.editObject(sportConfig, competition);
-    }
-
     createObject(sportConfig: SportConfig, competition: Competition): Observable<SportConfig> {
         return this.http.post(this.url, this.mapper.toJson(sportConfig), this.getOptions(competition)).pipe(
             map((res: JsonSportConfig) => this.mapper.toObject(res, competition, sportConfig)),
@@ -53,12 +46,6 @@ export class SportConfigRepository extends APIRepository {
     removeObject(sportConfig: SportConfig, competition: Competition, structure: Structure): Observable<void> {
         const url = this.url + '/' + sportConfig.getId();
         return this.http.delete(url, this.getOptions(competition)).pipe(
-            map((res) => {
-                const sportConfigService = new SportConfigService(
-                    new SportScoreConfigService(), new SportPlanningConfigService()
-                );
-                sportConfigService.remove(sportConfig, structure);
-            }),
             catchError((err) => this.handleError(err))
         );
     }
