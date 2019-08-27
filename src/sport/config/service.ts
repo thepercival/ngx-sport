@@ -61,11 +61,11 @@ export class SportConfigService {
 
     addToStructure(config: SportConfig, structure: Structure) {
         let roundNumber: RoundNumber = structure.getFirstRoundNumber();
-        while ( roundNumber !== undefined ) {
-            if ( roundNumber.hasPrevious() === false || roundNumber.getSportScoreConfigs().length > 0 ) {
+        while (roundNumber !== undefined) {
+            if (roundNumber.hasPrevious() === false || roundNumber.getSportScoreConfigs().length > 0) {
                 this.scoreConfigService.createDefault(config.getSport(), roundNumber);
             }
-            if ( roundNumber.hasPrevious() === false || roundNumber.getSportPlanningConfigs().length > 0 ) {
+            if (roundNumber.hasPrevious() === false || roundNumber.getSportPlanningConfigs().length > 0) {
                 this.planningConfigService.createDefault(config.getSport(), roundNumber);
             }
             roundNumber = roundNumber.getNext();
@@ -79,12 +79,12 @@ export class SportConfigService {
         if (index > -1) {
             sportConfigs.splice(index, 1);
         }
+        const sport = config.getSport();
         const fields = competition.getFields();
-        fields.filter(field => field.getSport() === config.getSport()).forEach(field => {
+        fields.filter(field => field.getSport() === sport).forEach(field => {
             competition.removeField(field);
         });
         let roundNumber = structure.getFirstRoundNumber();
-        const sport = config.getSport();
         while (roundNumber) {
             const planningConfigs = roundNumber.getSportPlanningConfigs();
             const planningConfig = planningConfigs.find(planningConfigIt => planningConfigIt.getSport() === sport);
