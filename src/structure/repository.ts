@@ -31,7 +31,7 @@ export class StructureRepository extends APIRepository {
             headers: super.getHeaders(),
             params: new HttpParams().set('competitionid', competition.getId().toString())
         };
-        return this.http.get(this.url, options).pipe(
+        return this.http.get(this.url  + '/' + competition.getId(), options).pipe(
             map((json: JsonStructure) => this.mapper.toObject(json, competition)),
             catchError((err) => this.handleError(err))
         );
