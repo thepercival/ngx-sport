@@ -39,9 +39,7 @@ describe('Planning/Service', () => {
         });
     });
 
-    /**
-     * with one poule referee can be from same poule
-     */
+    // with one poule referee can be from same poule
     it('self referee 1 poule of 3', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -70,12 +68,10 @@ describe('Planning/Service', () => {
         });
     });
 
-    /**
-     * games should be ordered by roundnumber, subnumber because if sorted by poule
-     * the planning is not optimized.
-     * If all competitors of poule A play first and there are still fields free
-     * than they cannot be referee. This will be most bad when there are two poules.
-     */
+    // games should be ordered by roundnumber, subnumber because if sorted by poule
+    // the planning is not optimized.
+    // If all competitors of poule A play first and there are still fields free
+    // than they cannot be referee. This will be most bad when there are two poules.
     it('self referee 4 fields, 66', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -153,7 +149,6 @@ describe('Planning/Service', () => {
         firstRoundNumber.getPlaces().forEach(place => {
             this.assertValidGamesParticipations(place, games3, 9);
         });
-
     });
 
     it('2 fields 2 sports, 5', () => {
@@ -171,7 +166,7 @@ describe('Planning/Service', () => {
         planningService.create(firstRoundNumber);
 
         const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
+        // consoleGames(games1);
         expect(games1.length).to.equal(10);
         assertValidResourcesPerBatch(games1);
         firstRoundNumber.getPlaces().forEach(place => {
