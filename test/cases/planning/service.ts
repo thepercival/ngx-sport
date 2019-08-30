@@ -175,6 +175,9 @@ describe('Planning/Service', () => {
         expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
     });
 
+    // 2 sports(1 & 3 fields), also check startdatetime
+    // CDK @TODO
+
     /**
      * time disabled
      */
