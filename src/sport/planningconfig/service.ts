@@ -83,9 +83,9 @@ export class SportPlanningConfigService {
 
     /**
      * de sporten moeten allemaal dezelfde aantal deelnemers per wedstrijd hebben
-     * 
-     * @param poule 
-     * @param sportPlanningConfigs 
+     *
+     * @param poule
+     * @param sportPlanningConfigs
      */
     protected getMinNrOfPouleGames(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): number {
 

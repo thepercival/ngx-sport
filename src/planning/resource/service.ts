@@ -96,9 +96,9 @@ export class PlanningResourceService {
         if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
             const nextBatch = this.toNextBatch(batch, assignedBatches, resources);
             // if (batch.getNumber() < 4) {
-            // console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
-            // assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
-            // console.log('-------------------');
+            //     console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
+            //     assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
+            //     console.log('-------------------');
             // }
             if (games.length === 0) { // endsuccess
                 return true;
@@ -330,7 +330,7 @@ export class PlanningResourceService {
         if (this.planningConfig.getSelfReferee()) {
             nrOfGamePlaces++;
         }
-        const nrOfGamesSimultaneously = Math.ceil(this.roundNumber.getNrOfPlaces() / nrOfGamePlaces);
+        const nrOfGamesSimultaneously = Math.floor(this.roundNumber.getNrOfPlaces() / nrOfGamePlaces);
         if (nrOfGamesSimultaneously < this.maxNrOfGamesPerBatch) {
             this.maxNrOfGamesPerBatch = nrOfGamesSimultaneously;
         }
