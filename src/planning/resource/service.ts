@@ -19,17 +19,14 @@ export class PlanningResourceService {
     private planningConfig: PlanningConfig;
 
     private blockedPeriod;
-    private currentGameStartDate: Date;
     private nrOfPoules: number;
     private maxNrOfGamesPerBatch: number;
 
     private placesSportsCounter: LocationIdToSportCounterMap;
 
     constructor(
-        private roundNumber: RoundNumber,
-        dateTime: Date
+        private roundNumber: RoundNumber
     ) {
-        this.currentGameStartDate = this.cloneDateTime(dateTime);
         this.planningConfig = this.roundNumber.getValidPlanningConfig();
         this.nrOfPoules = this.roundNumber.getPoules().length;
     }
@@ -71,23 +68,28 @@ export class PlanningResourceService {
         });
     }
 
-    assign(games: Game[]): Date {
+    assign(games: Game[], startDateTime: Date) {
         this.initSportsCounter();
-        if (!this.assignBatch(games.slice(), this.getMaxNrOfGamesPerBatch())) {
+
+        const resources = { dateTime: this.cloneDateTime(startDateTime), fields: this.fields.slice() };
+        // this.currentGameStartDate = this.cloneDateTime(dateTime);
+
+        if (!this.assignBatch(games.slice(), resources, this.getMaxNrOfGamesPerBatch())) {
             throw Error('cannot assign resources');
         }
-        return this.getEndDateTime();
     }
 
-    assignBatch(games: Game[], nrOfGamesPerBatch: number): boolean {
+    assignBatch(games: Game[], resources: Resources, nrOfGamesPerBatch: number): boolean {
         if (nrOfGamesPerBatch === 0) {
             return false;
         }
-        const resources = { fields: this.fields.slice() };
+
         if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch(1)) === true) {
             return true;
         }
-        return this.assignBatch(games, nrOfGamesPerBatch - 1);
+        return this.assignBatch(games,
+            { dateTime: this.cloneDateTime(resources.dateTime), fields: this.fields.slice() },
+            nrOfGamesPerBatch - 1);
     }
 
     protected assignBatchHelper(games: Game[], resources: Resources, nrOfGames: number, batch: PlanningResourceBatch
@@ -116,7 +118,7 @@ export class PlanningResourceService {
         if (this.isGameAssignable(batch, game, resources)) {
             this.assignGame(batch, game, resources);
             // console.log('assigned game .. ' + this.consoleGame(game));
-            const resourcesTmp = { fields: resources.fields.slice() };
+            const resourcesTmp = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
             if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch, assignedBatches.slice(), 0, iteration++) === true) {
                 return true;
             }
@@ -158,7 +160,7 @@ export class PlanningResourceService {
     protected toNextBatch(batch: PlanningResourceBatch, assignedBatches: PlanningResourceBatch[]
         , resources: Resources): PlanningResourceBatch {
         batch.getGames().forEach(game => {
-            game.setStartDateTime(this.cloneDateTime(this.currentGameStartDate));
+            game.setStartDateTime(this.cloneDateTime(resources.dateTime));
             game.setResourceBatch(batch.getNumber());
             resources.fields.push(game.getField());
             if (game.getRefereePlace()) {
@@ -168,7 +170,7 @@ export class PlanningResourceService {
                 this.referees.push(game.getReferee());
             }
         });
-        this.setNextGameStartDateTime();
+        this.setNextGameStartDateTime(resources.dateTime);
         assignedBatches.push(batch);
         return new PlanningResourceBatch(batch.getNumber() + 1);
     }
@@ -339,11 +341,11 @@ export class PlanningResourceService {
 
     /* time functions */
 
-    private getEndDateTime(): Date {
-        if (this.currentGameStartDate === undefined) {
+    private getEndDateTime(date: Date): Date {
+        if (date === undefined) {
             return undefined;
         }
-        const endDateTime = new Date(this.currentGameStartDate.getTime());
+        const endDateTime = new Date(date.getTime());
         endDateTime.setMinutes(endDateTime.getMinutes() + this.planningConfig.getMaximalNrOfMinutesPerGame());
         return endDateTime;
     }
@@ -355,25 +357,25 @@ export class PlanningResourceService {
         return new Date(dateTime.getTime());
     }
 
-    private setNextGameStartDateTime() {
-        if (this.currentGameStartDate === undefined) {
-            return;
+    private setNextGameStartDateTime(date: Date) {
+        if (date === undefined) {
+            return undefined;
         }
         const add = this.planningConfig.getMaximalNrOfMinutesPerGame() + this.planningConfig.getMinutesBetweenGames();
-        this.currentGameStartDate = this.addMinutes(this.currentGameStartDate, add);
+        this.addMinutes(date, add);
     }
 
-    protected addMinutes(dateTime: Date, minutes: number): Date {
+    protected addMinutes(dateTime: Date, minutes: number) {
         dateTime.setMinutes(dateTime.getMinutes() + minutes);
         if (this.blockedPeriod === undefined) {
-            return dateTime;
+            return;
         }
         const endDateTime = this.cloneDateTime(dateTime);
         endDateTime.setMinutes(endDateTime.getMinutes() + this.planningConfig.getMaximalNrOfMinutesPerGame());
         if (endDateTime > this.blockedPeriod.start && dateTime < this.blockedPeriod.end) {
             dateTime = new Date(this.blockedPeriod.end.getTime());
         }
-        return dateTime;
+        // return dateTime;
     }
 
     /**
@@ -405,5 +407,6 @@ interface LocationIdToSportCounterMap {
 }
 
 interface Resources {
+    dateTime: Date;
     fields: Field[];
 }

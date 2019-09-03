@@ -79,7 +79,7 @@ export class PlanningService {
         return dateTime;
     }
 
-    protected calculateEndDateTime(roundNumber: RoundNumber) {
+    calculateEndDateTime(roundNumber: RoundNumber) {
         const config = roundNumber.getValidPlanningConfig();
         if (config.getEnableTime() === false) {
             return undefined;
@@ -139,12 +139,13 @@ export class PlanningService {
         fields: Field[],
         referees: Referee[],
         refereePlaces: Place[]): Date {
-        const resourceService = new PlanningResourceService(roundNumber, dateTime);
+        const resourceService = new PlanningResourceService(roundNumber);
         resourceService.setBlockedPeriod(this.blockedPeriod);
         resourceService.setFields(fields);
         resourceService.setReferees(referees);
         resourceService.setRefereePlaces(refereePlaces);
-        return resourceService.assign(games);
+        resourceService.assign(games, dateTime);
+        return this.calculateEndDateTime(roundNumber);
     }
 
     getGamesForRoundNumber(roundNumber: RoundNumber, order: number): Game[] {
