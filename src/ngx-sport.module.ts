@@ -82,7 +82,7 @@ import { StructureService } from './structure/service';
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
-        SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
+        SportConfigRepository, PlanningConfigRepository, PlanningConfigService, PlanningConfigRepository,
         SeasonRepository, StructureRepository, StructureService,
         SportMapper, SportConfigMapper, SportPlanningConfigMapper,
         SportConfigService, SportPlanningConfigService, SportScoreConfigService,

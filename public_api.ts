@@ -55,6 +55,8 @@ export * from './src/place';
 export * from './src/place/repository';
 export * from './src/place/mapper';
 export * from './src/planning/config/mapper';
+export * from './src/planning/config/service';
+export * from './src/planning/config/repository';
 export * from './src/poule';
 export * from './src/poule/mapper';
 export * from './src/poule/horizontal';

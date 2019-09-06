@@ -228,7 +228,7 @@ export class RoundNumber {
         return this.sportScoreConfigs;
     }
 
-    getSportScoreConfig(sport?: Sport): SportScoreConfig {
+    getSportScoreConfig(sport: Sport): SportScoreConfig {
         const sportScoreConfig = this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
         if (sportScoreConfig !== undefined) {
             return sportScoreConfig;
