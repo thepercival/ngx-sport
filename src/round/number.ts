@@ -197,23 +197,24 @@ export class RoundNumber {
         return this.sportPlanningConfigs;
     }
 
-    getSportPlanningConfig(sport?: Sport): SportPlanningConfig {
-        const sportPlanningConfig = this.sportPlanningConfigs.find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
-        if (sportPlanningConfig !== undefined) {
-            return sportPlanningConfig;
-        }
-        return this.getPrevious().getSportPlanningConfig(sport);
-    }
-
-    getValidSportPlanningConfigs(): SportPlanningConfig[] {
-        if (this.sportPlanningConfigs.length === 0) {
-            return this.getPrevious().getValidSportPlanningConfigs();
-        }
-        return this.sportPlanningConfigs;
+    getSportPlanningConfig(sport: Sport): SportPlanningConfig {
+        return this.sportPlanningConfigs.find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
     }
 
     setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
         this.sportPlanningConfigs.push(sportPlanningConfig);
+    }
+
+    getValidSportPlanningConfigs(): SportPlanningConfig[] {
+        return this.getSportConfigs().map( sportConfig => this.getValidSportPlanningConfig(sportConfig.getSport() ) );
+    }
+
+    getValidSportPlanningConfig(sport: Sport): SportPlanningConfig {
+        const sportPlanningConfig = this.getSportPlanningConfig(sport);
+        if (sportPlanningConfig !== undefined) {
+            return sportPlanningConfig;
+        }
+        return this.getPrevious().getSportPlanningConfig(sport);
     }
 
     hasMultipleSportScoreConfigs(): boolean {
@@ -229,14 +230,22 @@ export class RoundNumber {
     }
 
     getSportScoreConfig(sport: Sport): SportScoreConfig {
-        const sportScoreConfig = this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
-        if (sportScoreConfig !== undefined) {
-            return sportScoreConfig;
-        }
-        return this.getPrevious().getSportScoreConfig(sport);
+        return this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
     }
 
     setSportScoreConfig(sportScoreConfig: SportScoreConfig) {
         this.sportScoreConfigs.push(sportScoreConfig);
+    }
+
+    getValidSportScoreConfigs(): SportScoreConfig[] {
+        return this.getSportConfigs().map( sportConfig => this.getValidSportScoreConfig(sportConfig.getSport() ) );
+    }
+
+    getValidSportScoreConfig(sport: Sport): SportScoreConfig {
+        const sportScoreConfig = this.getSportScoreConfig(sport);
+        if (sportScoreConfig !== undefined) {
+            return sportScoreConfig;
+        }
+        return this.getPrevious().getSportScoreConfig(sport);
     }
 }

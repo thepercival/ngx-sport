@@ -63,19 +63,18 @@ export class SportScoreConfigService {
     }
 
     getInput(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        let childScoreConfig = rootSportScoreConfig.getChild();
-        while (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getMaximum() === 0)) {
-            rootSportScoreConfig = childScoreConfig;
-            childScoreConfig = childScoreConfig.getChild();
+        const childScoreConfig = rootSportScoreConfig.getChild();
+        if (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getMaximum() === 0)) {
+            return childScoreConfig;
         }
         return rootSportScoreConfig;
     }
 
     getCalculate(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        while (rootSportScoreConfig.getMaximum() === 0 && rootSportScoreConfig.getChild() !== undefined) {
-            rootSportScoreConfig = rootSportScoreConfig.getChild();
+        while (rootSportScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getChild() === undefined) {
+            return rootSportScoreConfig;
         }
-        return rootSportScoreConfig;
+        return rootSportScoreConfig.getChild();
     }
 
     hasMultipleScores(rootSportScoreConfig: SportScoreConfig): boolean {

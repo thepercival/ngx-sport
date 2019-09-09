@@ -32,13 +32,6 @@ export class SportPlanningConfigService {
         return configA.getNrOfGames() === configB.getNrOfGames();
     }*/
 
-    getUsed(roundNumber: RoundNumber) {
-        const usedSports = roundNumber.getCompetition().getFields().map(field => field.getSport());
-        return roundNumber.getSportPlanningConfigs().filter(config => {
-            return usedSports.some(sport => config.getSport() === sport);
-        });
-    }
-
     getMinNrOfGamesMap(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): SportIdToNumberMap {
         const minNrOfGames = {};
         if (sportPlanningConfigs.length === 1) { // bereken voor 1 sport

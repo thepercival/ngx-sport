@@ -60,7 +60,7 @@ export class GameGenerator {
     }
 
     protected setSportPlanningConfigs(roundNumber: RoundNumber) {
-        this.sportPlanningConfigs = this.sportPlanningConfigService.getUsed(roundNumber);
+        this.sportPlanningConfigs = roundNumber.getValidSportPlanningConfigs();
     }
 
     createPouleGameRounds(poule: Poule, teamup: boolean): PlanningGameRound[] {

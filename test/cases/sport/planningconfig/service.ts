@@ -47,28 +47,28 @@ describe('Sport/PlanningConfig/Service', () => {
         // could check on not same sport to copy
     });
 
-    it('getUsed', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+    // it('getUsed', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 4, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
 
-        const service = new SportPlanningConfigService();
+    //     const service = new SportPlanningConfigService();
 
-        expect(service.getUsed(firstRoundNumber).length).to.equal(1);
+    //     expect(service.getUsed(firstRoundNumber).length).to.equal(1);
 
-        const sport2 = new Sport('sport 2');
-        const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
-        const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
+    //     const sport2 = new Sport('sport 2');
+    //     const sourceConfig = firstRoundNumber.getFirstSportPlanningConfig();
+    //     const newConfig = service.copy(sport2, firstRoundNumber, sourceConfig);
 
-        expect(service.getUsed(firstRoundNumber).length).to.equal(1);
+    //     expect(service.getUsed(firstRoundNumber).length).to.equal(1);
 
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
 
-        expect(service.getUsed(firstRoundNumber).length).to.equal(2);
-    });
+    //     expect(service.getUsed(firstRoundNumber).length).to.equal(2);
+    // });
 
     it('getNrOfCombinations', () => {
         const competitionMapper = getMapper('competition');
@@ -178,7 +178,7 @@ describe('Sport/PlanningConfig/Service', () => {
         firstRoundNumber.getSportPlanningConfig(sport2).setMinNrOfGames(2);
         const firstPoule = structure.getRootRound().getPoule(1);
 
-        const sportPlanningConfigs = service.getUsed(firstRoundNumber);
+        const sportPlanningConfigs = firstRoundNumber.getValidSportPlanningConfigs();
         const nrOfHeadtohead = service.getNrOfHeadtohead(firstPoule, sportPlanningConfigs);
         expect(nrOfHeadtohead).to.equal(1);
 

@@ -57,7 +57,7 @@ export class PlanningResourceService {
     // per plaats bijhouden: als alle sporten klaar
     protected initSportsCounter() {
         const sportPlanningConfigService = new SportPlanningConfigService();
-        const sportPlanningConfigs = sportPlanningConfigService.getUsed(this.roundNumber);
+        const sportPlanningConfigs = this.roundNumber.getValidSportPlanningConfigs();
 
         this.placesSportsCounter = {};
         this.roundNumber.getPoules().forEach(poule => {
