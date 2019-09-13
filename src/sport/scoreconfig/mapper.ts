@@ -14,8 +14,8 @@ export class SportScoreConfigMapper {
         scoreConfig.setId(json.id);
         scoreConfig.setDirection(json.direction);
         scoreConfig.setMaximum(json.maximum);
-        if (json.child !== undefined) {
-            this.toObject(json.child, sport, roundNumber, scoreConfig);
+        if (json.next !== undefined) {
+            this.toObject(json.next, sport, roundNumber, scoreConfig);
         }
         return scoreConfig;
     }
@@ -26,7 +26,7 @@ export class SportScoreConfigMapper {
             sportId: scoreConfig.getSport().getId(),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
-            child: scoreConfig.getChild() !== undefined ? this.toJson(scoreConfig.getChild()) : undefined
+            next: scoreConfig.getNext() !== undefined ? this.toJson(scoreConfig.getNext()) : undefined
         };
     }
 }
@@ -36,5 +36,5 @@ export interface JsonSportScoreConfig {
     sportId: number;
     direction: number;
     maximum: number;
-    child?: JsonSportScoreConfig;
+    next?: JsonSportScoreConfig;
 }

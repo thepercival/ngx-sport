@@ -6,14 +6,17 @@ export class SportScoreConfig {
     static readonly DOWNWARDS = 2;
 
     protected id: number;
-    protected parent: SportScoreConfig;
+    protected previous: SportScoreConfig;
     protected direction: number;
     protected maximum: number;
-    protected child: SportScoreConfig;
+    protected next: SportScoreConfig;
 
-    constructor(protected sport: Sport, protected roundNumber: RoundNumber, parent: SportScoreConfig) {
-        roundNumber.getSportScoreConfigs().push(this);
-        this.setParent(parent);
+    constructor(protected sport: Sport, protected roundNumber: RoundNumber, previous: SportScoreConfig) {
+        if (previous === undefined) {
+            roundNumber.getSportScoreConfigs().push(this);
+        } else {
+            this.setPrevious(previous);
+        }
     }
 
     getId(): number {
@@ -48,40 +51,44 @@ export class SportScoreConfig {
         return this.roundNumber;
     }
 
-    hasParent(): boolean {
-        return this.parent !== undefined;
+    hasPrevious(): boolean {
+        return this.previous !== undefined;
     }
 
-    getParent(): SportScoreConfig {
-        return this.parent;
+    getPrevious(): SportScoreConfig {
+        return this.previous;
     }
 
-    private setParent(parent: SportScoreConfig) {
-        this.parent = parent;
-        if (this.parent !== undefined) {
-            this.parent.setChild(this);
+    private setPrevious(previous: SportScoreConfig) {
+        this.previous = previous;
+        if (this.previous !== undefined) {
+            this.previous.setNext(this);
         }
     }
 
     getRoot() {
-        const parent = this.getParent();
-        if (parent !== undefined) {
-            return parent.getRoot();
+        const previous = this.getPrevious();
+        if (previous !== undefined) {
+            return previous.getRoot();
         }
         return this;
     }
 
-    getChild(): SportScoreConfig {
-        return this.child;
+    getNext(): SportScoreConfig {
+        return this.next;
     }
 
-    setChild(child: SportScoreConfig) {
-        this.child = child;
+    setNext(next: SportScoreConfig) {
+        this.next = next;
+    }
+
+    hasNext(): boolean {
+        return this.next !== undefined;
     }
 
     isInput() {
-        if (this.getParent() === undefined || this.getParent().getMaximum() === 0) {
-            if (this.getMaximum() !== 0 || this.getChild() === undefined) {
+        if (this.getPrevious() === undefined || this.getPrevious().getMaximum() === 0) {
+            if (this.getMaximum() !== 0 || this.getNext() === undefined) {
                 return true;
             }
         }

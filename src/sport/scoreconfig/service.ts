@@ -30,7 +30,7 @@ export class SportScoreConfigService {
         const newScoreConfig = new SportScoreConfig(sport, roundNumber, undefined);
         newScoreConfig.setDirection(sourceScoreConfig.getDirection());
         newScoreConfig.setMaximum(sourceScoreConfig.getMaximum());
-        const previousSubScoreConfig = sourceScoreConfig.getChild();
+        const previousSubScoreConfig = sourceScoreConfig.getNext();
         if (previousSubScoreConfig) {
             const newSubScoreConfig = new SportScoreConfig(sport, roundNumber, newScoreConfig);
             newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
@@ -44,10 +44,10 @@ export class SportScoreConfigService {
         ) {
             return false;
         }
-        if (sportScoreConfig.getChild() === undefined) {
+        if (sportScoreConfig.getNext() === undefined) {
             return true;
         }
-        return this.isDefault(sportScoreConfig.getChild());
+        return this.isDefault(sportScoreConfig.getNext());
     }
 
     areEqual(sportScoreConfigA: SportScoreConfig, sportScoreConfigB: SportScoreConfig): boolean {
@@ -56,14 +56,14 @@ export class SportScoreConfigService {
         ) {
             return false;
         }
-        if (sportScoreConfigA.getChild() !== undefined && sportScoreConfigB.getChild() !== undefined) {
-            return this.areEqual(sportScoreConfigA.getChild(), sportScoreConfigB.getChild());
+        if (sportScoreConfigA.getNext() !== undefined && sportScoreConfigB.getNext() !== undefined) {
+            return this.areEqual(sportScoreConfigA.getNext(), sportScoreConfigB.getNext());
         }
-        return sportScoreConfigA.getChild() === sportScoreConfigB.getChild();
+        return sportScoreConfigA.getNext() === sportScoreConfigB.getNext();
     }
 
     getInput(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        const childScoreConfig = rootSportScoreConfig.getChild();
+        const childScoreConfig = rootSportScoreConfig.getNext();
         if (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getMaximum() === 0)) {
             return childScoreConfig;
         }
@@ -71,14 +71,14 @@ export class SportScoreConfigService {
     }
 
     getCalculate(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        while (rootSportScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getChild() === undefined) {
+        while (rootSportScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getNext() === undefined) {
             return rootSportScoreConfig;
         }
-        return rootSportScoreConfig.getChild();
+        return rootSportScoreConfig.getNext();
     }
 
     hasMultipleScores(rootSportScoreConfig: SportScoreConfig): boolean {
-        return rootSportScoreConfig.getChild() !== undefined;
+        return rootSportScoreConfig.getNext() !== undefined;
     }
 
     getFinal(game: Game, sub?: boolean): GameScoreHomeAway {
