@@ -77,8 +77,8 @@ export class SportScoreConfigService {
         return rootSportScoreConfig.getNext();
     }
 
-    hasMultipleScores(rootSportScoreConfig: SportScoreConfig): boolean {
-        return rootSportScoreConfig.getNext() !== undefined;
+    inputAndCalculateDiffers(rootSportScoreConfig: SportScoreConfig): boolean {
+        return this.getInput(rootSportScoreConfig) !== this.getCalculate(rootSportScoreConfig);
     }
 
     getFinal(game: Game, sub?: boolean): GameScoreHomeAway {

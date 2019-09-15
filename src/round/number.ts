@@ -166,7 +166,7 @@ export class RoundNumber {
         return this.getCompetition().getSportConfigs();
     }
 
-    getSportConfig(sport: Sport ): SportConfig {
+    getSportConfig(sport: Sport): SportConfig {
         return this.getCompetition().getSportConfig(sport);
     }
 
@@ -206,7 +206,7 @@ export class RoundNumber {
     }
 
     getValidSportPlanningConfigs(): SportPlanningConfig[] {
-        return this.getSportConfigs().map( sportConfig => this.getValidSportPlanningConfig(sportConfig.getSport() ) );
+        return this.getSportConfigs().map(sportConfig => this.getValidSportPlanningConfig(sportConfig.getSport()));
     }
 
     getValidSportPlanningConfig(sport: Sport): SportPlanningConfig {
@@ -214,7 +214,7 @@ export class RoundNumber {
         if (sportPlanningConfig !== undefined) {
             return sportPlanningConfig;
         }
-        return this.getPrevious().getSportPlanningConfig(sport);
+        return this.getPrevious().getValidSportPlanningConfig(sport);
     }
 
     hasMultipleSportScoreConfigs(): boolean {
@@ -238,7 +238,7 @@ export class RoundNumber {
     }
 
     getValidSportScoreConfigs(): SportScoreConfig[] {
-        return this.getSportConfigs().map( sportConfig => this.getValidSportScoreConfig(sportConfig.getSport() ) );
+        return this.getSportConfigs().map(sportConfig => this.getValidSportScoreConfig(sportConfig.getSport()));
     }
 
     getValidSportScoreConfig(sport: Sport): SportScoreConfig {
@@ -246,6 +246,6 @@ export class RoundNumber {
         if (sportScoreConfig !== undefined) {
             return sportScoreConfig;
         }
-        return this.getPrevious().getSportScoreConfig(sport);
+        return this.getPrevious().getValidSportScoreConfig(sport);
     }
 }

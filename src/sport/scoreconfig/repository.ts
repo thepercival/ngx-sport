@@ -27,7 +27,7 @@ export class SportScoreConfigRepository extends APIRepository {
     }
 
     createObject(jsonConfig: JsonSportScoreConfig, sport: Sport, roundNumber: RoundNumber): Observable<SportScoreConfig> {
-        return this.http.post(this.url, jsonConfig, this.getOptions(roundNumber)).pipe(
+        return this.http.post(this.url, jsonConfig, this.getOptions(roundNumber, sport)).pipe(
             map((res: JsonSportScoreConfig) => this.mapper.toObject(res, sport, roundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -40,10 +40,13 @@ export class SportScoreConfigRepository extends APIRepository {
         );
     }
 
-    protected getOptions(roundNumber: RoundNumber): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(roundNumber: RoundNumber, sport?: Sport): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
         httpParams = httpParams.set('roundnumber', roundNumber.getNumber().toString());
+        if (sport !== undefined) {
+            httpParams = httpParams.set('sportid', sport.getId().toString());
+        }
         return {
             headers: super.getHeaders(),
             params: httpParams
