@@ -97,14 +97,22 @@ export class PlanningResourceService {
 
         if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
             const nextBatch = this.toNextBatch(batch, assignedBatches, resources);
-            // if (batch.getNumber() < 4) {
-            //     console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
-            //     assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
-            //     console.log('-------------------');
-            // }
             if (games.length === 0) { // endsuccess
                 return true;
             }
+            // if (batch.getNumber() === 5) {
+            //     console.log('-------------------');
+            //     console.log('batch succes pre sort: ' + batch.getNumber());
+            //     this.consoleGames(games);
+            //     console.log('-------------------');
+            // }
+            this.sortGamesByInARow(games, assignedBatches);
+            // if (batch.getNumber() === 5) {
+            //     console.log('-------------------');
+            //     console.log('batch succes post sort: ' + batch.getNumber());
+            //     this.consoleGames(games);
+            //     console.log('-------------------');
+            // }
             return this.assignBatchHelper(games, resources, nrOfGames, nextBatch, assignedBatches, 0, iteration++);
         }
         if (games.length === nrOfGamesTried) {
@@ -339,6 +347,38 @@ export class PlanningResourceService {
         return this.maxNrOfGamesPerBatch;
     }
 
+    protected sortGamesByInARow(games: Game[], assignedBatches: PlanningResourceBatch[]) {
+        const reversed = assignedBatches.reverse();
+
+        const getInRow = (place: Place): number => {
+            let nrInRow = 0;
+            reversed.some(batch => {
+                if (batch.hasPlace(place)) {
+                    nrInRow++;
+                    return true;
+                }
+                return false;
+            });
+            return nrInRow;
+        };
+
+        const getMostInRow = (game: Game): number => {
+            let maxNrInRow = 0;
+            this.getPlaces(game).forEach(place => {
+                const nrInRow = getInRow(place);
+                if (nrInRow > maxNrInRow) {
+                    maxNrInRow = nrInRow;
+                }
+            });
+            return maxNrInRow;
+        };
+
+        games.sort((g1: Game, g2: Game) => {
+            return getMostInRow(g2) - getMostInRow(g1);
+        });
+    }
+
+
     /* time functions */
 
     private getEndDateTime(date: Date): Date {
@@ -397,7 +437,7 @@ export class PlanningResourceService {
             + ', batch ' + (game.getResourceBatch() ? game.getResourceBatch() : '?')
             + ', field ' + (game.getField() ? game.getField().getNumber() : '?')
             + ', sport ' + (game.getField() ? game.getField().getSport().getName() +
-             (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
+                (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
             ;
     }
 }

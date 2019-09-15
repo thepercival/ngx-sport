@@ -202,6 +202,29 @@ describe('Planning/Service', () => {
     //     expect(games.pop().getResourceBatch()).to.be.lessThan(6);
     // });
 
+    it('2 fields check games in row, 6', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
+
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 6, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+
+        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // consoleGames(games);
+        expect(games.length).to.equal(15);
+        assertValidResourcesPerBatch(games);
+        firstRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, games, 5);
+            this.assertGamesInRow(place, games, 3);
+        });
+        expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+    });
+
     it('check datetime, 5', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -227,7 +250,7 @@ describe('Planning/Service', () => {
         const lastGame = games1.pop();
         expect(lastGame.getResourceBatch()).to.equal(5);
 
-        const endDateTime = planningService.calculateEndDateTime( firstRoundNumber );
+        const endDateTime = planningService.calculateEndDateTime(firstRoundNumber);
         const nrOfMinutes = firstRoundNumber.getValidPlanningConfig().getMaximalNrOfMinutesPerGame();
         const lastGameStartDateTime = lastGame.getStartDateTime();
         lastGameStartDateTime.setMinutes(lastGameStartDateTime.getMinutes() + nrOfMinutes);
@@ -374,6 +397,28 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
     if (expectedValue !== undefined) {
         expect(expectedValue).to.equal(nrOfGames);
     }
+}
+
+export function assertGamesInRow(place: Place, games: Game[], maxInRow: number) {
+    let nrOfGamesInRow = 0; let previousBatchNr = 1; let placeInBatch = false;
+    games.forEach(game => {
+        if (previousBatchNr === (game.getResourceBatch() - 1)) {
+            previousBatchNr = game.getResourceBatch();
+            if (placeInBatch) {
+                nrOfGamesInRow++;
+                expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
+            } else {
+                nrOfGamesInRow = 0;
+            }
+            placeInBatch = false;
+        }
+        if (placeInBatch) {
+            return;
+        }
+        const places = game.getPlaces().map(gamePlace => gamePlace.getPlace());
+        placeInBatch = places.some(placeIt => placeIt === place);
+    });
+    expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
 }
 
 /**
