@@ -88,6 +88,7 @@ export * from './src/sport/config/repository';
 export * from './src/sport/config/mapper';
 export * from './src/sport/planningconfig/mapper';
 export * from './src/sport/planningconfig/service';
+export * from './src/sport/scoreconfig/repository';
 export * from './src/sport/scoreconfig/service';
 export * from './src/sport/custom';
 export * from './src/sport/repository';

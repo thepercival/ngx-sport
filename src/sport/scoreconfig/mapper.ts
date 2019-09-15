@@ -9,15 +9,18 @@ export class SportScoreConfigMapper {
     constructor() {
     }
 
-    toObject(json: JsonSportScoreConfig, sport: Sport, roundNumber: RoundNumber, parent?: SportScoreConfig): SportScoreConfig {
-        const scoreConfig = new SportScoreConfig(sport, roundNumber, parent);
-        scoreConfig.setId(json.id);
-        scoreConfig.setDirection(json.direction);
-        scoreConfig.setMaximum(json.maximum);
-        if (json.next !== undefined) {
-            this.toObject(json.next, sport, roundNumber, scoreConfig);
+    toObject(json: JsonSportScoreConfig, sport: Sport, roundNumber: RoundNumber,
+        config?: SportScoreConfig, previous?: SportScoreConfig): SportScoreConfig {
+        if (config === undefined) {
+            config = new SportScoreConfig(sport, roundNumber, previous);
         }
-        return scoreConfig;
+        config.setId(json.id);
+        config.setDirection(json.direction);
+        config.setMaximum(json.maximum);
+        if (json.next !== undefined) {
+            this.toObject(json.next, sport, roundNumber, config.getNext(), config);
+        }
+        return config;
     }
 
     toJson(scoreConfig: SportScoreConfig): JsonSportScoreConfig {

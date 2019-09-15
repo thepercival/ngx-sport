@@ -61,13 +61,14 @@ import { SportScoreConfigService } from './sport/scoreconfig/service';
 import { Structure } from './structure';
 import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
+import { SportScoreConfigRepository } from './sport/scoreconfig/repository';
 
 @NgModule({
     imports: [
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
         PlanningService, PlaceRepository, QualifyService, RefereeRepository,
         RoundRepository, SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
-        SportMapper,
+        SportMapper, SportScoreConfigRepository,
         SeasonRepository, StructureRepository, StructureService, Structure,
         CompetitorRepository,
         PlanningRepository, NameService,
@@ -85,7 +86,7 @@ import { StructureService } from './structure/service';
         SportConfigRepository, PlanningConfigRepository, PlanningConfigService, PlanningConfigRepository,
         SeasonRepository, StructureRepository, StructureService,
         SportMapper, SportConfigMapper, SportPlanningConfigMapper,
-        SportConfigService, SportPlanningConfigService, SportScoreConfigService,
+        SportConfigService, SportPlanningConfigService, SportScoreConfigService, SportScoreConfigRepository,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,
