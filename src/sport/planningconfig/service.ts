@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ViewChildren } from '@angular/core';
 
 import { Poule } from '../../poule';
 import { RoundNumber } from '../../round/number';
@@ -32,66 +32,153 @@ export class SportPlanningConfigService {
         return configA.getNrOfGames() === configB.getNrOfGames();
     }*/
 
-    getMinNrOfGamesMap(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): SportIdToNumberMap {
-        const minNrOfGames = {};
-        if (sportPlanningConfigs.length === 1) { // bereken voor 1 sport
-            const config = poule.getRound().getNumber().getValidPlanningConfig();
-            minNrOfGames[sportPlanningConfigs[0].getSport().getId()] = this.getNrOfGamesPerPlace(poule, config.getNrOfHeadtohead());
-        } else {
-            let nrOfGames = this.getNrOfGamesPerPoule(poule);
-            nrOfGames *= poule.getRound().getNumber().getValidPlanningConfig().getNrOfHeadtohead();
-            const nrOfGamesByConfigs = this.getMinNrOfPouleGames(poule, sportPlanningConfigs);
-            const factor = nrOfGames > nrOfGamesByConfigs ? Math.floor(nrOfGames / nrOfGamesByConfigs) : 1;
-            // console.log('nrOfGames : ' + nrOfGames);
-            // console.log('nrOfGamesByConfigs : ' + nrOfGamesByConfigs);
-            // console.log('factor : ' + factor);
-            sportPlanningConfigs.forEach(sportPlanningConfig => {
-                minNrOfGames[sportPlanningConfig.getSport().getId()] = sportPlanningConfig.getMinNrOfGames() * factor;
+    getMinNrOfGamesMap(roundNumber: RoundNumber): SportIdToNumberMap {
+        return this.convertToMap(this.getSportsNrOfGames(roundNumber));
+    }
+
+    protected convertToMap(sportsNrOfGames: SportNrOfGames[]): SportIdToNumberMap {
+        const minNrOfGamesMap = {};
+        sportsNrOfGames.forEach(sportNrOfGames => {
+            minNrOfGamesMap[sportNrOfGames.sport.getId()] = sportNrOfGames.nrOfGames;
+        });
+        return minNrOfGamesMap;
+    }
+
+    getSportsNrOfGames(roundNumber: RoundNumber, divisor?: number): SportNrOfGames[] {
+        const sportsNrOfGames = [];
+        roundNumber.getSportPlanningConfigs().forEach(sportPlanningConfig => {
+            let nrOfGames = sportPlanningConfig.getMinNrOfGames();
+            if (divisor) {
+                nrOfGames /= divisor;
+            }
+            sportsNrOfGames.push({
+                sport: sportPlanningConfig.getSport(),
+                nrOfGames: nrOfGames
             });
+        });
+        return sportsNrOfGames;
+    }
+
+    // de map is niet door de gebruiker gekozen, maar is afhankelijk van het aantal velden
+    // hoe meer velden er zijn voor een sport, hoe vaker de deelnemer de sport moet doen
+    // wanneer er van elke sport een veelvoud aan sporten is, dan is het headtohead bepalend
+    // bij een veelvoud kan de mapping kan alleen naar beneden worden aangepast als daardoor
+    // aan de headtohead wordt voldaan
+    getPlanningMinNrOfGamesMap(poule: Poule): SportIdToNumberMap {
+
+        // const map = this.getDefaultMinNrOfGamesMap(roundNumber);
+        // poule.getRound().getNumber().getValidPlanningConfig().getNrOfHeadtohead()
+
+        const roundNumber = poule.getRound().getNumber();
+        const nrOfFieldsPerSport = roundNumber.getSportPlanningConfigs().map(sportPlanningConfig => {
+            return sportPlanningConfig.getMinNrOfGames();
+        });
+        const fieldDivisors = this.getFieldsCommonDivisors(nrOfFieldsPerSport);
+
+        const nrOfPouleGames = this.getNrOfPouleGames(poule);
+        let bestSportsNrOfGames = this.getSportsNrOfGames(roundNumber);
+        fieldDivisors.every(fieldDivisor => {
+            const sportsNrOfGamesTmp = this.getSportsNrOfGames(roundNumber, fieldDivisor);
+            const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGamesTmp);
+            if (nrOfPouleGames < nrOfPouleGamesBySports) {
+                return false;
+            }
+            bestSportsNrOfGames = sportsNrOfGamesTmp;
+        });
+
+        let divisor = 0.5;
+        let newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
+        while (nrOfPouleGames >= this.getNrOfPouleGamesBySports(poule, newSportsNrOfGames)) {
+            bestSportsNrOfGames = newSportsNrOfGames;
+            divisor *= 0.5;
+            newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
         }
-        return minNrOfGames;
+
+        return this.convertToMap(bestSportsNrOfGames);
+
+        // bv 2 sporten met 4 en 8 velden
+        // kan worden teruggebracht naar 1, 2 of 2, 4
     }
 
-    protected getNrOfGamesPerPoule(poule: Poule): number {
-        const config = poule.getRound().getNumber().getValidPlanningConfig();
-        return this.getNrOfCombinations(poule.getPlaces().length, config.getTeamup());
-    }
-
-    getNrOfGamesPerPlace(poule: Poule, nrOfHeadtohead?: number): number {
-        const nrOfPlaces = poule.getPlaces().length;
-        let nrOfGames = nrOfPlaces - 1;
-        const config = poule.getRound().getNumber().getValidPlanningConfig();
-        if (config.getTeamup() === true) {
-            nrOfGames = this.getNrOfCombinations(nrOfPlaces, true) - this.getNrOfCombinations(nrOfPlaces - 1, true);
+    getFieldsCommonDivisors(numbers: number[]): number[] {
+        if (numbers.length === 1) {
+            return [];
         }
-        return nrOfHeadtohead ? nrOfGames * nrOfHeadtohead : nrOfGames;
+        let commonDivisors = [];
+        for (let i = 0; i < numbers.length - 1; i++) {
+
+            const commonDivisorsIt = this.getCommonDivisors(numbers[i], numbers[i + 1]);
+            if (commonDivisors.length === 0) {
+                commonDivisors = commonDivisorsIt;
+            } else {
+                commonDivisors = commonDivisors.filter(commonDivisor => {
+                    return commonDivisorsIt.find(commonDivisorIt => commonDivisorIt === commonDivisor) !== undefined;
+                });
+            }
+        }
+        return commonDivisors;
     }
 
-    getNrOfHeadtohead(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): number {
-        const minNrOfPouleGames = this.getMinNrOfPouleGames(poule, sportPlanningConfigs);
-        const nrOfPouleGames = this.getNrOfGamesPerPoule(poule);
-        const nrOfHeadtoheadNeeded = Math.ceil(minNrOfPouleGames / nrOfPouleGames);
-        return nrOfHeadtoheadNeeded;
+    protected getCommonDivisors(a: number, b: number): number[] {
+        const gcd = (x: number, y: number): number => {
+            if (!y) {
+                return x;
+            }
+            return gcd(y, x % y);
+        };
+        return this.getDivisors(gcd(a, b)).reverse();
     }
+
+    protected getDivisors(number: number): number[] {
+        const divisors = [];
+        for (let currentDivisor = 1; currentDivisor <= number; currentDivisor++) {
+            if (number % currentDivisor === 0) {
+                divisors.push(currentDivisor);
+            }
+        }
+        return divisors;
+    }
+
+    getNrOfPouleGames(poule: Poule, nrOfHeadtohead?: number): number {
+        const config = poule.getRound().getNumber().getValidPlanningConfig();
+        if (nrOfHeadtohead === undefined) {
+            nrOfHeadtohead = config.getNrOfHeadtohead();
+        }
+        return this.getNrOfCombinations(poule.getPlaces().length, config.getTeamup()) * nrOfHeadtohead;
+    }
+
+    // getNrOfGamesPerPlace(poule: Poule, nrOfHeadtohead?: number): number {
+    //     const nrOfPlaces = poule.getPlaces().length;
+    //     let nrOfGames = nrOfPlaces - 1;
+    //     const config = poule.getRound().getNumber().getValidPlanningConfig();
+    //     if (config.getTeamup() === true) {
+    //         nrOfGames = this.getNrOfCombinations(nrOfPlaces, true) - this.getNrOfCombinations(nrOfPlaces - 1, true);
+    //     }
+    //     return nrOfHeadtohead ? nrOfGames * nrOfHeadtohead : nrOfGames;
+    // }
 
     /**
-     * de sporten moeten allemaal dezelfde aantal deelnemers per wedstrijd hebben
      *
      * @param poule
      * @param sportPlanningConfigs
      */
-    protected getMinNrOfPouleGames(poule: Poule, sportPlanningConfigs: SportPlanningConfig[]): number {
+    getNrOfPouleGamesBySports(poule: Poule, sportsNrOfGames: SportNrOfGames[]): number {
 
         const roundNumber = poule.getRound().getNumber();
         const config = roundNumber.getValidPlanningConfig();
         // multiple sports
         let nrOfPouleGames = 0;
-        sportPlanningConfigs.forEach((sportPlanningConfig) => {
-            const minNrOfGames = sportPlanningConfig.getMinNrOfGames();
-            const nrOfGamePlaces = sportPlanningConfig.getNrOfGamePlaces(config.getTeamup());
-            nrOfPouleGames += (poule.getPlaces().length / nrOfGamePlaces * minNrOfGames);
+        sportsNrOfGames.forEach((sportNrOfGames) => {
+            const minNrOfGames = sportNrOfGames.nrOfGames;
+            const nrOfGamePlaces = this.getNrOfGamePlaces(roundNumber, sportNrOfGames.sport, config.getTeamup());
+            nrOfPouleGames += Math.ceil((poule.getPlaces().length / nrOfGamePlaces) * minNrOfGames);
         });
         return nrOfPouleGames;
+    }
+
+    getNrOfGamePlaces(roundNumber: RoundNumber, sport: Sport, teamup: boolean): number {
+        const nrOfGamePlaces = roundNumber.getSportConfig(sport).getNrOfGamePlaces();
+        return teamup ? nrOfGamePlaces * 2 : nrOfGamePlaces;
     }
 
     getNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {
@@ -131,4 +218,9 @@ export class SportPlanningConfigService {
         }
         return 1;
     }
+}
+
+export class SportNrOfGames {
+    sport: Sport;
+    nrOfGames: number;
 }

@@ -57,11 +57,11 @@ export class PlanningResourceService {
     // per plaats bijhouden: als alle sporten klaar
     protected initSportsCounter() {
         const sportPlanningConfigService = new SportPlanningConfigService();
-        const sportPlanningConfigs = this.roundNumber.getValidSportPlanningConfigs();
+        const sportPlanningConfigs = this.roundNumber.getSportPlanningConfigs();
 
         this.placesSportsCounter = {};
         this.roundNumber.getPoules().forEach(poule => {
-            const minNrOfGamesMap = sportPlanningConfigService.getMinNrOfGamesMap(poule, sportPlanningConfigs);
+            const minNrOfGamesMap = sportPlanningConfigService.getPlanningMinNrOfGamesMap(poule);
             poule.getPlaces().forEach((place: Place) => {
                 this.placesSportsCounter[place.getLocationId()] = new SportCounter(minNrOfGamesMap, sportPlanningConfigs);
             });
@@ -70,10 +70,7 @@ export class PlanningResourceService {
 
     assign(games: Game[], startDateTime: Date) {
         this.initSportsCounter();
-
         const resources = { dateTime: this.cloneDateTime(startDateTime), fields: this.fields.slice() };
-        // this.currentGameStartDate = this.cloneDateTime(dateTime);
-
         if (!this.assignBatch(games.slice(), resources, this.getMaxNrOfGamesPerBatch())) {
             throw Error('cannot assign resources');
         }
@@ -83,7 +80,6 @@ export class PlanningResourceService {
         if (nrOfGamesPerBatch === 0) {
             return false;
         }
-
         if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch(1)) === true) {
             return true;
         }
@@ -100,11 +96,18 @@ export class PlanningResourceService {
             if (games.length === 0) { // endsuccess
                 return true;
             }
+
+            // if (batch.getNumber() < 4) {
+            // console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
+            // assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
+            // console.log('-------------------');
+            // }
+
             // if (batch.getNumber() === 5) {
-            //     console.log('-------------------');
-            //     console.log('batch succes pre sort: ' + batch.getNumber());
-            //     this.consoleGames(games);
-            //     console.log('-------------------');
+            // console.log('-------------------');
+            // console.log('batch succes pre sort: ' + batch.getNumber());
+            // this.consoleGames(games);
+            // console.log('-------------------');
             // }
             this.sortGamesByInARow(games, assignedBatches);
             // if (batch.getNumber() === 5) {

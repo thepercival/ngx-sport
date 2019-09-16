@@ -75,6 +75,10 @@ export class Competition {
         return this.getLeague().getName() + ' ' + this.getSeason().getName();
     }
 
+    getNrOfFields(sport: Sport): number {
+        return this.getFields().filter(field => field.getSport() === sport).length;
+    }
+
     getFields(): Field[] {
         return this.fields;
     }
@@ -106,7 +110,7 @@ export class Competition {
     }
 
     getSports() {
-        return this.sportConfigs.map( sportConfig => sportConfig.getSport() );
+        return this.sportConfigs.map(sportConfig => sportConfig.getSport());
     }
 
     getSportConfigs(): SportConfig[] {
@@ -114,8 +118,8 @@ export class Competition {
     }
 
     getSportConfig(sport?: Sport): SportConfig {
-        const sportConfig = this.sportConfigs.find( sportConfigIt => sportConfigIt.getSport() === sport );
-        if ( sportConfig !== undefined ) {
+        const sportConfig = this.sportConfigs.find(sportConfigIt => sportConfigIt.getSport() === sport);
+        if (sportConfig !== undefined) {
             return sportConfig;
         }
         return this.getFirstSportConfig();

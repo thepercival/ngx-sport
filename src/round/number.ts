@@ -18,7 +18,7 @@ export class RoundNumber {
     protected next: RoundNumber;
     protected rounds: Round[] = [];
     protected planningConfig: PlanningConfig;
-    protected sportPlanningConfigs: SportPlanningConfig[] = [];
+    protected sportPlanningConfigs: SportPlanningConfig[];
     protected sportScoreConfigs: SportScoreConfig[] = [];
     protected id: number;
 
@@ -185,44 +185,38 @@ export class RoundNumber {
         return this.getPrevious().getValidPlanningConfig();
     }
 
-    hasMultipleSportPlanningConfigs(): boolean {
-        return this.sportPlanningConfigs.length > 1;
-    }
+    // hasMultipleSportPlanningConfigs(): boolean {
+    //     return this.sportPlanningConfigs.length > 1;
+    // }
 
-    getFirstSportPlanningConfig(): SportPlanningConfig {
-        return this.sportPlanningConfigs[0];
-    }
+    // getFirstSportPlanningConfig(): SportPlanningConfig {
+    //     return this.sportPlanningConfigs[0];
+    // }
+
+    // getSportPlanningConfigs(): SportPlanningConfig[] {
+    //     return this.sportPlanningConfigs;
+    // }
+
+    // setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
+    //     this.sportPlanningConfigs.push(sportPlanningConfig);
+    // }
 
     getSportPlanningConfigs(): SportPlanningConfig[] {
+        if (this.sportPlanningConfigs !== undefined) {
+            return this.sportPlanningConfigs;
+        }
+        this.sportPlanningConfigs = [];
+
+        this.getSportConfigs().forEach(sportConfig => {
+            const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
+            sportPlanningConfig.setMinNrOfGames(this.getCompetition().getNrOfFields(sportConfig.getSport()));
+            this.sportPlanningConfigs.push(sportPlanningConfig);
+        });
         return this.sportPlanningConfigs;
     }
 
     getSportPlanningConfig(sport: Sport): SportPlanningConfig {
-        return this.sportPlanningConfigs.find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
-    }
-
-    setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
-        this.sportPlanningConfigs.push(sportPlanningConfig);
-    }
-
-    getValidSportPlanningConfigs(): SportPlanningConfig[] {
-        return this.getSportConfigs().map(sportConfig => this.getValidSportPlanningConfig(sportConfig.getSport()));
-    }
-
-    getValidSportPlanningConfig(sport: Sport): SportPlanningConfig {
-        const sportPlanningConfig = this.getSportPlanningConfig(sport);
-        if (sportPlanningConfig !== undefined) {
-            return sportPlanningConfig;
-        }
-        return this.getPrevious().getValidSportPlanningConfig(sport);
-    }
-
-    hasMultipleSportScoreConfigs(): boolean {
-        return this.sportScoreConfigs.length > 1;
-    }
-
-    getFirstSportScoreConfig(): SportScoreConfig {
-        return this.sportScoreConfigs[0];
+        return this.getSportPlanningConfigs().find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
     }
 
     getSportScoreConfigs(): SportScoreConfig[] {

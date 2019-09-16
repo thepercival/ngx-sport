@@ -8,7 +8,7 @@ export class SportPlanningConfig {
     protected minNrOfGames: number;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber) {
-        roundNumber.getSportPlanningConfigs().push(this);
+        // roundNumber.getSportPlanningConfigs().push(this);
     }
 
     getId(): number {
@@ -35,8 +35,5 @@ export class SportPlanningConfig {
         return this.roundNumber;
     }
 
-    getNrOfGamePlaces(teamup: boolean): number {
-        const nrOfGamePlaces = this.roundNumber.getSportConfig(this.getSport()).getNrOfGamePlaces();
-        return teamup ? nrOfGamePlaces * 2 : nrOfGamePlaces;
-    }
+
 }

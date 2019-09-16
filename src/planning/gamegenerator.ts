@@ -34,14 +34,24 @@ export class GameGenerator {
 
 
     create(roundNumber: RoundNumber) {
-        this.setSportPlanningConfigs(roundNumber);
         roundNumber.getPoules().forEach(poule => {
             this.createPoule(poule, roundNumber.getValidPlanningConfig());
         });
     }
 
+    protected getSufficientNrOfHeadtohead(poule: Poule): number {
+        const roundNumber = poule.getRound().getNumber();
+        const sportsNrOfGames = this.sportPlanningConfigService.getSportsNrOfGames(roundNumber);
+        let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
+        const nrOfPouleGamesBySports = this.sportPlanningConfigService.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
+        while ((this.sportPlanningConfigService.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
+            nrOfHeadtohead++;
+        }
+        return nrOfHeadtohead;
+    }
+
     protected createPoule(poule: Poule, config: PlanningConfig) {
-        let nrOfHeadtohead = this.sportPlanningConfigService.getNrOfHeadtohead(poule, this.sportPlanningConfigs);
+        let nrOfHeadtohead = this.getSufficientNrOfHeadtohead(poule);
         if (config.getNrOfHeadtohead() > nrOfHeadtohead) {
             nrOfHeadtohead = config.getNrOfHeadtohead();
         }
@@ -57,10 +67,6 @@ export class GameGenerator {
                 });
             });
         }
-    }
-
-    protected setSportPlanningConfigs(roundNumber: RoundNumber) {
-        this.sportPlanningConfigs = roundNumber.getValidSportPlanningConfigs();
     }
 
     createPouleGameRounds(poule: Poule, teamup: boolean): PlanningGameRound[] {

@@ -150,7 +150,7 @@ export function assertSameGame(gameRounds: PlanningGameRound[], roundNr: number,
  * @param game
  */
 export function assertValidGamesParticipations(place: Place, gameRounds: PlanningGameRound[], expectedValue?: number) {
-    const sportPlanningConfigService = new SportPlanningConfigService();
+    // const sportPlanningConfigService = new SportPlanningConfigService();
     let nrOfGames = 0;
     gameRounds.forEach(gameRound => gameRound.getCombinations().forEach(combination => {
         // combination is game
@@ -165,9 +165,9 @@ export function assertValidGamesParticipations(place: Place, gameRounds: Plannin
         }
         expect(nrOfSingleGameParticipations).to.be.lessThan(2);
     }));
-    const config = place.getRound().getNumber().getValidPlanningConfig();
-    const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
-    expect(nrOfGamesPerPlace).to.equal(nrOfGames);
+    // const config = place.getRound().getNumber().getValidPlanningConfig();
+    // const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
+    // expect(nrOfGamesPerPlace).to.equal(nrOfGames);
     if (expectedValue !== undefined) {
         expect(expectedValue).to.equal(nrOfGames);
     }

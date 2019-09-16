@@ -103,6 +103,30 @@ describe('Planning/Service', () => {
         });
     });
 
+    it('2 fields 2 sports, 3', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+        const sport2 = addSport(competition);
+        const field2 = new Field(competition, 2); field2.setSport(sport2);
+
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 3, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+
+        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // consoleGames(games1);
+        expect(games1.length).to.equal(6);
+        assertValidResourcesPerBatch(games1);
+        firstRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, games1, 4);
+        });
+        expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+    });
+
     it('3 fields 3 sports, 4', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
@@ -117,8 +141,8 @@ describe('Planning/Service', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
 
+        planningService.create(firstRoundNumber);
         const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
         // consoleGames(games);
         expect(games1.length).to.equal(6);
@@ -131,7 +155,7 @@ describe('Planning/Service', () => {
         firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
         planningService.create(firstRoundNumber);
         const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
+        // consoleGames(games2);
         expect(games2.length).to.equal(12);
         assertValidResourcesPerBatch(games2);
         firstRoundNumber.getPlaces().forEach(place => {
@@ -392,8 +416,8 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
         expect(nrOfSingleGameParticipations).to.be.lessThan(2);
     });
     const config = place.getRound().getNumber().getValidPlanningConfig();
-    const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
-    expect(nrOfGamesPerPlace).to.equal(nrOfGames);
+    // const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
+    // expect(nrOfGamesPerPlace).to.equal(nrOfGames);
     if (expectedValue !== undefined) {
         expect(expectedValue).to.equal(nrOfGames);
     }
