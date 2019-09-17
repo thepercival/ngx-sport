@@ -97,24 +97,19 @@ export class PlanningResourceService {
                 return true;
             }
 
-            // if (batch.getNumber() < 4) {
-            // console.log('batch succes: ' + batch.getNumber() + ' it(' + iteration + ')');
-            // assignedBatches.forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
-            // console.log('-------------------');
+            // if (batch.getNumber() === 6) {
+            //     console.log('------batch succes assigned batches -------------');
+            //     assignedBatches.slice().reverse().forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
             // }
 
-            // if (batch.getNumber() === 5) {
-            // console.log('-------------------');
-            // console.log('batch succes pre sort: ' + batch.getNumber());
-            // this.consoleGames(games);
-            // console.log('-------------------');
+            // if (batch.getNumber() === 6) {
+            //     console.log('------batch succes pre sort: ' + batch.getNumber() + ' -------------');
+            //     this.consoleGames(games);
             // }
             this.sortGamesByInARow(games, assignedBatches);
-            // if (batch.getNumber() === 5) {
-            //     console.log('-------------------');
-            //     console.log('batch succes post sort: ' + batch.getNumber());
+            // if (batch.getNumber() === 6) {
+            //     console.log('------batch succes post sort: ' + batch.getNumber() + ' -------------');
             //     this.consoleGames(games);
-            //     console.log('-------------------');
             // }
             return this.assignBatchHelper(games, resources, nrOfGames, nextBatch, assignedBatches, 0, iteration++);
         }
@@ -351,11 +346,14 @@ export class PlanningResourceService {
     }
 
     protected sortGamesByInARow(games: Game[], assignedBatches: PlanningResourceBatch[]) {
-        const reversed = assignedBatches.reverse();
+        assignedBatches.sort((batch1: PlanningResourceBatch, batch2: PlanningResourceBatch) => {
+            return batch2.getNumber() - batch1.getNumber();
+        });
+        // const reversedBatches = assignedBatches.reverse();
 
         const getInRow = (place: Place): number => {
             let nrInRow = 0;
-            reversed.some(batch => {
+            assignedBatches.every(batch => {
                 if (batch.hasPlace(place)) {
                     nrInRow++;
                     return true;
@@ -377,7 +375,7 @@ export class PlanningResourceService {
         };
 
         games.sort((g1: Game, g2: Game) => {
-            return getMostInRow(g2) - getMostInRow(g1);
+            return getMostInRow(g1) - getMostInRow(g2);
         });
     }
 

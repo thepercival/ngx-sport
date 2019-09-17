@@ -249,6 +249,30 @@ describe('Planning/Service', () => {
         expect(games.pop().getResourceBatch()).to.be.lessThan(9);
     });
 
+    it('2 fields, 2 sports, check games in row, 6', () => {
+        const competitionMapper = getMapper('competition');
+        const competition = competitionMapper.toObject(jsonCompetition);
+        const sport2 = addSport(competition);
+        const field2 = new Field(competition, 2); field2.setSport(sport2);
+
+        const structureService = new StructureService();
+        const structure = structureService.create(competition, 6, 1);
+        const firstRoundNumber = structure.getFirstRoundNumber();
+
+        const planningService = new PlanningService(competition);
+        planningService.create(firstRoundNumber);
+
+        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // consoleGames(games);
+        expect(games.length).to.equal(15);
+        assertValidResourcesPerBatch(games);
+        firstRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, games, 5);
+            this.assertGamesInRow(place, games, 3);
+        });
+        expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+    });
+
     it('check datetime, 5', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
