@@ -163,7 +163,7 @@ export class Game {
     }
 
     getSportScoreConfig() {
-        return this.getRound().getNumber().getSportScoreConfig(this.getField().getSport());
+        return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSport());
     }
 
     getScoresMoment(): number {

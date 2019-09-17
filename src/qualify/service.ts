@@ -15,8 +15,8 @@ import { State } from '../state';
 
 export class QualifyService {
     private rankingService: RankingService;
-    private poulesPlayed = {};
-    private roundPlayed: boolean;
+    private poulesFinished = {};
+    private roundFinished: boolean;
     private reservationService: QualifyReservationService;
 
     constructor(private round: Round, ruleSet: number) {
@@ -62,7 +62,7 @@ export class QualifyService {
     protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: QualifyRuleMultiple): Place[] {
         const changedPlaces: Place[] = [];
         const toPlaces = ruleMultiple.getToPlaces();
-        if (!this.isRoundPlayed()) {
+        if (!this.isRoundFinished()) {
             toPlaces.forEach((toPlace) => {
                 toPlace.setCompetitor(undefined);
                 changedPlaces.push(toPlace);
@@ -87,7 +87,7 @@ export class QualifyService {
     }
 
     protected getQualifiedCompetitor(poule: Poule, rank: number): Competitor {
-        if (!this.isPoulePlayed(poule)) {
+        if (!this.isPouleFinished(poule)) {
             return undefined;
         }
         const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
@@ -96,18 +96,18 @@ export class QualifyService {
         return place.getCompetitor();
     }
 
-    protected isRoundPlayed(): boolean {
-        if (this.roundPlayed === undefined) {
-            this.roundPlayed = this.round.getPoules().every(poule => this.isPoulePlayed(poule));
+    protected isRoundFinished(): boolean {
+        if (this.roundFinished === undefined) {
+            this.roundFinished = this.round.getPoules().every(poule => this.isPouleFinished(poule));
         }
-        return this.roundPlayed;
+        return this.roundFinished;
     }
 
-    protected isPoulePlayed(poule: Poule): boolean {
-        if (this.poulesPlayed[poule.getNumber()] === undefined) {
-            this.poulesPlayed[poule.getNumber()] = (poule.getState() === State.Finished);
+    protected isPouleFinished(poule: Poule): boolean {
+        if (this.poulesFinished[poule.getNumber()] === undefined) {
+            this.poulesFinished[poule.getNumber()] = (poule.getState() === State.Finished);
         }
-        return this.poulesPlayed[poule.getNumber()];
+        return this.poulesFinished[poule.getNumber()];
     }
 }
 

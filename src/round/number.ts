@@ -134,11 +134,9 @@ export class RoundNumber {
     }
 
     getNrOfCompetitors(): number {
-        let nrOfPlaces = 0;
-        this.getPoules().forEach(poule => {
-            nrOfPlaces += poule.getPlaces().length;
-        });
-        return nrOfPlaces;
+        let nrOfCompetitors = 0;
+        this.getRounds().forEach(round => { nrOfCompetitors += round.getNrOfCompetitors(); });
+        return nrOfCompetitors;
     }
 
     getARound(): Round {

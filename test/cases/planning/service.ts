@@ -103,7 +103,7 @@ describe('Planning/Service', () => {
         });
     });
 
-    it('2 fields 2 sports, 3', () => {
+    it('2 fields 2 sports, 5->(3)', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
         const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
@@ -111,20 +111,33 @@ describe('Planning/Service', () => {
         const field2 = new Field(competition, 2); field2.setSport(sport2);
 
         const structureService = new StructureService();
-        const structure = structureService.create(competition, 3, 1);
+        const structure = structureService.create(competition, 5, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
+
+        const rootRound = structure.getRootRound();
+        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
 
         const planningService = new PlanningService(competition);
         planningService.create(firstRoundNumber);
 
-        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+        // // consoleGames(games1);
+        // expect(games1.length).to.equal(6);
+        // assertValidResourcesPerBatch(games1);
+        // firstRoundNumber.getPlaces().forEach(place => {
+        //     this.assertValidGamesParticipations(place, games1, 4);
+        // });
+        // expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+
+        const secondRoundNumber = firstRoundNumber.getNext();
+        const games2 = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
         // consoleGames(games1);
-        expect(games1.length).to.equal(6);
-        assertValidResourcesPerBatch(games1);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games1, 4);
+        expect(games2.length).to.equal(6);
+        assertValidResourcesPerBatch(games2);
+        secondRoundNumber.getPlaces().forEach(place => {
+            this.assertValidGamesParticipations(place, games2, 4);
         });
-        expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+        expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
     });
 
     it('3 fields 3 sports, 4', () => {
