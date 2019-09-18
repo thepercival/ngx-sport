@@ -1,14 +1,12 @@
 import { RoundNumber } from '../round/number';
 
 export class PlanningConfig {
-    static readonly DEFAULTHASEXTENSION = false;
     static readonly DEFAULTENABLETIME = false;
     static readonly TEAMUP_MIN = 4;
     static readonly TEAMUP_MAX = 6;
     static readonly DEFAULTNROFHEADTOHEAD = 1;
 
     protected id: number;
-    protected hasExtension: boolean;
     protected minutesPerGameExt: number;
     protected enableTime: boolean;
     protected minutesPerGame: number;
@@ -30,12 +28,8 @@ export class PlanningConfig {
         this.id = id;
     }
 
-    getHasExtension(): boolean {
-        return this.hasExtension;
-    }
-
-    setHasExtension(hasExtension: boolean) {
-        this.hasExtension = hasExtension;
+    hasExtension(): boolean {
+        return this.getMinutesPerGameExt() > 0;
     }
 
     getMinutesPerGameExt(): number {
@@ -103,11 +97,7 @@ export class PlanningConfig {
     }
 
     getMaximalNrOfMinutesPerGame(): number {
-        let nrOfMinutes = this.getMinutesPerGame();
-        if (this.getHasExtension()) {
-            nrOfMinutes += this.getMinutesPerGameExt();
-        }
-        return nrOfMinutes;
+        return this.getMinutesPerGame() + this.getMinutesPerGameExt();
     }
 
     getRoundNumber(): RoundNumber {

@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GameScoreMapper {
 
-    constructor()  {}
+    constructor() { }
 
     toObject(json: JsonGameScore, game: Game, gameScore?: GameScore): GameScore {
         if (gameScore === undefined) {
-            gameScore = new GameScore(game, json.home, json.away, json.number);
+            gameScore = new GameScore(game, json.home, json.away, json.phase, json.number);
         }
         gameScore.setId(json.id);
         return gameScore;
@@ -18,16 +18,18 @@ export class GameScoreMapper {
     toJson(gameScore: GameScore): JsonGameScore {
         return {
             id: gameScore.getId(),
-            number: gameScore.getNumber(),
             home: gameScore.getHome(),
-            away: gameScore.getAway()
+            away: gameScore.getAway(),
+            phase: gameScore.getPhase(),
+            number: gameScore.getNumber()
         };
     }
 }
 
 export interface JsonGameScore {
     id?: number;
-    number: number;
     home: number;
     away: number;
+    phase: number;
+    number: number;
 }

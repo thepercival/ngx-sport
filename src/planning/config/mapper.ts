@@ -12,7 +12,6 @@ export class PlanningConfigMapper {
             config = new PlanningConfig(roundNumber);
         }
         config.setId(json.id);
-        config.setHasExtension(json.hasExtension);
         config.setMinutesPerGameExt(json.minutesPerGameExt);
         config.setEnableTime(json.enableTime);
         config.setMinutesPerGame(json.minutesPerGame);
@@ -27,7 +26,6 @@ export class PlanningConfigMapper {
     toJson(config: PlanningConfig): JsonPlanningConfig {
         return {
             id: config.getId(),
-            hasExtension: config.getHasExtension(),
             minutesPerGameExt: config.getMinutesPerGameExt(),
             enableTime: config.getEnableTime(),
             minutesPerGame: config.getMinutesPerGame(),
@@ -42,7 +40,6 @@ export class PlanningConfigMapper {
 
 export interface JsonPlanningConfig {
     id?: number;
-    hasExtension: boolean;
     minutesPerGameExt: number;
     enableTime: boolean;
     minutesPerGame: number;

@@ -20,7 +20,6 @@ export class GameMapper {
         game.setId(json.id);
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
-        game.setScoresMoment(json.scoresMoment);
         game.setField(poule.getCompetition().getField(json.fieldNr));
         game.setReferee(json.refereeInitials !== undefined ? poule.getCompetition().getReferee(json.refereeInitials) : undefined);
 
@@ -55,7 +54,6 @@ export class GameMapper {
             refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
             refereePlaceId: game.getRefereePlace() ? game.getRefereePlace().getId() : undefined,
             startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
-            scoresMoment: game.getScoresMoment(),
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
         };
     }
@@ -72,6 +70,5 @@ export interface JsonGame {
     startDateTime?: string;
     refereeInitials?: string;
     refereePlaceId?: number;
-    scoresMoment?: number;
     scores?: JsonGameScore[];
 }

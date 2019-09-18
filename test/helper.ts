@@ -15,7 +15,7 @@ export function setScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: n
     });
     const newHomeGoals = foundGame.getHomeAway(homePlace) === Game.HOME ? homeGoals : awayGoals;
     const newAwayGoals = foundGame.getHomeAway(awayPlace) === Game.AWAY ? awayGoals : homeGoals;
-    foundGame.getScores().push(new GameScore(foundGame, newHomeGoals, newAwayGoals));
+    foundGame.getScores().push(new GameScore(foundGame, newHomeGoals, newAwayGoals, Game.PHASE_REGULARTIME));
 
     foundGame.setState(state ? state : State.Finished);
 }

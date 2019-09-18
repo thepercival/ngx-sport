@@ -9,17 +9,16 @@ import { SportConfig } from './sport/config';
 import { State } from './state';
 
 export class Game {
-    static readonly WINNERS = 1;
-    static readonly DRAW = 2;
-    static readonly LOSERS = 3;
+    static readonly RESULT_HOME = 1;
+    static readonly RESULT_DRAW = 2;
+    static readonly RESULT_AWAY = 3;
     static readonly HOME = true;
     static readonly AWAY = false;
     static readonly ORDER_BYNUMBER = 1;
     static readonly ORDER_RESOURCEBATCH = 2;
-    static readonly MOMENT_HALFTIME = 1;
-    static readonly MOMENT_FULLTIME = 2;
-    static readonly MOMENT_EXTRATIME = 4;
-    static readonly MOMENT_PENALTIES = 8;
+    static readonly PHASE_REGULARTIME = 1;
+    static readonly PHASE_EXTRATIME = 2;
+    static readonly PHASE_PENALTIES = 4;
 
     protected id: number;
     protected poule: Poule;
@@ -31,7 +30,6 @@ export class Game {
     protected refereePlace: Place;
     protected startDateTime: Date;
     protected state: number;
-    protected scoresMoment: number;
     protected scores: GameScore[] = [];
     protected places: GamePlace[] = [];
 
@@ -158,19 +156,18 @@ export class Game {
         return this.scores;
     }
 
+    getFinalPhase(): number {
+        if (this.scores.length === 0) {
+            return 0;
+        }
+        return this.scores[this.scores.length - 1].getPhase();
+    }
+
     getSportConfig(): SportConfig {
         return this.getRound().getNumber().getCompetition().getSportConfig(this.getField().getSport());
     }
 
     getSportScoreConfig() {
         return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSport());
-    }
-
-    getScoresMoment(): number {
-        return this.scoresMoment;
-    }
-
-    setScoresMoment(scoresMoment: number): void {
-        this.scoresMoment = scoresMoment;
     }
 }

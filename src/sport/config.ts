@@ -1,5 +1,6 @@
 import { Competition } from '../competition';
 import { Sport } from '../sport';
+import { Game } from '../game';
 
 export class SportConfig {
 
@@ -16,7 +17,7 @@ export class SportConfig {
     protected pointsCalculation: number;
     protected nrOfGamePlaces: number;
 
-    constructor(protected sport: Sport, protected competition: Competition ) {
+    constructor(protected sport: Sport, protected competition: Competition) {
         this.competition.getSportConfigs().push(this);
     }
 
@@ -58,6 +59,23 @@ export class SportConfig {
 
     setDrawPointsExt(drawPointsExt: number) {
         this.drawPointsExt = drawPointsExt;
+    }
+
+    getPointsCustom(result: number, phase: number): number {
+        if (result === Game.RESULT_DRAW) {
+            if (phase === Game.PHASE_REGULARTIME) {
+                return this.getDrawPoints();
+            } else if (phase === Game.PHASE_EXTRATIME) {
+                return this.getDrawPointsExt();
+            }
+            return 0;
+        }
+        if (phase === Game.PHASE_REGULARTIME) {
+            return this.getWinPoints();
+        } else if (phase === Game.PHASE_EXTRATIME) {
+            return this.getWinPointsExt();
+        }
+        return 0;
     }
 
     getPointsCalculation(): number {

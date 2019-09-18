@@ -6,11 +6,13 @@ export class GameScore extends GameScoreHomeAway {
     static readonly RECEIVED = 2;
     protected id: number;
     protected game: Game;
+    protected phase: number;
     protected number: number;
 
-    constructor(game: Game, home: number, away: number, number?: number) {
+    constructor(game: Game, home: number, away: number, phase: number, number?: number) {
         super(home, away);
         this.setGame(game);
+        this.setPhase(phase);
         if (!number) {
             number = game.getScores().length;
         }
@@ -32,6 +34,14 @@ export class GameScore extends GameScoreHomeAway {
     private setGame(game: Game) {
         game.getScores().push(this);
         this.game = game;
+    }
+
+    getPhase(): number {
+        return this.phase;
+    }
+
+    private setPhase(phase: number): void {
+        this.phase = phase;
     }
 
     getNumber(): number {

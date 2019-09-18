@@ -53,26 +53,20 @@ export class RankingItemsGetter {
     }
 
     private getNrOfPoints(finalScore: GameScoreHomeAway, homeAway: boolean, game: Game): number {
-        let points = 0;
         if (finalScore === undefined) {
-            return points;
+            return 0;
         }
-        const scoresMoment: number = game.getScoresMoment();
-        const config = game.getSportConfig();
+        return game.getSportConfig().getPointsCustom(this.getResult(finalScore, homeAway), game.getFinalPhase());
+    }
+
+    private getResult(finalScore: GameScoreHomeAway, homeAway: boolean): number {
+        if (this.getGameScorePart(finalScore, homeAway) === this.getGameScorePart(finalScore, !homeAway)) {
+            return Game.RESULT_DRAW;
+        }
         if (this.getGameScorePart(finalScore, homeAway) > this.getGameScorePart(finalScore, !homeAway)) {
-            if (scoresMoment === Game.MOMENT_EXTRATIME) {
-                points += config.getWinPointsExt();
-            } else {
-                points += config.getWinPoints();
-            }
-        } else if (this.getGameScorePart(finalScore, homeAway) === this.getGameScorePart(finalScore, !homeAway)) {
-            if (scoresMoment === Game.MOMENT_EXTRATIME) {
-                points += config.getDrawPointsExt();
-            } else {
-                points += config.getDrawPoints();
-            }
+            return homeAway === Game.HOME ? Game.RESULT_HOME : Game.RESULT_AWAY;
         }
-        return points;
+        return homeAway === Game.HOME ? Game.RESULT_AWAY : Game.RESULT_HOME;
     }
 
     private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number, sub: boolean): number {
