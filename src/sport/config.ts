@@ -61,23 +61,6 @@ export class SportConfig {
         this.drawPointsExt = drawPointsExt;
     }
 
-    getPointsCustom(result: number, phase: number): number {
-        if (result === Game.RESULT_DRAW) {
-            if (phase === Game.PHASE_REGULARTIME) {
-                return this.getDrawPoints();
-            } else if (phase === Game.PHASE_EXTRATIME) {
-                return this.getDrawPointsExt();
-            }
-            return 0;
-        }
-        if (phase === Game.PHASE_REGULARTIME) {
-            return this.getWinPoints();
-        } else if (phase === Game.PHASE_EXTRATIME) {
-            return this.getWinPointsExt();
-        }
-        return 0;
-    }
-
     getPointsCalculation(): number {
         return this.pointsCalculation;
     }

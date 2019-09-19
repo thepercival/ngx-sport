@@ -1,3 +1,5 @@
+import { Game } from '../../game';
+
 export class GameScoreHomeAway {
 
     protected home: number;
@@ -22,5 +24,12 @@ export class GameScoreHomeAway {
 
     setAway(away: number): void {
         this.away = away;
+    }
+
+    getResult(): number {
+        if (this.getHome() === this.getAway()) {
+            return Game.RESULT_DRAW;
+        }
+        return (this.getHome() > this.getAway()) ? Game.RESULT_HOME : Game.RESULT_DRAW;
     }
 }

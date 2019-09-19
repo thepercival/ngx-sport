@@ -56,17 +56,29 @@ export class RankingItemsGetter {
         if (finalScore === undefined) {
             return 0;
         }
-        return game.getSportConfig().getPointsCustom(this.getResult(finalScore, homeAway), game.getFinalPhase());
+        if (this.isWin(finalScore, homeAway)) {
+            if (game.getFinalPhase() === Game.PHASE_REGULARTIME) {
+                return game.getSportConfig().getWinPoints();
+            } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+                return game.getSportConfig().getWinPointsExt();
+            }
+        } else if (this.isDraw(finalScore)) {
+            if (game.getFinalPhase() === Game.PHASE_REGULARTIME) {
+                return game.getSportConfig().getDrawPoints();
+            } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+                return game.getSportConfig().getDrawPointsExt();
+            }
+        }
+        return 0;
     }
 
-    private getResult(finalScore: GameScoreHomeAway, homeAway: boolean): number {
-        if (this.getGameScorePart(finalScore, homeAway) === this.getGameScorePart(finalScore, !homeAway)) {
-            return Game.RESULT_DRAW;
-        }
-        if (this.getGameScorePart(finalScore, homeAway) > this.getGameScorePart(finalScore, !homeAway)) {
-            return homeAway === Game.HOME ? Game.RESULT_HOME : Game.RESULT_AWAY;
-        }
-        return homeAway === Game.HOME ? Game.RESULT_AWAY : Game.RESULT_HOME;
+    private isWin(finalScore: GameScoreHomeAway, homeAway: boolean): boolean {
+        return (finalScore.getResult() === Game.RESULT_HOME && homeAway === Game.HOME)
+            || (finalScore.getResult() === Game.RESULT_AWAY && homeAway === Game.AWAY);
+    }
+
+    private isDraw(finalScore: GameScoreHomeAway): boolean {
+        return finalScore.getResult() === Game.RESULT_DRAW;
     }
 
     private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number, sub: boolean): number {
