@@ -98,8 +98,8 @@ export class Competition {
         return this.referees;
     }
 
-    getReferee(initials: string): Referee {
-        return this.referees.find(refereeIt => initials === refereeIt.getInitials());
+    getReferee(rank: number): Referee {
+        return this.referees.find(refereeIt => rank === refereeIt.getRank());
     }
 
     removeReferee(referee: Referee) {

@@ -21,7 +21,7 @@ export class GameMapper {
         game.setResourceBatch(json.resourceBatch);
         game.setState(json.state);
         game.setField(poule.getCompetition().getField(json.fieldNr));
-        game.setReferee(json.refereeInitials !== undefined ? poule.getCompetition().getReferee(json.refereeInitials) : undefined);
+        game.setReferee(json.refereeRank !== undefined ? poule.getCompetition().getReferee(json.refereeRank) : undefined);
 
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         while (game.getScores().length > 0) {
@@ -51,7 +51,7 @@ export class GameMapper {
             resourceBatch: game.getResourceBatch(),
             fieldNr: game.getField().getNumber(),
             state: game.getState(),
-            refereeInitials: game.getReferee() ? game.getReferee().getInitials() : undefined,
+            refereeRank: game.getReferee() ? game.getReferee().getRank() : undefined,
             refereePlaceId: game.getRefereePlace() ? game.getRefereePlace().getId() : undefined,
             startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
@@ -68,7 +68,7 @@ export interface JsonGame {
     fieldNr: number;
     state: number;
     startDateTime?: string;
-    refereeInitials?: string;
+    refereeRank?: number;
     refereePlaceId?: number;
     scores?: JsonGameScore[];
 }

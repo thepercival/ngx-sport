@@ -5,13 +5,14 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class RefereeMapper {
 
-    constructor()  {}
+    constructor() { }
 
     toObject(json: JsonReferee, competition: Competition, referee?: Referee): Referee {
         if (referee === undefined) {
-            referee = new Referee(competition, json.initials);
+            referee = new Referee(competition, json.rank);
         }
         referee.setId(json.id);
+        referee.setInitials(json.initials);
         referee.setName(json.name);
         referee.setInfo(json.info);
         referee.setEmailaddress(json.emailaddress);
@@ -21,6 +22,7 @@ export class RefereeMapper {
     toJson(referee: Referee): JsonReferee {
         return {
             id: referee.getId(),
+            rank: referee.getRank(),
             initials: referee.getInitials(),
             name: referee.getName(),
             emailaddress: referee.getEmailaddress(),
@@ -31,6 +33,7 @@ export class RefereeMapper {
 
 export interface JsonReferee {
     id?: number;
+    rank: number;
     initials: string;
     name?: string;
     emailaddress?: string;
