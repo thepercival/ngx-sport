@@ -21,206 +21,179 @@ import { jsonCompetition } from '../../data/competition';
 
 describe('Planning/Service', () => {
 
-    it('game creation default', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+    // it('game creation default', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 9, 3);
-        const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 9, 3);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
 
-        expect(firstRoundNumber.getGames().length).to.equal(9);
-        assertValidResourcesPerBatch(firstRoundNumber.getGames());
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 2);
-        });
-    });
+    //     expect(firstRoundNumber.getGames().length).to.equal(9);
+    //     assertValidResourcesPerBatch(firstRoundNumber.getGames());
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 2);
+    //     });
+    // });
 
-    // with one poule referee can be from same poule
-    it('self referee 1 poule of 3', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
+    // // with one poule referee can be from same poule
+    // it('self referee 1 poule of 3', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 3, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        firstRoundNumber.getPlanningConfig().setSelfReferee(true);
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 3, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+    //     firstRoundNumber.getPlanningConfig().setSelfReferee(true);
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
 
-        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
 
-        expect(games.length).to.equal(3);
-        const firstGame = games.shift();
-        expect(firstGame.getResourceBatch()).to.equal(1);
-        expect(firstGame.getRefereePlace()).to.equal(firstGame.getPoule().getPlace(1));
-        expect(games.shift().getResourceBatch()).to.equal(2);
-        expect(games.shift().getResourceBatch()).to.equal(3);
+    //     expect(games.length).to.equal(3);
+    //     const firstGame = games.shift();
+    //     expect(firstGame.getResourceBatch()).to.equal(1);
+    //     expect(firstGame.getRefereePlace()).to.equal(firstGame.getPoule().getPlace(1));
+    //     expect(games.shift().getResourceBatch()).to.equal(2);
+    //     expect(games.shift().getResourceBatch()).to.equal(3);
 
-        assertValidResourcesPerBatch(firstRoundNumber.getGames());
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 2);
-        });
-    });
+    //     assertValidResourcesPerBatch(firstRoundNumber.getGames());
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 2);
+    //     });
+    // });
 
-    // games should be ordered by roundnumber, subnumber because if sorted by poule
-    // the planning is not optimized.
-    // If all competitors of poule A play first and there are still fields free
-    // than they cannot be referee. This will be most bad when there are two poules.
-    it('self referee 4 fields, 66', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
-        const field3 = new Field(competition, 3); field3.setSport(competition.getFirstSportConfig().getSport());
-        const field4 = new Field(competition, 4); field4.setSport(competition.getFirstSportConfig().getSport());
+    // // games should be ordered by roundnumber, subnumber because if sorted by poule
+    // // the planning is not optimized.
+    // // If all competitors of poule A play first and there are still fields free
+    // // than they cannot be referee. This will be most bad when there are two poules.
+    // it('self referee 4 fields, 66', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
+    //     const field3 = new Field(competition, 3); field3.setSport(competition.getFirstSportConfig().getSport());
+    //     const field4 = new Field(competition, 4); field4.setSport(competition.getFirstSportConfig().getSport());
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 12, 2);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        firstRoundNumber.getPlanningConfig().setSelfReferee(true);
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 12, 2);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+    //     firstRoundNumber.getPlanningConfig().setSelfReferee(true);
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
 
-        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
-        expect(games.length).to.equal(30);
+    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games);
+    //     expect(games.length).to.equal(30);
 
-        expect(games.shift().getResourceBatch()).to.equal(1);
-        expect(games.shift().getResourceBatch()).to.equal(1);
-        expect(games.shift().getResourceBatch()).to.equal(1);
-        expect(games.shift().getResourceBatch()).to.equal(1);
-        expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+    //     expect(games.shift().getResourceBatch()).to.equal(1);
+    //     expect(games.shift().getResourceBatch()).to.equal(1);
+    //     expect(games.shift().getResourceBatch()).to.equal(1);
+    //     expect(games.shift().getResourceBatch()).to.equal(1);
+    //     expect(games.pop().getResourceBatch()).to.be.lessThan(9);
 
-        assertValidResourcesPerBatch(firstRoundNumber.getGames());
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 5);
-        });
-    });
+    //     assertValidResourcesPerBatch(firstRoundNumber.getGames());
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 5);
+    //     });
+    // });
 
-    it('2 fields 2 sports, 5->(3)', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-        const sport2 = addSport(competition);
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 5, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-
-        const rootRound = structure.getRootRound();
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
-
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
-
-        // const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // // consoleGames(games1);
-        // expect(games1.length).to.equal(6);
-        // assertValidResourcesPerBatch(games1);
-        // firstRoundNumber.getPlaces().forEach(place => {
-        //     this.assertValidGamesParticipations(place, games1, 4);
-        // });
-        // expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
-
-        const secondRoundNumber = firstRoundNumber.getNext();
-        const games2 = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games1);
-        expect(games2.length).to.equal(6);
-        assertValidResourcesPerBatch(games2);
-        secondRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games2, 4);
-        });
-        expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
-    });
-
-    it('3 fields 3 sports, 4', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-        const sport2 = addSport(competition);
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
-        const sport3 = addSport(competition);
-        const field3 = new Field(competition, 3); field3.setSport(sport3);
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-
-        const planningService = new PlanningService(competition);
-
-        planningService.create(firstRoundNumber);
-        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
-        expect(games1.length).to.equal(6);
-        assertValidResourcesPerBatch(games1);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games1, 3);
-        });
-        expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
-
-        firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
-        planningService.create(firstRoundNumber);
-        const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games2);
-        expect(games2.length).to.equal(12);
-        assertValidResourcesPerBatch(games2);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games2, 6);
-        });
-        expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
-
-        firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(3);
-        planningService.create(firstRoundNumber);
-        const games3 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
-        expect(games3.length).to.equal(18);
-
-        assertValidResourcesPerBatch(games3);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games3, 9);
-        });
-    });
-
-    it('2 fields 2 sports, 5', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-        const sport2 = addSport(competition);
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 5, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
-
-        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games1);
-        expect(games1.length).to.equal(10);
-        assertValidResourcesPerBatch(games1);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games1, 4);
-        });
-        expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
-    });
-
-    // should not be possible, fields determine nrofsports
-    // it('2 sports(1 & 3 fields), 5', () => {
+    // it('2 fields 2 sports, 5->(3)', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
     //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
     //     const sport2 = addSport(competition);
     //     const field2 = new Field(competition, 2); field2.setSport(sport2);
-    //     const field3 = new Field(competition, 3); field3.setSport(sport2);
-    //     const field4 = new Field(competition, 4); field4.setSport(sport2);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 5, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    //     const rootRound = structure.getRootRound();
+    //     structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
+
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
+
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(10);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 4);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
+
+    //     const secondRoundNumber = firstRoundNumber.getNext();
+    //     const games2 = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games2.length).to.equal(6);
+    //     assertValidResourcesPerBatch(games2);
+    //     secondRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games2, 4);
+    //     });
+    //     expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
+    // });
+
+    // it('3 fields 3 sports, 4', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    //     const sport3 = addSport(competition);
+    //     const field3 = new Field(competition, 3); field3.setSport(sport3);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 4, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    //     const planningService = new PlanningService(competition);
+
+    //     planningService.create(firstRoundNumber);
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games);
+    //     expect(games1.length).to.equal(6);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 3);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
+    //     planningService.create(firstRoundNumber);
+    //     const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games2);
+    //     expect(games2.length).to.equal(12);
+    //     assertValidResourcesPerBatch(games2);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games2, 6);
+    //     });
+    //     expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
+
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(3);
+    //     planningService.create(firstRoundNumber);
+    //     const games3 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games);
+    //     expect(games3.length).to.equal(18);
+
+    //     assertValidResourcesPerBatch(games3);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games3, 9);
+    //     });
+    // });
+
+    // it('2 fields 2 sports, 5', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
 
     //     const structureService = new StructureService();
     //     const structure = structureService.create(competition, 5, 1);
@@ -229,38 +202,91 @@ describe('Planning/Service', () => {
     //     const planningService = new PlanningService(competition);
     //     planningService.create(firstRoundNumber);
 
-    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
     //     // consoleGames(games1);
-    //     expect(games.length).to.equal(10);
-    //     assertValidResourcesPerBatch(games);
+    //     expect(games1.length).to.equal(10);
+    //     assertValidResourcesPerBatch(games1);
     //     firstRoundNumber.getPlaces().forEach(place => {
-    //         this.assertValidGamesParticipations(place, games, 4);
+    //         this.assertValidGamesParticipations(place, games1, 4);
     //     });
-    //     expect(games.pop().getResourceBatch()).to.be.lessThan(6);
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
     // });
 
-    it('2 fields check games in row, 6', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
+    // it('3 fields 2 sports, 5', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    //     const field3 = new Field(competition, 3); field3.setSport(sport2);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 5, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
 
-        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
-        expect(games.length).to.equal(15);
-        assertValidResourcesPerBatch(games);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games, 5);
-            this.assertGamesInRow(place, games, 3);
-        });
-        expect(games.pop().getResourceBatch()).to.be.lessThan(9);
-    });
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(10);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 4);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
+    // });
+
+
+    // // should not be possible, fields determine nrofsports
+    // // it('2 sports(1 & 3 fields), 5', () => {
+    // //     const competitionMapper = getMapper('competition');
+    // //     const competition = competitionMapper.toObject(jsonCompetition);
+    // //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    // //     const sport2 = addSport(competition);
+    // //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    // //     const field3 = new Field(competition, 3); field3.setSport(sport2);
+    // //     const field4 = new Field(competition, 4); field4.setSport(sport2);
+
+    // //     const structureService = new StructureService();
+    // //     const structure = structureService.create(competition, 5, 1);
+    // //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    // //     const planningService = new PlanningService(competition);
+    // //     planningService.create(firstRoundNumber);
+
+    // //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    // //     // consoleGames(games1);
+    // //     expect(games.length).to.equal(10);
+    // //     assertValidResourcesPerBatch(games);
+    // //     firstRoundNumber.getPlaces().forEach(place => {
+    // //         this.assertValidGamesParticipations(place, games, 4);
+    // //     });
+    // //     expect(games.pop().getResourceBatch()).to.be.lessThan(6);
+    // // });
+
+    // // it('2 fields check games in row, 6', () => {
+    // //     const competitionMapper = getMapper('competition');
+    // //     const competition = competitionMapper.toObject(jsonCompetition);
+    // //     const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
+
+    // //     const structureService = new StructureService();
+    // //     const structure = structureService.create(competition, 6, 1);
+    // //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    // //     const planningService = new PlanningService(competition);
+    // //     planningService.create(firstRoundNumber);
+
+    // //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    // //     // consoleGames(games);
+    // //     expect(games.length).to.equal(15);
+    // //     assertValidResourcesPerBatch(games);
+    // //     firstRoundNumber.getPlaces().forEach(place => {
+    // //         this.assertValidGamesParticipations(place, games, 5);
+    // //         this.assertGamesInRow(place, games, 3);
+    // //     });
+    // //     expect(games.pop().getResourceBatch()).to.be.lessThan(9);
+    // // });
 
     it('2 fields, 2 sports, check games in row, 6', () => {
         const competitionMapper = getMapper('competition');
@@ -286,99 +312,99 @@ describe('Planning/Service', () => {
         expect(games.pop().getResourceBatch()).to.be.lessThan(9);
     });
 
-    it('check datetime, 5', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-        const sport2 = addSport(competition);
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
+    // it('check datetime, 5', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 5, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 5, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
 
-        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games1);
-        expect(games1.length).to.equal(10);
-        assertValidResourcesPerBatch(games1);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games1, 4);
-        });
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(10);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 4);
+    //     });
 
-        const lastGame = games1.pop();
-        expect(lastGame.getResourceBatch()).to.equal(5);
+    //     const lastGame = games1.pop();
+    //     expect(lastGame.getResourceBatch()).to.equal(5);
 
-        const endDateTime = planningService.calculateEndDateTime(firstRoundNumber);
-        const nrOfMinutes = firstRoundNumber.getValidPlanningConfig().getMaximalNrOfMinutesPerGame();
-        const lastGameStartDateTime = lastGame.getStartDateTime();
-        lastGameStartDateTime.setMinutes(lastGameStartDateTime.getMinutes() + nrOfMinutes);
-        expect(lastGameStartDateTime.getTime()).to.equal(endDateTime.getTime());
-    });
-
-
-    /**
-     * time disabled
-     */
-    it('time disabled 4', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        firstRoundNumber.getPlanningConfig().setEnableTime(false);
-
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
-        planningService.reschedule(firstRoundNumber);
-
-        const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // consoleGames(games);
-        expect(games.length).to.equal(6);
-
-        assertValidResourcesPerBatch(firstRoundNumber.getGames());
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 3);
-        });
-    });
-
-    /**
-     * time disabled
-     */
-    it('second round losers before winners, 44', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 8, 2);
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const rootRound = structure.getRootRound();
-
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 2);
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 2);
+    //     const endDateTime = planningService.calculateEndDateTime(firstRoundNumber);
+    //     const nrOfMinutes = firstRoundNumber.getValidPlanningConfig().getMaximalNrOfMinutesPerGame();
+    //     const lastGameStartDateTime = lastGame.getStartDateTime();
+    //     lastGameStartDateTime.setMinutes(lastGameStartDateTime.getMinutes() + nrOfMinutes);
+    //     expect(lastGameStartDateTime.getTime()).to.equal(endDateTime.getTime());
+    // });
 
 
-        const planningService = new PlanningService(competition);
-        planningService.create(firstRoundNumber);
-        planningService.reschedule(firstRoundNumber);
+    // /**
+    //  * time disabled
+    //  */
+    // it('time disabled 4', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
 
-        const secondRoundNumber = firstRoundNumber.getNext();
-        planningService.reschedule(secondRoundNumber);
-        const games = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 4, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+    //     firstRoundNumber.getPlanningConfig().setEnableTime(false);
 
-        expect(games.length).to.equal(2);
-        // consoleGames(games);
-        expect(games[0].getRound().getParentQualifyGroup().getWinnersOrLosers()).to.equal(QualifyGroup.LOSERS);
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
+    //     planningService.reschedule(firstRoundNumber);
 
-        assertValidResourcesPerBatch(secondRoundNumber.getGames());
-        secondRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, secondRoundNumber.getGames(), 1);
-        });
-    });
+    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games);
+    //     expect(games.length).to.equal(6);
+
+    //     assertValidResourcesPerBatch(firstRoundNumber.getGames());
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, firstRoundNumber.getGames(), 3);
+    //     });
+    // });
+
+    // /**
+    //  * time disabled
+    //  */
+    // it('second round losers before winners, 44', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 8, 2);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const rootRound = structure.getRootRound();
+
+    //     structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 2);
+    //     structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 2);
+
+
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
+    //     planningService.reschedule(firstRoundNumber);
+
+    //     const secondRoundNumber = firstRoundNumber.getNext();
+    //     planningService.reschedule(secondRoundNumber);
+    //     const games = planningService.getGamesForRoundNumber(secondRoundNumber, Game.ORDER_RESOURCEBATCH);
+
+    //     expect(games.length).to.equal(2);
+    //     // consoleGames(games);
+    //     expect(games[0].getRound().getParentQualifyGroup().getWinnersOrLosers()).to.equal(QualifyGroup.LOSERS);
+
+    //     assertValidResourcesPerBatch(secondRoundNumber.getGames());
+    //     secondRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, secondRoundNumber.getGames(), 1);
+    //     });
+    // });
 
 
 

@@ -58,12 +58,13 @@ export class PlanningResourceService {
     protected initSportsCounter() {
         const sportPlanningConfigService = new SportPlanningConfigService();
         const sportPlanningConfigs = this.roundNumber.getSportPlanningConfigs();
-
         this.placesSportsCounter = {};
         this.roundNumber.getPoules().forEach(poule => {
+            const nrOfHeadtohead = sportPlanningConfigService.getSufficientNrOfHeadtohead(poule);
+            const nrOfGamesToGo = sportPlanningConfigService.getNrOfGamesPerPlace(poule, nrOfHeadtohead);
             const minNrOfGamesMap = sportPlanningConfigService.getPlanningMinNrOfGamesMap(poule);
             poule.getPlaces().forEach((place: Place) => {
-                this.placesSportsCounter[place.getLocationId()] = new SportCounter(minNrOfGamesMap, sportPlanningConfigs);
+                this.placesSportsCounter[place.getLocationId()] = new SportCounter(nrOfGamesToGo, minNrOfGamesMap, sportPlanningConfigs);
             });
         });
     }
@@ -89,18 +90,13 @@ export class PlanningResourceService {
     }
 
     protected assignBatchHelper(games: Game[], resources: Resources, nrOfGames: number, batch: PlanningResourceBatch
-        , assignedBatches: PlanningResourceBatch[] = [], nrOfGamesTried: number = 0, iteration: number = 0): boolean {
+        , assignedBatches: PlanningResourceBatch[] = [], nrOfGamesTried: number = 0): boolean {
 
         if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
             const nextBatch = this.toNextBatch(batch, assignedBatches, resources);
             if (games.length === 0) { // endsuccess
                 return true;
             }
-
-            // if (batch.getNumber() === 6) {
-            //     console.log('------batch succes assigned batches -------------');
-            //     assignedBatches.slice().reverse().forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
-            // }
 
             // if (batch.getNumber() === 6) {
             //     console.log('------batch succes pre sort: ' + batch.getNumber() + ' -------------');
@@ -111,7 +107,13 @@ export class PlanningResourceService {
             //     console.log('------batch succes post sort: ' + batch.getNumber() + ' -------------');
             //     this.consoleGames(games);
             // }
-            return this.assignBatchHelper(games, resources, nrOfGames, nextBatch, assignedBatches, 0, iteration++);
+
+            // if (batch.getNumber() === 6) {
+            // console.log('------batch succes assigned batches (games per batch(' + nrOfGames + ' )-------------');
+            // assignedBatches.slice().reverse().forEach(batchTmp => this.consoleGames(batchTmp.getGames()));
+            // }
+
+            return this.assignBatchHelper(games, resources, nrOfGames, nextBatch, assignedBatches, 0);
         }
         if (games.length === nrOfGamesTried) {
             // this.releaseBatch(batch);
@@ -125,13 +127,13 @@ export class PlanningResourceService {
             this.assignGame(batch, game, resources);
             // console.log('assigned game .. ' + this.consoleGame(game));
             const resourcesTmp = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
-            if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch, assignedBatches.slice(), 0, iteration++) === true) {
+            if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch, assignedBatches.slice(), 0) === true) {
                 return true;
             }
             this.releaseGame(batch, game, resources);
         }
         games.push(game);
-        return this.assignBatchHelper(games, resources, nrOfGames, batch, assignedBatches, ++nrOfGamesTried, iteration++);
+        return this.assignBatchHelper(games, resources, nrOfGames, batch, assignedBatches, ++nrOfGamesTried);
     }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game, resources: Resources) {
@@ -181,21 +183,6 @@ export class PlanningResourceService {
         return new PlanningResourceBatch(batch.getNumber() + 1);
     }
 
-    /*protected shouldGoToNextBatch(batch: PlanningResourceBatch): boolean {
-        if (this.config.getSelfReferee() && this.nrOfPoules > 1 && batch.getNrOfPoules() === this.nrOfPoules) {
-            return true;
-        }
-        if (!this.isSomeFieldAssignable()) {
-            return true;
-        }
-        if (!this.isSomeRefereeAssignable(batch)) {
-            return true;
-        }
-        let minNrNeeded = this.config.getNrOfGamePlaces();
-        minNrNeeded += this.config.getSelfReferee() ? 1 : 0;
-        return batch.getNrOfPlaces() + minNrNeeded > this.nrOfPlaces;
-    }*/
-
     private isGameAssignable(batch: PlanningResourceBatch, game: Game, resources: Resources): boolean {
         if (!this.isSomeFieldAssignable(game, resources)) {
             return false;
@@ -218,9 +205,6 @@ export class PlanningResourceService {
     private areAllPlacesAssignable(batch: PlanningResourceBatch, game: Game): boolean {
         return this.getPlaces(game).every(place => {
             return !batch.hasPlace(place);
-            // moved to isFieldAssignable
-            // const sportCounter = this.placesSportsCounter[place.getLocationId()];
-            // return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
         });
     }
 
@@ -281,7 +265,7 @@ export class PlanningResourceService {
     private isSportAssignable(game: Game, sport: Sport): boolean {
         return this.getPlaces(game).every(place => {
             const sportCounter = this.placesSportsCounter[place.getLocationId()];
-            return (!sportCounter.isSportDone(sport) || sportCounter.isDone());
+            return sportCounter.isAssignable(sport);
         });
     }
 
@@ -349,8 +333,6 @@ export class PlanningResourceService {
         assignedBatches.sort((batch1: PlanningResourceBatch, batch2: PlanningResourceBatch) => {
             return batch2.getNumber() - batch1.getNumber();
         });
-        // const reversedBatches = assignedBatches.reverse();
-
         const getInRow = (place: Place): number => {
             let nrInRow = 0;
             assignedBatches.every(batch => {
@@ -362,7 +344,6 @@ export class PlanningResourceService {
             });
             return nrInRow;
         };
-
         const getMostInRow = (game: Game): number => {
             let maxNrInRow = 0;
             this.getPlaces(game).forEach(place => {

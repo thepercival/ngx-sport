@@ -20,7 +20,6 @@ export const jsonStructure332a: JsonStructure = {
         'sportScoreConfigs': [],
         'planningConfig': {
             'nrOfHeadtohead': 1,
-            'hasExtension': false,
             'minutesPerGameExt': 0,
             'enableTime': true,
             'minutesPerGame': 20,

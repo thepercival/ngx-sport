@@ -2,12 +2,12 @@ import { Sport } from '../sport';
 import { SportPlanningConfig } from './planningconfig';
 
 export class SportCounter {
-    private nrOfSports: number;
-    private nrOfSportsDone = 0;
+    private nrToGo = 0;
     private minNrOfGamesMap: SportIdToNumberMap = {};
     private nrOfGamesDoneMap: SportIdToNumberMap = {};
 
     constructor(
+        private nrOfGamesToGo: number,
         minNrOfGamesMap: SportIdToNumberMap,
         sportPlanningConfigs: SportPlanningConfig[]
     ) {
@@ -15,37 +15,32 @@ export class SportCounter {
             const sportId = sportPlanningConfig.getSport().getId();
             this.minNrOfGamesMap[sportId] = minNrOfGamesMap[sportId];
             this.nrOfGamesDoneMap[sportId] = 0;
+            this.nrToGo += this.minNrOfGamesMap[sportId];
         });
-        this.nrOfSports = sportPlanningConfigs.length;
     }
 
-    isDone(): boolean {
-        if (this.nrOfSportsDone > this.nrOfSports) {
-            throw Error('nrsportsdone cannot be greater than nrofsports,' +
-                'add PlanningResourceService.placesSportsCounter to Resources');
-        }
-        return this.nrOfSportsDone === this.nrOfSports;
-    }
-
-    isSportDone(sport: Sport): boolean {
-        return this.nrOfGamesDoneMap[sport.getId()] >= this.minNrOfGamesMap[sport.getId()];
+    isAssignable(sport: Sport): boolean {
+        const isSportDone = this.nrOfGamesDoneMap[sport.getId()] >= this.minNrOfGamesMap[sport.getId()];
+        return (this.nrToGo - (isSportDone ? 0 : 1)) <= (this.nrOfGamesToGo - 1);
     }
 
     addGame(sport: Sport) {
         if (this.nrOfGamesDoneMap[sport.getId()] === undefined) {
             this.nrOfGamesDoneMap[sport.getId()] = 0;
         }
-        this.nrOfGamesDoneMap[sport.getId()]++;
-        if (this.nrOfGamesDoneMap[sport.getId()] === this.minNrOfGamesMap[sport.getId()]) {
-            this.nrOfSportsDone++;
+        if (this.nrOfGamesDoneMap[sport.getId()] < this.minNrOfGamesMap[sport.getId()]) {
+            this.nrToGo--;
         }
+        this.nrOfGamesDoneMap[sport.getId()]++;
+        this.nrOfGamesToGo--;
     }
 
     removeGame(sport: Sport) {
-        if (this.nrOfGamesDoneMap[sport.getId()] === this.minNrOfGamesMap[sport.getId()]) {
-            this.nrOfSportsDone--;
-        }
         this.nrOfGamesDoneMap[sport.getId()]--;
+        if (this.nrOfGamesDoneMap[sport.getId()] < this.minNrOfGamesMap[sport.getId()]) {
+            this.nrToGo++;
+        }
+        this.nrOfGamesToGo++;
     }
 }
 

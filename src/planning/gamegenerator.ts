@@ -10,7 +10,6 @@ import { PlanningGameRound } from './gameround';
 
 export class GameGenerator {
     private sportPlanningConfigService: SportPlanningConfigService;
-    private sportPlanningConfigs: SportPlanningConfig[];
 
     public constructor() {
         this.sportPlanningConfigService = new SportPlanningConfigService();
@@ -39,19 +38,8 @@ export class GameGenerator {
         });
     }
 
-    protected getSufficientNrOfHeadtohead(poule: Poule): number {
-        const roundNumber = poule.getRound().getNumber();
-        const sportsNrOfGames = this.sportPlanningConfigService.getSportsNrOfGames(roundNumber);
-        let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
-        const nrOfPouleGamesBySports = this.sportPlanningConfigService.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
-        while ((this.sportPlanningConfigService.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
-            nrOfHeadtohead++;
-        }
-        return nrOfHeadtohead;
-    }
-
     protected createPoule(poule: Poule, config: PlanningConfig) {
-        let nrOfHeadtohead = this.getSufficientNrOfHeadtohead(poule);
+        let nrOfHeadtohead = this.sportPlanningConfigService.getSufficientNrOfHeadtohead(poule);
         if (config.getNrOfHeadtohead() > nrOfHeadtohead) {
             nrOfHeadtohead = config.getNrOfHeadtohead();
         }

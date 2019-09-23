@@ -147,15 +147,26 @@ export class SportPlanningConfigService {
         return this.getNrOfCombinations(poule.getPlaces().length, config.getTeamup()) * nrOfHeadtohead;
     }
 
-    // getNrOfGamesPerPlace(poule: Poule, nrOfHeadtohead?: number): number {
-    //     const nrOfPlaces = poule.getPlaces().length;
-    //     let nrOfGames = nrOfPlaces - 1;
-    //     const config = poule.getRound().getNumber().getValidPlanningConfig();
-    //     if (config.getTeamup() === true) {
-    //         nrOfGames = this.getNrOfCombinations(nrOfPlaces, true) - this.getNrOfCombinations(nrOfPlaces - 1, true);
-    //     }
-    //     return nrOfHeadtohead ? nrOfGames * nrOfHeadtohead : nrOfGames;
-    // }
+    getNrOfGamesPerPlace(poule: Poule, nrOfHeadtohead?: number): number {
+        const nrOfPlaces = poule.getPlaces().length;
+        let nrOfGames = nrOfPlaces - 1;
+        const config = poule.getRound().getNumber().getValidPlanningConfig();
+        if (config.getTeamup() === true) {
+            nrOfGames = this.getNrOfCombinations(nrOfPlaces, true) - this.getNrOfCombinations(nrOfPlaces - 1, true);
+        }
+        return nrOfGames * (nrOfHeadtohead === undefined ? config.getNrOfHeadtohead() : nrOfHeadtohead);
+    }
+
+    getSufficientNrOfHeadtohead(poule: Poule): number {
+        const roundNumber = poule.getRound().getNumber();
+        const sportsNrOfGames = this.getSportsNrOfGames(roundNumber);
+        let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
+        const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
+        while ((this.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
+            nrOfHeadtohead++;
+        }
+        return nrOfHeadtohead;
+    }
 
     /**
      *

@@ -27,7 +27,6 @@ export class Place {
         }
         this.setNumber(number);
         poule.addPlace(this);
-        this.locationId = poule.getRound().getNumberAsValue() + '.' + poule.getNumber() + '.' + number;
     }
 
     getId(): number {
@@ -119,6 +118,9 @@ export class Place {
      * within roundnumber
      */
     getLocationId(): string {
+        if (this.locationId === undefined) {
+            this.locationId = this.poule.getRound().getStructureNumber() + '.' + this.poule.getNumber() + '.' + this.number;
+        }
         return this.locationId;
     }
 
