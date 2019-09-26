@@ -3,7 +3,7 @@ import { Injectable, ViewChildren } from '@angular/core';
 import { Poule } from '../../poule';
 import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
-import { SportIdToNumberMap } from '../counter';
+import { SportIdToNumberMap } from '../../planning/place';
 import { SportPlanningConfig } from '../planningconfig';
 
 @Injectable()

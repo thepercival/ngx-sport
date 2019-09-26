@@ -3,16 +3,58 @@ import { Place } from '../../place';
 import { Poule } from '../../poule';
 
 export class PlanningResourceBatch {
-
+    private number: number;
+    private next: PlanningResourceBatch;
     private games: Game[] = [];
     private poules: Poule[] = [];
     private places: Place[] = [];
 
-    constructor(private number: number) {
+    constructor(private previous?: PlanningResourceBatch) {
+        this.number = previous === undefined ? 1 : previous.getNumber() + 1;
     }
 
     getNumber(): number {
         return this.number;
+    }
+
+    hasNext(): boolean {
+        return this.next !== undefined;
+    }
+
+    getNext(): PlanningResourceBatch {
+        return this.next;
+    }
+
+    createNext(): PlanningResourceBatch {
+        this.next = new PlanningResourceBatch(this);
+        return this.getNext();
+    }
+
+    removeNext() {
+        this.next = undefined;
+    }
+
+    hasPrevious(): boolean {
+        return this.previous !== undefined;
+    }
+
+    getPrevious(): PlanningResourceBatch {
+        return this.previous;
+    }
+
+    getRoot(): PlanningResourceBatch {
+        return this.hasPrevious() ? this.previous.getRoot() : this;
+    }
+
+    getGamesInARow(place: Place): number {
+        const hasPlace = this.hasPlace(place);
+        if (!hasPlace) {
+            return 0;
+        }
+        if (!this.hasPrevious()) {
+            return 1;
+        }
+        return this.getPrevious().getGamesInARow(place) + 1;
     }
 
     add(game: Game) {
@@ -20,7 +62,7 @@ export class PlanningResourceBatch {
         if (this.poules.find(pouleIt => game.getPoule() === pouleIt) === undefined) {
             this.poules.push(game.getPoule());
         }
-        this.getPlaces(game).forEach(place => {
+        this.getPlacesForGame(game).forEach(place => {
             if (this.places.find(placeIt => place === placeIt) === undefined) {
                 this.places.push(place);
             }
@@ -37,7 +79,7 @@ export class PlanningResourceBatch {
             this.poules.splice(this.poules.indexOf(game.getPoule()), 1);
         }
 
-        this.getPlaces(game).forEach(placeIt => {
+        this.getPlacesForGame(game).forEach(placeIt => {
             this.places.splice(this.places.indexOf(placeIt), 1);
         });
         if (game.getRefereePlace()) {
@@ -45,7 +87,11 @@ export class PlanningResourceBatch {
         }
     }
 
-    protected getPlaces(game: Game): Place[] {
+    getPlaces(): Place[] {
+        return this.places;
+    }
+
+    protected getPlacesForGame(game: Game): Place[] {
         return game.getPlaces().map(gamePlace => gamePlace.getPlace());
     }
 

@@ -10,7 +10,7 @@ import {
     SportScoreConfigService,
     StructureService,
 } from '../../../../public_api';
-import { SportIdToNumberMap } from '../../../../src/sport/counter';
+import { SportIdToNumberMap } from '../../../../src/planning/place';
 import { getMapper } from '../../../createmapper';
 import { jsonCompetition } from '../../../data/competition';
 
