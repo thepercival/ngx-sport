@@ -30,6 +30,7 @@ export class GameGenerator {
     //     }
     // }
 
+    // getPlanningMinNrOfGamesMap(poule: Poule): SportIdToNumberMap {
 
 
     create(roundNumber: RoundNumber) {

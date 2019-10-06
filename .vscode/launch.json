@@ -21,6 +21,36 @@
                 "NODE_ENV": "development",
             },
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "profiler",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "tsconfig-profile.json"
+            },
+            "args": [
+                "${workspaceFolder}/test/profile/planning.ts"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "profilerjs",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "tsconfig-profile-2.json"
+            },
+            "args": [
+                "${workspaceFolder}/test/profile/planning.ts"
+            ]
         }
     ]
 }

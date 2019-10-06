@@ -36,7 +36,7 @@ export class SportPlanningConfigService {
         return this.convertToMap(this.getSportsNrOfGames(roundNumber));
     }
 
-    protected convertToMap(sportsNrOfGames: SportNrOfGames[]): SportIdToNumberMap {
+    convertToMap(sportsNrOfGames: SportNrOfGames[]): SportIdToNumberMap {
         const minNrOfGamesMap = {};
         sportsNrOfGames.forEach(sportNrOfGames => {
             minNrOfGamesMap[sportNrOfGames.sport.getId()] = sportNrOfGames.nrOfGames;
@@ -64,7 +64,7 @@ export class SportPlanningConfigService {
     // wanneer er van elke sport een veelvoud aan sporten is, dan is het headtohead bepalend
     // bij een veelvoud kan de mapping kan alleen naar beneden worden aangepast als daardoor
     // aan de headtohead wordt voldaan
-    getPlanningMinNrOfGamesMap(poule: Poule): SportIdToNumberMap {
+    getPlanningMinNrOfGames(poule: Poule): SportNrOfGames[] {
 
         // const map = this.getDefaultMinNrOfGamesMap(roundNumber);
         // poule.getRound().getNumber().getValidPlanningConfig().getNrOfHeadtohead()
@@ -94,7 +94,7 @@ export class SportPlanningConfigService {
             newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
         }
 
-        return this.convertToMap(bestSportsNrOfGames);
+        return bestSportsNrOfGames;
 
         // bv 2 sporten met 4 en 8 velden
         // kan worden teruggebracht naar 1, 2 of 2, 4
@@ -106,7 +106,6 @@ export class SportPlanningConfigService {
         }
         let commonDivisors = [];
         for (let i = 0; i < numbers.length - 1; i++) {
-
             const commonDivisorsIt = this.getCommonDivisors(numbers[i], numbers[i + 1]);
             if (commonDivisors.length === 0) {
                 commonDivisors = commonDivisorsIt;
@@ -159,8 +158,9 @@ export class SportPlanningConfigService {
 
     getSufficientNrOfHeadtohead(poule: Poule): number {
         const roundNumber = poule.getRound().getNumber();
-        const sportsNrOfGames = this.getSportsNrOfGames(roundNumber);
+        // const sportsNrOfGames = this.getSportsNrOfGames(roundNumber);
         let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
+        const sportsNrOfGames = this.getPlanningMinNrOfGames(poule);
         const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
         while ((this.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
             nrOfHeadtohead++;
@@ -179,17 +179,29 @@ export class SportPlanningConfigService {
         const config = roundNumber.getValidPlanningConfig();
         // multiple sports
         let nrOfPouleGames = 0;
+        // let totalNrOfGamePlaces = 0;
         sportsNrOfGames.forEach((sportNrOfGames) => {
             const minNrOfGames = sportNrOfGames.nrOfGames;
             const nrOfGamePlaces = this.getNrOfGamePlaces(roundNumber, sportNrOfGames.sport, config.getTeamup());
+            // nrOfPouleGames += (poule.getPlaces().length / nrOfGamePlaces) * minNrOfGames;
             nrOfPouleGames += Math.ceil((poule.getPlaces().length / nrOfGamePlaces) * minNrOfGames);
         });
+        // return Math.ceil(nrOfPouleGames);
         return nrOfPouleGames;
     }
 
     getNrOfGamePlaces(roundNumber: RoundNumber, sport: Sport, teamup: boolean): number {
         const nrOfGamePlaces = roundNumber.getSportConfig(sport).getNrOfGamePlaces();
         return teamup ? nrOfGamePlaces * 2 : nrOfGamePlaces;
+    }
+
+    getNrOfCombinationsExt(roundNumber: RoundNumber): number {
+        let nrOfGames = 0;
+        const teamup = roundNumber.getValidPlanningConfig().getTeamup();
+        roundNumber.getPoules().forEach(poule => {
+            nrOfGames += this.getNrOfCombinations(poule.getPlaces().length, teamup);
+        });
+        return nrOfGames;
     }
 
     getNrOfCombinations(nrOfPlaces: number, teamup: boolean): number {

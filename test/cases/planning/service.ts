@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-const colors = require('colors');
 import {
     Competition,
     Field,
@@ -17,9 +16,45 @@ import {
 } from '../../../public_api';
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
-
+import { consoleGames } from '../../helper';
+import { poules2 } from './variations/2';
+import { poules3 } from './variations/3';
+import { poules4 } from './variations/4';
 
 describe('Planning/Service', () => {
+
+    it('check Planning variations', () => {
+        const maxNrOfCompetitors = 16;
+        const maxNrOfSports = 4;
+
+        for (let nrOfCompetitors = 2; nrOfCompetitors <= maxNrOfCompetitors; nrOfCompetitors++) {
+            let nrOfPoules = 0;
+            // let teamup = false;
+            // let selfReferee = false;
+            const maxNrOfHeadtohead = 4;
+            while (Math.floor(nrOfCompetitors / ++nrOfPoules) >= 2) {
+                for (let nrOfSports = 1; nrOfSports <= maxNrOfSports; nrOfSports++) {
+                    for (let nrOfFields = nrOfSports; nrOfFields <= nrOfSports * 2; nrOfFields++) {
+                        for (let nrOfHeadtohead = 1; nrOfHeadtohead <= maxNrOfHeadtohead; nrOfHeadtohead++) {
+                            if (nrOfCompetitors !== 4 /* || nrOfPoules !== 1
+                            || nrOfSports !== 2 || nrOfFields !== 3 || nrOfHeadtohead !== 4*/ ) {
+                                continue;
+                            }
+
+                            const assertConfig = getAssertionsConfig(nrOfCompetitors, nrOfPoules, nrOfSports, nrOfFields, nrOfHeadtohead);
+                            console.log(
+                                'nrOfCompetitors ' + nrOfCompetitors + ', nrOfPoules ' + nrOfPoules + ', nrOfSports ' + nrOfSports
+                                + ', nrOfFields ' + nrOfFields + ', nrOfHeadtohead ' + nrOfHeadtohead
+                            );
+                            if (assertConfig !== undefined) {
+                                checkPlanning(nrOfCompetitors, nrOfPoules, nrOfSports, nrOfFields, nrOfHeadtohead, assertConfig);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     // it('game creation default', () => {
     //     const competitionMapper = getMapper('competition');
@@ -103,6 +138,7 @@ describe('Planning/Service', () => {
     //     });
     // });
 
+
     // it('2 fields 2 sports, 5->(3)', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
@@ -121,7 +157,7 @@ describe('Planning/Service', () => {
     //     planningService.create(firstRoundNumber);
 
     //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-    //     consoleGames(games1);
+    //     // consoleGames(games1);
     //     expect(games1.length).to.equal(10);
     //     assertValidResourcesPerBatch(games1);
     //     firstRoundNumber.getPlaces().forEach(place => {
@@ -155,8 +191,43 @@ describe('Planning/Service', () => {
 
     //     planningService.create(firstRoundNumber);
     //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-    //     // consoleGames(games1);
+    //     consoleGames(games1); console.log('');
     //     expect(games1.length).to.equal(6);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 3);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
+    //     planningService.create(firstRoundNumber);
+    //     const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     consoleGames(games2); console.log('');
+    //     expect(games2.length).to.equal(12);
+    //     assertValidResourcesPerBatch(games2);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games2, 6);
+    //     });
+    //     expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
+    // });
+
+    // it('2 fields 2 sports, 44', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 8, 2);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    //     const planningService = new PlanningService(competition);
+
+    //     planningService.create(firstRoundNumber);
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1); console.log('');
+    //     expect(games1.length).to.equal(12);
     //     assertValidResourcesPerBatch(games1);
     //     firstRoundNumber.getPlaces().forEach(place => {
     //         this.assertValidGamesParticipations(place, games1, 3);
@@ -165,53 +236,90 @@ describe('Planning/Service', () => {
     // });
 
 
-    it('3 fields 3 sports, 4', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
-        const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
-        const sport2 = addSport(competition);
-        const field2 = new Field(competition, 2); field2.setSport(sport2);
-        const sport3 = addSport(competition);
-        const field3 = new Field(competition, 3); field3.setSport(sport3);
+    // it('3 fields 3 sports, 4', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    //     const sport3 = addSport(competition);
+    //     const field3 = new Field(competition, 3); field3.setSport(sport3);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 1);
-        const firstRoundNumber = structure.getFirstRoundNumber();
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 4, 1);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
 
-        const planningService = new PlanningService(competition);
+    //     const planningService = new PlanningService(competition);
 
-        planningService.create(firstRoundNumber);
-        const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        consoleGames(games1);
-        expect(games1.length).to.equal(6);
-        assertValidResourcesPerBatch(games1);
-        firstRoundNumber.getPlaces().forEach(place => {
-            this.assertValidGamesParticipations(place, games1, 3);
-        });
-        expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
+    //     planningService.create(firstRoundNumber);
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(6);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 3);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(7);
 
-        // firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
-        // planningService.create(firstRoundNumber);
-        // const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // // consoleGames(games2);
-        // expect(games2.length).to.equal(12);
-        // assertValidResourcesPerBatch(games2);
-        // firstRoundNumber.getPlaces().forEach(place => {
-        //     this.assertValidGamesParticipations(place, games2, 6);
-        // });
-        // expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
+    //     planningService.create(firstRoundNumber);
+    //     const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     consoleGames(games2);
+    //     expect(games2.length).to.equal(12);
+    //     assertValidResourcesPerBatch(games2);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games2, 6);
+    //     });
+    //     expect(games2.pop().getResourceBatch()).to.be.lessThan(7);
 
-        // firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(3);
-        // planningService.create(firstRoundNumber);
-        // const games3 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-        // // consoleGames(games3);
-        // expect(games3.length).to.equal(18);
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(3);
+    //     planningService.create(firstRoundNumber);
+    //     const games3 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games3);
+    //     expect(games3.length).to.equal(18);
+    //     assertValidResourcesPerBatch(games3);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games3, 9);
+    //     });
+    //     expect(games3.pop().getResourceBatch()).to.be.lessThan(13);
+    // });
 
-        // assertValidResourcesPerBatch(games3);
-        // firstRoundNumber.getPlaces().forEach(place => {
-        //     this.assertValidGamesParticipations(place, games3, 9);
-        // });
-    });
+    // it('3 fields 3 sports, 44', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+    //     const sport3 = addSport(competition);
+    //     const field3 = new Field(competition, 3); field3.setSport(sport3);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 8, 2);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    //     const planningService = new PlanningService(competition);
+
+    //     planningService.create(firstRoundNumber);
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(12);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 3);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(13);
+
+    //     firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(2);
+    //     planningService.create(firstRoundNumber);
+    //     const games2 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     consoleGames(games2);
+    //     expect(games2.length).to.equal(24);
+    //     assertValidResourcesPerBatch(games2);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games2, 6);
+    //     });
+    //     expect(games2.pop().getResourceBatch()).to.be.lessThan(13);
+    // });
 
     // it('2 fields 2 sports, 5', () => {
     //     const competitionMapper = getMapper('competition');
@@ -236,6 +344,31 @@ describe('Planning/Service', () => {
     //     });
     //     expect(games1.pop().getResourceBatch()).to.be.lessThan(6);
     // });
+
+    // it('2 fields 2 sports, 55', () => {
+    //     const competitionMapper = getMapper('competition');
+    //     const competition = competitionMapper.toObject(jsonCompetition);
+    //     const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+    //     const sport2 = addSport(competition);
+    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
+
+    //     const structureService = new StructureService();
+    //     const structure = structureService.create(competition, 10, 2);
+    //     const firstRoundNumber = structure.getFirstRoundNumber();
+
+    //     const planningService = new PlanningService(competition);
+    //     planningService.create(firstRoundNumber);
+
+    //     const games1 = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    //     // consoleGames(games1);
+    //     expect(games1.length).to.equal(20);
+    //     assertValidResourcesPerBatch(games1);
+    //     firstRoundNumber.getPlaces().forEach(place => {
+    //         this.assertValidGamesParticipations(place, games1, 4);
+    //     });
+    //     expect(games1.pop().getResourceBatch()).to.be.lessThan(11);
+    // });
+
 
     // it('3 fields 2 sports, 5', () => {
     //     const competitionMapper = getMapper('competition');
@@ -294,30 +427,6 @@ describe('Planning/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
     //     const field2 = new Field(competition, 2); field2.setSport(competition.getFirstSportConfig().getSport());
-
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 6, 1);
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-
-    //     const planningService = new PlanningService(competition);
-    //     planningService.create(firstRoundNumber);
-
-    //     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-    //     // consoleGames(games);
-    //     expect(games.length).to.equal(15);
-    //     assertValidResourcesPerBatch(games);
-    //     firstRoundNumber.getPlaces().forEach(place => {
-    //         this.assertValidGamesParticipations(place, games, 5);
-    //         this.assertGamesInRow(place, games, 3);
-    //     });
-    //     expect(games.pop().getResourceBatch()).to.be.lessThan(9);
-    // });
-
-    // it('2 fields, 2 sports, check games in row, 6', () => {
-    //     const competitionMapper = getMapper('competition');
-    //     const competition = competitionMapper.toObject(jsonCompetition);
-    //     const sport2 = addSport(competition);
-    //     const field2 = new Field(competition, 2); field2.setSport(sport2);
 
     //     const structureService = new StructureService();
     //     const structure = structureService.create(competition, 6, 1);
@@ -507,30 +616,34 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
     // const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
     // expect(nrOfGamesPerPlace).to.equal(nrOfGames);
     if (expectedValue !== undefined) {
-        expect(expectedValue).to.equal(nrOfGames);
+        expect(expectedValue, 'nrofgames for 1 place are not equal').to.equal(nrOfGames);
     }
 }
 
 export function assertGamesInRow(place: Place, games: Game[], maxInRow: number) {
-    let nrOfGamesInRow = 0; let previousBatchNr = 1; let placeInBatch = false;
+    const batches = {}; let maxBatchNr = 0;
     games.forEach(game => {
-        if (previousBatchNr === (game.getResourceBatch() - 1)) {
-            previousBatchNr = game.getResourceBatch();
-            if (placeInBatch) {
-                nrOfGamesInRow++;
-                expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
-            } else {
-                nrOfGamesInRow = 0;
+        if (batches[game.getResourceBatch()] === undefined) {
+            batches[game.getResourceBatch()] = false;
+            if (game.getResourceBatch() > maxBatchNr) {
+                maxBatchNr = game.getResourceBatch();
             }
-            placeInBatch = false;
         }
-        if (placeInBatch) {
+        if (batches[game.getResourceBatch()]) {
             return;
         }
         const places = game.getPlaces().map(gamePlace => gamePlace.getPlace());
-        placeInBatch = places.some(placeIt => placeIt === place);
+        batches[game.getResourceBatch()] = places.some(placeIt => placeIt === place);
     });
-    expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
+    let nrOfGamesInRow = 0;
+    for (let i = 1; i <= maxBatchNr; i++) {
+        if (batches[i]) {
+            nrOfGamesInRow++;
+            expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
+        } else {
+            nrOfGamesInRow = 0;
+        }
+    }
 }
 
 /**
@@ -553,54 +666,13 @@ export function assertValidResourcesPerBatch(games: Game[]) {
             expect(batchResource.places.find(place => place === placeIt)).to.equal(undefined);
             batchResource.places.push(placeIt);
         });
-        expect(batchResource.fields.find(field => field === game.getField())).to.equal(undefined);
+        expect(batchResource.fields.find(field => field === game.getField()), 'same field in one batch? ').to.equal(undefined);
         batchResource.fields.push(game.getField());
         if (game.getReferee()) {
             expect(batchResource.referees.find(referee => referee === game.getReferee())).to.equal(undefined);
-            batchResource.fields.push(game.getReferee());
+            batchResource.referees.push(game.getReferee());
         }
     });
-}
-
-export function consoleGames(games: Game[]) {
-    const nameService = new NameService();
-    games.forEach(game => {
-        const homeNumber = game.getPlaces(Game.HOME)[0].getPlace().getNumber();
-        const home = consoleColor(homeNumber, nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, false));
-        const awayNumber = game.getPlaces(Game.AWAY)[0].getPlace().getNumber();
-        const away = consoleColor(awayNumber, nameService.getPlacesFromName(game.getPlaces(Game.AWAY), false, false));
-        const refDescr = (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '');
-        const refNumber = game.getRefereePlace() ? game.getRefereePlace().getNumber() : 0;
-        console.log(
-            'poule ' + game.getPoule().getNumber()
-            + ', ' + home
-            + ' vs ' + away
-            + ' , ref ' + consoleColor(refNumber, refDescr)
-            + ', batch ' + game.getResourceBatch()
-            + ', field ' + game.getField().getNumber()
-            + ', sport ' + game.getField().getSport().getName() + (game.getField().getSport().getCustomId() ?
-                '(' + game.getField().getSport().getCustomId() + ')' : '')
-        );
-    });
-}
-
-export function consoleColor(number: number, content: string): string {
-    if (number === 1) {
-        return colors.red(content);
-    } else if (number === 2) {
-        return colors.green(content);
-    } else if (number === 3) {
-        return colors.blue(content);
-    } else if (number === 4) {
-        return colors.yellow(content);
-    } else if (number === 5) {
-        return colors.magenta(content);
-    } else if (number === 6) {
-        return colors.grey(content);
-    } else if (number === 7) {
-        return colors.cyan(content);
-    }
-    return content;
 }
 
 export function addSport(competition: Competition) {
@@ -610,4 +682,99 @@ export function addSport(competition: Competition) {
     sport.setId(id);
     sportConfigService.createDefault(sport, competition);
     return sport;
+}
+
+
+
+export function checkPlanning(
+    nrOfCompetitors: number,
+    nrOfPoules: number,
+    nrOfSports: number,
+    nrOfFields: number,
+    nrOfHeadtohead: number,
+    assertConfig: AssertConfig
+) {
+    const competitionMapper = getMapper('competition');
+    const competition = competitionMapper.toObject(jsonCompetition);
+    const competitionFirstSports = [];
+    for (let sportNr = 2; sportNr <= nrOfSports; sportNr++) {
+        competitionFirstSports.push(addSport(competition));
+    }
+    const competitionSports = competition.getSportConfigs().map(sportConfig => sportConfig.getSport());
+
+    let sports = [];
+    while (sports.length < nrOfFields) {
+        const init = sports.length === 0;
+        sports = sports.concat(competitionSports);
+        if (init && competitionSports.length > 1) {
+            sports.shift();
+        }
+    }
+    for (let fieldNr = 2; fieldNr <= nrOfFields; fieldNr++) {
+        const field = new Field(competition, fieldNr);
+        field.setSport(sports.shift());
+    }
+
+    const structureService = new StructureService();
+    const structure = structureService.create(competition, nrOfCompetitors, nrOfPoules);
+    const firstRoundNumber = structure.getFirstRoundNumber();
+    firstRoundNumber.getValidPlanningConfig().setNrOfHeadtohead(nrOfHeadtohead);
+
+    const planningService = new PlanningService(competition);
+
+    if (nrOfCompetitors === 4 && nrOfSports === 3 && nrOfFields === 3 && nrOfHeadtohead === 1) {
+        const x = 1;
+    }
+
+    planningService.create(firstRoundNumber);
+    const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
+    consoleGames(games); console.log('');
+    expect(games.length, 'het aantal wedstrijd voor de hele ronde komt niet overeen').to.equal(assertConfig.nrOfGames);
+    assertValidResourcesPerBatch(games);
+    firstRoundNumber.getPlaces().forEach(place => {
+        assertValidGamesParticipations(place, games, assertConfig.nrOfPlaceGames);
+        assertGamesInRow(place, games, assertConfig.maxNrOfGamesInARow);
+    });
+    expect(games.pop().getResourceBatch(), 'het aantal batches moet minder zijn dan ..').to.be.lessThan(assertConfig.maxNrOfBatches + 1);
+}
+
+export function getAssertionsConfig(
+    nrOfCompetitors: number,
+    nrOfPoules: number,
+    nrOfSports: number,
+    nrOfFields: number,
+    nrOfHeadtohead: number
+): AssertConfig {
+    const competitors = {
+        2: poules2,
+        3: poules3,
+        4: poules4
+    };
+    if (competitors[nrOfCompetitors] === undefined) {
+        return undefined;
+    }
+    const nrOfCompetitorsConfigs = competitors[nrOfCompetitors];
+    if (nrOfCompetitorsConfigs.nrOfPoules[nrOfPoules] === undefined) {
+        return undefined;
+    }
+    const nrOfPoulesConfigs = nrOfCompetitorsConfigs.nrOfPoules[nrOfPoules];
+    if (nrOfPoulesConfigs.nrOfSports[nrOfSports] === undefined) {
+        return undefined;
+    }
+    const nrOfSportsConfigs = nrOfPoulesConfigs.nrOfSports[nrOfSports];
+    if (nrOfSportsConfigs.nrOfFields[nrOfFields] === undefined) {
+        return undefined;
+    }
+    const nrOfFieldsConfigs = nrOfSportsConfigs.nrOfFields[nrOfFields];
+    if (nrOfFieldsConfigs.nrOfHeadtohead[nrOfHeadtohead] === undefined) {
+        return undefined;
+    }
+    return nrOfFieldsConfigs.nrOfHeadtohead[nrOfHeadtohead];
+}
+
+export class AssertConfig {
+    nrOfGames: number;
+    maxNrOfGamesInARow: number;
+    maxNrOfBatches: number;
+    nrOfPlaceGames: number;
 }

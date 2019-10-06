@@ -1,0 +1,26 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "outDir": "./test/profile/dist",
+        "sourceMap": true,
+        "declaration": false,
+        "module": "commonjs",
+        "target": "es5",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "es5",
+            "dom"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "./test/profile/planning.ts"
+    ]
+}

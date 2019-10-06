@@ -11,6 +11,8 @@ import { PlanningConfig } from '../config';
 import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
 import { SportCounter } from '../../sport/counter';
+import { StructureService } from '../../structure/service';
+import { consoleBatch } from '../../../test/helper';
 
 export class PlanningResourceService {
     private referees: Referee[];
@@ -23,8 +25,9 @@ export class PlanningResourceService {
     private nrOfPoules: number;
     private maxNrOfGamesPerBatch: number;
     private maxNrOfGamesInARow: number;
-    private multipleSports: boolean;
-
+    private nrOfSports: number;
+    private counter = 0;
+    private tryShuffledFields = false;
     private planningPlaces: PlanningPlaceMap;
 
     constructor(
@@ -61,12 +64,14 @@ export class PlanningResourceService {
     protected initPlanningPlaces() {
         const sportPlanningConfigService = new SportPlanningConfigService();
         const sportPlanningConfigs = this.roundNumber.getSportPlanningConfigs();
-        this.multipleSports = sportPlanningConfigs.length > 1;
+        this.nrOfSports = sportPlanningConfigs.length;
         this.planningPlaces = {};
         this.roundNumber.getPoules().forEach(poule => {
             const nrOfHeadtohead = sportPlanningConfigService.getSufficientNrOfHeadtohead(poule);
             const nrOfGamesToGo = sportPlanningConfigService.getNrOfGamesPerPlace(poule, nrOfHeadtohead);
-            const minNrOfGamesMap = sportPlanningConfigService.getPlanningMinNrOfGamesMap(poule);
+
+            const sportsNrOfGames = sportPlanningConfigService.getPlanningMinNrOfGames(poule);
+            const minNrOfGamesMap = sportPlanningConfigService.convertToMap(sportsNrOfGames);
             poule.getPlaces().forEach((place: Place) => {
                 const sportCounter = new SportCounter(nrOfGamesToGo, minNrOfGamesMap, sportPlanningConfigs);
                 this.planningPlaces[place.getLocationId()] = new PlanningPlace(sportCounter);
@@ -77,7 +82,7 @@ export class PlanningResourceService {
     assign(games: Game[], startDateTime: Date) {
         this.initPlanningPlaces();
         const resources = { dateTime: this.cloneDateTime(startDateTime), fields: this.fields.slice() };
-        if (!this.assignBatch(games.slice(), resources, this.getMaxNrOfGamesPerBatch())) {
+        if (!this.assignBatch(games.slice(), resources, this.getMaxNrOfGamesPerBatch(games.length))) {
             throw Error('cannot assign resources');
         }
     }
@@ -87,67 +92,82 @@ export class PlanningResourceService {
             return false;
         }
         this.setMaxNrOfGamesInARow(nrOfGamesPerBatch);
-        if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch()) === true) {
-            return true;
-        }
-        return this.assignBatch(games,
-            { dateTime: this.cloneDateTime(resources.dateTime), fields: this.fields.slice() },
-            nrOfGamesPerBatch - 1);
+        return this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch());
+        // if (this.assignBatchHelper(games.slice(), resources, nrOfGamesPerBatch, new PlanningResourceBatch()) === true) {
+        //     return true;
+        // }
+        // return this.assignBatch(games,
+        //     { dateTime: this.cloneDateTime(resources.dateTime), fields: this.fields.slice() },
+        //     nrOfGamesPerBatch - 1);
     }
 
     protected assignBatchHelper(games: Game[], resources: Resources, nrOfGames: number, batch: PlanningResourceBatch
         , nrOfGamesTried: number = 0): boolean {
 
         if (batch.getGames().length === nrOfGames || games.length === 0) { // batchsuccess
+            // consoleBatch(batch);
             const nextBatch = this.toNextBatch(batch, resources);
             if (games.length === 0) { // endsuccess
-                // console.log('------batch ' + batch.getNumber() +
-                //     ' succes assigned batches (games per batch(' + nrOfGames + ' )-------------');
-                // this.consoleBatch(batch);
+                // consoleBatch(batch);
                 return true;
             }
-            // if (batch.getNumber() === 6) {
-            //     console.log('------batch succes pre sort: ' + batch.getNumber() + ' -------------');
-            //     this.consoleGames(games);
-            // }
-            // this.sortGamesByInARow(games, assignedBatches);
-            // if (batch.getNumber() === 6) {
-            //     console.log('------batch succes post sort: ' + batch.getNumber() + ' -------------');
-            //     this.consoleGames(games);
-            // }
-            // if (batch.getNumber() === 5) {
-            console.log('------batch ' + batch.getNumber() +
-                ' succes assigned batches (games per batch(' + nrOfGames + ' )-------------');
-            this.consoleBatch(batch);
-            // }
-
             return this.assignBatchHelper(games, resources, nrOfGames, nextBatch);
         }
         if (games.length === nrOfGamesTried) {
             return false;
         }
-        const game = games.shift();
-        if (this.isGameAssignable(batch, game, resources)) {
-            this.assignGame(batch, game, resources);
-            if (batch.getGames().length === nrOfGames) {
-                const resourcesNext = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
-                if (this.assignBatchHelper(games.slice(), resourcesNext, nrOfGames, batch)) {
-                    return true;
-                }
-            } else { // try fields
-                let nrOfFieldsTried = 0;
-                while (nrOfFieldsTried++ < resources.fields.length) {
-                    const resourcesTmp = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
-                    if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfGames, batch)) {
+
+        const resources3 = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
+        let nrOfFieldsTried = 0;
+        while (nrOfFieldsTried++ < resources3.fields.length) {
+            let nrOfGamesTriedPerField = nrOfGamesTried;
+            // console.log('batchnr: ' + this.getConsoleString(batch.getNumber(), 2)
+            //     + ', gamesInBatch: ' + this.getConsoleString(batch.getGames().length, 2)
+            //     + ', fieldsTried: ' + this.getConsoleString(nrOfFieldsTried - 1, 1)
+            //     + ', gamesTried: ' + this.getConsoleString(nrOfGamesTriedPerField, 2)
+            //     + ', gamesPerBatch: ' + nrOfGames);
+            const resources2 = { dateTime: this.cloneDateTime(resources3.dateTime), fields: resources3.fields.slice() };
+            {
+                const game = games.shift();
+                if (this.isGameAssignable(batch, game, resources2)) {
+                    this.assignGame(batch, game, resources2);
+                    if (this.assignBatchHelper(games.slice(), resources2, nrOfGames, batch)) {
                         return true;
                     }
-                    resources.fields.push(resources.fields.shift());
+                    this.releaseGame(batch, game, resources2);
                 }
+                games.push(game);
             }
-            this.releaseGame(batch, game, resources);
+            if (this.assignBatchHelper(games, resources3, nrOfGames, batch, ++nrOfGamesTriedPerField)) {
+                return true;
+            }
+            if (!this.tryShuffledFields) {
+                return false;
+            }
+            // if (resources2.fields.length === 0) {
+            //     const f = 1;
+            //     break;
+            // }
+            resources3.fields.push(resources3.fields.shift());
         }
-        games.push(game);
-        return this.assignBatchHelper(games, resources, nrOfGames, batch, ++nrOfGamesTried);
+        return false;
+
+        // const resources2 = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
+        // const game = games.shift();
+        // if (this.isGameAssignable(batch, game, resources)) {
+        //     this.assignGame(batch, game, resources2);
+        //     // console.log('------game for batch ' + batch.getNumber() +
+        //     //     ' : games per batch => ' + nrOfGames + ' ----------');
+        //     // console.log(this.consoleGame(batch, game));
+        //     if (this.assignBatchHelper(games.slice(), resources2, nrOfGames, batch)) {
+        //         return true;
+        //     }
+        //     this.releaseGame(batch, game, resources2);
+        // }
+        // games.push(game);
+
+        // const resources3 = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
+        // return this.assignBatchHelper(games, resources3, nrOfGames, batch, ++nrOfGamesTried);
     }
 
     protected assignGame(batch: PlanningResourceBatch, game: Game, resources: Resources) {
@@ -183,7 +203,11 @@ export class PlanningResourceService {
         batch.getGames().forEach(game => {
             game.setStartDateTime(this.cloneDateTime(resources.dateTime));
             game.setResourceBatch(batch.getNumber());
-            resources.fields.push(game.getField());
+            // hier alle velden toevoegen die er nog niet in staan
+            const fieldIndex = resources.fields.indexOf(game.getField());
+            if (fieldIndex === -1) {
+                resources.fields.push(game.getField());
+            }
             if (game.getRefereePlace()) {
                 this.refereePlaces.push(game.getRefereePlace());
             }
@@ -191,6 +215,7 @@ export class PlanningResourceService {
                 this.referees.push(game.getReferee());
             }
         });
+        // console.log('nextbatch', resources.fields.map(field => field.getNumber()).join(' & '));
         this.setNextGameStartDateTime(resources.dateTime);
         return batch.createNext();
     }
@@ -273,7 +298,22 @@ export class PlanningResourceService {
     }
 
     private releaseField(game: Game, resources: Resources) {
-        resources.fields.unshift(game.getField());
+        // resources.fields.unshift(game.getField());
+
+
+        if (resources.fieldIndex !== undefined) {
+            if (resources.fields.length === 3) {
+                const r = 4;
+            }
+            const fieldIndex = resources.fields.indexOf(game.getField());
+            if (fieldIndex === -1) {
+                resources.fields.splice(resources.fieldIndex, 0, game.getField());
+            }
+            resources.fieldIndex = undefined;
+        }
+        // const fieldIndex = resources.fields.indexOf(game.getField());
+        // resources.fields.unshift(resources.fields.splice(fieldIndex, 1).pop());
+
         game.setField(undefined);
     }
 
@@ -282,7 +322,12 @@ export class PlanningResourceService {
             return this.isSportAssignable(game, fieldIt.getSport());
         });
         if (field) {
-            game.setField(resources.fields.splice(resources.fields.indexOf(field), 1).pop());
+            // const fieldIndex = resources.fields.indexOf(field);
+            // resources.fields.splice(fieldIndex, 1);
+            // resources.fields.push(field);
+            // game.setField(field);
+            resources.fieldIndex = resources.fields.indexOf(field);
+            game.setField(resources.fields.splice(resources.fieldIndex, 1).pop());
         }
     }
 
@@ -338,7 +383,7 @@ export class PlanningResourceService {
         return this.planningPlaces[place.getLocationId()];
     }
 
-    protected getMaxNrOfGamesPerBatch(): number {
+    protected getMaxNrOfGamesPerBatch(nrOfGames: number): number {
         if (this.maxNrOfGamesPerBatch !== undefined) {
             return this.maxNrOfGamesPerBatch;
         }
@@ -348,21 +393,85 @@ export class PlanningResourceService {
             this.maxNrOfGamesPerBatch = this.referees.length;
         }
 
-        let nrOfGamePlaces = Sport.TEMPDEFAULT;
-        if (this.planningConfig.getTeamup()) {
-            nrOfGamePlaces *= 2;
-        }
-        if (this.planningConfig.getSelfReferee()) {
-            nrOfGamePlaces++;
-        }
-        const nrOfGamesSimultaneously = Math.floor(this.roundNumber.getNrOfPlaces() / nrOfGamePlaces);
+        const nrOfGamePlaces = this.getNrOfGamePlaces();
+        const nrOfRoundNumberPlaces = this.roundNumber.getNrOfPlaces();
+        const nrOfGamesSimultaneously = Math.floor(nrOfRoundNumberPlaces / nrOfGamePlaces);
+        const maxNrOfGamesPerBatchPreBorder = this.maxNrOfGamesPerBatch;
         if (nrOfGamesSimultaneously < this.maxNrOfGamesPerBatch) {
             this.maxNrOfGamesPerBatch = nrOfGamesSimultaneously;
+        }
+        const ss = new StructureService();
+        const nrOfPoulePlaces = ss.getNrOfPlacesPerPoule(this.roundNumber.getNrOfPlaces(), this.roundNumber.getPoules().length);
+        // if ((nrOfPoulePlaces - 1) === this.nrOfSports
+        //     && this.nrOfSports > 1 && this.nrOfSports === this.fields.length
+        // ) {
+        //     if (this.roundNumber.getValidPlanningConfig().getNrOfHeadtohead() === 2 ||
+        //         this.roundNumber.getValidPlanningConfig().getNrOfHeadtohead() === 3) {
+        //         this.maxNrOfGamesPerBatch = 2;
+        //     } else {
+        //         this.maxNrOfGamesPerBatch = 1; // this.roundNumber.getPoules().length;
+        //     }
+        // }
+
+        const nrOfPlacesPerBatch = nrOfGamePlaces * this.maxNrOfGamesPerBatch;
+        if (this.nrOfSports > 1) {
+            /*if (this.roundNumber.getNrOfPlaces() === nrOfPlacesPerBatch) {
+                this.maxNrOfGamesPerBatch--;
+            } else*/ if (Math.floor(this.roundNumber.getNrOfPlaces() / nrOfPlacesPerBatch) < 2) {
+                const sportPlanningConfigService = new SportPlanningConfigService();
+                const defaultNrOfGames = sportPlanningConfigService.getNrOfCombinationsExt(this.roundNumber);
+                const nrOfHeadtothead = nrOfGames / defaultNrOfGames;
+                // if (((nrOfPlacesPerBatch * nrOfHeadtothead) % this.roundNumber.getNrOfPlaces()) !== 0) {
+
+                if (maxNrOfGamesPerBatchPreBorder >= this.maxNrOfGamesPerBatch) {
+
+
+                    if ((nrOfHeadtothead % 2) === 1) {
+                        this.maxNrOfGamesPerBatch--;
+                    } else if (this.nrOfSports === (nrOfPoulePlaces - 1)) {
+                        this.maxNrOfGamesPerBatch--;
+                    }
+
+                    // if ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) <= this.maxNrOfGamesPerBatch) {
+                    //     this.maxNrOfGamesPerBatch--;
+                    // }
+                }
+
+                /*if (maxNrOfGamesPerBatchPreBorder === this.maxNrOfGamesPerBatch
+                    && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) === this.maxNrOfGamesPerBatch)) {
+                    this.maxNrOfGamesPerBatch--;
+                } else if (maxNrOfGamesPerBatchPreBorder > this.maxNrOfGamesPerBatch
+                    && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) < this.maxNrOfGamesPerBatch)) {
+                    this.maxNrOfGamesPerBatch--;
+                } /*else {
+                    this.tryShuffledFields = true;
+                }*/
+                // nrOfPlacesPerBatch deelbaar door nrOfGames
+                // als wat is verschil met:
+                // 3v en 4d 1H2H
+                // 3v en 4d 2H2H deze niet heeft 12G
+                // 2v en 4d
+            }
+        }
+
+
+        // this.maxNrOfGamesPerBatch moet 1 zijn, maar er kunnen twee, dus bij meerdere sporten
+        // en totaal aantal deelnemers <= aantal deelnemers per batch
+        //      bij  2v  4d dan 4 <= 4 1H2H van 2 naar 1
+        //      bij 21v 44d dan 8 <= 8 1H2H van 3 naar 2
+        //      bij  3v  4d dan 4 <= 6 1H2H van 2 naar 1
+        //      bij  3v  4d dan 4 <= 6 2H2H van 2 naar 1(FOUT)
+
+        // if (this.fields.length === 3 && this.nrOfSports === 2) {
+        //     this.tryShuffledFields = true;
+        // }
+        if (this.maxNrOfGamesPerBatch < 1) {
+            this.maxNrOfGamesPerBatch = 1;
         }
         return this.maxNrOfGamesPerBatch;
     }
 
-    protected setMaxNrOfGamesInARow(maxNrOfGamesPerBatch: number) {
+    protected getNrOfGamePlaces(): number {
         let nrOfGamePlaces = Sport.TEMPDEFAULT;
         if (this.planningConfig.getTeamup()) {
             nrOfGamePlaces *= 2;
@@ -370,63 +479,52 @@ export class PlanningResourceService {
         if (this.planningConfig.getSelfReferee()) {
             nrOfGamePlaces++;
         }
+        return nrOfGamePlaces;
+    }
+
+    protected setMaxNrOfGamesInARow(maxNrOfGamesPerBatch: number) {
+        const nrOfGamePlaces = this.getNrOfGamePlaces();
 
         const nrOfPlaces = this.roundNumber.getNrOfPlaces();
+        // @TODO only when all games(field->sports) have equal nrOfPlacesPerGame
+        const nrOfPlacesPerBatch = nrOfGamePlaces * maxNrOfGamesPerBatch;
 
-        const nrOfRestPerBatch = nrOfPlaces - (nrOfGamePlaces * maxNrOfGamesPerBatch);
+        const nrOfRestPerBatch = nrOfPlaces - nrOfPlacesPerBatch;
         if (nrOfRestPerBatch < 1) {
             this.maxNrOfGamesInARow = -1;
         } else {
             this.maxNrOfGamesInARow = Math.ceil(nrOfPlaces / nrOfRestPerBatch) - 1;
-            if ((nrOfGamePlaces * maxNrOfGamesPerBatch) === nrOfRestPerBatch) {
+            if (nrOfPlacesPerBatch === nrOfRestPerBatch) {
                 this.maxNrOfGamesInARow++;
             }
+            if (this.nrOfSports > 1) {
+                if ((nrOfPlaces - 1) === nrOfPlacesPerBatch) {
+                    this.maxNrOfGamesInARow++;
+                }
+            }
+
+            // nrOfPlacesPerBatch = 2
+            // nrOfRestPerBatch = 1
+            // nrOfPlaces = 3
+
+            // bij 3 teams en 2 teams per batch speelt ook aantal placesper
+            // if (nrOfPlacesPerBatch === nrOfRestPerBatch) {
+            //     this.maxNrOfGamesInARow++;
+            // }
+            // if (this.nrOfSports >= Math.ceil(nrOfRestPerBatch / this.fields.length)
+            //     && this.nrOfSports > 1 /*&& this.nrOfSports === this.fields.length*/) {
+            //     // this.maxNrOfGamesInARow++;
+            //     this.maxNrOfGamesInARow++;
+            //     // this.maxNrOfGamesInARow = -1;
+            // }
         }
-        this.maxNrOfGamesInARow = -1;
+        // if (this.nrOfSports > 1) {
+        //     this.maxNrOfGamesInARow = -1;
+        // }
+        // this.maxNrOfGamesInARow = -1;
     }
-
-    protected sortGamesByInARow(games: Game[], assignedBatches: PlanningResourceBatch[]) {
-        assignedBatches.sort((batch1: PlanningResourceBatch, batch2: PlanningResourceBatch) => {
-            return batch2.getNumber() - batch1.getNumber();
-        });
-        const getInRow = (place: Place): number => {
-            let nrInRow = 0;
-            assignedBatches.every(batch => {
-                if (batch.hasPlace(place)) {
-                    nrInRow++;
-                    return true;
-                }
-                return false;
-            });
-            return nrInRow;
-        };
-        const getMostInRow = (game: Game): number => {
-            let maxNrInRow = 0;
-            this.getPlaces(game).forEach(place => {
-                const nrInRow = getInRow(place);
-                if (nrInRow > maxNrInRow) {
-                    maxNrInRow = nrInRow;
-                }
-            });
-            return maxNrInRow;
-        };
-
-        games.sort((g1: Game, g2: Game) => {
-            return getMostInRow(g1) - getMostInRow(g2);
-        });
-    }
-
 
     /* time functions */
-
-    private getEndDateTime(date: Date): Date {
-        if (date === undefined) {
-            return undefined;
-        }
-        const endDateTime = new Date(date.getTime());
-        endDateTime.setMinutes(endDateTime.getMinutes() + this.planningConfig.getMaximalNrOfMinutesPerGame());
-        return endDateTime;
-    }
 
     private cloneDateTime(dateTime: Date): Date {
         if (dateTime === undefined) {
@@ -455,54 +553,6 @@ export class PlanningResourceService {
         }
         // return dateTime;
     }
-
-    /**
-    * @TODO REMOVE
-    */
-    private consoleBatch(batch: PlanningResourceBatch) {
-        this.consoleBatchHelper(batch.getRoot());
-    }
-
-    private consoleBatchHelper(batch: PlanningResourceBatch) {
-        this.consoleGames(batch, batch.getGames());
-        if (batch.hasNext()) {
-            this.consoleBatchHelper(batch.getNext());
-        }
-    }
-
-    /**
-     * @TODO REMOVE
-     */
-    private consoleGames(batch: PlanningResourceBatch, games: Game[]) {
-        games.forEach(game => console.log(this.consoleGame(batch, game)));
-    }
-
-    /**
-     * @TODO REMOVE
-     */
-    private consoleGame(batch: PlanningResourceBatch, game: Game): string {
-        const nameService = new NameService();
-        return 'poule ' + game.getPoule().getNumber()
-            + ', ' + this.getConsolePlaces(batch, game, Game.HOME)
-            + ' vs ' + this.getConsolePlaces(batch, game, Game.AWAY)
-            + ' , ref ' + (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '')
-            + ', batch ' + (game.getResourceBatch() ? game.getResourceBatch() : '?')
-            + ', field ' + (game.getField() ? game.getField().getNumber() : '?')
-            + ', sport ' + (game.getField() ? game.getField().getSport().getName() +
-                (game.getField().getSport().getCustomId() ? '(' + game.getField().getSport().getCustomId() + ')' : '') : '?')
-            ;
-    }
-
-    /**
-     * @TODO REMOVE
-     */
-    getConsolePlaces(batch: PlanningResourceBatch, game: Game, homeAway: boolean): string {
-        const nameService = new NameService();
-        return game.getPlaces(homeAway).map(gamePlace => {
-            return nameService.getPlaceFromName(gamePlace.getPlace(), false, false) + '(' +
-                batch.getGamesInARow(gamePlace.getPlace()) + ')';
-        }).join(' & ');
-    }
 }
 
 interface PlanningPlaceMap {
@@ -512,4 +562,5 @@ interface PlanningPlaceMap {
 interface Resources {
     dateTime: Date;
     fields: Field[];
+    fieldIndex?: number;
 }

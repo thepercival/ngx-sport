@@ -87,6 +87,7 @@
     "coverage": "nyc npm run test",
     "test1": "mocha -r test/hook.js --recursive test/cases/planning/service.ts",
     "coverage1": "nyc npm run test1",
+    "profile": "ngc -p tsconfig-profile.json",
     "help": "nyc help"
   },
   "nyc": {
