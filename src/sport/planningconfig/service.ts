@@ -59,22 +59,31 @@ export class SportPlanningConfigService {
         return sportsNrOfGames;
     }
 
-    // de map is niet door de gebruiker gekozen, maar is afhankelijk van het aantal velden
-    // hoe meer velden er zijn voor een sport, hoe vaker de deelnemer de sport moet doen
-    // wanneer er van elke sport een veelvoud aan sporten is, dan is het headtohead bepalend
-    // bij een veelvoud kan de mapping kan alleen naar beneden worden aangepast als daardoor
-    // aan de headtohead wordt voldaan
+    // de map is niet door de gebruiker gekozen, maar is afhankelijk van het aantal velden:
+    // *    hoe meer velden er zijn voor een sport, hoe vaker de deelnemer de sport moet doen
+    // *    wanneer er van elke sport een veelvoud aan velden is, dan wordt alleen verkleind
+    //      als het-aantal-poulewedstrijden nog gehaald wordt
+    // *    zolang het aantal-keer-sporten-per-deelnemer minder blijft dan het aantal poulewedstrijden
+    //      wordt het aantal-keer-sporten-per-deelnemer vergroot met 2x
+    //
+    //  Dus eerst wordt de veelvouden(sp1 -> 4v, sp2 -> 4v) van het aantal-keer-sporten-per-deelnemer naar beneden gebracht en
+    //  vervolgens wordt er gekeken als het aantal-keer-sporten-per-deelnemer nog verhoogd kan worden, er moet dan wel onder
+    //  het aantal poulewedstrijden worden gebleven
+    //
     getPlanningMinNrOfGames(poule: Poule): SportNrOfGames[] {
 
         // const map = this.getDefaultMinNrOfGamesMap(roundNumber);
         // poule.getRound().getNumber().getValidPlanningConfig().getNrOfHeadtohead()
 
+        // haal veelvouden eruit
         const roundNumber = poule.getRound().getNumber();
         const nrOfFieldsPerSport = roundNumber.getSportPlanningConfigs().map(sportPlanningConfig => {
             return sportPlanningConfig.getMinNrOfGames();
         });
         const fieldDivisors = this.getFieldsCommonDivisors(nrOfFieldsPerSport);
 
+        // kijk als veelvouden van het aantal-keer-sporten-per-deelnemer verkleind gebruikt kunnen worden
+        // door te kijken als er nog aan het aantal poulewedstrijden wordt gekomen
         const nrOfPouleGames = this.getNrOfPouleGames(poule);
         let bestSportsNrOfGames = this.getSportsNrOfGames(roundNumber);
         fieldDivisors.every(fieldDivisor => {
@@ -86,6 +95,8 @@ export class SportPlanningConfigService {
             bestSportsNrOfGames = sportsNrOfGamesTmp;
         });
 
+        // zolang het aantal-keer-sporten-per-deelnemer minder blijft dan het aantal poulewedstrijden
+        // wordt het aantal-keer-sporten-per-deelnemer vergroot met 2x
         let divisor = 0.5;
         let newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
         while (nrOfPouleGames >= this.getNrOfPouleGamesBySports(poule, newSportsNrOfGames)) {
@@ -95,9 +106,6 @@ export class SportPlanningConfigService {
         }
 
         return bestSportsNrOfGames;
-
-        // bv 2 sporten met 4 en 8 velden
-        // kan worden teruggebracht naar 1, 2 of 2, 4
     }
 
     getFieldsCommonDivisors(numbers: number[]): number[] {
@@ -163,6 +171,11 @@ export class SportPlanningConfigService {
         const sportsNrOfGames = this.getPlanningMinNrOfGames(poule);
         const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
         while ((this.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
+            nrOfHeadtohead++;
+        }
+        if (this.getNrOfPouleGames(poule, nrOfHeadtohead) === nrOfPouleGamesBySports
+            && poule.getPlaces().length === 4
+            && (poule.getPlaces().length - 1) === sportsNrOfGames.length) {
             nrOfHeadtohead++;
         }
         return nrOfHeadtohead;

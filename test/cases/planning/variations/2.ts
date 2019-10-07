@@ -42,8 +42,8 @@ export const poules2 = {
                         },
                         4: {
                             nrOfHeadtohead: {
-                                1: { nrOfGames: 4, maxNrOfGamesInARow: 4, maxNrOfBatches: 4, nrOfPlaceGames: 4 },
-                                2: { nrOfGames: 4, maxNrOfGamesInARow: 4, maxNrOfBatches: 4, nrOfPlaceGames: 4 },
+                                1: { nrOfGames: 2, maxNrOfGamesInARow: 2, maxNrOfBatches: 2, nrOfPlaceGames: 2 },
+                                2: { nrOfGames: 2, maxNrOfGamesInARow: 2, maxNrOfBatches: 2, nrOfPlaceGames: 2 },
                                 3: { nrOfGames: 4, maxNrOfGamesInARow: 4, maxNrOfBatches: 4, nrOfPlaceGames: 4 },
                                 4: { nrOfGames: 4, maxNrOfGamesInARow: 4, maxNrOfBatches: 4, nrOfPlaceGames: 4 },
                             }

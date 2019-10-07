@@ -36,7 +36,7 @@ describe('Planning/Service', () => {
                 for (let nrOfSports = 1; nrOfSports <= maxNrOfSports; nrOfSports++) {
                     for (let nrOfFields = nrOfSports; nrOfFields <= nrOfSports * 2; nrOfFields++) {
                         for (let nrOfHeadtohead = 1; nrOfHeadtohead <= maxNrOfHeadtohead; nrOfHeadtohead++) {
-                            if (nrOfCompetitors !== 4 /* || nrOfPoules !== 1
+                            if (nrOfCompetitors !== 2 /* || nrOfPoules !== 1
                             || nrOfSports !== 2 || nrOfFields !== 3 || nrOfHeadtohead !== 4*/ ) {
                                 continue;
                             }
@@ -722,7 +722,7 @@ export function checkPlanning(
 
     const planningService = new PlanningService(competition);
 
-    if (nrOfCompetitors === 4 && nrOfSports === 3 && nrOfFields === 3 && nrOfHeadtohead === 1) {
+    if (nrOfCompetitors === 2 && nrOfSports === 2 && nrOfFields === 4 && nrOfHeadtohead === 1) {
         const x = 1;
     }
 

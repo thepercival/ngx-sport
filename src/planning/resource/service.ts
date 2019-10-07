@@ -424,13 +424,11 @@ export class PlanningResourceService {
                 // if (((nrOfPlacesPerBatch * nrOfHeadtothead) % this.roundNumber.getNrOfPlaces()) !== 0) {
 
                 if (maxNrOfGamesPerBatchPreBorder >= this.maxNrOfGamesPerBatch) {
-
-
                     if ((nrOfHeadtothead % 2) === 1) {
                         this.maxNrOfGamesPerBatch--;
-                    } else if (this.nrOfSports === (nrOfPoulePlaces - 1)) {
+                    } /*else if (this.nrOfSports === (nrOfPoulePlaces - 1)) {
                         this.maxNrOfGamesPerBatch--;
-                    }
+                    }*/
 
                     // if ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) <= this.maxNrOfGamesPerBatch) {
                     //     this.maxNrOfGamesPerBatch--;

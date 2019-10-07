@@ -54,7 +54,7 @@ export const poules4 = {
                     nrOfFields: {
                         3: {
                             nrOfHeadtohead: {
-                                1: { nrOfGames: 6, maxNrOfGamesInARow: 3, maxNrOfBatches: 3, nrOfPlaceGames: 3 }/*,
+                                1: { nrOfGames: 12, maxNrOfGamesInARow: 6, maxNrOfBatches: 6, nrOfPlaceGames: 6 }/*,
                                 2: { nrOfGames: 6, maxNrOfGamesInARow: 3, maxNrOfBatches: 6, nrOfPlaceGames: 4 },
                                 3: { nrOfGames: 9, maxNrOfGamesInARow: 3, maxNrOfBatches: 9, nrOfPlaceGames: 6 },
                                 4: { nrOfGames: 12, maxNrOfGamesInARow: 3, maxNrOfBatches: 12, nrOfPlaceGames: 8 },*/
