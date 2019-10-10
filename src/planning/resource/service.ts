@@ -12,7 +12,7 @@ import { BlockedPeriod } from '../service';
 import { PlanningResourceBatch } from './batch';
 import { SportCounter } from '../../sport/counter';
 import { StructureService } from '../../structure/service';
-import { consoleBatch } from '../../../test/helper';
+// import { consoleBatch } from '../../../test/helper';
 
 export class PlanningResourceService {
     private referees: Referee[];
@@ -150,6 +150,10 @@ export class PlanningResourceService {
             // }
             resources3.fields.push(resources3.fields.shift());
         }
+        // if (nrOfGames > 1) {
+        //     const resources4 = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
+        //     return this.assignBatchHelper(games, resources4, nrOfGames, batch);
+        // }
         return false;
 
         // const resources2 = { dateTime: this.cloneDateTime(resources.dateTime), fields: resources.fields.slice() };
@@ -396,12 +400,13 @@ export class PlanningResourceService {
         const nrOfGamePlaces = this.getNrOfGamePlaces();
         const nrOfRoundNumberPlaces = this.roundNumber.getNrOfPlaces();
         const nrOfGamesSimultaneously = Math.floor(nrOfRoundNumberPlaces / nrOfGamePlaces);
-        const maxNrOfGamesPerBatchPreBorder = this.maxNrOfGamesPerBatch;
+        // const maxNrOfGamesPerBatchPreBorder = this.maxNrOfGamesPerBatch;
         if (nrOfGamesSimultaneously < this.maxNrOfGamesPerBatch) {
             this.maxNrOfGamesPerBatch = nrOfGamesSimultaneously;
         }
-        const ss = new StructureService();
-        const nrOfPoulePlaces = ss.getNrOfPlacesPerPoule(this.roundNumber.getNrOfPlaces(), this.roundNumber.getPoules().length);
+        // TEMPCOMMENT
+        // const ss = new StructureService();
+        // const nrOfPoulePlaces = ss.getNrOfPlacesPerPoule(this.roundNumber.getNrOfPlaces(), this.roundNumber.getPoules().length);
         // if ((nrOfPoulePlaces - 1) === this.nrOfSports
         //     && this.nrOfSports > 1 && this.nrOfSports === this.fields.length
         // ) {
@@ -413,59 +418,71 @@ export class PlanningResourceService {
         //     }
         // }
 
-        const nrOfPlacesPerBatch = nrOfGamePlaces * this.maxNrOfGamesPerBatch;
-        if (this.nrOfSports > 1) {
-            /*if (this.roundNumber.getNrOfPlaces() === nrOfPlacesPerBatch) {
-                this.maxNrOfGamesPerBatch--;
-            } else*/ if (Math.floor(this.roundNumber.getNrOfPlaces() / nrOfPlacesPerBatch) < 2) {
-                const sportPlanningConfigService = new SportPlanningConfigService();
-                const defaultNrOfGames = sportPlanningConfigService.getNrOfCombinationsExt(this.roundNumber);
-                const nrOfHeadtothead = nrOfGames / defaultNrOfGames;
-                // if (((nrOfPlacesPerBatch * nrOfHeadtothead) % this.roundNumber.getNrOfPlaces()) !== 0) {
+        // const nrOfPlacesPerBatch = nrOfGamePlaces * this.maxNrOfGamesPerBatch;
+        // if (this.nrOfSports > 1) {
+        //     /*if (this.roundNumber.getNrOfPlaces() === nrOfPlacesPerBatch) {
+        //         this.maxNrOfGamesPerBatch--;
+        //     } else*/ if (Math.floor(this.roundNumber.getNrOfPlaces() / nrOfPlacesPerBatch) < 2) {
+        //         const sportPlanningConfigService = new SportPlanningConfigService();
+        //         const defaultNrOfGames = sportPlanningConfigService.getNrOfCombinationsExt(this.roundNumber);
+        //         const nrOfHeadtothead = nrOfGames / defaultNrOfGames;
+        //         // if (((nrOfPlacesPerBatch * nrOfHeadtothead) % this.roundNumber.getNrOfPlaces()) !== 0) {
 
-                if (maxNrOfGamesPerBatchPreBorder >= this.maxNrOfGamesPerBatch) {
-                    if ((nrOfHeadtothead % 2) === 1) {
-                        this.maxNrOfGamesPerBatch--;
-                    } /*else if (this.nrOfSports === (nrOfPoulePlaces - 1)) {
-                        this.maxNrOfGamesPerBatch--;
-                    }*/
-
-                    // if ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) <= this.maxNrOfGamesPerBatch) {
-                    //     this.maxNrOfGamesPerBatch--;
-                    // }
-                }
-
-                /*if (maxNrOfGamesPerBatchPreBorder === this.maxNrOfGamesPerBatch
-                    && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) === this.maxNrOfGamesPerBatch)) {
-                    this.maxNrOfGamesPerBatch--;
-                } else if (maxNrOfGamesPerBatchPreBorder > this.maxNrOfGamesPerBatch
-                    && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) < this.maxNrOfGamesPerBatch)) {
-                    this.maxNrOfGamesPerBatch--;
-                } /*else {
-                    this.tryShuffledFields = true;
-                }*/
-                // nrOfPlacesPerBatch deelbaar door nrOfGames
-                // als wat is verschil met:
-                // 3v en 4d 1H2H
-                // 3v en 4d 2H2H deze niet heeft 12G
-                // 2v en 4d
-            }
-        }
+        //         if (maxNrOfGamesPerBatchPreBorder >= this.maxNrOfGamesPerBatch) {
 
 
-        // this.maxNrOfGamesPerBatch moet 1 zijn, maar er kunnen twee, dus bij meerdere sporten
-        // en totaal aantal deelnemers <= aantal deelnemers per batch
-        //      bij  2v  4d dan 4 <= 4 1H2H van 2 naar 1
-        //      bij 21v 44d dan 8 <= 8 1H2H van 3 naar 2
-        //      bij  3v  4d dan 4 <= 6 1H2H van 2 naar 1
-        //      bij  3v  4d dan 4 <= 6 2H2H van 2 naar 1(FOUT)
 
-        // if (this.fields.length === 3 && this.nrOfSports === 2) {
-        //     this.tryShuffledFields = true;
+        //             if ((nrOfHeadtothead % 2) === 1) {
+        //                 const comp = this.roundNumber.getCompetition();
+        //                 if (
+        //                     (this.roundNumber.getNrOfPlaces() - 1) > comp.getSports().length
+        //                     /*|| ((this.roundNumber.getNrOfPlaces() - 1) === comp.getSports().length
+        //                         && comp.getFields().length > comp.getSports().length)*/
+        //                 ) {
+        //                     this.maxNrOfGamesPerBatch--;
+        //                 }
+        //                 // this.maxNrOfGamesPerBatch--;
+
+        //             } /*else if (this.nrOfSports === (nrOfPoulePlaces - 1)) {
+        //                 this.maxNrOfGamesPerBatch--;
+        //             }*/
+
+        //             // if ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) <= this.maxNrOfGamesPerBatch) {
+        //             //     this.maxNrOfGamesPerBatch--;
+        //             // }
+
+        //             /*if (maxNrOfGamesPerBatchPreBorder === this.maxNrOfGamesPerBatch
+        //                 && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) === this.maxNrOfGamesPerBatch)) {
+        //                 this.maxNrOfGamesPerBatch--;
+        //             } else if (maxNrOfGamesPerBatchPreBorder > this.maxNrOfGamesPerBatch
+        //                 && ((nrOfHeadtothead * maxNrOfGamesPerBatchPreBorder) < this.maxNrOfGamesPerBatch)) {
+        //                 this.maxNrOfGamesPerBatch--;
+        //             } /*else {
+        //                 this.tryShuffledFields = true;
+        //             }*/
+        //             // nrOfPlacesPerBatch deelbaar door nrOfGames
+        //             // als wat is verschil met:
+        //             // 3v en 4d 1H2H
+        //             // 3v en 4d 2H2H deze niet heeft 12G
+        //             // 2v en 4d
+        //         }
+        //     }
+
+
+        //     // this.maxNrOfGamesPerBatch moet 1 zijn, maar er kunnen twee, dus bij meerdere sporten
+        //     // en totaal aantal deelnemers <= aantal deelnemers per batch
+        //     //      bij  2v  4d dan 4 <= 4 1H2H van 2 naar 1
+        //     //      bij 21v 44d dan 8 <= 8 1H2H van 3 naar 2
+        //     //      bij  3v  4d dan 4 <= 6 1H2H van 2 naar 1
+        //     //      bij  3v  4d dan 4 <= 6 2H2H van 2 naar 1(FOUT)
+
+        //     // if (this.fields.length === 3 && this.nrOfSports === 2) {
+        //     //     this.tryShuffledFields = true;
+        //     // }
         // }
-        if (this.maxNrOfGamesPerBatch < 1) {
-            this.maxNrOfGamesPerBatch = 1;
-        }
+        // if (this.maxNrOfGamesPerBatch < 1) {
+        //     this.maxNrOfGamesPerBatch = 1;
+        // }
         return this.maxNrOfGamesPerBatch;
     }
 

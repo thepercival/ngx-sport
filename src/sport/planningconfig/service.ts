@@ -89,7 +89,7 @@ export class SportPlanningConfigService {
         fieldDivisors.every(fieldDivisor => {
             const sportsNrOfGamesTmp = this.getSportsNrOfGames(roundNumber, fieldDivisor);
             const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGamesTmp);
-            if (nrOfPouleGames < nrOfPouleGamesBySports) {
+            if (nrOfPouleGamesBySports < nrOfPouleGames) {
                 return false;
             }
             bestSportsNrOfGames = sportsNrOfGamesTmp;
@@ -99,7 +99,7 @@ export class SportPlanningConfigService {
         // wordt het aantal-keer-sporten-per-deelnemer vergroot met 2x
         let divisor = 0.5;
         let newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
-        while (nrOfPouleGames >= this.getNrOfPouleGamesBySports(poule, newSportsNrOfGames)) {
+        while (this.getNrOfPouleGamesBySports(poule, newSportsNrOfGames) <= nrOfPouleGames) {
             bestSportsNrOfGames = newSportsNrOfGames;
             divisor *= 0.5;
             newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
@@ -168,16 +168,29 @@ export class SportPlanningConfigService {
         const roundNumber = poule.getRound().getNumber();
         // const sportsNrOfGames = this.getSportsNrOfGames(roundNumber);
         let nrOfHeadtohead = roundNumber.getValidPlanningConfig().getNrOfHeadtohead();
+        // sportsNrOfGames is 4, 2, 2 en kan dus ook omdat er 9 wedstrijden per deelnemer worden gespeeld
+        // maar blijkbaar gaat dit toch niet lukken ????????
         const sportsNrOfGames = this.getPlanningMinNrOfGames(poule);
         const nrOfPouleGamesBySports = this.getNrOfPouleGamesBySports(poule, sportsNrOfGames);
         while ((this.getNrOfPouleGames(poule, nrOfHeadtohead)) < nrOfPouleGamesBySports) {
             nrOfHeadtohead++;
         }
-        if (this.getNrOfPouleGames(poule, nrOfHeadtohead) === nrOfPouleGamesBySports
-            && poule.getPlaces().length === 4
-            && (poule.getPlaces().length - 1) === sportsNrOfGames.length) {
-            nrOfHeadtohead++;
-        }
+        // TEMPCOMMENT
+        // if (this.getNrOfPouleGames(poule, nrOfHeadtohead) === nrOfPouleGamesBySports
+        //     && poule.getPlaces().length === 4
+        //     && (poule.getPlaces().length - 1) === sportsNrOfGames.length
+        //     && sportsNrOfGames.length <= roundNumber.getCompetition().getFields().length
+        // ) {
+        //     // if (roundNumber.getCompetition().getSports().length !== 3) {
+        //     if (nrOfHeadtohead === 1) {
+        //         nrOfHeadtohead++;
+        //     }
+
+        //     // } else {
+        //     //     const x = 1;
+        //     // }
+
+        // }
         return nrOfHeadtohead;
     }
 
