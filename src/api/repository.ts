@@ -15,7 +15,7 @@ export class APIRepository {
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        headers = headers.append('X-Api-Version', '2');
+        headers = headers.append('X-Api-Version', '17');
         const token = APIConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);
@@ -28,11 +28,12 @@ export class APIRepository {
     }
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
+        console.log(error);
         let errortext = 'onbekende fout';
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (error.status === 0) {
-            errortext = 'er kan verbinding met de data-service gemaakt worden';
+            errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
         } else if (typeof error.error === 'string') {
             errortext = error.error;
         } else if (error.statusText !== undefined) {

@@ -40,7 +40,7 @@ export class SportRepository extends APIRepository {
     }
 
     protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
+        const httpParams = new HttpParams();
         return {
             headers: super.getHeaders(),
             params: httpParams
