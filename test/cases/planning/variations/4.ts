@@ -14,14 +14,14 @@ export const poules4 = {
                         },
                         2: {
                             nrOfHeadtohead: {
-                                1: { nrOfGames: 6, maxNrOfGamesInARow: 3, maxNrOfBatches: 3, nrOfPlaceGames: 3 },
-                                2: { nrOfGames: 12, maxNrOfGamesInARow: 6, maxNrOfBatches: 6, nrOfPlaceGames: 6 },
-                                3: { nrOfGames: 18, maxNrOfGamesInARow: 9, maxNrOfBatches: 9, nrOfPlaceGames: 9 },
-                                4: { nrOfGames: 24, maxNrOfGamesInARow: 12, maxNrOfBatches: 12, nrOfPlaceGames: 12 },
+                                1: { nrOfGames: 6, maxNrOfGamesInARow: 2, maxNrOfBatches: 3, nrOfPlaceGames: 3 },
+                                2: { nrOfGames: 12, maxNrOfGamesInARow: 2, maxNrOfBatches: 6, nrOfPlaceGames: 6 },
+                                3: { nrOfGames: 18, maxNrOfGamesInARow: 2, maxNrOfBatches: 9, nrOfPlaceGames: 9 },
+                                4: { nrOfGames: 24, maxNrOfGamesInARow: 2, maxNrOfBatches: 12, nrOfPlaceGames: 12 },
                             }
                         }
                     }
-                },
+                }/*,
                 2: {
                     nrOfFields: {
                         2: {
@@ -69,7 +69,7 @@ export const poules4 = {
                             }
                         }
                     }
-                }
+                }*/
             }
         }
     }
