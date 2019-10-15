@@ -19,7 +19,7 @@ export class SportMapper {
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
         sport.setTeam(json.team),
-            sport.setCustomId(json.customId);
+        sport.setCustomId(json.customId);
         return sport;
     }
 

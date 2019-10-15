@@ -252,7 +252,7 @@ export class PlanningResourceService {
                 return false;
             }
             const nrOfGamesInARow = batch.hasPrevious() ? (batch.getPrevious().getGamesInARow(place)) : 0;
-            return nrOfGamesInARow < this.maxNrOfGamesInARow || this.maxNrOfGamesInARow === -1;
+            return (nrOfGamesInARow < this.maxNrOfGamesInARow) || this.maxNrOfGamesInARow === -1;
         });
     }
 
@@ -269,11 +269,11 @@ export class PlanningResourceService {
     }
 
     private isSomeFieldAssignable(game: Game, resources: Resources): boolean {
-        resources.fields.forEach(fieldIt => {
-            if (fieldIt === undefined) {
-                const e = 4;
-            }
-        });
+        // resources.fields.forEach(fieldIt => {
+        //     if (fieldIt === undefined) {
+        //         const e = 4;
+        //     }
+        // });
         return resources.fields.some(fieldIt => {
             return this.isSportAssignable(game, fieldIt.getSport());
         });
