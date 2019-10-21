@@ -43,11 +43,12 @@ export function consoleGame(game: Game, batch?: PlanningResourceBatch) {
     const refDescr = (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '');
     const refNumber = game.getRefereePlace() ? game.getRefereePlace().getNumber() : 0;
     console.log(
-        'poule ' + game.getPoule().getNumber()
+        'batch ' + consoleColor(game.getResourceBatch(), consoleString(game.getResourceBatch(), 2))
+        + ' (' + game.getStartDateTime().toISOString() + ') '
+        + ', poule ' + game.getPoule().getNumber()
         + ', ' + consolePlaces(game, Game.HOME, batch)
         + ' vs ' + consolePlaces(game, Game.AWAY, batch)
         + ' , ref ' + consoleColor(refNumber, refDescr)
-        + ', batch ' + game.getResourceBatch()
         + ', ' + consoleColor(game.getField().getNumber(), 'field ' + game.getField().getNumber())
         + ', sport ' + game.getField().getSport().getName() + (game.getField().getSport().getCustomId() ?
             '(' + game.getField().getSport().getCustomId() + ')' : '')

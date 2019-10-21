@@ -17,9 +17,12 @@ import {
 import { getMapper } from '../../createmapper';
 import { jsonCompetition } from '../../data/competition';
 import { consoleGames } from '../../helper';
-import { poules2 } from './variations/2';
-import { poules3 } from './variations/3';
-import { poules4 } from './variations/4';
+import { assertionsConfigs2 } from './variations/2';
+import { assertionsConfigs3 } from './variations/3';
+import { assertionsConfigs4 } from './variations/4';
+import { assertionsConfigs5 } from './variations/5';
+import { assertionsConfigs8 } from './variations/8';
+import { assertionsConfigs9 } from './variations/9';
 
 describe('Planning/Service', () => {
 
@@ -36,8 +39,8 @@ describe('Planning/Service', () => {
                 for (let nrOfSports = 1; nrOfSports <= maxNrOfSports; nrOfSports++) {
                     for (let nrOfFields = nrOfSports; nrOfFields <= nrOfSports * 2; nrOfFields++) {
                         for (let nrOfHeadtohead = 1; nrOfHeadtohead <= maxNrOfHeadtohead; nrOfHeadtohead++) {
-                            // if (nrOfCompetitors !== 4 || nrOfPoules !== 1
-                            //     || nrOfSports !== 3 || nrOfFields !== 4 || nrOfHeadtohead !== 3) {
+                            // if (nrOfCompetitors !== 5 /* || nrOfPoules !== 1
+                            //     || nrOfSports !== 1 || nrOfFields !== 2 || nrOfHeadtohead !== 1*/) {
                             //     continue;
                             // }
 
@@ -593,7 +596,7 @@ describe('Planning/Service', () => {
  * @param place
  * @param game
  */
-export function assertValidGamesParticipations(place: Place, games: Game[], expectedValue?: number) {
+export function assertValidGamesParticipations(place: Place, games: Game[], expectedValues: number[]) {
     const sportPlanningConfigService = new SportPlanningConfigService();
     let nrOfGames = 0;
     games.forEach(game => {
@@ -612,12 +615,11 @@ export function assertValidGamesParticipations(place: Place, games: Game[], expe
         }
         expect(nrOfSingleGameParticipations).to.be.lessThan(2);
     });
-    const config = place.getRound().getNumber().getValidPlanningConfig();
+    // const config = place.getRound().getNumber().getValidPlanningConfig();
     // const nrOfGamesPerPlace = sportPlanningConfigService.getNrOfGamesPerPlace(place.getPoule(), config.getNrOfHeadtohead());
     // expect(nrOfGamesPerPlace).to.equal(nrOfGames);
-    if (expectedValue !== undefined) {
-        expect(expectedValue, 'nrofgames for 1 place are not equal').to.equal(nrOfGames);
-    }
+    const hasNrOfGames = expectedValues.some(expectedValue => expectedValue === nrOfGames);
+    expect(hasNrOfGames, 'nrofgames for 1 place are not equal').to.equal(true);
 }
 
 export function assertGamesInRow(place: Place, games: Game[], maxInRow: number) {
@@ -635,11 +637,14 @@ export function assertGamesInRow(place: Place, games: Game[], maxInRow: number) 
         const places = game.getPlaces().map(gamePlace => gamePlace.getPlace());
         batches[game.getResourceBatch()] = places.some(placeIt => placeIt === place);
     });
+    if (maxInRow < 0) {
+        return;
+    }
     let nrOfGamesInRow = 0;
     for (let i = 1; i <= maxBatchNr; i++) {
         if (batches[i]) {
             nrOfGamesInRow++;
-            expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1);
+            expect(nrOfGamesInRow).to.be.lessThan(maxInRow + 1, place.getLocationId() + ' has more than ' + maxInRow + ' games in a row');
         } else {
             nrOfGamesInRow = 0;
         }
@@ -663,7 +668,8 @@ export function assertValidResourcesPerBatch(games: Game[]) {
             places.push(game.getRefereePlace());
         }
         places.forEach(placeIt => {
-            expect(batchResource.places.find(place => place === placeIt)).to.equal(undefined);
+            expect(batchResource.places.find(place => place === placeIt)).to.equal(undefined,
+                'exptected ' + placeIt.getLocationId() + ' to appear once in a batch');
             batchResource.places.push(placeIt);
         });
         expect(batchResource.fields.find(field => field === game.getField()), 'same field in one batch? ').to.equal(undefined);
@@ -746,9 +752,8 @@ export function getAssertionsConfig(
     nrOfHeadtohead: number
 ): AssertConfig {
     const competitors = {
-        2: poules2,
-        3: poules3,
-        4: poules4
+        2: assertionsConfigs2, 3: assertionsConfigs3, 4: assertionsConfigs4, 5: assertionsConfigs5,
+        8: assertionsConfigs8, 9: assertionsConfigs9
     };
     if (competitors[nrOfCompetitors] === undefined) {
         return undefined;
@@ -776,5 +781,5 @@ export class AssertConfig {
     nrOfGames: number;
     maxNrOfGamesInARow: number;
     maxNrOfBatches: number;
-    nrOfPlaceGames: number;
+    nrOfPlaceGames: number[];
 }

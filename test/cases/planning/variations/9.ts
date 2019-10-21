@@ -1,23 +1,15 @@
-export const assertionsConfigs4 = {
+export const assertionsConfigs9 = {
     nrOfPoules: {
-        1: {
+        3: {
             nrOfSports: {
                 1: {
                     nrOfFields: {
-                        1: {
-                            nrOfHeadtohead: {
-                                1: { nrOfGames: 6, maxNrOfGamesInARow: 2, maxNrOfBatches: 6, nrOfPlaceGames: [3] },
-                                2: { nrOfGames: 12, maxNrOfGamesInARow: 2, maxNrOfBatches: 12, nrOfPlaceGames: [6] },
-                                3: { nrOfGames: 18, maxNrOfGamesInARow: 2, maxNrOfBatches: 18, nrOfPlaceGames: [9] },
-                                4: { nrOfGames: 24, maxNrOfGamesInARow: 2, maxNrOfBatches: 24, nrOfPlaceGames: [12] },
-                            }
-                        },
                         2: {
                             nrOfHeadtohead: {
-                                1: { nrOfGames: 6, maxNrOfGamesInARow: -1, maxNrOfBatches: 3, nrOfPlaceGames: [3] },
+                                1: { nrOfGames: 9, maxNrOfGamesInARow: 2, maxNrOfBatches: 5, nrOfPlaceGames: [2] }/*,
                                 2: { nrOfGames: 12, maxNrOfGamesInARow: -1, maxNrOfBatches: 6, nrOfPlaceGames: [6] },
                                 3: { nrOfGames: 18, maxNrOfGamesInARow: -1, maxNrOfBatches: 9, nrOfPlaceGames: [9] },
-                                4: { nrOfGames: 24, maxNrOfGamesInARow: -1, maxNrOfBatches: 12, nrOfPlaceGames: [12] },
+                                4: { nrOfGames: 24, maxNrOfGamesInARow: -1, maxNrOfBatches: 12, nrOfPlaceGames: [12] },*/
                             }
                         }
                     }

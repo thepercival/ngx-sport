@@ -204,13 +204,21 @@ export class RoundNumber {
             return this.sportPlanningConfigs;
         }
         this.sportPlanningConfigs = [];
-
-        this.getSportConfigs().forEach(sportConfig => {
-            const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
-            sportPlanningConfig.setMinNrOfGames(this.getCompetition().getNrOfFields(sportConfig.getSport()));
-            this.sportPlanningConfigs.push(sportPlanningConfig);
-        });
         return this.sportPlanningConfigs;
+        // if (this.competition.hasMultipleSportConfigs()) {
+        //     this.getSportConfigs().forEach(sportConfig => {
+        //         const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
+        //         sportPlanningConfig.setMinNrOfGames(this.getCompetition().getNrOfFields(sportConfig.getSport()));
+        //         this.sportPlanningConfigs.push(sportPlanningConfig);
+        //     });
+        // } else {
+        //     const sportConfig = this.competition.getFirstSportConfig();
+        //     const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
+        //     // aantal wedstrijden dit staat ook in planning!!!!
+        //     sportPlanningConfig.setMinNrOfGames();
+        //     this.sportPlanningConfigs.push(sportPlanningConfig);
+        // }
+        // return this.sportPlanningConfigs;
     }
 
     getSportPlanningConfig(sport: Sport): SportPlanningConfig {

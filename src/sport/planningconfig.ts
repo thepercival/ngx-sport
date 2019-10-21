@@ -8,7 +8,7 @@ export class SportPlanningConfig {
     protected minNrOfGames: number;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber) {
-        // roundNumber.getSportPlanningConfigs().push(this);
+        roundNumber.getSportPlanningConfigs().push(this);
     }
 
     getId(): number {

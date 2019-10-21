@@ -13,18 +13,14 @@ import { SportConfigService } from '../sport/config/service';
 import { SportPlanningConfigService } from '../sport/planningconfig/service';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { Structure } from '../structure';
-
-export interface CompetitorRange {
-    min: number;
-    max: number;
-}
+import { VoetbalRange } from '../range';
 
 export class StructureService {
     private planningConfigService: PlanningConfigService;
     private sportConfigService: SportConfigService;
 
     constructor(
-        private competitorRange?: CompetitorRange
+        private competitorRange?: VoetbalRange
     ) {
         this.planningConfigService = new PlanningConfigService();
         this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());

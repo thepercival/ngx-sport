@@ -97,12 +97,11 @@ export class SportPlanningConfigService {
 
         // zolang het aantal-keer-sporten-per-deelnemer minder blijft dan het aantal poulewedstrijden
         // wordt het aantal-keer-sporten-per-deelnemer vergroot met 2x
-        let divisor = 0.5;
-        let newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
+        let newNrOfGames = 2;
+        let newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, 1 / newNrOfGames);
         while (this.getNrOfPouleGamesBySports(poule, newSportsNrOfGames) <= nrOfPouleGames) {
             bestSportsNrOfGames = newSportsNrOfGames;
-            divisor *= 0.5;
-            newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, divisor);
+            newSportsNrOfGames = this.getSportsNrOfGames(roundNumber, 1 / ++newNrOfGames);
         }
 
         return bestSportsNrOfGames;

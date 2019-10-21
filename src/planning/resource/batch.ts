@@ -5,6 +5,7 @@ import { Poule } from '../../poule';
 export class PlanningResourceBatch {
     private number: number;
     private next: PlanningResourceBatch;
+    dateTime: Date;
     private games: Game[] = [];
     private poules: Poule[] = [];
     private places: Place[] = [];
@@ -44,6 +45,18 @@ export class PlanningResourceBatch {
 
     getRoot(): PlanningResourceBatch {
         return this.hasPrevious() ? this.previous.getRoot() : this;
+    }
+
+    getLeaf(): PlanningResourceBatch {
+        return this.hasNext() ? this.next.getLeaf() : this;
+    }
+
+    getDateTime(): Date {
+        return this.dateTime;
+    }
+
+    setDateTime(dateTime: Date) {
+        this.dateTime = dateTime;
     }
 
     getGamesInARow(place: Place): number {
