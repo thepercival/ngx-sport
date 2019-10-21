@@ -1,5 +1,3 @@
-import { Sport } from '../sport';
-import { SportPlanningConfig } from '../sport/planningconfig';
 import { SportCounter } from '../sport/counter';
 
 export class PlanningPlace {
