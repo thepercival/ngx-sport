@@ -23,12 +23,15 @@ import { assertionsConfigs4 } from './variations/4';
 import { assertionsConfigs5 } from './variations/5';
 import { assertionsConfigs8 } from './variations/8';
 import { assertionsConfigs9 } from './variations/9';
+import { assertionsConfigs16 } from './variations/16';
+import { assertionsConfigs40 } from './variations/40';
 
 describe('Planning/Service', () => {
 
     it('check Planning variations', () => {
-        const maxNrOfCompetitors = 16;
+        const maxNrOfCompetitors = 40;
         const maxNrOfSports = 1;
+        const maxNrOfFields = 20;
 
         for (let nrOfCompetitors = 2; nrOfCompetitors <= maxNrOfCompetitors; nrOfCompetitors++) {
             let nrOfPoules = 0;
@@ -37,12 +40,12 @@ describe('Planning/Service', () => {
             const maxNrOfHeadtohead = 4;
             while (Math.floor(nrOfCompetitors / ++nrOfPoules) >= 2) {
                 for (let nrOfSports = 1; nrOfSports <= maxNrOfSports; nrOfSports++) {
-                    for (let nrOfFields = nrOfSports; nrOfFields <= nrOfSports * 2; nrOfFields++) {
+                    for (let nrOfFields = nrOfSports; nrOfFields <= maxNrOfFields; nrOfFields++) {
                         for (let nrOfHeadtohead = 1; nrOfHeadtohead <= maxNrOfHeadtohead; nrOfHeadtohead++) {
-                            // if (nrOfCompetitors !== 5 /* || nrOfPoules !== 1
-                            //     || nrOfSports !== 1 || nrOfFields !== 2 || nrOfHeadtohead !== 1*/) {
-                            //     continue;
-                            // }
+                            if (nrOfCompetitors !== 40 /* || nrOfPoules !== 1
+                                || nrOfSports !== 1 || nrOfFields !== 2 || nrOfHeadtohead !== 1*/) {
+                                continue;
+                            }
 
                             const assertConfig = getAssertionsConfig(nrOfCompetitors, nrOfPoules, nrOfSports, nrOfFields, nrOfHeadtohead);
                             console.log(
@@ -753,7 +756,7 @@ export function getAssertionsConfig(
 ): AssertConfig {
     const competitors = {
         2: assertionsConfigs2, 3: assertionsConfigs3, 4: assertionsConfigs4, 5: assertionsConfigs5,
-        8: assertionsConfigs8, 9: assertionsConfigs9
+        8: assertionsConfigs8, 9: assertionsConfigs9, 16: assertionsConfigs16, 40: assertionsConfigs40
     };
     if (competitors[nrOfCompetitors] === undefined) {
         return undefined;
