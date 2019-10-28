@@ -25,12 +25,14 @@ export class PlanningResourceService {
 
     private blockedPeriod;
     private nrOfPoules: number;
-    private maxNrOfGamesPerBatch: number;
     private maxNrOfGamesInARow: number;
     private nrOfSports: number;
-    private counter = 0;
+    private succesfullResources;
     private tryShuffledFields = false;
     private planningPlaces: PlanningPlaceMap;
+
+    private debugH2hIterator = 0;
+    private debugTries = {};
 
     constructor(
         private roundNumber: RoundNumber
@@ -92,11 +94,12 @@ export class PlanningResourceService {
         let batch = new PlanningResourceBatch();
         batch.setDateTime(startDateTime);
         gamesH2h.forEach(games => {
-            const resources = { fields: this.fields.slice() };
+            const resources = this.succesfullResources ? this.succesfullResources : { fields: this.fields.slice() };
             batch = this.assignBatch(games.slice(), resources, batch);
             if (batch === undefined) {
                 throw Error('cannot assign resources');
             }
+            this.debugH2hIterator++;
         });
     }
 
@@ -114,31 +117,56 @@ export class PlanningResourceService {
         while (nrOfBatchGames.min > 0) {
 
             this.maxNrOfGamesInARow = optimalization.getMaxNrOfGamesInARow();
-            console.log('trying for maxNrOfBatchGames = (' + nrOfBatchGames.min + '->'
+            console.log('trying for h2h ' + (this.debugH2hIterator + 1) + ' : maxNrOfBatchGames = (' + nrOfBatchGames.min + '->'
                 + nrOfBatchGames.max + ')  maxNrOfGamesInARow = ' + this.maxNrOfGamesInARow);
             // die();
             this.initPlanningPlaces();
             let resourcesTmp = { fields: resources.fields.slice() };
             if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfBatchGames, batch)) {
-                return batch.getLeaf();
+                return this.getActiveLeaf(batch.getLeaf(), nrOfBatchGames.max);
             }
             // throw Error('cannot assign resources new ');
 
             this.maxNrOfGamesInARow = optimalization.setMaxNrOfGamesInARow(++this.maxNrOfGamesInARow);
-            console.log('trying2 for maxNrOfBatchGames = (' + nrOfBatchGames.min + '->'
+            console.log('trying2 for h2h ' + (this.debugH2hIterator + 1) + ' : maxNrOfBatchGames = (' + nrOfBatchGames.min + '->'
                 + nrOfBatchGames.max + ')  maxNrOfGamesInARow = ' + this.maxNrOfGamesInARow);
             // die();
             this.initPlanningPlaces();
             resourcesTmp = { fields: resources.fields.slice() };
             if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfBatchGames, batch)) {
-                return batch.getLeaf();
+                return this.getActiveLeaf(batch.getLeaf(), nrOfBatchGames.max);
             }
+
+            // this.maxNrOfGamesInARow = optimalization.setMaxNrOfGamesInARow(-1);
+            // console.log('trying3 for h2h ' + (this.debugH2hIterator + 1) + ' : maxNrOfBatchGames = (' + nrOfBatchGames.min + '->'
+            //     + nrOfBatchGames.max + ')  maxNrOfGamesInARow = ' + this.maxNrOfGamesInARow);
+            // // die();
+            // this.initPlanningPlaces();
+            // resourcesTmp = { fields: resources.fields.slice() };
+            // if (this.assignBatchHelper(games.slice(), resourcesTmp, nrOfBatchGames, batch)) {
+            //     return this.getActiveLeaf(batch.getLeaf(), nrOfBatchGames.max);
+            // }
 
             optimalization.decreaseNrOfBatchGames();
         }
         return undefined;
     }
 
+    protected getActiveLeaf(batch: PlanningResourceBatch, nrOfBatchGames: number): PlanningResourceBatch {
+        if (batch.hasPrevious() === false) {
+            return batch;
+        }
+        if (batch.getPrevious().getGames().length === nrOfBatchGames) {
+            return batch;
+        }
+        return this.getActiveLeaf(batch.getPrevious(), nrOfBatchGames);
+    }
+
+    // @TODO CDK
+    // na een h2hgames moet de active batch en resources bewaard blijven, zodat daar verder mee gegaan kan worden
+    // moet er nog meer aan resources gekoppeld worden? dan kan er minder bij de releases gedaan worden!
+    // na een goede headtohead moet je ook nog terug kunnen???
+    // moet je een goede head to head ook nog terug kunnen? denk het niet?
 
     protected assignBatchHelper(games: Game[], resources: Resources, nrOfBatchGames: VoetbalRange
         , batch: PlanningResourceBatch, nrOfGamesTried: number = 0): boolean {
@@ -151,6 +179,7 @@ export class PlanningResourceService {
             // console.log('-------------------');
             // }
             if (games.length === 0) { // endsuccess
+                this.succesfullResources = resources;
                 return true;
             }
             return this.assignBatchHelper(games, resources, nrOfBatchGames, nextBatch);
@@ -172,10 +201,25 @@ export class PlanningResourceService {
             //                 . ', fieldsTried: ' . $this->getConsoleString($nrOfFieldsTried - 1, 1)
             //                 . ', gamesTried: ' . $this->getConsoleString($nrOfGamesTriedPerField, 2)
             //                 . ', gamesPerBatch: ' . $nrOfGames . PHP_EOL;
-            const resources2 = { fields: resources3.fields.slice() };
+            // if (this.debugH2hIterator !== undefined) {
+            //     const id = 'h2h: ' + this.debugH2hIterator + ', gamesleft: ' + games.length + ', nrOfGamesTried: ' + nrOfGamesTried;
+            //     if (this.debugTries[id] === undefined) {
+            //         this.debugTries[id] = true;
+            //         console.log(id + ' NEW!');
+            //     } else {
+            //         console.log(id + ' ALREADY DONE!');
+            //         // return false;
+            //     }
+            // }
+
             {
+                // eerst kijken welk games er kunnen en daarna shiften, kan alleen binnen batch??
+                // const filteredGames = games.filter(gameIt => this.isGameAssignable(batch, gameIt, resources2));
+                // heeft dit zin?
+
                 const game = games.shift();
-                if (this.isGameAssignable(batch, game, resources2)) {
+                if (this.isGameAssignable(batch, game, resources3)) {
+                    const resources2 = { fields: resources3.fields.slice() };
                     this.assignGame(batch, game, resources2);
                     if (this.assignBatchHelper(games.slice(), resources2, nrOfBatchGames, batch)) {
                         return true;

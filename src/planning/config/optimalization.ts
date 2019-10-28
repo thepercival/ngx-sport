@@ -160,9 +160,9 @@ export class PlanningConfigOptimalization {
 
         let maxNrOfGamesInARow = Math.ceil(this.nrOfPlaces / nrOfRestPerBatch) - 1;
         // 12 places per batch 16 places
-        if (nrOfPlacesPerBatch === nrOfRestPerBatch && this.nrOfPoules === 1) {
-            maxNrOfGamesInARow++;
-        }
+        // if (nrOfPlacesPerBatch === nrOfRestPerBatch && this.nrOfPoules === 1) {
+        //     maxNrOfGamesInARow++;
+        // }
 
         const structureService = new StructureService();
         const nrOfPoulePlaces = structureService.getNrOfPlacesPerPoule(this.nrOfPlaces, this.nrOfPoules);
@@ -191,6 +191,26 @@ export class PlanningConfigOptimalization {
             //            }
         }
         // maxNrOfGamesInARow = -1;
+        // if (maxNrOfGamesInARow === 4) {
+        //     maxNrOfGamesInARow = 5;
+        // }
+
+        if (this.nrOfPlaces === 8) {
+            if (nrOfPlacesPerBatch >= nrOfRestPerBatch && (nrOfPlacesPerBatch % nrOfRestPerBatch) === 0 && this.nrOfPoules === 1
+                && (this.nrOfFields % 2) === 1
+            ) {
+                maxNrOfGamesInARow++;
+            }
+        }
+
+        // if (this.nrOfPlaces > 8 && (this.nrOfPlaces % 2) === 1) {
+        //     if ((nrOfPlacesPerBatch + 1) > nrOfRestPerBatch && this.nrOfPoules === 1
+        //     ) {
+        //         maxNrOfGamesInARow++;
+        //     }
+        // }
+
+
         return maxNrOfGamesInARow;
     }
 

@@ -21,6 +21,7 @@ import { assertionsConfigs2 } from './variations/2';
 import { assertionsConfigs3 } from './variations/3';
 import { assertionsConfigs4 } from './variations/4';
 import { assertionsConfigs5 } from './variations/5';
+import { assertionsConfigs6 } from './variations/6';
 import { assertionsConfigs8 } from './variations/8';
 import { assertionsConfigs9 } from './variations/9';
 import { assertionsConfigs16 } from './variations/16';
@@ -32,18 +33,18 @@ describe('Planning/Service', () => {
         const maxNrOfCompetitors = 40;
         const maxNrOfSports = 1;
         const maxNrOfFields = 20;
+        const maxNrOfHeadtohead = 1;
 
         for (let nrOfCompetitors = 2; nrOfCompetitors <= maxNrOfCompetitors; nrOfCompetitors++) {
             let nrOfPoules = 0;
             // let teamup = false;
             // let selfReferee = false;
-            const maxNrOfHeadtohead = 4;
             while (Math.floor(nrOfCompetitors / ++nrOfPoules) >= 2) {
                 for (let nrOfSports = 1; nrOfSports <= maxNrOfSports; nrOfSports++) {
                     for (let nrOfFields = nrOfSports; nrOfFields <= maxNrOfFields; nrOfFields++) {
                         for (let nrOfHeadtohead = 1; nrOfHeadtohead <= maxNrOfHeadtohead; nrOfHeadtohead++) {
-                            if (nrOfCompetitors !== 40 /* || nrOfPoules !== 1
-                                || nrOfSports !== 1 || nrOfFields !== 2 || nrOfHeadtohead !== 1*/) {
+                            if (nrOfCompetitors !== 9 /*|| nrOfPoules !== 1
+                                || nrOfSports !== 1 || nrOfFields !== 2 || nrOfHeadtohead !== 2*/) {
                                 continue;
                             }
 
@@ -52,9 +53,9 @@ describe('Planning/Service', () => {
                                 'nrOfCompetitors ' + nrOfCompetitors + ', nrOfPoules ' + nrOfPoules + ', nrOfSports ' + nrOfSports
                                 + ', nrOfFields ' + nrOfFields + ', nrOfHeadtohead ' + nrOfHeadtohead
                             );
-                            if (assertConfig !== undefined) {
-                                checkPlanning(nrOfCompetitors, nrOfPoules, nrOfSports, nrOfFields, nrOfHeadtohead, assertConfig);
-                            }
+                            // if (assertConfig !== undefined) {
+                            checkPlanning(nrOfCompetitors, nrOfPoules, nrOfSports, nrOfFields, nrOfHeadtohead, assertConfig);
+                            // }
                         }
                     }
                 }
@@ -736,6 +737,11 @@ export function checkPlanning(
     }
 
     planningService.create(firstRoundNumber);
+
+    if (assertConfig === undefined) {
+        return;
+    }
+
     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
     consoleGames(games); console.log('');
     expect(games.length, 'het aantal wedstrijd voor de hele ronde komt niet overeen').to.equal(assertConfig.nrOfGames);
@@ -744,7 +750,9 @@ export function checkPlanning(
         assertValidGamesParticipations(place, games, assertConfig.nrOfPlaceGames);
         assertGamesInRow(place, games, assertConfig.maxNrOfGamesInARow);
     });
-    expect(games.pop().getResourceBatch(), 'het aantal batches moet minder zijn dan ..').to.be.lessThan(assertConfig.maxNrOfBatches + 1);
+    const lastResourceBatch = games.pop().getResourceBatch();
+    expect(lastResourceBatch, 'het aantal batches(' + lastResourceBatch + ') moet minder zijn dan ' +
+        (assertConfig.maxNrOfBatches + 1)).to.be.lessThan(assertConfig.maxNrOfBatches + 1);
 }
 
 export function getAssertionsConfig(
@@ -756,6 +764,7 @@ export function getAssertionsConfig(
 ): AssertConfig {
     const competitors = {
         2: assertionsConfigs2, 3: assertionsConfigs3, 4: assertionsConfigs4, 5: assertionsConfigs5,
+        6: assertionsConfigs6,
         8: assertionsConfigs8, 9: assertionsConfigs9, 16: assertionsConfigs16, 40: assertionsConfigs40
     };
     if (competitors[nrOfCompetitors] === undefined) {

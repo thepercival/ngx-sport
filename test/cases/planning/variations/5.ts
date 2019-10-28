@@ -44,6 +44,14 @@ export const assertionsConfigs5 = {
                             3: { nrOfGames: 12, maxNrOfGamesInARow: 2, maxNrOfBatches: 10, nrOfPlaceGames: [3, 6] },
                             4: { nrOfGames: 16, maxNrOfGamesInARow: 2, maxNrOfBatches: 13, nrOfPlaceGames: [4, 8] },
                         }
+                    },
+                    3: {
+                        nrOfHeadtohead: {
+                            1: { nrOfGames: 4, maxNrOfGamesInARow: 2, maxNrOfBatches: 4, nrOfPlaceGames: [1, 2] }/*,
+                            2: { nrOfGames: 8, maxNrOfGamesInARow: 2, maxNrOfBatches: 6, nrOfPlaceGames: [2, 4] },
+                            3: { nrOfGames: 12, maxNrOfGamesInARow: 2, maxNrOfBatches: 10, nrOfPlaceGames: [3, 6] },
+                            4: { nrOfGames: 16, maxNrOfGamesInARow: 2, maxNrOfBatches: 13, nrOfPlaceGames: [4, 8] },*/
+                        }
                     }
                 }
             }

@@ -14,17 +14,10 @@ export const assertionsConfigs4 = {
                         },
                         2: {
                             nrOfHeadtohead: {
-<<<<<<< HEAD
                                 1: { nrOfGames: 6, maxNrOfGamesInARow: -1, maxNrOfBatches: 3, nrOfPlaceGames: [3] },
                                 2: { nrOfGames: 12, maxNrOfGamesInARow: -1, maxNrOfBatches: 6, nrOfPlaceGames: [6] },
                                 3: { nrOfGames: 18, maxNrOfGamesInARow: -1, maxNrOfBatches: 9, nrOfPlaceGames: [9] },
                                 4: { nrOfGames: 24, maxNrOfGamesInARow: -1, maxNrOfBatches: 12, nrOfPlaceGames: [12] },
-=======
-                                1: { nrOfGames: 6, maxNrOfGamesInARow: 2, maxNrOfBatches: 3, nrOfPlaceGames: 3 },
-                                2: { nrOfGames: 12, maxNrOfGamesInARow: 2, maxNrOfBatches: 6, nrOfPlaceGames: 6 },
-                                3: { nrOfGames: 18, maxNrOfGamesInARow: 2, maxNrOfBatches: 9, nrOfPlaceGames: 9 },
-                                4: { nrOfGames: 24, maxNrOfGamesInARow: 2, maxNrOfBatches: 12, nrOfPlaceGames: 12 },
->>>>>>> 2e6bbb7558e182f8b03f9487a2416e1e399093f5
                             }
                         }
                     }
@@ -77,7 +70,6 @@ export const assertionsConfigs4 = {
                         }
                     }
                 }*/
-<<<<<<< HEAD
             }
         }
     },
@@ -102,8 +94,6 @@ export const assertionsConfigs4 = {
                         }
                     }
                 }
-=======
->>>>>>> 2e6bbb7558e182f8b03f9487a2416e1e399093f5
             }
         }
     }

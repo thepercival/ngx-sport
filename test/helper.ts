@@ -43,7 +43,7 @@ export function consoleGame(game: Game, batch?: PlanningResourceBatch) {
     const refDescr = (game.getRefereePlace() ? nameService.getPlaceFromName(game.getRefereePlace(), false, false) : '');
     const refNumber = game.getRefereePlace() ? game.getRefereePlace().getNumber() : 0;
     console.log(
-        'batch ' + consoleColor(game.getResourceBatch(), consoleString(game.getResourceBatch(), 2))
+        'batch ' + consoleColor(game.getResourceBatch() % 10, consoleString(game.getResourceBatch(), 2))
         + ' (' + game.getStartDateTime().toISOString() + ') '
         + ', poule ' + game.getPoule().getNumber()
         + ', ' + consolePlaces(game, Game.HOME, batch)
@@ -79,7 +79,12 @@ export function consoleColor(number: number, content: string): string {
         return colors.grey(content);
     } else if (number === 7) {
         return colors.cyan(content);
+    } else if (number === 8) {
+        return colors.brightWhite(content);
+    } else if (number === 9) {
+        return colors.brightRed(content);
     }
+
     return content;
 }
 
