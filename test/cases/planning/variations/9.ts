@@ -1,5 +1,29 @@
 export const assertionsConfigs9 = {
     nrOfPoules: {
+        2: {
+            nrOfSports: {
+                1: {
+                    nrOfFields: {
+                        1: {
+                            nrOfHeadtohead: {
+                                1: { nrOfGames: 16, maxNrOfGamesInARow: 1, maxNrOfBatches: 16, nrOfPlaceGames: [3, 4] }/*,
+                                2: { nrOfGames: 4, maxNrOfGamesInARow: 1, maxNrOfBatches: 4, nrOfPlaceGames: [2] },
+                                3: { nrOfGames: 6, maxNrOfGamesInARow: 1, maxNrOfBatches: 6, nrOfPlaceGames: [3] },
+                                4: { nrOfGames: 8, maxNrOfGamesInARow: 1, maxNrOfBatches: 8, nrOfPlaceGames: [4] },*/
+                            }
+                        },
+                        2: {
+                            nrOfHeadtohead: {
+                                /*1: { nrOfGames: 2, maxNrOfGamesInARow: -1, maxNrOfBatches: 1, nrOfPlaceGames: [1] }*//*,
+                                2: { nrOfGames: 4, maxNrOfGamesInARow: -1, maxNrOfBatches: 2, nrOfPlaceGames: [2] },
+                                3: { nrOfGames: 6, maxNrOfGamesInARow: -1, maxNrOfBatches: 3, nrOfPlaceGames: [3] },
+                                4: { nrOfGames: 8, maxNrOfGamesInARow: -1, maxNrOfBatches: 4, nrOfPlaceGames: [4] },*/
+                            }
+                        }
+                    }
+                }
+            }
+        },
         3: {
             nrOfSports: {
                 1: {
@@ -62,30 +86,6 @@ export const assertionsConfigs9 = {
                         }
                     }
                 }*/
-            }
-        }
-    },
-    2: {
-        nrOfSports: {
-            1: {
-                nrOfFields: {
-                    1: {
-                        nrOfHeadtohead: {
-                            1: { nrOfGames: 2, maxNrOfGamesInARow: 1, maxNrOfBatches: 2, nrOfPlaceGames: [1] },
-                            2: { nrOfGames: 4, maxNrOfGamesInARow: 1, maxNrOfBatches: 4, nrOfPlaceGames: [2] },
-                            3: { nrOfGames: 6, maxNrOfGamesInARow: 1, maxNrOfBatches: 6, nrOfPlaceGames: [3] },
-                            4: { nrOfGames: 8, maxNrOfGamesInARow: 1, maxNrOfBatches: 8, nrOfPlaceGames: [4] },
-                        }
-                    },
-                    2: {
-                        nrOfHeadtohead: {
-                            1: { nrOfGames: 2, maxNrOfGamesInARow: -1, maxNrOfBatches: 1, nrOfPlaceGames: [1] },
-                            2: { nrOfGames: 4, maxNrOfGamesInARow: -1, maxNrOfBatches: 2, nrOfPlaceGames: [2] },
-                            3: { nrOfGames: 6, maxNrOfGamesInARow: -1, maxNrOfBatches: 3, nrOfPlaceGames: [3] },
-                            4: { nrOfGames: 8, maxNrOfGamesInARow: -1, maxNrOfBatches: 4, nrOfPlaceGames: [4] },
-                        }
-                    }
-                }
             }
         }
     }
