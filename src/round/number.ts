@@ -7,7 +7,6 @@ import { Poule } from '../poule';
 import { Round } from '../round';
 import { Sport } from '../sport';
 import { SportConfig } from '../sport/config';
-import { SportPlanningConfig } from '../sport/planningconfig';
 import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
 
@@ -18,15 +17,16 @@ export class RoundNumber {
     protected next: RoundNumber;
     protected rounds: Round[] = [];
     protected planningConfig: PlanningConfig;
-    protected sportPlanningConfigs: SportPlanningConfig[];
     protected sportScoreConfigs: SportScoreConfig[] = [];
     protected id: number;
+    protected bestPlanning: boolean;
 
     constructor(competition: Competition, previous?: RoundNumber) {
         this.competition = competition;
         this.previous = previous;
         this.number = previous === undefined ? 1 : previous.getNumber() + 1;
         this.competition = competition;
+        this.bestPlanning = false;
     }
 
     getId(): number {
@@ -93,11 +93,16 @@ export class RoundNumber {
         return poules;
     }
 
-    getGames(): Game[] {
+    getGames(order: number): Game[] {
         let games = [];
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
+        if (order === Game.ORDER_BY_BATCH) {
+            games.sort((g1, g2) => {
+                return g1.getBatchNr() - g2.getBatchNr();
+            });
+        }
         return games;
     }
 
@@ -137,10 +142,6 @@ export class RoundNumber {
         let nrOfCompetitors = 0;
         this.getRounds().forEach(round => { nrOfCompetitors += round.getNrOfCompetitors(); });
         return nrOfCompetitors;
-    }
-
-    getARound(): Round {
-        return this.getRounds()[0];
     }
 
     needsRanking(): boolean {
@@ -183,48 +184,6 @@ export class RoundNumber {
         return this.getPrevious().getValidPlanningConfig();
     }
 
-    // hasMultipleSportPlanningConfigs(): boolean {
-    //     return this.sportPlanningConfigs.length > 1;
-    // }
-
-    // getFirstSportPlanningConfig(): SportPlanningConfig {
-    //     return this.sportPlanningConfigs[0];
-    // }
-
-    // getSportPlanningConfigs(): SportPlanningConfig[] {
-    //     return this.sportPlanningConfigs;
-    // }
-
-    // setSportPlanningConfig(sportPlanningConfig: SportPlanningConfig) {
-    //     this.sportPlanningConfigs.push(sportPlanningConfig);
-    // }
-
-    getSportPlanningConfigs(): SportPlanningConfig[] {
-        if (this.sportPlanningConfigs !== undefined) {
-            return this.sportPlanningConfigs;
-        }
-        this.sportPlanningConfigs = [];
-        return this.sportPlanningConfigs;
-        // if (this.competition.hasMultipleSportConfigs()) {
-        //     this.getSportConfigs().forEach(sportConfig => {
-        //         const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
-        //         sportPlanningConfig.setMinNrOfGames(this.getCompetition().getNrOfFields(sportConfig.getSport()));
-        //         this.sportPlanningConfigs.push(sportPlanningConfig);
-        //     });
-        // } else {
-        //     const sportConfig = this.competition.getFirstSportConfig();
-        //     const sportPlanningConfig = new SportPlanningConfig(sportConfig.getSport(), this);
-        //     // aantal wedstrijden dit staat ook in planning!!!!
-        //     sportPlanningConfig.setMinNrOfGames();
-        //     this.sportPlanningConfigs.push(sportPlanningConfig);
-        // }
-        // return this.sportPlanningConfigs;
-    }
-
-    getSportPlanningConfig(sport: Sport): SportPlanningConfig {
-        return this.getSportPlanningConfigs().find(sportPlanningConfigIt => sportPlanningConfigIt.getSport() === sport);
-    }
-
     getSportScoreConfigs(): SportScoreConfig[] {
         return this.sportScoreConfigs;
     }
@@ -247,5 +206,23 @@ export class RoundNumber {
             return sportScoreConfig;
         }
         return this.getPrevious().getValidSportScoreConfig(sport);
+    }
+
+    getFirstStartDateTime(): Date {
+        const games = this.getGames(Game.ORDER_BY_BATCH);
+        return games[0].getStartDateTime();
+    }
+
+    getLastStartDateTime(): Date {
+        const games = this.getGames(Game.ORDER_BY_BATCH);
+        return games[games.length - 1].getStartDateTime();
+    }
+
+    hasBestPlanning(): boolean {
+        return this.bestPlanning;
+    }
+
+    setBestPlanning() {
+        this.bestPlanning = true;
     }
 }

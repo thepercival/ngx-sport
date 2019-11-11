@@ -10,7 +10,6 @@ import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { SportConfigService } from '../sport/config/service';
-import { SportPlanningConfigService } from '../sport/planningconfig/service';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
@@ -23,7 +22,7 @@ export class StructureService {
         private competitorRange?: VoetbalRange
     ) {
         this.planningConfigService = new PlanningConfigService();
-        this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+        this.sportConfigService = new SportConfigService(new SportScoreConfigService());
     }
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {

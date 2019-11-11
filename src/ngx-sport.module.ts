@@ -32,7 +32,6 @@ import { PlanningConfigMapper } from './planning/config/mapper';
 import { PlanningConfigRepository } from './planning/config/repository';
 import { PlanningConfigService } from './planning/config/service';
 import { PlanningRepository } from './planning/repository';
-import { PlanningService } from './planning/service';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { QualifyGroup } from './qualify/group';
@@ -54,8 +53,6 @@ import { SportConfigMapper } from './sport/config/mapper';
 import { SportConfigRepository } from './sport/config/repository';
 import { SportConfigService } from './sport/config/service';
 import { SportMapper } from './sport/mapper';
-import { SportPlanningConfigMapper } from './sport/planningconfig/mapper';
-import { SportPlanningConfigService } from './sport/planningconfig/service';
 import { SportScoreConfig } from './sport/scoreconfig';
 import { SportScoreConfigService } from './sport/scoreconfig/service';
 import { Structure } from './structure';
@@ -66,7 +63,7 @@ import { SportScoreConfigRepository } from './sport/scoreconfig/repository';
 @NgModule({
     imports: [
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PlaceRepository, QualifyService, RefereeRepository,
+        PlaceRepository, QualifyService, RefereeRepository,
         RoundRepository, SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
         SportMapper, SportScoreConfigRepository,
         SeasonRepository, StructureRepository, StructureService, Structure,
@@ -82,11 +79,11 @@ import { SportScoreConfigRepository } from './sport/scoreconfig/repository';
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,
         AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlanningService, PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
+        PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
         SportConfigRepository, PlanningConfigRepository, PlanningConfigService, PlanningConfigRepository,
         SeasonRepository, StructureRepository, StructureService,
-        SportMapper, SportConfigMapper, SportPlanningConfigMapper,
-        SportConfigService, SportPlanningConfigService, SportScoreConfigService, SportScoreConfigRepository,
+        SportMapper, SportConfigMapper,
+        SportConfigService, SportScoreConfigService, SportScoreConfigRepository,
         CompetitorRepository,
         PlanningRepository, NameService,
         ExternalObject, ExternalObjectRepository,

@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 
 import { Competitor } from '../../src/competitor';
 import { NameService } from '../../src/nameservice';
-import { PlanningService } from '../../src/planning/service';
+import { PlanningPeriod } from '../../src/planning/period';
 import { QualifyGroup } from '../../src/qualify/group';
 import { Referee } from '../../src/referee';
 import { StructureService } from '../../src/structure/service';

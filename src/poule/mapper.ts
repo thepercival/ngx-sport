@@ -18,7 +18,10 @@ export class PouleMapper {
         });
         json.places.map(jsonPlace => this.placeMapper.toObject(jsonPlace, poule));
         if (json.games !== undefined) {
-            this.gameMapper.toArray(json.games, poule);
+            json.games.forEach(jsonGame => {
+                const game = poule.getGames().find(gameIt => gameIt.getId() === jsonGame.id);
+                this.gameMapper.toObject(jsonGame, poule, game);
+            });
         }
         return poule;
     }

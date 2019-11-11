@@ -6,16 +6,12 @@ import { Sport } from '../../sport';
 import { Structure } from '../../structure';
 import { SportConfig } from '../config';
 import { SportCustom } from '../custom';
-import { SportPlanningConfigService } from '../planningconfig/service';
 import { SportScoreConfigService } from '../scoreconfig/service';
 
 @Injectable()
 export class SportConfigService {
 
-    constructor(
-        private scoreConfigService: SportScoreConfigService,
-        private planningConfigService: SportPlanningConfigService
-    ) {
+    constructor(private scoreConfigService: SportScoreConfigService) {
     }
 
     createDefault(sport: Sport, competition: Competition, structure?: Structure): SportConfig {
@@ -65,9 +61,6 @@ export class SportConfigService {
             if (roundNumber.hasPrevious() === false || roundNumber.getSportScoreConfigs().length > 0) {
                 this.scoreConfigService.createDefault(config.getSport(), roundNumber);
             }
-            if (roundNumber.hasPrevious() === false || roundNumber.getSportPlanningConfigs().length > 0) {
-                this.planningConfigService.createDefault(config.getSport(), roundNumber);
-            }
             roundNumber = roundNumber.getNext();
         }
     }
@@ -86,17 +79,11 @@ export class SportConfigService {
         });
         let roundNumber = structure.getFirstRoundNumber();
         while (roundNumber) {
-            const planningConfigs = roundNumber.getSportPlanningConfigs();
-            const planningConfig = planningConfigs.find(planningConfigIt => planningConfigIt.getSport() === sport);
-            const idxPlanning = planningConfigs.indexOf(planningConfig);
-            if (idxPlanning >= 0) {
-                planningConfigs.splice(idxPlanning, 1);
-            }
             const scoreConfigs = roundNumber.getSportScoreConfigs();
             const scoreConfig = scoreConfigs.find(scoreConfigIt => scoreConfigIt.getSport() === sport);
             const idxScore = scoreConfigs.indexOf(scoreConfig);
             if (idxScore >= 0) {
-                planningConfigs.splice(idxScore, 1);
+                scoreConfigs.splice(idxScore, 1);
             }
             roundNumber = roundNumber.getNext();
         }

@@ -24,7 +24,7 @@ export class NameService {
     */
     getRoundNumberName(roundNumber: RoundNumber): string {
         if (this.roundsHaveSameName(roundNumber)) {
-            return this.getRoundName(roundNumber.getARound(), true);
+            return this.getRoundName(roundNumber.getRounds()[0], true);
         }
         return this.getHtmlNumber(roundNumber.getNumber()) + ' ronde';
     }

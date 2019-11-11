@@ -5,6 +5,7 @@ import { JsonRound, RoundMapper } from '../round/mapper';
 import { RoundNumber } from '../round/number';
 import { JsonRoundNumber, RoundNumberMapper } from '../round/number/mapper';
 import { Structure } from '../structure';
+import { Game } from '../game';
 
 @Injectable()
 export class StructureMapper {
@@ -22,7 +23,7 @@ export class StructureMapper {
     protected setRefereePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
         if (roundNumber.getValidPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
-            const games = roundNumber.getGames();
+            const games = roundNumber.getGames(Game.ORDER_BY_POULE);
             jsonRound.poules.forEach(jsonPoule => jsonPoule.games.forEach(jsonGame => {
                 if (jsonGame.refereePlaceId === undefined) {
                     return;

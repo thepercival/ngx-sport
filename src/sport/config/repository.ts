@@ -8,10 +8,7 @@ import { APIRepository } from '../../api/repository';
 import { Competition } from '../../competition';
 import { Structure } from '../../structure';
 import { SportConfig } from '../config';
-import { SportPlanningConfigService } from '../planningconfig/service';
-import { SportScoreConfigService } from '../scoreconfig/service';
 import { JsonSportConfig, SportConfigMapper } from './mapper';
-import { SportConfigService } from './service';
 
 @Injectable()
 export class SportConfigRepository extends APIRepository {

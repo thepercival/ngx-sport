@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { TheCache } from '../../cache';
 import { Competition } from '../../competition';
 import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
-import { JsonSportPlanningConfig, SportPlanningConfigMapper } from '../../sport/planningconfig/mapper';
 import { JsonSportScoreConfig, SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
 import { RoundNumber } from '../number';
 
@@ -11,13 +10,15 @@ import { RoundNumber } from '../number';
 export class RoundNumberMapper {
     constructor(
         private planningConfigMapper: PlanningConfigMapper,
-        private sportPlanningConfigMapper: SportPlanningConfigMapper,
         private sportScoreConfigMapper: SportScoreConfigMapper
     ) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
         roundNumber.setId(json.id);
+        if (json.hasBestPlanning) {
+            roundNumber.setBestPlanning();
+        }
 
         // roundNumber.getFields().forEach( field => {
         //     field.getSport();
@@ -30,11 +31,6 @@ export class RoundNumberMapper {
                 this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, TheCache.sports[jsonSportScoreConfig.sportId], roundNumber);
             });
         }
-        if (json.sportPlanningConfigs) {
-            json.sportPlanningConfigs.forEach(jsonSportPlanningConfig => {
-                this.sportPlanningConfigMapper.toObject(jsonSportPlanningConfig, TheCache.sports[jsonSportPlanningConfig.sportId], roundNumber);
-            });
-        }
         if (json.next !== undefined) {
             this.toObject(json.next, competition, roundNumber);
         }
@@ -45,8 +41,8 @@ export class RoundNumberMapper {
         return {
             id: roundNumber.getId(),
             number: roundNumber.getNumber(),
+            hasBestPlanning: roundNumber.hasBestPlanning(),
             planningConfig: roundNumber.getPlanningConfig() ? this.planningConfigMapper.toJson(roundNumber.getPlanningConfig()) : undefined,
-            sportPlanningConfigs: roundNumber.getSportPlanningConfigs().map(config => this.sportPlanningConfigMapper.toJson(config)),
             sportScoreConfigs: roundNumber.getSportScoreConfigs().map(config => this.sportScoreConfigMapper.toJson(config)),
             next: roundNumber.hasNext() ? this.toJson(roundNumber.getNext()) : undefined
         };
@@ -56,8 +52,8 @@ export class RoundNumberMapper {
 export interface JsonRoundNumber {
     id?: number;
     number: number;
+    hasBestPlanning: boolean;
     planningConfig?: JsonPlanningConfig;
-    sportPlanningConfigs?: JsonSportPlanningConfig[];
     sportScoreConfigs?: JsonSportScoreConfig[];
     next?: JsonRoundNumber;
 }

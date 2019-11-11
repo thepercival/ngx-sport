@@ -14,8 +14,8 @@ export class Game {
     static readonly RESULT_AWAY = 3;
     static readonly HOME = true;
     static readonly AWAY = false;
-    static readonly ORDER_BYNUMBER = 1;
-    static readonly ORDER_RESOURCEBATCH = 2;
+    static readonly ORDER_BY_BATCH = 1;
+    static readonly ORDER_BY_POULE = 2;
     static readonly PHASE_REGULARTIME = 1;
     static readonly PHASE_EXTRATIME = 2;
     static readonly PHASE_PENALTIES = 4;
@@ -24,7 +24,7 @@ export class Game {
     protected poule: Poule;
     protected roundNumber: number;
     protected subNumber: number;
-    protected resourceBatch: number;
+    protected batchNr: number;
     protected field: Field;
     protected referee: Referee;
     protected refereePlace: Place;
@@ -76,12 +76,12 @@ export class Game {
         this.subNumber = subNumber;
     }
 
-    getResourceBatch(): number {
-        return this.resourceBatch;
+    getBatchNr(): number {
+        return this.batchNr;
     }
 
-    setResourceBatch(resourceBatch: number): void {
-        this.resourceBatch = resourceBatch;
+    setBatchNr(batchNr: number): void {
+        this.batchNr = batchNr;
     }
 
     getField(): Field {

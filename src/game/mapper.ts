@@ -18,7 +18,7 @@ export class GameMapper {
             game = new Game(poule, json.roundNumber, json.subNumber);
         }
         game.setId(json.id);
-        game.setResourceBatch(json.resourceBatch);
+        game.setBatchNr(json.batchNr);
         game.setState(json.state);
         game.setField(poule.getCompetition().getField(json.fieldNr));
         game.setReferee(json.refereeRank !== undefined ? poule.getCompetition().getReferee(json.refereeRank) : undefined);
@@ -35,20 +35,13 @@ export class GameMapper {
         return game;
     }
 
-    toArray(json: JsonGame[], poule: Poule): Game[] {
-        return json.map(jsonGame => {
-            const game = poule.getGames().find(gameIt => gameIt.getId() === jsonGame.id);
-            return this.toObject(jsonGame, poule, game);
-        });
-    }
-
     toJson(game: Game): JsonGame {
         return {
             id: game.getId(),
             places: game.getPlaces().map(gamePlace => this.gamePlaceMapper.toJson(gamePlace)),
             roundNumber: game.getRoundNumber(),
             subNumber: game.getSubNumber(),
-            resourceBatch: game.getResourceBatch(),
+            batchNr: game.getBatchNr(),
             fieldNr: game.getField().getNumber(),
             state: game.getState(),
             refereeRank: game.getReferee() ? game.getReferee().getRank() : undefined,
@@ -57,6 +50,13 @@ export class GameMapper {
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
         };
     }
+
+    toArray(json: JsonGame[], poule: Poule): Game[] {
+        return json.map(jsonGame => {
+            const game = poule.getGames().find(gameIt => gameIt.getId() === jsonGame.id);
+            return this.toObject(jsonGame, poule, game);
+        });
+    }
 }
 
 export interface JsonGame {
@@ -64,7 +64,7 @@ export interface JsonGame {
     places: JsonGamePlace[];
     roundNumber: number;
     subNumber: number;
-    resourceBatch: number;
+    batchNr: number;
     fieldNr: number;
     state: number;
     startDateTime?: string;
