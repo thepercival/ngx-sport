@@ -35,11 +35,9 @@ export class Game {
 
     constructor(
         poule: Poule,
-        roundNumber: number,
-        subNumber: number) {
+        batchNr: number) {
         this.setPoule(poule);
-        this.setRoundNumber(roundNumber);
-        this.setSubNumber(subNumber);
+        this.batchNr = batchNr;
         this.setState(State.Created);
     }
 
@@ -60,28 +58,8 @@ export class Game {
         this.poule = poule;
     }
 
-    getRoundNumber(): number {
-        return this.roundNumber;
-    }
-
-    setRoundNumber(roundNumber: number): void {
-        this.roundNumber = roundNumber;
-    }
-
-    getSubNumber(): number {
-        return this.subNumber;
-    }
-
-    setSubNumber(subNumber: number): void {
-        this.subNumber = subNumber;
-    }
-
     getBatchNr(): number {
         return this.batchNr;
-    }
-
-    setBatchNr(batchNr: number): void {
-        this.batchNr = batchNr;
     }
 
     getField(): Field {

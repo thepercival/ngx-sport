@@ -15,10 +15,9 @@ export class GameMapper {
 
     toObject(json: JsonGame, poule: Poule, game?: Game): Game {
         if (game === undefined) {
-            game = new Game(poule, json.roundNumber, json.subNumber);
+            game = new Game(poule, json.batchNr);
         }
         game.setId(json.id);
-        game.setBatchNr(json.batchNr);
         game.setState(json.state);
         game.setField(poule.getCompetition().getField(json.fieldNr));
         game.setReferee(json.refereeRank !== undefined ? poule.getCompetition().getReferee(json.refereeRank) : undefined);
@@ -39,8 +38,6 @@ export class GameMapper {
         return {
             id: game.getId(),
             places: game.getPlaces().map(gamePlace => this.gamePlaceMapper.toJson(gamePlace)),
-            roundNumber: game.getRoundNumber(),
-            subNumber: game.getSubNumber(),
             batchNr: game.getBatchNr(),
             fieldNr: game.getField().getNumber(),
             state: game.getState(),
@@ -62,8 +59,6 @@ export class GameMapper {
 export interface JsonGame {
     id?: number;
     places: JsonGamePlace[];
-    roundNumber: number;
-    subNumber: number;
     batchNr: number;
     fieldNr: number;
     state: number;
