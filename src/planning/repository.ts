@@ -35,14 +35,13 @@ export class PlanningRepository extends APIRepository {
 
     /**
      * games verwijderen en weer toevoegen
-     * 
+     *
      * @param roundNumber
      */
-    createObject(structure: Structure, blockedPeriod: PlanningPeriod): Observable<Structure> {
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        this.removeGames(firstRoundNumber);
-        return this.http.post(this.url, undefined, this.getOptions(firstRoundNumber, blockedPeriod)).pipe(
-            map((jsonStructure: JsonStructure) => this.toObject(jsonStructure, structure)),
+    createObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<Structure> {
+        this.removeGames(roundNumber);
+        return this.http.post(this.url, undefined, this.getOptions(roundNumber, blockedPeriod)).pipe(
+            map((jsonStructure: JsonStructure) => this.toObject(jsonStructure, roundNumber)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -52,36 +51,40 @@ export class PlanningRepository extends APIRepository {
             poule.getGames().splice(0, poule.getGames().length);
         });
         if (roundNumber.hasNext()) {
-            this.removeGames(roundNumber);
+            this.removeGames(roundNumber.getNext());
         }
     }
 
-    toObject(json: JsonStructure, structure: Structure): Structure {
-        this.toRoundNumber(json.firstRoundNumber, structure.getFirstRoundNumber());
-        this.toRoundGames(json.rootRound, structure.getRootRound());
-        return structure;
+    toObject(json: JsonStructure, roundNumber: RoundNumber): RoundNumber {
+        this.toRoundNumber(json.firstRoundNumber, roundNumber.getFirst(), roundNumber.getNumber());
+        this.toRoundGames(json.rootRound, roundNumber.getFirst().getRounds()[0], roundNumber.getFirst(), roundNumber.getNumber());
+        return roundNumber;
     }
 
-    protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber) {
-        if (jsonRoundNumber.hasBestPlanning) {
-            roundNumber.setBestPlanning();
+    protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
+        if (roundNumber.getNumber() >= startRoundNumber) {
+            if (jsonRoundNumber.hasBestPlanning) {
+                roundNumber.setBestPlanning();
+            }
         }
         if (roundNumber.hasNext()) {
-            this.toRoundNumber(jsonRoundNumber.next, roundNumber.getNext());
+            this.toRoundNumber(jsonRoundNumber.next, roundNumber.getNext(), startRoundNumber);
         }
     }
-    protected toRoundGames(jsonRound: JsonRound, round: Round) {
-        jsonRound.poules.forEach(jsonPoule => {
-            const poule = round.getPoule(jsonPoule.number);
-            if (jsonPoule.games !== undefined) {
-                jsonPoule.games.forEach(jsonGame => {
-                    this.gameMapper.toObject(jsonGame, poule);
-                });
-            }
-        });
+    protected toRoundGames(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
+        if (roundNumber.getNumber() >= startRoundNumber) {
+            jsonRound.poules.forEach(jsonPoule => {
+                const poule = round.getPoule(jsonPoule.number);
+                if (jsonPoule.games !== undefined) {
+                    jsonPoule.games.forEach(jsonGame => {
+                        this.gameMapper.toObject(jsonGame, poule);
+                    });
+                }
+            });
+        }
         jsonRound.qualifyGroups.forEach((jsonQualifyGroup) => {
             const qualifyGroup = round.getQualifyGroup(jsonQualifyGroup.winnersOrLosers, jsonQualifyGroup.number);
-            this.toRoundGames(jsonQualifyGroup.childRound, qualifyGroup.getChildRound());
+            this.toRoundGames(jsonQualifyGroup.childRound, qualifyGroup.getChildRound(), roundNumber.getNext(), startRoundNumber);
         });
     }
 
@@ -119,9 +122,10 @@ export class PlanningRepository extends APIRepository {
         );
     }
 
-    isBestObject(roundNumber: RoundNumber): Observable<boolean> {
-        return this.http.get(this.url + '/isbest', this.getOptions(roundNumber)).pipe(
-            map((isBestObject: boolean) => isBestObject),
+    isBetterAvailable(roundNumber: RoundNumber, withNext?: boolean): Observable<boolean> {
+        const options = this.getOptions(roundNumber, undefined, withNext);
+        return this.http.get(this.url + '/isbetteravailable' + '/' + roundNumber.getId(), options).pipe(
+            map((isBetterAvailable: boolean) => isBetterAvailable),
             catchError((err) => this.handleError(err))
         );
     }
@@ -145,13 +149,18 @@ export class PlanningRepository extends APIRepository {
         return true;
     }
 
-    protected getOptions(roundNumber: RoundNumber, blockedPeriod?: PlanningPeriod): { headers: HttpHeaders; params: HttpParams } {
+    protected getOptions(
+        roundNumber: RoundNumber, blockedPeriod?: PlanningPeriod, withNext?: boolean
+    ): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('competitionid', roundNumber.getCompetition().getId().toString());
         httpParams = httpParams.set('roundnumber', roundNumber.getNumber().toString());
         if (blockedPeriod !== undefined) {
             httpParams = httpParams.set('blockedperiodstart', blockedPeriod.start.toISOString());
             httpParams = httpParams.set('blockedperiodend', blockedPeriod.end.toISOString());
+        }
+        if (withNext !== undefined) {
+            httpParams = httpParams.set('withnext', withNext.toString());
         }
 
         return {

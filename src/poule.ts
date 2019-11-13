@@ -83,7 +83,7 @@ export class Poule {
 
     getCompetitors(): Competitor[] {
         const competitors: Competitor[] = [];
-        this.getPlaces().forEach( place => {
+        this.getPlaces().forEach(place => {
             const competitor = place.getCompetitor();
             if (competitor !== undefined) {
                 competitors.push(competitor);
@@ -94,10 +94,6 @@ export class Poule {
 
     getGames(): Game[] {
         return this.games;
-    }
-
-    getGamesWithState(state: number): Game[] {
-        return this.getGames().filter((gameIt) => gameIt.getState() === state);
     }
 
     getState(): number {

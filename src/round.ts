@@ -205,14 +205,6 @@ export class Round {
         return nrOfGames;
     }
 
-    getGamesWithState(state: number): Game[] {
-        const games = [];
-        this.getPoules().forEach(poule => {
-            poule.getGamesWithState(state).forEach(game => games.push(game));
-        });
-        return games;
-    }
-
     getState(): number {
         if (this.getPoules().every(poule => poule.getState() === State.Finished)) {
             return State.Finished;
