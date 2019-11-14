@@ -38,7 +38,7 @@ export class PlanningRepository extends APIRepository {
      *
      * @param roundNumber
      */
-    createObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<Structure> {
+    createObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<RoundNumber> {
         this.removeGames(roundNumber);
         return this.http.post(this.url, undefined, this.getOptions(roundNumber, blockedPeriod)).pipe(
             map((jsonStructure: JsonStructure) => this.toObject(jsonStructure, roundNumber)),
@@ -63,9 +63,7 @@ export class PlanningRepository extends APIRepository {
 
     protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
         if (roundNumber.getNumber() >= startRoundNumber) {
-            if (jsonRoundNumber.hasBestPlanning) {
-                roundNumber.setBestPlanning();
-            }
+            roundNumber.setPlanningState(jsonRoundNumber.planningState);
         }
         if (roundNumber.hasNext()) {
             this.toRoundNumber(jsonRoundNumber.next, roundNumber.getNext(), startRoundNumber);
@@ -122,13 +120,13 @@ export class PlanningRepository extends APIRepository {
         );
     }
 
-    isBetterAvailable(roundNumber: RoundNumber, withNext?: boolean): Observable<boolean> {
-        const options = this.getOptions(roundNumber, undefined, withNext);
-        return this.http.get(this.url + '/isbetteravailable' + '/' + roundNumber.getId(), options).pipe(
-            map((isBetterAvailable: boolean) => isBetterAvailable),
-            catchError((err) => this.handleError(err))
-        );
-    }
+    // isBetterAvailable(roundNumber: RoundNumber, withNext?: boolean): Observable<boolean> {
+    //     const options = this.getOptions(roundNumber, undefined, withNext);
+    //     return this.http.get(this.url + '/isbetteravailable' + '/' + roundNumber.getId(), options).pipe(
+    //         map((isBetterAvailable: boolean) => isBetterAvailable),
+    //         catchError((err) => this.handleError(err))
+    //     );
+    // }
 
     private reschedule(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr, gameDate;

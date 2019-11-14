@@ -11,6 +11,10 @@ import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
 
 export class RoundNumber {
+    static readonly PLANNING_ISBEST = 1;
+    static readonly PLANNING_BEST_IS_AVAILABLE = 2;
+    static readonly PLANNING_BEST_IS_NOT_AVAILABLE_YET = 4;
+
     protected competition: Competition;
     protected number: number;
     protected previous: RoundNumber;
@@ -19,14 +23,13 @@ export class RoundNumber {
     protected planningConfig: PlanningConfig;
     protected sportScoreConfigs: SportScoreConfig[] = [];
     protected id: number;
-    protected bestPlanning: boolean;
+    protected planningState: number;
 
     constructor(competition: Competition, previous?: RoundNumber) {
         this.competition = competition;
         this.previous = previous;
         this.number = previous === undefined ? 1 : previous.getNumber() + 1;
         this.competition = competition;
-        this.bestPlanning = false;
     }
 
     getId(): number {
@@ -218,11 +221,11 @@ export class RoundNumber {
         return games[games.length - 1].getStartDateTime();
     }
 
-    hasBestPlanning(): boolean {
-        return this.bestPlanning;
+    getPlanningState(): number {
+        return this.planningState;
     }
 
-    setBestPlanning() {
-        this.bestPlanning = true;
+    setPlanningState(state: number) {
+        this.planningState = state;
     }
 }
