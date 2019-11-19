@@ -16,7 +16,7 @@ export class RoundNumberMapper {
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
         roundNumber.setId(json.id);
-        roundNumber.setPlanningState(json.planningState);
+        roundNumber.setHasPlanning(json.hasPlanning);
 
         // roundNumber.getFields().forEach( field => {
         //     field.getSport();
@@ -49,7 +49,7 @@ export class RoundNumberMapper {
 export interface JsonRoundNumber {
     id?: number;
     number: number;
-    planningState?: number;
+    hasPlanning?: boolean;
     planningConfig?: JsonPlanningConfig;
     sportScoreConfigs?: JsonSportScoreConfig[];
     next?: JsonRoundNumber;

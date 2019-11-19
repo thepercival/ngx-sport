@@ -63,14 +63,14 @@ export class PlanningRepository extends APIRepository {
 
     protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
         if (roundNumber.getNumber() >= startRoundNumber) {
-            roundNumber.setPlanningState(jsonRoundNumber.planningState);
+            roundNumber.setHasPlanning(jsonRoundNumber.hasPlanning);
         }
         if (roundNumber.hasNext()) {
             this.toRoundNumber(jsonRoundNumber.next, roundNumber.getNext(), startRoundNumber);
         }
     }
     protected toRoundGames(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
-        if (roundNumber.getNumber() >= startRoundNumber) {
+        if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
             jsonRound.poules.forEach(jsonPoule => {
                 const poule = round.getPoule(jsonPoule.number);
                 if (jsonPoule.games !== undefined) {
@@ -86,47 +86,12 @@ export class PlanningRepository extends APIRepository {
         });
     }
 
-    // protected toGames(roundNumber: RoundNumber): Observable<Game[][]> {
-    //     const gamesGet: Observable<Game[]>[] = [];
-    //     const poules = this.getPoules(roundNumber);
-    //     poules.forEach(poule => {
-    //         gamesGet.push(
-    //             this.http.get(this.url, this.getGetOptions(poule)).pipe(
-    //                 map((jsoGames: JsonGame[]) => {
-
-    //                 }),
-    //                 catchError((err) => this.handleError(err))
-    //             )
-    //         );
-    //     });
-    //     return forkJoin(gamesGet);
-    // }
-
-    // private getPoules(roundNumber: RoundNumber): Poule[] {
-    //     let poules: Poule[] = [];
-    //     roundNumber.getRounds().forEach(round => {
-    //         poules = poules.concat(round.getPoules());
-    //     });
-    //     if (roundNumber.hasNext()) {
-    //         poules = poules.concat(this.getPoules(roundNumber.getNext()));
-    //     }
-    //     return poules.filter(poule => poule.getGames().length > 0);
-    // }
-
     editObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<boolean> {
         return this.http.put(this.url, undefined, this.getOptions(roundNumber, blockedPeriod)).pipe(
             map((dates: Date[]) => this.reschedule(roundNumber, dates)),
             catchError((err) => this.handleError(err))
         );
     }
-
-    // isBetterAvailable(roundNumber: RoundNumber, withNext?: boolean): Observable<boolean> {
-    //     const options = this.getOptions(roundNumber, undefined, withNext);
-    //     return this.http.get(this.url + '/isbetteravailable' + '/' + roundNumber.getId(), options).pipe(
-    //         map((isBetterAvailable: boolean) => isBetterAvailable),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
 
     private reschedule(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr, gameDate;
@@ -161,16 +126,6 @@ export class PlanningRepository extends APIRepository {
             httpParams = httpParams.set('withnext', withNext.toString());
         }
 
-        return {
-            headers: super.getHeaders(),
-            params: httpParams
-        };
-    }
-
-    protected getGetOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('competitionid', poule.getRound().getNumber().getCompetition().getId().toString());
-        httpParams = httpParams.set('pouleid', poule.getId().toString());
         return {
             headers: super.getHeaders(),
             params: httpParams
