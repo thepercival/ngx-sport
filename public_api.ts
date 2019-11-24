@@ -47,6 +47,7 @@ export * from './src/league/mapper';
 export * from './src/nameservice';
 export * from './src/planning/period';
 export * from './src/planning/repository';
+export * from './src/planning/mapper';
 export * from './src/place/location';
 export * from './src/place';
 export * from './src/place/repository';

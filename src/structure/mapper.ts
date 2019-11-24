@@ -6,15 +6,16 @@ import { RoundNumber } from '../round/number';
 import { JsonRoundNumber, RoundNumberMapper } from '../round/number/mapper';
 import { Structure } from '../structure';
 import { Game } from '../game';
+import { PlanningMapper } from '../planning/mapper';
 
 @Injectable()
 export class StructureMapper {
-    constructor(private roundNumberMapper: RoundNumberMapper, private roundMapper: RoundMapper) { }
+    constructor(private roundNumberMapper: RoundNumberMapper, private roundMapper: RoundMapper, private planningMapper: PlanningMapper) { }
 
     toObject(json: JsonStructure, competition: Competition): Structure {
         const firstRoundNumber = this.roundNumberMapper.toObject(json.firstRoundNumber, competition);
         const rootRound = this.roundMapper.toObject(json.rootRound, firstRoundNumber);
-        this.setRefereePlaces(json.rootRound, firstRoundNumber);
+        this.planningMapper.setRefereePlaces(json.rootRound, firstRoundNumber);
         const structure = new Structure(firstRoundNumber, rootRound);
         structure.setStructureNumbers();
         return structure;

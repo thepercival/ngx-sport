@@ -7,14 +7,9 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../api/repository';
 import { Game } from '../game';
 import { RoundNumber } from '../round/number';
-import { JsonRound } from '../round/mapper';
-import { GameMapper, JsonGame } from '../game/mapper';
-import { Round } from '../round';
-import { Poule } from '../poule';
 import { PlanningPeriod } from './period';
 import { JsonStructure } from '../structure/mapper';
-import { Structure } from '../structure';
-import { JsonRoundNumber } from '../round/number/mapper';
+import { PlanningMapper } from './mapper';
 
 @Injectable()
 export class PlanningRepository extends APIRepository {
@@ -23,7 +18,7 @@ export class PlanningRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private gameMapper: GameMapper,
+        private planningMapper: PlanningMapper,
         router: Router) {
         super(router);
         this.url = super.getApiUrl() + 'voetbal/' + this.getUrlpostfix();
@@ -31,6 +26,13 @@ export class PlanningRepository extends APIRepository {
 
     getUrlpostfix(): string {
         return 'planning';
+    }
+
+    getObject(roundNumber: RoundNumber): Observable<RoundNumber> {
+        return this.http.get(this.url, this.getOptions(roundNumber)).pipe(
+            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     /**
@@ -41,7 +43,7 @@ export class PlanningRepository extends APIRepository {
     createObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<RoundNumber> {
         this.removeGames(roundNumber);
         return this.http.post(this.url, undefined, this.getOptions(roundNumber, blockedPeriod)).pipe(
-            map((jsonStructure: JsonStructure) => this.toObject(jsonStructure, roundNumber)),
+            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -53,37 +55,6 @@ export class PlanningRepository extends APIRepository {
         if (roundNumber.hasNext()) {
             this.removeGames(roundNumber.getNext());
         }
-    }
-
-    toObject(json: JsonStructure, roundNumber: RoundNumber): RoundNumber {
-        this.toRoundNumber(json.firstRoundNumber, roundNumber.getFirst(), roundNumber.getNumber());
-        this.toRoundGames(json.rootRound, roundNumber.getFirst().getRounds()[0], roundNumber.getFirst(), roundNumber.getNumber());
-        return roundNumber;
-    }
-
-    protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
-        if (roundNumber.getNumber() >= startRoundNumber) {
-            roundNumber.setHasPlanning(jsonRoundNumber.hasPlanning);
-        }
-        if (roundNumber.hasNext()) {
-            this.toRoundNumber(jsonRoundNumber.next, roundNumber.getNext(), startRoundNumber);
-        }
-    }
-    protected toRoundGames(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
-        if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
-            jsonRound.poules.forEach(jsonPoule => {
-                const poule = round.getPoule(jsonPoule.number);
-                if (jsonPoule.games !== undefined) {
-                    jsonPoule.games.forEach(jsonGame => {
-                        this.gameMapper.toObject(jsonGame, poule);
-                    });
-                }
-            });
-        }
-        jsonRound.qualifyGroups.forEach((jsonQualifyGroup) => {
-            const qualifyGroup = round.getQualifyGroup(jsonQualifyGroup.winnersOrLosers, jsonQualifyGroup.number);
-            this.toRoundGames(jsonQualifyGroup.childRound, qualifyGroup.getChildRound(), roundNumber.getNext(), startRoundNumber);
-        });
     }
 
     editObject(roundNumber: RoundNumber, blockedPeriod: PlanningPeriod): Observable<boolean> {
