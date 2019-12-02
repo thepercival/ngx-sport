@@ -106,4 +106,22 @@ export class HorizontalPouleService {
         });
         return places;
     }
+
+    updateQualifyGroups(roundHorizontalPoules: HorizontalPoule[], horizontolPoulesCreators: HorizontolPoulesCreator[]) {
+        horizontolPoulesCreators.forEach(creator => {
+            creator.qualifyGroup.getHorizontalPoules().splice(0);
+            let qualifiersAdded = 0;
+            while (qualifiersAdded < creator.nrOfQualifiers) {
+                const roundHorizontalPoule = roundHorizontalPoules.shift();
+                roundHorizontalPoule.setQualifyGroup(creator.qualifyGroup);
+                qualifiersAdded += roundHorizontalPoule.getPlaces().length;
+            }
+        });
+        roundHorizontalPoules.forEach(roundHorizontalPoule => roundHorizontalPoule.setQualifyGroup(undefined));
+    }
+}
+
+export interface HorizontolPoulesCreator {
+    qualifyGroup: QualifyGroup;
+    nrOfQualifiers: number;
 }

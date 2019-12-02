@@ -6,7 +6,6 @@ import { QualifyGroup } from '../qualify/group';
 import { JsonQualifyGroup, QualifyGroupMapper } from '../qualify/group/mapper';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
-import { StructureService } from '../structure/service';
 import { RoundNumber } from './number';
 
 @Injectable()
@@ -30,9 +29,8 @@ export class RoundMapper {
             qualifyGroupMapper.toObject(jsonQualifyGroup, round);
         });
 
-        const structureService = new StructureService();
         [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-            structureService.updateQualifyGroupsHorizontalPoules(
+            horizontalPouleService.updateQualifyGroups(
                 round.getHorizontalPoules(winnersOrLosers).slice(),
                 round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
                     return { qualifyGroup: qualifyGroup, nrOfQualifiers: qualifyGroup.getChildRound().getNrOfPlaces() };

@@ -4,7 +4,7 @@ import { Place } from '../place';
 import { PlanningConfigService } from '../planning/config/service';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
-import { HorizontalPouleService } from '../poule/horizontal/service';
+import { HorizontalPouleService, HorizontolPoulesCreator } from '../poule/horizontal/service';
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
@@ -18,9 +18,7 @@ export class StructureService {
     private planningConfigService: PlanningConfigService;
     private sportConfigService: SportConfigService;
 
-    constructor(
-        private competitorRange?: VoetbalRange
-    ) {
+    constructor(private structureOptions: StructureOptions) {
         this.planningConfigService = new PlanningConfigService();
         this.sportConfigService = new SportConfigService(new SportScoreConfigService());
     }
@@ -46,9 +44,7 @@ export class StructureService {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');
         }
         const newNrOfPlaces = nrOfPlaces - 1;
-        if (this.competitorRange && newNrOfPlaces < this.competitorRange.min) {
-            throw new Error('er moeten minimaal ' + this.competitorRange.min + ' deelnemers zijn');
-        }
+        this.checkRanges(newNrOfPlaces);
         if ((newNrOfPlaces / round.getPoules().length) < 2) {
             throw new Error('Er kan geen deelnemer verwijderd worden. De minimale aantal deelnemers per poule is 2.');
         }
@@ -62,11 +58,10 @@ export class StructureService {
 
     addPlaceToRootRound(round: Round): Place {
         const newNrOfPlaces = round.getNrOfPlaces() + 1;
-        if (this.competitorRange && newNrOfPlaces > this.competitorRange.max) {
-            throw new Error('er mogen maximaal ' + this.competitorRange.max + ' deelnemers meedoen');
-        }
+        const nrOfPoules = round.getPoules().length;
+        this.checkRanges(newNrOfPlaces, nrOfPoules);
 
-        this.updateRound(round, newNrOfPlaces, round.getPoules().length);
+        this.updateRound(round, newNrOfPlaces, nrOfPoules);
 
         const rootRound = this.getRoot(round);
         const structure = new Structure(rootRound.getNumber(), rootRound);
@@ -103,8 +98,8 @@ export class StructureService {
         const poules = round.getPoules();
         const lastPoule = poules[poules.length - 1];
         const newNrOfPlaces = round.getNrOfPlaces() + (modifyNrOfPlaces ? lastPoule.getPlaces().length : 0);
-        if (modifyNrOfPlaces && this.competitorRange && newNrOfPlaces > this.competitorRange.max) {
-            throw new Error('er mogen maximaal ' + this.competitorRange.max + ' deelnemers meedoen');
+        if (modifyNrOfPlaces) {
+            this.checkRanges(newNrOfPlaces, poules.length);
         }
         this.updateRound(round, newNrOfPlaces, poules.length + 1);
         if (!round.isRoot()) {
@@ -299,26 +294,14 @@ export class StructureService {
             horizontolPoulesCreators.push(horizontolPoulesCreator);
             newNrOfPlacesChildren -= horizontolPoulesCreator.nrOfQualifiers;
         }
-        this.updateQualifyGroupsHorizontalPoules(round.getHorizontalPoules(winnersOrLosers).slice(), horizontolPoulesCreators);
+        const horizontalPouleService = new HorizontalPouleService(round);
+        horizontalPouleService.updateQualifyGroups(round.getHorizontalPoules(winnersOrLosers).slice(), horizontolPoulesCreators);
 
         horizontolPoulesCreators.forEach(creator => {
             const newNrOfPoules = this.calculateNewNrOfPoules(creator.qualifyGroup, creator.nrOfQualifiers);
             this.updateRound(creator.qualifyGroup.getChildRound(), creator.nrOfQualifiers, newNrOfPoules);
         });
         this.cleanupRemovedQualifyGroups(round, initRemovedQualifyGroups);
-    }
-
-    updateQualifyGroupsHorizontalPoules(roundHorizontalPoules: HorizontalPoule[], horizontolPoulesCreators: HorizontolPoulesCreator[]) {
-        horizontolPoulesCreators.forEach(creator => {
-            creator.qualifyGroup.getHorizontalPoules().splice(0);
-            let qualifiersAdded = 0;
-            while (qualifiersAdded < creator.nrOfQualifiers) {
-                const roundHorizontalPoule = roundHorizontalPoules.shift();
-                roundHorizontalPoule.setQualifyGroup(creator.qualifyGroup);
-                qualifiersAdded += roundHorizontalPoule.getPlaces().length;
-            }
-        });
-        roundHorizontalPoules.forEach(roundHorizontalPoule => roundHorizontalPoule.setQualifyGroup(undefined));
     }
 
     /**
@@ -385,7 +368,7 @@ export class StructureService {
         poules.splice(0, poules.length);
 
         while (nrOfPlaces > 0) {
-            const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules);
+            const nrOfPlacesToAdd = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
             const poule = new Poule(round);
             for (let i = 0; i < nrOfPlacesToAdd; i++) {
                 const tmp = new Place(poule);
@@ -403,22 +386,45 @@ export class StructureService {
         return round;
     }
 
-    getNrOfPlacesPerPoule(nrOfPlaces: number, nrOfPoules: number): number {
+    getNrOfPlacesPerPoule(nrOfPlaces: number, nrOfPoules: number, floor: boolean): number {
         const nrOfPlaceLeft = (nrOfPlaces % nrOfPoules);
         if (nrOfPlaceLeft === 0) {
             return nrOfPlaces / nrOfPoules;
         }
-        return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules) + 1;
+        if (floor) {
+            return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules);
+        }
+        return ((nrOfPlaces + (nrOfPoules - nrOfPlaceLeft)) / nrOfPoules);
+    }
+
+    protected checkRanges(nrOfPlaces: number, nrOfPoules?: number) {
+        if (nrOfPlaces < this.structureOptions.placeRange.min) {
+            throw new Error('er moeten minimaal ' + this.structureOptions.placeRange.min + ' deelnemers zijn');
+        }
+        if (nrOfPlaces > this.structureOptions.placeRange.max) {
+            throw new Error('er mogen maximaal ' + this.structureOptions.placeRange.max + ' deelnemers zijn');
+        }
+        if (nrOfPoules === undefined) {
+            return;
+        }
+        if (nrOfPoules < this.structureOptions.pouleRange.min) {
+            throw new Error('er moeten minimaal ' + this.structureOptions.pouleRange.min + ' poules zijn');
+        }
+        if (nrOfPoules > this.structureOptions.pouleRange.max) {
+            throw new Error('er mogen maximaal ' + this.structureOptions.pouleRange.max + ' poules zijn');
+        }
+        const flooredNrOfPlacesPerPoule = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
+        if (flooredNrOfPlacesPerPoule < this.structureOptions.placesPerPouleRange.min) {
+            throw new Error('er moeten minimaal ' + this.structureOptions.placesPerPouleRange.min + ' deelnemers per poule zijn');
+        }
+        const ceiledNrOfPlacesPerPoule = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
+        if (ceiledNrOfPlacesPerPoule > this.structureOptions.placesPerPouleRange.max) {
+            throw new Error('er mogen maximaal ' + this.structureOptions.placesPerPouleRange.max + ' deelnemers per poule zijn');
+        }
     }
 
     getDefaultNrOfPoules(nrOfPlaces): number {
-        const min = this.competitorRange ? this.competitorRange.min : 2;
-        const max = this.competitorRange ? this.competitorRange.max : undefined;
-        if (nrOfPlaces < min) {
-            throw new Error('Het aantal deelnemers is kleiner dan ' + min);
-        } else if (max && nrOfPlaces > max) {
-            throw new Error('Het aantal deelnemers is groter dan ' + max);
-        }
+        this.checkRanges(nrOfPlaces);
         switch (nrOfPlaces) {
             case 2:
             case 3:
@@ -478,7 +484,8 @@ export class StructureService {
     }
 }
 
-interface HorizontolPoulesCreator {
-    qualifyGroup: QualifyGroup;
-    nrOfQualifiers: number;
+export interface StructureOptions {
+    pouleRange: VoetbalRange;
+    placeRange: VoetbalRange;
+    placesPerPouleRange: VoetbalRange;
 }
