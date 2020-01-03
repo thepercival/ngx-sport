@@ -99,6 +99,9 @@ export class RoundNumber {
         });
         if (order === Game.ORDER_BY_BATCH) {
             games.sort((g1, g2) => {
+                if (g1.getBatchNr() === g2.getBatchNr()) {
+                    return g1.getField().getNumber() - g2.getField().getNumber();
+                }
                 return g1.getBatchNr() - g2.getBatchNr();
             });
         }

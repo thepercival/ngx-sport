@@ -1,37 +1,20 @@
 import { NgModule } from '@angular/core';
 
-import { APIConfig } from './api/config';
-import { APIRepository } from './api/repository';
 import { Association } from './association';
-import { AssociationRepository } from './association/repository';
 import { Competition } from './competition';
 import { CompetitionMapper } from './competition/mapper';
-import { CompetitionRepository } from './competition/repository';
 import { Competitor } from './competitor';
-import { CompetitorRepository } from './competitor/repository';
-import { ExternalObject } from './external/object';
-import { ExternalObjectRepository } from './external/object/repository';
-import { ExternalSystem } from './external/system';
-import { ExternalSystemBetFair } from './external/system/betfair';
-import { ExternalSystemMapper } from './external/system/mapper';
-import { ExternalSystemRepository } from './external/system/repository';
 import { Field } from './field';
-import { FieldRepository } from './field/repository';
 import { Game } from './game';
 import { GamePlace } from './game/place';
-import { GameRepository } from './game/repository';
 import { GameScore } from './game/score';
 import { League } from './league';
-import { LeagueRepository } from './league/repository';
 import { NameService } from './nameservice';
 import { Place } from './place';
 import { PlaceLocation } from './place/location';
-import { PlaceRepository } from './place/repository';
 import { PlanningConfig } from './planning/config';
 import { PlanningConfigMapper } from './planning/config/mapper';
-import { PlanningConfigRepository } from './planning/config/repository';
 import { PlanningConfigService } from './planning/config/service';
-import { PlanningRepository } from './planning/repository';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { QualifyGroup } from './qualify/group';
@@ -42,52 +25,36 @@ import { EndRankingService } from './ranking/end/service';
 import { RankedRoundItem } from './ranking/item';
 import { RankingService } from './ranking/service';
 import { Referee } from './referee';
-import { RefereeRepository } from './referee/repository';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
-import { RoundRepository } from './round/repository';
 import { Season } from './season';
-import { SeasonRepository } from './season/repository';
 import { SportConfig } from './sport/config';
 import { SportConfigMapper } from './sport/config/mapper';
-import { SportConfigRepository } from './sport/config/repository';
 import { SportConfigService } from './sport/config/service';
 import { SportMapper } from './sport/mapper';
 import { SportScoreConfig } from './sport/scoreconfig';
 import { SportScoreConfigService } from './sport/scoreconfig/service';
 import { Structure } from './structure';
-import { StructureRepository } from './structure/repository';
 import { StructureService } from './structure/service';
-import { SportScoreConfigRepository } from './sport/scoreconfig/repository';
 
 @NgModule({
     imports: [
-        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlaceRepository, QualifyService, RefereeRepository,
-        RoundRepository, SportConfigRepository, PlanningConfigRepository, PlanningConfigService,
-        SportMapper, SportScoreConfigRepository,
-        SeasonRepository, StructureRepository, StructureService, Structure,
-        CompetitorRepository,
-        PlanningRepository, NameService,
-        ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemRepository, ExternalSystemBetFair, SportConfigMapper, PlanningConfigMapper
+        QualifyService, PlanningConfigService,
+        SportMapper, StructureService, Structure,
+        NameService, SportConfigMapper, PlanningConfigMapper
     ],
     exports: [
-        Association, League, Competition, APIConfig, Field, Game, GameScore, GamePlace, HorizontalPoule,
-        Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee, APIRepository,
+        Association, League, Competition, Field, Game, GameScore, GamePlace, HorizontalPoule,
+        Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee,
         Round, RoundNumber, SportConfig, PlanningConfig, SportScoreConfig,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
         CompetitionMapper,
-        AssociationRepository, LeagueRepository, CompetitionRepository, FieldRepository, GameRepository,
-        PlaceRepository, QualifyService, RefereeRepository, RoundRepository,
-        SportConfigRepository, PlanningConfigRepository, PlanningConfigService, PlanningConfigRepository,
-        SeasonRepository, StructureRepository, StructureService,
+        QualifyService,
+        PlanningConfigService,
+        StructureService,
         SportMapper, SportConfigMapper,
-        SportConfigService, SportScoreConfigService, SportScoreConfigRepository,
-        CompetitorRepository,
-        PlanningRepository, NameService,
-        ExternalObject, ExternalObjectRepository,
-        ExternalSystem, ExternalSystemMapper, ExternalSystemRepository, ExternalSystemBetFair
+        SportConfigService, SportScoreConfigService,
+        NameService
     ]
 })
 export class SportModule { }
