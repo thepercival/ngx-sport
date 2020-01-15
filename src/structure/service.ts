@@ -99,7 +99,7 @@ export class StructureService {
         const lastPoule = poules[poules.length - 1];
         const newNrOfPlaces = round.getNrOfPlaces() + (modifyNrOfPlaces ? lastPoule.getPlaces().length : 0);
         if (modifyNrOfPlaces) {
-            this.checkRanges(newNrOfPlaces, poules.length);
+            this.checkRanges(newNrOfPlaces, poules.length + 1);
         }
         this.updateRound(round, newNrOfPlaces, poules.length + 1);
         if (!round.isRoot()) {
