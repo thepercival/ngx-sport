@@ -89,6 +89,10 @@ export class RankingService {
         return rankingItems.find(rankingItemIt => rankingItemIt.getUniqueRank() === rank);
     }
 
+    getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
+        return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
+    }
+
     getCompetitor(placeLocation: PlaceLocation): Competitor {
         return this.round.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr()).getCompetitor();
     }
@@ -100,6 +104,12 @@ export class RankingService {
         while (unrankedItems.length > 0) {
             const bestItems: UnrankedRoundItem[] = this.findBestItems(unrankedItems, rankFunctions);
             const rank = nrOfIterations + 1;
+            bestItems.sort((unrankedA, unrankedB) => {
+                if (unrankedA.getPlaceLocation().getPouleNr() === unrankedB.getPlaceLocation().getPouleNr()) {
+                    return unrankedA.getPlaceLocation().getPlaceNr() > unrankedB.getPlaceLocation().getPlaceNr() ? 1 : -1;
+                }
+                return unrankedA.getPlaceLocation().getPouleNr() > unrankedB.getPlaceLocation().getPouleNr() ? 1 : -1;
+            });
             bestItems.forEach(bestItem => {
                 unrankedItems.splice(unrankedItems.indexOf(bestItem), 1);
                 rankedItems.push(new RankedRoundItem(bestItem, ++nrOfIterations, rank));

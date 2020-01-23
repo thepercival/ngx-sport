@@ -38,7 +38,6 @@ export class StructureService {
     }
 
     removePlaceFromRootRound(round: Round) {
-        // console.log('removePlace for round ' + round.getNumberAsValue());
         const nrOfPlaces = round.getNrOfPlaces();
         if (nrOfPlaces === round.getNrOfPlacesChildren()) {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');

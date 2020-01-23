@@ -56,6 +56,9 @@ export class EndRankingService {
                         return nrOfDropouts > 0;
                     }
                     const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule, rankingService);
+                    while (nrOfDropouts - dropoutsHorizontalPoule.length < 0) {
+                        dropoutsHorizontalPoule.pop();
+                    }
                     dropouts = dropouts.concat(dropoutsHorizontalPoule);
                     nrOfDropouts -= dropoutsHorizontalPoule.length;
                     return nrOfDropouts > 0;
