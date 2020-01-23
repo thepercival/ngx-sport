@@ -23,9 +23,9 @@
     "@types/chai": "^4.2.0",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "codelyzer": "^5.1.0",
+    "codelyzer": "^5.2.1",
     "colors": "^1.4.0",
-    "cross-env": "^5.2.0",
+    "cross-env": "^5.2.1",
     "mocha": "^6.2.0",
     "nyc": "github:istanbuljs/nyc",
     "rollup": "^1.19.4",
@@ -35,7 +35,7 @@
     "tsickle": "^0.35.0",
     "tslint": "^5.18.0",
     "typescript": "3.4.5",
-    "uglify-js": "^3.6.0"
+    "uglify-js": "^3.7.5"
   },
   "directories": {},
   "dist": {
