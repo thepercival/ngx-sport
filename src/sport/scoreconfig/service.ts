@@ -62,25 +62,6 @@ export class SportScoreConfigService {
         return sportScoreConfigA.getNext() === sportScoreConfigB.getNext();
     }
 
-    getInput(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        const childScoreConfig = rootSportScoreConfig.getNext();
-        if (childScoreConfig !== undefined && (childScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getMaximum() === 0)) {
-            return childScoreConfig;
-        }
-        return rootSportScoreConfig;
-    }
-
-    getCalculate(rootSportScoreConfig: SportScoreConfig): SportScoreConfig {
-        while (rootSportScoreConfig.getMaximum() > 0 || rootSportScoreConfig.getNext() === undefined) {
-            return rootSportScoreConfig;
-        }
-        return rootSportScoreConfig.getNext();
-    }
-
-    inputAndCalculateDiffers(rootSportScoreConfig: SportScoreConfig): boolean {
-        return this.getInput(rootSportScoreConfig) !== this.getCalculate(rootSportScoreConfig);
-    }
-
     getFinal(game: Game, sub?: boolean): GameScoreHomeAway {
         if (game.getScores().length === 0) {
             return undefined;
@@ -91,7 +72,7 @@ export class SportScoreConfigService {
         let home = game.getScores()[0].getHome();
         let away = game.getScores()[0].getAway();
         const sportScoreConfig = game.getSportScoreConfig();
-        if (this.getCalculate(sportScoreConfig) !== this.getInput(sportScoreConfig)) {
+        if (sportScoreConfig.getCalculate() !== sportScoreConfig) {
             home = 0;
             away = 0;
             game.getScores().forEach(score => {

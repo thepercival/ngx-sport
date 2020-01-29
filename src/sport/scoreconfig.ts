@@ -9,6 +9,7 @@ export class SportScoreConfig {
     protected previous: SportScoreConfig;
     protected direction: number;
     protected maximum: number;
+    protected enabled: boolean;
     protected next: SportScoreConfig;
 
     constructor(protected sport: Sport, protected roundNumber: RoundNumber, previous: SportScoreConfig) {
@@ -43,6 +44,18 @@ export class SportScoreConfig {
         this.maximum = maximum;
     }
 
+    hasMaximum(): boolean {
+        return this.maximum > 0;
+    }
+
+    getEnabled(): boolean {
+        return this.enabled;
+    }
+
+    setEnabled(enabled: boolean) {
+        this.enabled = enabled;
+    }
+
     getSport(): Sport {
         return this.sport;
     }
@@ -66,12 +79,15 @@ export class SportScoreConfig {
         }
     }
 
-    getRoot() {
-        const previous = this.getPrevious();
-        if (previous !== undefined) {
-            return previous.getRoot();
+    getFirst() {
+        if (this.hasPrevious()) {
+            return this.getPrevious().getLast();
         }
         return this;
+    }
+
+    isFirst() {
+        return !this.hasPrevious();
     }
 
     getNext(): SportScoreConfig {
@@ -86,13 +102,23 @@ export class SportScoreConfig {
         return this.next !== undefined;
     }
 
-    isInput() {
-        if (this.getPrevious() === undefined || this.getPrevious().getMaximum() === 0) {
-            if (this.getMaximum() !== 0 || this.getNext() === undefined) {
-                return true;
-            }
+    getLast() {
+        if (this.hasNext()) {
+            return this.getNext().getLast();
         }
-        return false;
+        return this;
+    }
+
+    isLast() {
+        return !this.hasNext();
+    }
+
+    getCalculate(): SportScoreConfig {
+        const first = this.getFirst();
+        if (first.hasNext() && first.getNext().getEnabled()) {
+            return first.getNext();
+        }
+        return this;
     }
 }
 

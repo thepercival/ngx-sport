@@ -11,7 +11,7 @@ export abstract class SportCustom {
     static readonly TableTennis = 9;
     static readonly Tennis = 10;
     static readonly Football = 11;
-    static readonly Voleyball = 12;
+    static readonly Volleyball = 12;
     static readonly Baseball = 13;
 
     static get(): number[] {
@@ -27,7 +27,7 @@ export abstract class SportCustom {
             SportCustom.TableTennis,
             SportCustom.Tennis,
             SportCustom.Football,
-            SportCustom.Voleyball,
+            SportCustom.Volleyball,
             SportCustom.Baseball
         ];
     }
