@@ -79,14 +79,14 @@ export class SportScoreConfig {
         }
     }
 
-    getFirst() {
+    getFirst(): SportScoreConfig {
         if (this.hasPrevious()) {
             return this.getPrevious().getLast();
         }
         return this;
     }
 
-    isFirst() {
+    isFirst(): boolean {
         return !this.hasPrevious();
     }
 
@@ -102,14 +102,14 @@ export class SportScoreConfig {
         return this.next !== undefined;
     }
 
-    getLast() {
+    getLast(): SportScoreConfig {
         if (this.hasNext()) {
             return this.getNext().getLast();
         }
         return this;
     }
 
-    isLast() {
+    isLast(): boolean {
         return !this.hasNext();
     }
 

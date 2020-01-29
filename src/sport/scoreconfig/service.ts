@@ -17,24 +17,41 @@ export class SportScoreConfigService {
         const scoreConfig = new SportScoreConfig(sport, roundNumber, undefined);
         scoreConfig.setDirection(SportScoreConfig.UPWARDS);
         scoreConfig.setMaximum(0);
-
-        if (sport.getCustomId() === SportCustom.Darts || sport.getCustomId() === SportCustom.Tennis) {
+        scoreConfig.setEnabled(true);
+        if (this.hasNext(sport.getCustomId())) {
             const subScoreConfig = new SportScoreConfig(sport, roundNumber, scoreConfig);
             subScoreConfig.setDirection(SportScoreConfig.UPWARDS);
             subScoreConfig.setMaximum(0);
+            subScoreConfig.setEnabled(false);
         }
         return scoreConfig;
+    }
+
+    protected hasNext(customId: number): boolean {
+        if (
+            customId === SportCustom.Badminton
+            || customId === SportCustom.Darts
+            || customId === SportCustom.Squash
+            || customId === SportCustom.TableTennis
+            || customId === SportCustom.Tennis
+            || customId === SportCustom.Volleyball
+        ) {
+            return true;
+        }
+        return false;
     }
 
     copy(sport: Sport, roundNumber: RoundNumber, sourceScoreConfig: SportScoreConfig) {
         const newScoreConfig = new SportScoreConfig(sport, roundNumber, undefined);
         newScoreConfig.setDirection(sourceScoreConfig.getDirection());
         newScoreConfig.setMaximum(sourceScoreConfig.getMaximum());
+        newScoreConfig.setEnabled(sourceScoreConfig.getEnabled());
         const previousSubScoreConfig = sourceScoreConfig.getNext();
         if (previousSubScoreConfig) {
             const newSubScoreConfig = new SportScoreConfig(sport, roundNumber, newScoreConfig);
             newSubScoreConfig.setDirection(previousSubScoreConfig.getDirection());
             newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
+            newSubScoreConfig.setEnabled(previousSubScoreConfig.getEnabled());
         }
     }
 
