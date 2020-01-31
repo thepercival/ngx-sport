@@ -18,7 +18,7 @@ export class SportMapper {
         }
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
-        sport.setTeam(json.team),
+        sport.setTeam(json.team);
         sport.setCustomId(json.customId);
         return sport;
     }
@@ -41,5 +41,5 @@ export interface JsonSport {
     // scoreUnitName: string;
     // scoreSubUnitName?: string;
     team: boolean;
-    customId?: number;
+    customId: number;
 }

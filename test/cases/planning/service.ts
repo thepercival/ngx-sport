@@ -690,6 +690,7 @@ export function addSport(competition: Competition) {
     const id = competition.getSportConfigs().length + 1;
     const sport = new Sport('sport' + id);
     sport.setId(id);
+    sport.setCustomId(0);
     sportConfigService.createDefault(sport, competition);
     return sport;
 }
