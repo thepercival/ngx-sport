@@ -15,7 +15,6 @@ export class Game {
     static readonly HOME = true;
     static readonly AWAY = false;
     static readonly ORDER_BY_BATCH = 1;
-    static readonly ORDER_BY_POULE = 2;
     static readonly PHASE_REGULARTIME = 1;
     static readonly PHASE_EXTRATIME = 2;
     static readonly PHASE_PENALTIES = 4;

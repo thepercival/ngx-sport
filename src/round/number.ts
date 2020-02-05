@@ -92,7 +92,7 @@ export class RoundNumber {
         return poules;
     }
 
-    getGames(order: number): Game[] {
+    getGames(order?: number): Game[] {
         let games = [];
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());

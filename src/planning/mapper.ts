@@ -47,7 +47,7 @@ export class PlanningMapper {
     setRefereePlaces(jsonRound: JsonRound, roundNumber: RoundNumber) {
         if (roundNumber.getValidPlanningConfig().getSelfReferee()) {
             const places = roundNumber.getPlaces();
-            const games = roundNumber.getGames(Game.ORDER_BY_POULE);
+            const games = roundNumber.getGames();
             jsonRound.poules.forEach(jsonPoule => jsonPoule.games.forEach(jsonGame => {
                 if (jsonGame.refereePlaceId === undefined) {
                     return;
