@@ -30,6 +30,6 @@ export class GameScoreHomeAway {
         if (this.getHome() === this.getAway()) {
             return Game.RESULT_DRAW;
         }
-        return (this.getHome() > this.getAway()) ? Game.RESULT_HOME : Game.RESULT_DRAW;
+        return (this.getHome() > this.getAway()) ? Game.RESULT_HOME : Game.RESULT_AWAY;
     }
 }

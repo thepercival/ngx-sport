@@ -40,6 +40,9 @@ export class RankingItemsGetter {
                 game.getPlaces(homeAway).forEach(gamePlace => {
                     const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
                         && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
+                    if (item === undefined) {
+                        return;
+                    }
                     item.addGame();
                     item.addPoints(points);
                     item.addScored(scored);

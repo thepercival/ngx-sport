@@ -71,6 +71,7 @@ export * from './src/sport/config/service';
 export * from './src/sport/config/mapper';
 export * from './src/sport/scoreconfig/service';
 export * from './src/sport/custom';
+export * from './src/sport/service';
 export * from './src/structure';
 export * from './src/state';
 export * from './src/structure/service';

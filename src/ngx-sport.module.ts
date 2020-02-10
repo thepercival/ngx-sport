@@ -34,6 +34,7 @@ import { SportConfigService } from './sport/config/service';
 import { SportMapper } from './sport/mapper';
 import { SportScoreConfig } from './sport/scoreconfig';
 import { SportScoreConfigService } from './sport/scoreconfig/service';
+import { SportService } from './sport/service';
 import { Structure } from './structure';
 import { StructureService } from './structure/service';
 
@@ -53,7 +54,7 @@ import { StructureService } from './structure/service';
         PlanningConfigService,
         StructureService,
         SportMapper, SportConfigMapper,
-        SportConfigService, SportScoreConfigService,
+        SportConfigService, SportScoreConfigService, SportService,
         NameService
     ]
 })
