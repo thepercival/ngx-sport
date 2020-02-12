@@ -266,9 +266,13 @@ export class StructureService {
 
                 // add and remove qualifiers
                 nrOfQualifiers = qualifyGroup.getChildRound().getNrOfPlaces();
+                const nrOfPoules = round.getPoules().length;
 
-                if (nrOfQualifiers < round.getPoules().length && newNrOfPlacesChildren > nrOfQualifiers) {
-                    nrOfQualifiers = round.getPoules().length;
+                if (nrOfQualifiers > nrOfPoules && (nrOfQualifiers % nrOfPoules) > 0) { // when decrease nrofpoules
+                    nrOfQualifiers = nrOfQualifiers - (nrOfQualifiers % nrOfPoules);
+                }
+                if (nrOfQualifiers < nrOfPoules && newNrOfPlacesChildren > nrOfQualifiers) {
+                    nrOfQualifiers = nrOfPoules;
                 }
                 if (nrOfQualifiers > newNrOfPlacesChildren) {
                     nrOfQualifiers = newNrOfPlacesChildren;
@@ -287,7 +291,7 @@ export class StructureService {
         const qualifyGroups = round.getQualifyGroups(winnersOrLosers);
         const initRemovedQualifyGroups = qualifyGroups.splice(0, qualifyGroups.length);
         let qualifyGroupNumber = 1;
-        while (newNrOfPlacesChildren > 0) {
+        while (newNrOfPlacesChildren > 1) {
             const horizontolPoulesCreator = getNewQualifyGroup(initRemovedQualifyGroups);
             horizontolPoulesCreator.qualifyGroup.setNumber(qualifyGroupNumber++);
             horizontolPoulesCreators.push(horizontolPoulesCreator);
