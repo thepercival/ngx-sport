@@ -125,14 +125,14 @@ export class NameService {
 
         if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
             const nameWinners = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
-            if (horizontalPoule.isBorderPoule()) {
+            if (horizontalPoule.isBorderPoule() && horizontalPoule.getQualifyRuleMultiple() !== undefined) {
                 return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + nameWinners;
             }
             return nameWinners;
         }
         let name = (nrOfQualifiers > 1 ? 'nummers ' : '');
         name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
-        if (horizontalPoule.isBorderPoule()) {
+        if (horizontalPoule.isBorderPoule() && horizontalPoule.getQualifyRuleMultiple() !== undefined) {
             return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'slechtste ' + name;
         }
         return name;

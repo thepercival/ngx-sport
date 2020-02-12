@@ -105,7 +105,14 @@ export class Competition {
     removeReferee(referee: Referee) {
         const index = this.referees.indexOf(referee);
         if (index > -1) {
-            this.referees.splice(index, 1);
+            const referees = this.referees.splice(index);
+            referees.shift();
+            let rank = referee.getRank();
+            while (referees.length > 0) {
+                const removedReferee = referees.shift();
+                removedReferee.setRank(rank++);
+                this.referees.push(removedReferee);
+            }
         }
     }
 
