@@ -108,7 +108,6 @@ export class NameService {
     }
 
     /**
-     *
      * "nummers 2" voor winners complete
      * "3 beste nummers 2" voor winners incomplete
      *
