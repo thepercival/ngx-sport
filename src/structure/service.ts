@@ -205,10 +205,18 @@ export class StructureService {
 
         const firstQualifyGroup = qualifyGroupOne.getNumber() <= qualifyGroupTwo.getNumber() ? qualifyGroupOne : qualifyGroupTwo;
         const secondQualifyGroup = (firstQualifyGroup === qualifyGroupOne) ? qualifyGroupTwo : qualifyGroupOne;
-
+        const nrOfPlacesQualifyGroups = firstQualifyGroup.getChildRound().getNrOfPlaces()
+            + secondQualifyGroup.getChildRound().getNrOfPlaces();
+        const nrOfPoulesFirstQualifyGroup = firstQualifyGroup.getChildRound().getPoules().length;
         const nrOfPlacesChildrenBeforeMerge = round.getNrOfPlacesChildren(winnersOrLosers);
         const qualifyGroupService = new QualifyGroupService(this);
         qualifyGroupService.merge(firstQualifyGroup, secondQualifyGroup);
+        // first update places, before updateQualifyGroups
+        this.refillRound(firstQualifyGroup.getChildRound(), nrOfPlacesQualifyGroups, nrOfPoulesFirstQualifyGroup);
+
+        const horizontalPouleService = new HorizontalPouleService(firstQualifyGroup.getChildRound());
+        horizontalPouleService.recreate();
+        this.cleanupRemovedQualifyGroups(round, [secondQualifyGroup]);
 
         this.updateQualifyGroups(round, winnersOrLosers, nrOfPlacesChildrenBeforeMerge);
 
