@@ -5,6 +5,7 @@
   "bugs": {
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
+  "version": "0.0.0",
   "dependencies": {
     "@angular/common": "^9.0.2",
     "@angular/compiler": "^9.0.2",
@@ -124,6 +125,5 @@
         "pkgRoot": "dist"
       }
     ]
-  },
-  "version": "0.0.80"
+  }
 }
