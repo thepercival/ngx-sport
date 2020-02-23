@@ -40,12 +40,12 @@ import { StructureService } from './structure/service';
 
 @NgModule({
     imports: [
-        QualifyService, PlanningConfigService,
+        /*QualifyService, PlanningConfigService,
         SportMapper, StructureService, Structure,
-        NameService, SportConfigMapper, PlanningConfigMapper
+        NameService, SportConfigMapper, PlanningConfigMapper*/
     ],
     exports: [
-        Association, League, Competition, Field, Game, GameScore, GamePlace, HorizontalPoule,
+        /*Association, League, Competition, Field, Game, GameScore, GamePlace, HorizontalPoule,
         Poule, Place, PlaceLocation, QualifyGroup, RankingService, RankedRoundItem, EndRankingService, Referee,
         Round, RoundNumber, SportConfig, PlanningConfig, SportScoreConfig,
         Season, Competitor, QualifyRuleMultiple, QualifyRuleSingle,
@@ -55,7 +55,7 @@ import { StructureService } from './structure/service';
         StructureService,
         SportMapper, SportConfigMapper,
         SportConfigService, SportScoreConfigService, SportService,
-        NameService
+        NameService*/
     ]
 })
 export class SportModule { }

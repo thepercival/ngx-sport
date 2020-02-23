@@ -11,16 +11,16 @@
         "skipLibCheck": true,
         "lib": [
             "dom",
-            "es2015"
+            "es2018"
         ]
     },
     "files": [
         "./tmp/public_api.ts"
     ],
     "angularCompilerOptions": {
-        "annotateForClosureCompiler": true,
-        "strictMetadataEmit": true,
-        "skipTemplateCodegen": true,
+        "enableIvy": true,
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true,
         "flatModuleOutFile": "ngx-sport.js",
         "flatModuleId": "ngx-sport"
     }
