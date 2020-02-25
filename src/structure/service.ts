@@ -165,7 +165,27 @@ export class StructureService {
         if (current.isBorderPoule() && current.getNrOfQualifiers() < 2) {
             return false;
         }
+        if (this.getNrOfQualifiersPrevious(previous) < 2 || this.getNrOfQualifiersNext(current) < 2) {
+            return false;
+        }
         return true;
+    }
+
+    protected getNrOfQualifiersPrevious(horPoule: HorizontalPoule): number {
+        return this.getNrOfQualifiersRecursive(horPoule, 0, false);
+    }
+
+    protected getNrOfQualifiersNext(horPoule: HorizontalPoule): number {
+        return this.getNrOfQualifiersRecursive(horPoule, 0, true);
+    }
+
+    protected getNrOfQualifiersRecursive(horPoule: HorizontalPoule, nrOfQualifiers: number, add: boolean): number {
+        nrOfQualifiers += horPoule.getNrOfQualifiers();
+        const nextHorPoule = horPoule.getRound().getHorizontalPoule(horPoule.getWinnersOrLosers(), horPoule.getNumber() + (add ? 1 : -1));
+        if (nextHorPoule === undefined) {
+            return nrOfQualifiers;
+        }
+        return this.getNrOfQualifiersRecursive(nextHorPoule, nrOfQualifiers, add);
     }
 
     splitQualifyGroup(qualifyGroup: QualifyGroup, pouleOne: HorizontalPoule, pouleTwo: HorizontalPoule) {
