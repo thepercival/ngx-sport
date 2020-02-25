@@ -55,20 +55,31 @@ export class Structure {
     }
 
     setStructureNumbers() {
-        const structureNumber = { poule: 1, nrOfDropoutPlaces: 0 };
-        const setStructureNumbers = (round: Round) => {
-            round.getPoules().forEach(poule => {
-                poule.setStructureNumber(structureNumber.poule++);
-            });
+        let nrOfDropoutPlaces = 0;
+        const setRoundStructureNumbers = (round: Round) => {
             round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
-                setStructureNumbers(qualifyGroup.getChildRound());
+                setRoundStructureNumbers(qualifyGroup.getChildRound());
             });
-            round.setStructureNumber(structureNumber.nrOfDropoutPlaces);
-            structureNumber.nrOfDropoutPlaces += round.getNrOfDropoutPlaces();
+            round.setStructureNumber(nrOfDropoutPlaces);
+            nrOfDropoutPlaces += round.getNrOfDropoutPlaces();
             round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
-                setStructureNumbers(qualifyGroup.getChildRound());
+                setRoundStructureNumbers(qualifyGroup.getChildRound());
             });
         };
-        setStructureNumbers(this.rootRound);
+        let pouleNr = 1;
+        const setPouleStructureNumbers = (roundNumber: RoundNumber) => {
+            const rounds = roundNumber.getRounds();
+            rounds.sort((roundA, roundB) => {
+                return (roundA.getStructureNumber() > roundB.getStructureNumber()) ? 1 : -1;
+            });
+            rounds.forEach(round => {
+                round.getPoules().forEach(poule => poule.setStructureNumber(pouleNr++));
+            });
+            if (roundNumber.hasNext()) {
+                setPouleStructureNumbers(roundNumber.getNext());
+            }
+        };
+        setRoundStructureNumbers(this.rootRound);
+        setPouleStructureNumbers(this.firstRoundNumber);
     }
 }
