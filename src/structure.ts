@@ -54,6 +54,17 @@ export class Structure {
         return getRoundNumber(initRoundNumberAsValue, this.getFirstRoundNumber());
     }
 
+    hasPlanning(): boolean {
+        return this.hasRoundNumberPlanning(this.getFirstRoundNumber());
+    }
+
+    protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
+        if (!roundNumber.hasNext() || !roundNumber.getHasPlanning()) {
+            return roundNumber.getHasPlanning();
+        }
+        return this.hasRoundNumberPlanning(roundNumber.getNext());
+    }
+
     setStructureNumbers() {
         let nrOfDropoutPlaces = 0;
         const setRoundStructureNumbers = (round: Round) => {

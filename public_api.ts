@@ -14,16 +14,14 @@
  */
 export * from './src/association';
 export * from './src/association/mapper';
-export * from './src/sport/config';
-export * from './src/sport/config/mapper';
-export * from './src/sport/config/service';
-export * from './src/sport/scoreconfig';
-export * from './src/sport/scoreconfig/mapper';
-export * from './src/sport/scoreconfig/service';
 export * from './src/competition';
 export * from './src/competition/mapper';
 export * from './src/competitor';
 export * from './src/competitor/mapper';
+export * from './src/external/object';
+export * from './src/external/object/mapper';
+export * from './src/external/system';
+export * from './src/external/system/mapper';
 export * from './src/field';
 export * from './src/field/mapper';
 export * from './src/game';
@@ -65,6 +63,13 @@ export * from './src/round/mapper';
 export * from './src/round/number/mapper';
 export * from './src/season';
 export * from './src/season/mapper';
+
+export * from './src/sport/config';
+export * from './src/sport/config/mapper';
+export * from './src/sport/config/service';
+export * from './src/sport/scoreconfig';
+export * from './src/sport/scoreconfig/mapper';
+export * from './src/sport/scoreconfig/service';
 export * from './src/sport';
 export * from './src/sport/mapper';
 export * from './src/sport/config/service';
