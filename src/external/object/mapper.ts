@@ -5,7 +5,7 @@ import { TheCache } from '../../cache';
 @Injectable()
 export class ExternalObjectMapper {
 
-    constructor() {}
+    constructor() { }
 
     toObject(json: JsonExternalObject, externalObject?: ExternalObject): ExternalObject {
         if (externalObject === undefined && json.id !== undefined) {
@@ -29,6 +29,7 @@ export class ExternalObjectMapper {
             externalSystemId: externalObject.getExternalSystemId(),
             externalId: externalObject.getExternalId()
         };
+
     }
 }
 
