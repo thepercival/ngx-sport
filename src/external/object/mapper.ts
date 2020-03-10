@@ -1,33 +1,33 @@
-import { ExternalObject } from '../object';
+import { Attacher } from '../attacher';
 import { Injectable } from '@angular/core';
 import { TheCache } from '../../cache';
 
 @Injectable()
-export class ExternalObjectMapper {
+export class AttacherMapper {
 
     constructor() { }
 
-    toObject(json: JsonExternalObject, externalObject?: ExternalObject): ExternalObject {
-        if (externalObject === undefined && json.id !== undefined) {
-            externalObject = TheCache.externals[json.id];
+    toObject(json: JsonExternalObject, attacher?: Attacher): Attacher {
+        if (attacher === undefined && json.id !== undefined) {
+            attacher = TheCache.externals[json.id];
         }
-        if (externalObject === undefined) {
-            externalObject = new ExternalObject(
+        if (attacher === undefined) {
+            attacher = new Attacher(
                 json.importableObjectId,
-                json.externalSystemId);
-            externalObject.setId(json.id);
-            externalObject.setExternalId(json.externalId);
-            TheCache.externals[externalObject.getId()] = externalObject;
+                json.externalSourceId);
+            attacher.setId(json.id);
+            attacher.setExternalId(json.externalId);
+            TheCache.externals[attacher.getId()] = attacher;
         }
-        return externalObject;
+        return attacher;
     }
 
-    toJson(externalObject: ExternalObject): JsonExternalObject {
+    toJson(attacher: Attacher): JsonExternalObject {
         return {
-            id: externalObject.getId(),
-            importableObjectId: externalObject.getImportableObjectId(),
-            externalSystemId: externalObject.getExternalSystemId(),
-            externalId: externalObject.getExternalId()
+            id: attacher.getId(),
+            importableObjectId: attacher.getImportableObjectId(),
+            externalSourceId: attacher.getExternalSourceId(),
+            externalId: attacher.getExternalId()
         };
 
     }
@@ -36,7 +36,7 @@ export class ExternalObjectMapper {
 export interface JsonExternalObject {
     id?: number;
     importableObjectId: number;
-    externalSystemId: number;
+    externalSourceId: number;
     externalId: string;
 }
 

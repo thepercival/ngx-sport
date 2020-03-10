@@ -1,4 +1,4 @@
-export class ExternalObject {
+export class Attacher {
     static readonly MAX_LENGTH_EXTERNALID = 100;
 
     protected id: number;
@@ -6,7 +6,7 @@ export class ExternalObject {
 
     constructor(
         protected importableObjectId: number,
-        protected externalSystemId: number
+        protected externalSourceId: number
     ) {
     }
 
@@ -22,8 +22,8 @@ export class ExternalObject {
         return this.importableObjectId;
     }
 
-    getExternalSystemId(): number {
-        return this.externalSystemId;
+    getExternalSourceId(): number {
+        return this.externalSourceId;
     }
 
     getExternalId(): string {
@@ -35,6 +35,6 @@ export class ExternalObject {
     }
 }
 
-export interface ImportableObject {
+export interface Importable {
     getId(): number;
 }
