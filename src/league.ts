@@ -1,5 +1,5 @@
 import { Association } from './association';
-import { Importable } from './external/attacher';
+import { Importable } from './importable';
 
 export class League implements Importable {
     static readonly MIN_LENGTH_NAME = 3;
