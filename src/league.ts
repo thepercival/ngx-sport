@@ -1,7 +1,6 @@
 import { Association } from './association';
-import { Importable } from './importable';
 
-export class League implements Importable {
+export class League {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;

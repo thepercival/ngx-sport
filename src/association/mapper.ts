@@ -6,7 +6,7 @@ import { SportMapper, JsonSport } from '../sport/mapper';
 @Injectable()
 export class AssociationMapper {
 
-    constructor() {}
+    constructor() { }
 
     toObject(json: JsonAssociation, association?: Association): Association {
         if (association === undefined && json.id !== undefined) {
@@ -35,7 +35,7 @@ export class AssociationMapper {
 }
 
 export interface JsonAssociation {
-    id?: number;
+    id?: any;
     name: string;
     description?: string;
     parent?: JsonAssociation;
