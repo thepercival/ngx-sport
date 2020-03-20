@@ -36,7 +36,7 @@ export class SportMapper {
 }
 
 export interface JsonSport {
-    id?: number;
+    id?: string | number;
     name: string;
     // scoreUnitName: string;
     // scoreSubUnitName?: string;

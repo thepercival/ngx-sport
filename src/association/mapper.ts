@@ -35,7 +35,7 @@ export class AssociationMapper {
 }
 
 export interface JsonAssociation {
-    id?: any;
+    id?: string | number;
     name: string;
     description?: string;
     parent?: JsonAssociation;

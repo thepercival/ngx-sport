@@ -33,5 +33,5 @@ export interface JsonField {
     id?: number;
     number: number;
     name: string;
-    sportId: number;
+    sportId: string | number;
 }

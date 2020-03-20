@@ -38,7 +38,7 @@ export class SportScoreConfigMapper {
 
 export interface JsonSportScoreConfig {
     id?: number;
-    sportId: number;
+    sportId: string | number;
     direction: number;
     maximum: number;
     enabled: boolean;

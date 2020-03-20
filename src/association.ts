@@ -5,7 +5,7 @@ export class Association {
     static readonly MAX_LENGTH_NAME = 20;
     static readonly MAX_LENGTH_DESCRIPTION = 50;
 
-    protected id: any;
+    protected id: string | number;
     protected name: string;
     protected description: string;
     protected parent: Association;
@@ -20,11 +20,11 @@ export class Association {
         }
     }
 
-    getId(): any {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: any): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 

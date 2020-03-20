@@ -11,7 +11,7 @@ export class SportConfigMapper {
 
     toObject(json: JsonSportConfig, competition: Competition, config?: SportConfig): SportConfig {
         if (config === undefined) {
-            config = new SportConfig( TheCache.sports[json.sportId], competition);
+            config = new SportConfig(TheCache.sports[json.sportId], competition);
         }
         config.setId(json.id);
         config.setWinPoints(json.winPoints);
@@ -39,7 +39,7 @@ export class SportConfigMapper {
 
 export interface JsonSportConfig {
     id?: number;
-    sportId: number;
+    sportId: string | number;
     winPoints: number;
     drawPoints: number;
     winPointsExt: number;

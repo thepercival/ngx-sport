@@ -5,7 +5,7 @@ export class Sport {
 
     static readonly TEMPDEFAULT = 2;
 
-    protected id: number;
+    protected id: string | number;
     protected name: string;
     // protected scoreUnitName: string;
     // protected scoreSubUnitName: string;
@@ -16,11 +16,11 @@ export class Sport {
         this.setName(name);
     }
 
-    getId(): number {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: number): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 
