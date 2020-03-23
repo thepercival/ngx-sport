@@ -50,7 +50,7 @@ export function getMapper(mapper: string) {
     } else if (mapper === 'sportscoreconfig') {
         return new SportScoreConfigMapper();
     } else if (mapper === 'roundnumber') {
-        return new RoundNumberMapper( getMapper('planningconfig'), getMapper('sportplanningconfig'), getMapper('sportscoreconfig'));
+        return new RoundNumberMapper(getMapper('planningconfig'), getMapper('sportplanningconfig'), getMapper('sportscoreconfig'));
     } else if (mapper === 'competitor') {
         return new CompetitorMapper();
     } else if (mapper === 'place') {
@@ -69,6 +69,7 @@ export function getMapper(mapper: string) {
     } else if (mapper === 'round') {
         return new RoundMapper(getMapper('poule'));
     } else if (mapper === 'structure') {
+        // this is not good
         return new StructureMapper(getMapper('roundnumber'), getMapper('round'));
     }
 }
