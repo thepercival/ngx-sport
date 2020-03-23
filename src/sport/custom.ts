@@ -13,6 +13,7 @@ export abstract class SportCustom {
     static readonly Football = 11;
     static readonly Volleyball = 12;
     static readonly Baseball = 13;
+    static readonly IceHockey = 14;
 
     static get(): number[] {
         return [
@@ -21,6 +22,7 @@ export abstract class SportCustom {
             SportCustom.Darts,
             SportCustom.ESports,
             SportCustom.Hockey,
+            SportCustom.Baseball,
             SportCustom.Korfball,
             SportCustom.Chess,
             SportCustom.Squash,
@@ -28,7 +30,7 @@ export abstract class SportCustom {
             SportCustom.Tennis,
             SportCustom.Football,
             SportCustom.Volleyball,
-            SportCustom.Baseball
+            SportCustom.IceHockey
         ];
     }
 }
