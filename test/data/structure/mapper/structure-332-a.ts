@@ -21,6 +21,7 @@ export const jsonStructure332a: JsonStructure = {
         'planningConfig': {
             'nrOfHeadtohead': 1,
             'minutesPerGameExt': 0,
+            'extension': false,
             'enableTime': true,
             'minutesPerGame': 20,
             'minutesBetweenGames': 5,

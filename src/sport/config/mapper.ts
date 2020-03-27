@@ -19,6 +19,7 @@ export class SportConfigMapper {
         config.setDrawPoints(json.drawPoints);
         config.setWinPointsExt(json.winPointsExt);
         config.setDrawPointsExt(json.drawPointsExt);
+        config.setLosePointsExt(json.losePointsExt);
         config.setPointsCalculation(json.pointsCalculation);
         config.setNrOfGamePlaces(json.nrOfGamePlaces);
         return config;
@@ -32,6 +33,7 @@ export class SportConfigMapper {
             drawPoints: config.getDrawPoints(),
             winPointsExt: config.getWinPointsExt(),
             drawPointsExt: config.getDrawPointsExt(),
+            losePointsExt: config.getLosePointsExt(),
             pointsCalculation: config.getPointsCalculation(),
             nrOfGamePlaces: config.getNrOfGamePlaces()
         };
@@ -45,6 +47,7 @@ export interface JsonSportConfig {
     drawPoints: number;
     winPointsExt: number;
     drawPointsExt: number;
+    losePointsExt: number;
     pointsCalculation: number;
     nrOfGamePlaces: number;
 }

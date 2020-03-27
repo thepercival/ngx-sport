@@ -14,6 +14,7 @@ export class SportConfig {
     protected drawPoints: number;
     protected winPointsExt: number;
     protected drawPointsExt: number;
+    protected losePointsExt: number;
     protected pointsCalculation: number;
     protected nrOfGamePlaces: number;
 
@@ -59,6 +60,14 @@ export class SportConfig {
 
     setDrawPointsExt(drawPointsExt: number) {
         this.drawPointsExt = drawPointsExt;
+    }
+
+    getLosePointsExt(): number {
+        return this.losePointsExt;
+    }
+
+    setLosePointsExt(losePointsExt: number) {
+        this.losePointsExt = losePointsExt;
     }
 
     getPointsCalculation(): number {

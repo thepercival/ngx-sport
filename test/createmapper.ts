@@ -12,12 +12,12 @@ import { RefereeMapper } from '../src/referee/mapper';
 import { RoundMapper } from '../src/round/mapper';
 import { SportConfigMapper } from '../src/sport/config/mapper';
 import { PlanningConfigMapper } from '../src/planning/config/mapper';
-import { SportPlanningConfigMapper } from '../src/sport/planningconfig/mapper';
 import { SportScoreConfigMapper } from '../src/sport/scoreconfig/mapper';
 import { RoundNumberMapper } from '../src/round/number/mapper';
 import { SeasonMapper } from '../src/season/mapper';
 import { StructureMapper } from '../src/structure/mapper';
 import { SportMapper } from '../src/sport/mapper';
+import { PlanningMapper } from '../src/planning/mapper';
 
 export function getMapper(mapper: string) {
     if (mapper === 'sport') {
@@ -43,12 +43,12 @@ export function getMapper(mapper: string) {
         );
     } else if (mapper === 'sportconfig') {
         return new SportConfigMapper(getMapper('sportcscoreonfig'));
+    } else if (mapper === 'planning') {
+        return new PlanningMapper(getMapper('game'));
     } else if (mapper === 'planningconfig') {
         return new PlanningConfigMapper();
-    } else if (mapper === 'sportplanningconfig') {
-        return new SportPlanningConfigMapper();
     } else if (mapper === 'sportscoreconfig') {
-        return new SportScoreConfigMapper();
+        return new SportScoreConfigMapper(getMapper('sport'));
     } else if (mapper === 'roundnumber') {
         return new RoundNumberMapper(getMapper('planningconfig'), getMapper('sportplanningconfig'), getMapper('sportscoreconfig'));
     } else if (mapper === 'competitor') {
@@ -70,6 +70,6 @@ export function getMapper(mapper: string) {
         return new RoundMapper(getMapper('poule'));
     } else if (mapper === 'structure') {
         // this is not good
-        return new StructureMapper(getMapper('roundnumber'), getMapper('round'));
+        return new StructureMapper(getMapper('roundnumber'), getMapper('round'), getMapper('planning'));
     }
 }

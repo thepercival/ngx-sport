@@ -20,6 +20,7 @@ export class SportConfigService {
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
         config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
+        config.setLosePointsExt(this.getDefaultLosePointsExt(sport));
         config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
         config.setNrOfGamePlaces(SportConfig.DEFAULT_NROFGAMEPLACES);
         if (structure) {
@@ -44,12 +45,17 @@ export class SportConfigService {
         return sport.getCustomId() !== SportCustom.Chess ? 1 : 0.5;
     }
 
+    protected getDefaultLosePointsExt(sport: Sport): number {
+        return sport.getCustomId() !== SportCustom.IceHockey ? 1 : 0;
+    }
+
     copy(sourceConfig: SportConfig, competition: Competition): SportConfig {
         const newConfig = new SportConfig(sourceConfig.getSport(), competition);
         newConfig.setWinPoints(sourceConfig.getWinPoints());
         newConfig.setDrawPoints(sourceConfig.getDrawPoints());
         newConfig.setWinPointsExt(sourceConfig.getWinPointsExt());
         newConfig.setDrawPointsExt(sourceConfig.getDrawPointsExt());
+        newConfig.setLosePointsExt(sourceConfig.getLosePointsExt());
         newConfig.setPointsCalculation(sourceConfig.getPointsCalculation());
         newConfig.setNrOfGamePlaces(sourceConfig.getNrOfGamePlaces());
         return newConfig;
@@ -95,6 +101,7 @@ export class SportConfigService {
             || sportConfig.getDrawPoints() !== this.getDefaultDrawPoints(sport)
             || sportConfig.getWinPointsExt() !== this.getDefaultWinPointsExt(sport)
             || sportConfig.getDrawPointsExt() !== this.getDefaultDrawPointsExt(sport)
+            || sportConfig.getLosePointsExt() !== this.getDefaultLosePointsExt(sport)
             || sportConfig.getPointsCalculation() !== SportConfig.POINTS_CALC_GAMEPOINTS
             || sportConfig.getNrOfGamePlaces() !== SportConfig.DEFAULT_NROFGAMEPLACES
         );
@@ -106,6 +113,7 @@ export class SportConfigService {
             || sportConfigA.getDrawPoints() !== sportConfigB.getDrawPoints()
             || sportConfigA.getWinPointsExt() !== sportConfigB.getWinPointsExt()
             || sportConfigA.getDrawPointsExt() !== sportConfigB.getDrawPointsExt()
+            || sportConfigA.getLosePointsExt() !== sportConfigB.getLosePointsExt()
             || sportConfigA.getPointsCalculation() !== sportConfigB.getPointsCalculation()
             || sportConfigA.getNrOfGamePlaces() !== sportConfigB.getNrOfGamePlaces()
         );

@@ -71,6 +71,8 @@ export class RankingItemsGetter {
             } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
                 return game.getSportConfig().getDrawPointsExt();
             }
+        } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+            return game.getSportConfig().getLosePointsExt();
         }
         return 0;
     }

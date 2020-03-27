@@ -16,7 +16,6 @@ export const jsonCompetition: JsonCompetition = {
     },
     'sports': [
         {
-            'id': 1,
             'name': 'voetbal',
             'team': true,
             'customId': 11
@@ -24,17 +23,26 @@ export const jsonCompetition: JsonCompetition = {
     ],
     'sportConfigs': [
         {
-        'winPoints': 3.0,
-        'drawPoints': 1.0,
-        'winPointsExt': 2.0,
-        'drawPointsExt': 1.0,
-        'nrOfGamePlaces': SportConfig.DEFAULT_NROFGAMEPLACES,
-        'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
-        'sportId': 1
-    }],
+            'winPoints': 3.0,
+            'drawPoints': 1.0,
+            'winPointsExt': 2.0,
+            'drawPointsExt': 1.0,
+            'losePointsExt': 0.0,
+            'nrOfGamePlaces': SportConfig.DEFAULT_NROFGAMEPLACES,
+            'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
+            'sport': {
+                'name': 'voetbal',
+                'team': true,
+                'customId': 11
+            }
+        }],
     'fields': [
         {
-            'sportId': 1,
+            'sport': {
+                'name': 'voetbal',
+                'team': true,
+                'customId': 11
+            },
             'number': 1,
             'name': '1'
         }
