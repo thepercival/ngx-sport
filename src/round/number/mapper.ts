@@ -5,12 +5,14 @@ import { Competition } from '../../competition';
 import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
 import { JsonSportScoreConfig, SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
 import { RoundNumber } from '../number';
+import { SportMapper } from '../../sport/mapper';
 
 @Injectable()
 export class RoundNumberMapper {
     constructor(
         private planningConfigMapper: PlanningConfigMapper,
-        private sportScoreConfigMapper: SportScoreConfigMapper
+        private sportScoreConfigMapper: SportScoreConfigMapper,
+        private sportMapper: SportMapper
     ) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
@@ -26,7 +28,8 @@ export class RoundNumberMapper {
         }
         if (json.sportScoreConfigs) {
             json.sportScoreConfigs.forEach(jsonSportScoreConfig => {
-                this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, TheCache.sports[jsonSportScoreConfig.sportId], roundNumber);
+                const sport = this.sportMapper.toObject(jsonSportScoreConfig.sport);
+                this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, sport, roundNumber);
             });
         }
         if (json.next !== undefined) {

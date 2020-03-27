@@ -81,6 +81,10 @@ export class SportConfig {
         return this.sport;
     }
 
+    setSport(sport: Sport) {
+        this.sport = sport;
+    }
+
     getCompetition(): Competition {
         return this.competition;
     }

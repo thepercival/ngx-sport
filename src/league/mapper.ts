@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class LeagueMapper {
-    constructor( private associationMapper: AssociationMapper ) {}
+    constructor(private associationMapper: AssociationMapper) { }
 
     toObject(json: JsonLeague, league?: League): League {
         if (league === undefined && json.id !== undefined) {
@@ -23,7 +23,6 @@ export class LeagueMapper {
 
     toJson(league: League): JsonLeague {
         return {
-            id: league.getId(),
             name: league.getName(),
             abbreviation: league.getAbbreviation(),
             association: this.associationMapper.toJson(league.getAssociation()),
@@ -32,7 +31,7 @@ export class LeagueMapper {
 }
 
 export interface JsonLeague {
-    id?: number;
+    id?: string | number;
     association: JsonAssociation;
     name: string;
     abbreviation?: string;

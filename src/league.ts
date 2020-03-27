@@ -6,7 +6,7 @@ export class League {
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_SPORT = 30;
 
-    protected id: number;
+    protected id: string | number;
     protected name: string;
     protected abbreviation: string;
     protected association: Association;
@@ -15,11 +15,11 @@ export class League {
         this.setName(name);
     }
 
-    getId(): number {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: number): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 

@@ -23,7 +23,6 @@ export class SeasonMapper {
 
     toJson(season: Season): JsonSeason {
         return {
-            id: season.getId(),
             name: season.getName(),
             startDateTime: season.getStartDateTime().toISOString(),
             endDateTime: season.getEndDateTime().toISOString()
@@ -32,7 +31,7 @@ export class SeasonMapper {
 }
 
 export interface JsonSeason {
-    id?: number;
+    id?: string | number;
     name: string;
     startDateTime: string;
     endDateTime: string;

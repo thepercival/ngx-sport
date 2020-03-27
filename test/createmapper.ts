@@ -29,7 +29,7 @@ export function getMapper(mapper: string) {
     } else if (mapper === 'season') {
         return new SeasonMapper();
     } else if (mapper === 'field') {
-        return new FieldMapper();
+        return new FieldMapper(getMapper('sport'));
     } else if (mapper === 'referee') {
         return new RefereeMapper();
     } else if (mapper === 'competition') {

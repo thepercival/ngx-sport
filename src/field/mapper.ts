@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { TheCache } from '../cache';
 import { Competition } from '../competition';
 import { Field } from '../field';
+import { JsonSport, SportMapper } from '../sport/mapper';
 
 @Injectable()
 export class FieldMapper {
 
-    constructor() { }
+    constructor(private sportMapper: SportMapper) { }
 
     toObject(json: JsonField, competition: Competition, field?: Field): Field {
         if (field === undefined) {
@@ -15,7 +16,7 @@ export class FieldMapper {
         }
         field.setId(json.id);
         field.setName(json.name);
-        field.setSport(TheCache.sports[json.sportId]);
+        field.setSport(this.sportMapper.toObject(json.sport));
         return field;
     }
 
@@ -24,7 +25,7 @@ export class FieldMapper {
             id: field.getId(),
             number: field.getNumber(),
             name: field.getName(),
-            sportId: field.getSport().getId()
+            sport: this.sportMapper.toJson(field.getSport())
         };
     }
 }
@@ -33,5 +34,5 @@ export interface JsonField {
     id?: number;
     number: number;
     name: string;
-    sportId: string | number;
+    sport: JsonSport;
 }

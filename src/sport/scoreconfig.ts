@@ -60,6 +60,10 @@ export class SportScoreConfig {
         return this.sport;
     }
 
+    setSport(sport: Sport) {
+        this.sport = sport;
+    }
+
     getRoundNumber(): RoundNumber {
         return this.roundNumber;
     }

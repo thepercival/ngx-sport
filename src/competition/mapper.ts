@@ -32,7 +32,7 @@ export class CompetitionMapper {
         competition.setState(json.state);
         competition.setStartDateTime(new Date(json.startDateTime));
 
-        json.sports.map(jsonSport => this.sportMapper.toObject(jsonSport) );
+        json.sports.map(jsonSport => this.sportMapper.toObject(jsonSport));
         json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competition));
         json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
         json.sportConfigs.forEach(jsonSportConfig => this.sportConfigMapper.toObject(jsonSportConfig, competition));
@@ -41,7 +41,6 @@ export class CompetitionMapper {
 
     toJson(competition: Competition): JsonCompetition {
         return {
-            id: competition.getId(),
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
             sportConfigs: competition.getSportConfigs().map(sport => this.sportConfigMapper.toJson(sport)),
@@ -55,7 +54,7 @@ export class CompetitionMapper {
 }
 
 export interface JsonCompetition {
-    id?: number;
+    id?: string | number;
     league: JsonLeague;
     season: JsonSeason;
     sports?: JsonSport[];

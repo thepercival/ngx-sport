@@ -7,7 +7,7 @@ import { SportConfig } from './sport/config';
 import { Sport } from './sport';
 
 export class Competition {
-    protected id: number;
+    protected id: string | number;
     protected league: League;
     protected season: Season;
     protected ruleSet: number;
@@ -23,11 +23,11 @@ export class Competition {
         this.setState(State.Created);
     }
 
-    getId(): number {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: number): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 

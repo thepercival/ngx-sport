@@ -2,11 +2,12 @@ import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
 import { SportScoreConfig } from '../scoreconfig';
 import { Injectable } from '@angular/core';
+import { JsonSport, SportMapper } from '../mapper';
 
 @Injectable()
 export class SportScoreConfigMapper {
 
-    constructor() {
+    constructor(private sportMapper: SportMapper) {
     }
 
     toObject(json: JsonSportScoreConfig, sport: Sport, roundNumber: RoundNumber,
@@ -27,7 +28,7 @@ export class SportScoreConfigMapper {
     toJson(scoreConfig: SportScoreConfig): JsonSportScoreConfig {
         return {
             id: scoreConfig.getId(),
-            sportId: scoreConfig.getSport().getId(),
+            sport: this.sportMapper.toJson(scoreConfig.getSport()),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
             enabled: scoreConfig.getEnabled(),
@@ -38,7 +39,7 @@ export class SportScoreConfigMapper {
 
 export interface JsonSportScoreConfig {
     id?: number;
-    sportId: string | number;
+    sport: JsonSport;
     direction: number;
     maximum: number;
     enabled: boolean;

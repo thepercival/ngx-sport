@@ -26,7 +26,6 @@ export class AssociationMapper {
 
     toJson(association: Association): JsonAssociation {
         return {
-            id: association.getId(),
             name: association.getName(),
             description: association.getDescription(),
             parent: association.getParent() ? this.toJson(association.getParent()) : undefined

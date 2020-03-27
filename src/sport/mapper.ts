@@ -9,12 +9,12 @@ export class SportMapper {
 
     toObject(json: JsonSport, sport?: Sport): Sport {
         if (sport === undefined) {
-            sport = TheCache.sports[json.id];
+            sport = TheCache.sports[json.name];
         }
         if (sport === undefined) {
             sport = new Sport(json.name);
             sport.setId(json.id);
-            TheCache.sports[sport.getId()] = sport;
+            TheCache.sports[sport.getName()] = sport;
         }
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
@@ -25,7 +25,6 @@ export class SportMapper {
 
     toJson(sport: Sport): JsonSport {
         return {
-            id: sport.getId(),
             name: sport.getName(),
             // scoreUnitName: sport.getScoreUnitName(),
             // scoreSubUnitName: sport.getScoreSubUnitName(),

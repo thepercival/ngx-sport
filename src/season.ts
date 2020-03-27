@@ -2,7 +2,7 @@ export class Season {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 9;
 
-    protected id: number;
+    protected id: string | number;
     protected name: string;
     protected startDateTime: Date;
     protected endDateTime: Date;
@@ -11,11 +11,11 @@ export class Season {
         this.setName(name);
     }
 
-    getId(): number {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: number): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 
