@@ -14,7 +14,6 @@ import { State } from '../state';
 export class RankingService {
     static readonly RULESSET_WC = 1;
     static readonly RULESSET_EC = 2;
-    private maxPlaces = 64;
     private gameStates: number;
     private cache: {} = {};
 
