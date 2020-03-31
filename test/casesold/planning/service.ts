@@ -744,7 +744,7 @@ export function checkPlanning(
     }
 
     const games = planningService.getGamesForRoundNumber(firstRoundNumber, Game.ORDER_RESOURCEBATCH);
-    consoleGames(games); console.log('');
+    consoleGames(games);
     expect(games.length, 'het aantal wedstrijd voor de hele ronde komt niet overeen').to.equal(assertConfig.nrOfGames);
     assertValidResourcesPerBatch(games);
     firstRoundNumber.getPlaces().forEach(place => {

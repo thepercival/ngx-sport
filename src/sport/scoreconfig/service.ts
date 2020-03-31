@@ -79,19 +79,13 @@ export class SportScoreConfigService {
         return sportScoreConfigA.getNext() === sportScoreConfigB.getNext();
     }
 
-    getFinal(game: Game, sub?: boolean): GameScoreHomeAway {
+    getFinalScore(game: Game, useSubScore: boolean): GameScoreHomeAway {
         if (game.getScores().length === 0) {
             return undefined;
         }
-        if (sub === true) {
-            return this.getSubScore(game);
-        }
-        let home = game.getScores()[0].getHome();
-        let away = game.getScores()[0].getAway();
-        const sportScoreConfig = game.getSportScoreConfig();
-        if (sportScoreConfig.getCalculate() !== sportScoreConfig) {
-            home = 0;
-            away = 0;
+        if (useSubScore) {
+            let home = 0;
+            let away = 0;
             game.getScores().forEach(score => {
                 if (score.getHome() > score.getAway()) {
                     home++;
@@ -99,11 +93,12 @@ export class SportScoreConfigService {
                     away++;
                 }
             });
+            return new GameScoreHomeAway(home, away);
         }
-        return new GameScoreHomeAway(home, away);
+        return new GameScoreHomeAway(game.getScores()[0].getHome(), game.getScores()[0].getAway());
     }
 
-    private getSubScore(game: Game): GameScoreHomeAway {
+    getFinalSubScore(game: Game): GameScoreHomeAway {
         let home = 0;
         let away = 0;
         game.getScores().forEach(score => {

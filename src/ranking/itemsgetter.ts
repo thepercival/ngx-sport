@@ -5,17 +5,24 @@ import { Place } from '../place';
 import { Round } from '../round';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { UnrankedRoundItem } from './item';
+import { SportScoreConfig } from '../sport/scoreconfig';
 
 /* tslint:disable:no-bitwise */
 
 export class RankingItemsGetter {
     private sportScoreConfigService: SportScoreConfigService;
+    private useSubScoreRound: boolean;
 
     constructor(
         private round: Round,
         private gameStates: number
     ) {
         this.sportScoreConfigService = new SportScoreConfigService();
+
+        const sportConfig = round.getCompetition().getFirstSportConfig();
+        if (sportConfig) {
+            this.useSubScoreRound = round.getNumber().getSportScoreConfig(sportConfig.getSport()).useSubScore();
+        }
     }
 
     static getIndex(place: Place): string {
@@ -30,13 +37,22 @@ export class RankingItemsGetter {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const finalScore = this.sportScoreConfigService.getFinal(game);
+            const useSubScore = this.useSubScoreRound ? this.useSubScoreRound : game.getSportScoreConfig().useSubScore();
+            const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
+            let finalSubScore;
+            if (useSubScore) {
+                finalSubScore = this.sportScoreConfigService.getFinalSubScore(game);
+            }
             [Game.HOME, Game.AWAY].forEach(homeAway => {
                 const points = this.getNrOfPoints(finalScore, homeAway, game);
-                const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, false);
-                const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, false);
-                const subScored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED, true);
-                const subReceived = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED, true);
+                const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED);
+                const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED);
+                let subScored = 0;
+                let subReceived = 0;
+                if (useSubScore) {
+                    subScored = this.getNrOfUnits(finalSubScore, homeAway, GameScore.SCORED);
+                    subReceived = this.getNrOfUnits(finalSubScore, homeAway, GameScore.RECEIVED);
+                }
                 game.getPlaces(homeAway).forEach(gamePlace => {
                     const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
                         && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
@@ -86,7 +102,7 @@ export class RankingItemsGetter {
         return finalScore.getResult() === Game.RESULT_DRAW;
     }
 
-    private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number, sub: boolean): number {
+    private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number): number {
         if (finalScore === undefined) {
             return 0;
         }

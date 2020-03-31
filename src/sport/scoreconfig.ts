@@ -124,5 +124,9 @@ export class SportScoreConfig {
         }
         return this;
     }
+
+    useSubScore(): boolean {
+        return (this !== this.getCalculate());
+    }
 }
 
