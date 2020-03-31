@@ -21,7 +21,7 @@ export class RankingItemsGetter {
 
         const sportConfig = round.getCompetition().getFirstSportConfig();
         if (sportConfig) {
-            this.useSubScoreRound = round.getNumber().getSportScoreConfig(sportConfig.getSport()).useSubScore();
+            this.useSubScoreRound = round.getNumber().getValidSportScoreConfig(sportConfig.getSport()).useSubScore();
         }
     }
 
