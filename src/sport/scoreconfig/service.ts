@@ -79,9 +79,12 @@ export class SportScoreConfigService {
         return sportScoreConfigA.getNext() === sportScoreConfigB.getNext();
     }
 
-    getFinalScore(game: Game, useSubScore: boolean): GameScoreHomeAway {
+    getFinalScore(game: Game, useSubScore?: boolean): GameScoreHomeAway {
         if (game.getScores().length === 0) {
             return undefined;
+        }
+        if (useSubScore === undefined) {
+            useSubScore = game.getSportScoreConfig().useSubScore();
         }
         if (useSubScore) {
             let home = 0;

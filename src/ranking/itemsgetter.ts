@@ -11,18 +11,12 @@ import { SportScoreConfig } from '../sport/scoreconfig';
 
 export class RankingItemsGetter {
     private sportScoreConfigService: SportScoreConfigService;
-    private useSubScoreRound: boolean;
 
     constructor(
         private round: Round,
         private gameStates: number
     ) {
         this.sportScoreConfigService = new SportScoreConfigService();
-
-        const sportConfig = round.getCompetition().getFirstSportConfig();
-        if (sportConfig) {
-            this.useSubScoreRound = round.getNumber().getValidSportScoreConfig(sportConfig.getSport()).useSubScore();
-        }
     }
 
     static getIndex(place: Place): string {
@@ -37,7 +31,7 @@ export class RankingItemsGetter {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const useSubScore = this.useSubScoreRound ? this.useSubScoreRound : game.getSportScoreConfig().useSubScore();
+            const useSubScore = game.getSportScoreConfig().useSubScore();
             const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
             let finalSubScore;
             if (useSubScore) {
