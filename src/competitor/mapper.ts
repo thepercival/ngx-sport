@@ -17,9 +17,10 @@ export class CompetitorMapper {
             competitor.setId(json.id);
             TheCache.competitors[competitor.getId()] = competitor;
         }
+        competitor.setName(json.name);
         competitor.setAbbreviation(json.abbreviation);
-        competitor.setRegistered(json.registered),
-            competitor.setInfo(json.info);
+        competitor.setRegistered(json.registered);
+        competitor.setInfo(json.info);
         competitor.setImageUrl(json.imageUrl);
         return competitor;
     }

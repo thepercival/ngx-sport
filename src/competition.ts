@@ -105,7 +105,7 @@ export class Competition {
     removeReferee(referee: Referee) {
         const index = this.referees.indexOf(referee);
         if (index > -1) {
-            const referees = this.referees.splice(index);
+            const referees = this.referees.splice(index, 1);
             referees.shift();
             let rank = referee.getRank();
             while (referees.length > 0) {
