@@ -15,6 +15,8 @@ import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
 
 export class StructureService {
+    static readonly DefaultNrOfPlaces = 5;
+
     private planningConfigService: PlanningConfigService;
     private sportConfigService: SportConfigService;
 
