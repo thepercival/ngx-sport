@@ -7,26 +7,37 @@ import { Structure } from '../../structure';
 import { SportConfig } from '../config';
 import { SportCustom } from '../custom';
 import { SportScoreConfigService } from '../scoreconfig/service';
+import { JsonSportConfig, SportConfigMapper } from './mapper';
+import { SportMapper } from '../mapper';
 
 @Injectable()
 export class SportConfigService {
 
-    constructor(private scoreConfigService: SportScoreConfigService) {
+    constructor(
+        private scoreConfigService: SportScoreConfigService,
+        private sportConfigMapper: SportConfigMapper,
+        private sportMapper: SportMapper) {
     }
 
     createDefault(sport: Sport, competition: Competition, structure?: Structure): SportConfig {
-        const config = new SportConfig(sport, competition);
-        config.setWinPoints(this.getDefaultWinPoints(sport));
-        config.setDrawPoints(this.getDefaultDrawPoints(sport));
-        config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
-        config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
-        config.setLosePointsExt(this.getDefaultLosePointsExt(sport));
-        config.setPointsCalculation(SportConfig.POINTS_CALC_GAMEPOINTS);
-        config.setNrOfGamePlaces(SportConfig.DEFAULT_NROFGAMEPLACES);
+        const config = this.sportConfigMapper.toObject(this.createDefaultJson(sport), competition);
         if (structure) {
             this.addToStructure(config, structure);
         }
         return config;
+    }
+
+    createDefaultJson(sport: Sport): JsonSportConfig {
+        return {
+            sport: this.sportMapper.toJson(sport),
+            winPoints: this.getDefaultWinPoints(sport),
+            drawPoints: this.getDefaultDrawPoints(sport),
+            winPointsExt: this.getDefaultWinPointsExt(sport),
+            drawPointsExt: this.getDefaultDrawPointsExt(sport),
+            losePointsExt: this.getDefaultLosePointsExt(sport),
+            pointsCalculation: SportConfig.POINTS_CALC_GAMEPOINTS,
+            nrOfGamePlaces: SportConfig.DEFAULT_NROFGAMEPLACES
+        };
     }
 
     protected getDefaultWinPoints(sport: Sport): number {

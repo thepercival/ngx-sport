@@ -13,6 +13,8 @@ import { SportConfigService } from '../sport/config/service';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
+import { SportMapper } from '../sport/mapper';
+import { SportConfigMapper } from '../sport/config/mapper';
 
 export class StructureService {
     static readonly DefaultNrOfPlaces = 5;
@@ -22,7 +24,11 @@ export class StructureService {
 
     constructor(private structureOptions: StructureOptions) {
         this.planningConfigService = new PlanningConfigService();
-        this.sportConfigService = new SportConfigService(new SportScoreConfigService());
+        this.sportConfigService = new SportConfigService(
+            new SportScoreConfigService(),
+            new SportConfigMapper(new SportMapper()),
+            new SportMapper()
+        );
     }
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {

@@ -145,6 +145,9 @@ export class Game {
     }
 
     getSportScoreConfig() {
-        return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSport());
+        if (this.field) {
+            return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSport());
+        }
+        return this.getRound().getNumber().getValidSportScoreConfigs()[0];
     }
 }
