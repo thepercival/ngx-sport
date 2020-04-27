@@ -6,7 +6,7 @@
   "bugs": {
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "peerDependencies": {
     "@angular/core": "^9.1.3",
     "@angular/common": "^9.1.3"
@@ -69,9 +69,9 @@
     "url": "https://github.com/thepercival/ngx-sport.git"
   },
   "scripts": {
-    "build-lib": "ng-packagr -p package.json",
-    "build-lib-fct": "npm run build-lib && npm run copy-to-fct",
-    "build-lib-vob": "npm run build-lib && npm run copy-to-vob",
+    "build": "ng-packagr -p package.json",
+    "build-fct": "npm run build && npm run copy-to-fct",
+    "build-vob": "npm run build && npm run copy-to-vob",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
     "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
