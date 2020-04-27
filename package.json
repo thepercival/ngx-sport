@@ -2,24 +2,20 @@
   "author": {
     "name": "Coen Dunnink"
   },
+  "description": "jslib for sports",
   "bugs": {
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
   "version": "0.0.0",
-  "dependencies": {
-    "@angular/animations": "^9.1.2",
-    "@angular/common": "^9.1.2",
-    "@angular/compiler": "^9.1.2",
+  "peerDependencies": {
     "@angular/core": "^9.1.2",
-    "@angular/platform-browser": "^9.1.2",
-    "@angular/router": "^9.1.2",
-    "rxjs": "^6.5.5",
-    "tslib": "^1.11.1",
-    "zone.js": "^0.10.3"
+    "@angular/common": "^9.1.2"
   },
-  "description": "jslib for sports",
   "devDependencies": {
+    "@angular/core": "^9.1.2",
+    "@angular/common": "^9.1.2",
     "@angular-devkit/schematics": "^9.1.1",
+    "@angular/compiler": "^9.1.2",
     "@angular/compiler-cli": "^9.1.2",
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/npm": "^7.0.5",
@@ -28,7 +24,9 @@
     "chai": "^4.2.0",
     "codelyzer": "^5.2.2",
     "colors": "^1.4.0",
+    "ng-packagr": "^9.1.1",
     "cross-env": "^7.0.2",
+    "tslib": "^1.11.1",
     "mocha": "^7.1.1",
     "nyc": "github:istanbuljs/nyc",
     "rollup": "^2.6.1",
@@ -38,7 +36,7 @@
     "tsickle": "^0.38.1",
     "typescript": "3.8.3",
     "typescript-eslint": "0.0.1-alpha.0",
-    "uglify-js": "^3.9.1"
+    "zone.js": "^0.10.3"
   },
   "directories": {},
   "dist": {
@@ -72,27 +70,23 @@
     "url": "https://github.com/thepercival/ngx-sport.git"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:inline && npm run build:esm2015 && npm run build:fesm2015 && npm run build:esm5 && npm run build:fesm5 && npm run build:umd && npm run build:umd-min && npm run move:assets",
-    "build:inline": "mkdir tmp && cp *.ts ./tmp && cp -r ./src ./tmp",
-    "build:esm2015": "ngc -p tsconfig-esm2015.json",
-    "build:fesm2015": "rollup --sourcemap -c rollup-esm2015.conf.js",
-    "build:esm5": "ngc -p tsconfig-esm5.json",
-    "build:fesm5": "rollup --sourcemap -c rollup-esm5.conf.js",
-    "build:umd": "rollup -c rollup-umd.conf.js",
-    "build:help": "rollup --help",
-    "build:umd-min": "uglifyjs dist/bundles/ngx-sport.umd.js -c -m -o dist/bundles/ngx-sport.umd.min.js",
-    "move:assets": "cp -r tmp/esm5 tmp/fesm5 tmp/esm2015 tmp/fesm2015 tmp/esm2015/src tmp/esm2015/*.d.ts package.json README.md dist/",
-    "clean": "rm -rf ./tmp && rm -rf ./dist",
+    "build-lib": "ng-packagr -p package.json",
+    "build-lib-fct": "npm run build-lib && npm run copy-to-fct",
+    "build-lib-vob": "npm run build-lib && npm run copy-to-vob",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
-    "build:dev:fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
-    "build:dev:vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
+    "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
+    "copy-to-vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
     "test": "mocha -r test/hook.js --recursive test/cases/**/*.ts",
     "coverage": "nyc npm run test",
     "test1": "mocha -r test/hook.js --recursive test/cases/planning/service.ts",
-    "coverage1": "nyc npm run test1",
     "profile": "ngc -p tsconfig-profile.json",
     "help": "nyc help"
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public_api.ts"
+    }
   },
   "nyc": {
     "include": [

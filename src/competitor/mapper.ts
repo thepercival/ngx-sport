@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Association } from '../association';
 import { TheCache } from '../cache';
 import { Competitor } from '../competitor';
+import { JsonCompetitor } from './json';
 
 @Injectable()
 export class CompetitorMapper {
@@ -35,13 +36,4 @@ export class CompetitorMapper {
             imageUrl: competitor.getImageUrl()
         };
     }
-}
-
-export interface JsonCompetitor {
-    id?: number;
-    name?: string;
-    abbreviation?: string;
-    registered?: boolean;
-    info?: string;
-    imageUrl?: string;
 }

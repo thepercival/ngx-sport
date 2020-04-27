@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { HorizontalPouleService } from '../poule/horizontal/service';
-import { JsonPoule, PouleMapper } from '../poule/mapper';
+import { PouleMapper } from '../poule/mapper';
 import { QualifyGroup } from '../qualify/group';
-import { JsonQualifyGroup, QualifyGroupMapper } from '../qualify/group/mapper';
+import { QualifyGroupMapper } from '../qualify/group/mapper';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { Round } from '../round';
 import { RoundNumber } from './number';
+import { JsonRound } from './json';
 
 @Injectable()
 export class RoundMapper {
@@ -53,11 +54,4 @@ export class RoundMapper {
             qualifyGroups: round.getQualifyGroups().map(qualifyGroupIt => qualifyGroupMapper.toJson(qualifyGroupIt))
         };
     }
-}
-
-export interface JsonRound {
-    id?: number;
-    name?: string;
-    poules: JsonPoule[];
-    qualifyGroups: JsonQualifyGroup[];
 }

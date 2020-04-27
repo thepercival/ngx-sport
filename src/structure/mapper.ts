@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { Competition } from '../competition';
-import { JsonRound, RoundMapper } from '../round/mapper';
+import { RoundMapper } from '../round/mapper';
 import { RoundNumber } from '../round/number';
-import { JsonRoundNumber, RoundNumberMapper } from '../round/number/mapper';
+import { RoundNumberMapper } from '../round/number/mapper';
 import { Structure } from '../structure';
 import { Game } from '../game';
 import { PlanningMapper } from '../planning/mapper';
+import { JsonStructure } from './json';
+import { JsonRound } from '../round/json';
 
 @Injectable()
 export class StructureMapper {
@@ -45,9 +47,4 @@ export class StructureMapper {
             rootRound: this.roundMapper.toJson(structure.getRootRound())
         };
     }
-}
-
-export interface JsonStructure {
-    firstRoundNumber: JsonRoundNumber;
-    rootRound: JsonRound;
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { TheCache } from '../cache';
 import { Competition } from '../competition';
 import { Field } from '../field';
-import { JsonSport, SportMapper } from '../sport/mapper';
+import { SportMapper } from '../sport/mapper';
+import { JsonField } from './json';
 
 @Injectable()
 export class FieldMapper {
@@ -30,9 +30,3 @@ export class FieldMapper {
     }
 }
 
-export interface JsonField {
-    id?: number;
-    number: number;
-    name: string;
-    sport: JsonSport;
-}

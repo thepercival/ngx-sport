@@ -1,7 +1,8 @@
-import { JsonAssociation, AssociationMapper } from '../association/mapper';
+import { AssociationMapper } from '../association/mapper';
 import { League } from '../league';
 import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
+import { JsonLeague } from './json';
 
 @Injectable()
 export class LeagueMapper {
@@ -28,11 +29,4 @@ export class LeagueMapper {
             association: this.associationMapper.toJson(league.getAssociation()),
         };
     }
-}
-
-export interface JsonLeague {
-    id?: string | number;
-    association: JsonAssociation;
-    name: string;
-    abbreviation?: string;
 }

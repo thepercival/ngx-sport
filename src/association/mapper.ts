@@ -1,7 +1,7 @@
 import { Association } from '../association';
 import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
-import { SportMapper, JsonSport } from '../sport/mapper';
+import { JsonAssociation } from './json';
 
 @Injectable()
 export class AssociationMapper {
@@ -33,9 +33,4 @@ export class AssociationMapper {
     }
 }
 
-export interface JsonAssociation {
-    id?: string | number;
-    name: string;
-    description?: string;
-    parent?: JsonAssociation;
-}
+

@@ -9,7 +9,7 @@ import { RankingItemsGetter } from './itemsgetter';
 import { RankedRoundItem, UnrankedRoundItem } from './item';
 import { State } from '../state';
 
-/* tslint:disable:no-bitwise */
+/* eslint:disable:no-bitwise */
 
 export class RankingService {
     static readonly RULESSET_WC = 1;

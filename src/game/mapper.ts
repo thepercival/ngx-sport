@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { Game } from '../game';
 import { Poule } from '../poule';
-import { GamePlaceMapper, JsonGamePlace } from './place/mapper';
-import { GameScoreMapper, JsonGameScore } from './score/mapper';
+import { GamePlaceMapper } from './place/mapper';
+import { GameScoreMapper } from './score/mapper';
+import { JsonGame } from './json';
 
 @Injectable()
 export class GameMapper {
@@ -54,16 +55,4 @@ export class GameMapper {
             return this.toObject(jsonGame, poule, game);
         });
     }
-}
-
-export interface JsonGame {
-    id?: number;
-    places: JsonGamePlace[];
-    batchNr: number;
-    fieldNr: number;
-    state: number;
-    startDateTime?: string;
-    refereeRank?: number;
-    refereePlaceId?: number;
-    scores?: JsonGameScore[];
 }

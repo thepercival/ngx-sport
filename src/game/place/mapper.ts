@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Game } from '../../game';
 import { GamePlace } from '../place';
+import { JsonGamePlace } from './json';
 
 @Injectable()
 export class GamePlaceMapper {
@@ -24,10 +25,4 @@ export class GamePlaceMapper {
             homeaway: gamePlace.getHomeaway()
         };
     }
-}
-
-export interface JsonGamePlace {
-    id?: number;
-    placeNr: number;
-    homeaway: boolean;
 }

@@ -7,7 +7,7 @@ import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { UnrankedRoundItem } from './item';
 import { SportScoreConfig } from '../sport/scoreconfig';
 
-/* tslint:disable:no-bitwise */
+/* eslint:disable:no-bitwise */
 
 export class RankingItemsGetter {
     private sportScoreConfigService: SportScoreConfigService;

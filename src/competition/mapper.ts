@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../competition';
 
-import { JsonLeague, LeagueMapper } from '../league/mapper';
-import { JsonSeason, SeasonMapper } from '../season/mapper';
-import { JsonSport, SportMapper } from '../sport/mapper';
-import { JsonReferee, RefereeMapper } from '../referee/mapper';
-import { JsonSportConfig, SportConfigMapper } from '../sport/config/mapper';
-import { FieldMapper, JsonField } from '../field/mapper';
+import { LeagueMapper } from '../league/mapper';
+import { SeasonMapper } from '../season/mapper';
+import { SportMapper } from '../sport/mapper';
+import { RefereeMapper } from '../referee/mapper';
+import { SportConfigMapper } from '../sport/config/mapper';
+import { FieldMapper } from '../field/mapper';
+import { JsonCompetition } from './json';
 
 @Injectable()
 export class CompetitionMapper {
@@ -51,17 +52,4 @@ export class CompetitionMapper {
             state: competition.getState()
         };
     }
-}
-
-export interface JsonCompetition {
-    id?: string | number;
-    league: JsonLeague;
-    season: JsonSeason;
-    sports?: JsonSport[];
-    fields: JsonField[];
-    referees: JsonReferee[];
-    ruleSet: number;
-    startDateTime: string;
-    state: number;
-    sportConfigs: JsonSportConfig[];
 }

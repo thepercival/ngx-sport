@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TheCache } from '../cache';
 import { Sport } from '../sport';
+import { JsonSport } from './json';
 
 @Injectable()
 export class SportMapper {
@@ -32,13 +33,4 @@ export class SportMapper {
             customId: sport.getCustomId()
         };
     }
-}
-
-export interface JsonSport {
-    id?: string | number;
-    name: string;
-    // scoreUnitName: string;
-    // scoreSubUnitName?: string;
-    team: boolean;
-    customId: number;
 }

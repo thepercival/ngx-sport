@@ -1,6 +1,7 @@
 import { Round } from '../../round';
-import { JsonRound, RoundMapper } from '../../round/mapper';
+import { RoundMapper } from '../../round/mapper';
 import { QualifyGroup } from '../group';
+import { JsonQualifyGroup } from './json';
 
 export class QualifyGroupMapper {
     constructor(private roundMapper: RoundMapper) { }
@@ -21,11 +22,4 @@ export class QualifyGroupMapper {
             childRound: this.roundMapper.toJson(qualifyGroup.getChildRound())
         };
     }
-}
-
-export interface JsonQualifyGroup {
-    id?: number;
-    winnersOrLosers: number;
-    number: number;
-    childRound: JsonRound;
 }

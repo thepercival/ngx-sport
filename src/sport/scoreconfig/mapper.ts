@@ -2,7 +2,8 @@ import { RoundNumber } from '../../round/number';
 import { Sport } from '../../sport';
 import { SportScoreConfig } from '../scoreconfig';
 import { Injectable } from '@angular/core';
-import { JsonSport, SportMapper } from '../mapper';
+import { SportMapper } from '../mapper';
+import { JsonSport } from '../json';
 
 @Injectable()
 export class SportScoreConfigMapper {

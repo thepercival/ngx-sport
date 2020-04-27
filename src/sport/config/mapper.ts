@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../../competition';
 import { SportConfig } from '../config';
-import { JsonSport, SportMapper } from '../mapper';
-import { TheCache } from '../../cache';
+import { SportMapper } from '../mapper';
+import { JsonSportConfig } from './json';
 
 @Injectable()
 export class SportConfigMapper {
@@ -38,16 +38,4 @@ export class SportConfigMapper {
             nrOfGamePlaces: config.getNrOfGamePlaces()
         };
     }
-}
-
-export interface JsonSportConfig {
-    id?: number;
-    sport: JsonSport;
-    winPoints: number;
-    drawPoints: number;
-    winPointsExt: number;
-    drawPointsExt: number;
-    losePointsExt: number;
-    pointsCalculation: number;
-    nrOfGamePlaces: number;
 }

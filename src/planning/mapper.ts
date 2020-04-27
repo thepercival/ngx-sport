@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { JsonRound } from '../round/mapper';
 import { RoundNumber } from '../round/number';
-import { JsonRoundNumber } from '../round/number/mapper';
-import { Game } from '../game';
-import { JsonStructure } from '../structure/mapper';
 import { Round } from '../round';
 import { GameMapper } from '../game/mapper';
+import { JsonStructure } from '../structure/json';
+import { JsonRound } from '../round/json';
+import { JsonRoundNumber } from '../round/number/json';
 
 @Injectable()
 export class PlanningMapper {

@@ -1,6 +1,7 @@
 import { Referee } from '../referee';
 import { Competition } from '../competition';
 import { Injectable } from '@angular/core';
+import { JsonReferee } from './json';
 
 @Injectable()
 export class RefereeMapper {
@@ -29,13 +30,4 @@ export class RefereeMapper {
             info: referee.getInfo()
         };
     }
-}
-
-export interface JsonReferee {
-    id?: number;
-    rank: number;
-    initials: string;
-    name?: string;
-    emailaddress?: string;
-    info?: string;
 }

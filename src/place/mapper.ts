@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { CompetitorMapper, JsonCompetitor } from '../competitor/mapper';
+import { CompetitorMapper } from '../competitor/mapper';
 import { Poule } from '../poule';
 import { Place } from '../place';
+import { JsonPlace } from './json';
 
 @Injectable()
 export class PlaceMapper {
@@ -33,12 +34,4 @@ export class PlaceMapper {
             penaltyPoints: place.getPenaltyPoints()
         };
     }
-}
-
-export interface JsonPlace {
-    id?: number;
-    number: number;
-    name?: string;
-    competitor?: JsonCompetitor;
-    penaltyPoints: number;
 }

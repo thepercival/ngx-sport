@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { RoundNumber } from '../../round/number';
 import { PlanningConfig } from '../config';
+import { JsonPlanningConfig } from './json';
 
 @Injectable()
 export class PlanningConfigMapper {
@@ -38,17 +39,4 @@ export class PlanningConfigMapper {
             nrOfHeadtohead: config.getNrOfHeadtohead()
         };
     }
-}
-
-export interface JsonPlanningConfig {
-    id?: number;
-    extension: boolean;
-    enableTime: boolean;
-    minutesPerGame: number;
-    minutesPerGameExt: number;
-    minutesBetweenGames: number;
-    minutesAfter: number;
-    teamup: boolean;
-    selfReferee: boolean;
-    nrOfHeadtohead: number;
 }

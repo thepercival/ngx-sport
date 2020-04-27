@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { TheCache } from '../../cache';
 import { Competition } from '../../competition';
-import { JsonPlanningConfig, PlanningConfigMapper } from '../../planning/config/mapper';
-import { JsonSportScoreConfig, SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
+import { PlanningConfigMapper } from '../../planning/config/mapper';
+import { SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
 import { RoundNumber } from '../number';
 import { SportMapper } from '../../sport/mapper';
+import { JsonRoundNumber } from './json';
 
 @Injectable()
 export class RoundNumberMapper {
@@ -47,13 +47,4 @@ export class RoundNumberMapper {
             next: roundNumber.hasNext() ? this.toJson(roundNumber.getNext()) : undefined
         };
     }
-}
-
-export interface JsonRoundNumber {
-    id?: number;
-    number: number;
-    hasPlanning?: boolean;
-    planningConfig?: JsonPlanningConfig;
-    sportScoreConfigs?: JsonSportScoreConfig[];
-    next?: JsonRoundNumber;
 }

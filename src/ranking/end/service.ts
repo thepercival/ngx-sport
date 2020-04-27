@@ -7,7 +7,7 @@ import { EndRankingItem } from '../item';
 import { RankingService } from '../service';
 import { State } from '../../state';
 
-/* tslint:disable:no-bitwise */
+/* eslint:disable:no-bitwise */
 
 export class EndRankingService {
 

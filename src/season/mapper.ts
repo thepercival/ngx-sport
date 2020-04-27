@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TheCache } from '../cache';
 import { Season } from '../season';
+import { JsonSeason } from './json';
 
 @Injectable()
 export class SeasonMapper {
@@ -28,11 +29,4 @@ export class SeasonMapper {
             endDateTime: season.getEndDateTime().toISOString()
         };
     }
-}
-
-export interface JsonSeason {
-    id?: string | number;
-    name: string;
-    startDateTime: string;
-    endDateTime: string;
 }

@@ -7,7 +7,8 @@ import { Structure } from '../../structure';
 import { SportConfig } from '../config';
 import { SportCustom } from '../custom';
 import { SportScoreConfigService } from '../scoreconfig/service';
-import { JsonSportConfig, SportConfigMapper } from './mapper';
+import { SportConfigMapper } from './mapper';
+import { JsonSportConfig } from './json';
 import { SportMapper } from '../mapper';
 
 @Injectable()

@@ -2,8 +2,8 @@ import { Game } from '../game';
 import { GamePlace } from '../game/place';
 import { Place } from '../place';
 
-/* tslint:disable:no-bitwise */
-/* tslint:disable:no-use-before-declare */
+/* eslint:disable:no-bitwise */
+/* eslint:disable:no-use-before-declare */
 
 export class PlaceCombination {
     public constructor(
