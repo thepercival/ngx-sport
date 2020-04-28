@@ -11,7 +11,9 @@ import { SportConfigMapper } from './mapper';
 import { JsonSportConfig } from './json';
 import { SportMapper } from '../mapper';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportConfigService {
 
     constructor(

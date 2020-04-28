@@ -9,7 +9,9 @@ import { Round } from '../round';
 import { RoundNumber } from './number';
 import { JsonRound } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RoundMapper {
     // private qualifyGroupMapper: QualifyGroupMapper;
 

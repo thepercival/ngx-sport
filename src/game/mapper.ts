@@ -6,7 +6,9 @@ import { GamePlaceMapper } from './place/mapper';
 import { GameScoreMapper } from './score/mapper';
 import { JsonGame } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GameMapper {
 
     constructor(

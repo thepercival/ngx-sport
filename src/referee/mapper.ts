@@ -3,7 +3,9 @@ import { Competition } from '../competition';
 import { Injectable } from '@angular/core';
 import { JsonReferee } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RefereeMapper {
 
     constructor() { }

@@ -10,7 +10,9 @@ import { SportConfigMapper } from '../sport/config/mapper';
 import { FieldMapper } from '../field/mapper';
 import { JsonCompetition } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitionMapper {
 
     constructor(

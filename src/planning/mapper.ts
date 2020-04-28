@@ -7,7 +7,9 @@ import { JsonStructure } from '../structure/json';
 import { JsonRound } from '../round/json';
 import { JsonRoundNumber } from '../round/number/json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlanningMapper {
     constructor(private gameMapper: GameMapper) { }
 

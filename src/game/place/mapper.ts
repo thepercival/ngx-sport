@@ -4,7 +4,9 @@ import { Game } from '../../game';
 import { GamePlace } from '../place';
 import { JsonGamePlace } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GamePlaceMapper {
 
     constructor() { }

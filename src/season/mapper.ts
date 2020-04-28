@@ -4,7 +4,9 @@ import { TheCache } from '../cache';
 import { Season } from '../season';
 import { JsonSeason } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SeasonMapper {
     constructor() { }
 

@@ -5,7 +5,9 @@ import { Field } from '../field';
 import { SportMapper } from '../sport/mapper';
 import { JsonField } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FieldMapper {
 
     constructor(private sportMapper: SportMapper) { }

@@ -6,7 +6,9 @@ import { PlaceMapper } from '../place/mapper';
 import { Round } from '../round';
 import { JsonPoule } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PouleMapper {
     constructor(private placeMapper: PlaceMapper, private gameMapper: GameMapper) { }
 

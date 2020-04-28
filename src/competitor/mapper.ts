@@ -5,7 +5,9 @@ import { TheCache } from '../cache';
 import { Competitor } from '../competitor';
 import { JsonCompetitor } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitorMapper {
     constructor() { }
 

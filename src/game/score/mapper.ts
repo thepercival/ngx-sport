@@ -2,7 +2,9 @@ import { GameScore } from '../score';
 import { Game } from '../../game';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GameScoreMapper {
 
     constructor() { }

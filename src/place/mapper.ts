@@ -5,7 +5,9 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { JsonPlace } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlaceMapper {
     constructor(private competitorMapper: CompetitorMapper) {
     }

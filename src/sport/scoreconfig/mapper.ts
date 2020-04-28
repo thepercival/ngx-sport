@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core';
 import { SportMapper } from '../mapper';
 import { JsonSport } from '../json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportScoreConfigMapper {
 
     constructor(private sportMapper: SportMapper) {

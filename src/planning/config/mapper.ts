@@ -4,7 +4,9 @@ import { RoundNumber } from '../../round/number';
 import { PlanningConfig } from '../config';
 import { JsonPlanningConfig } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlanningConfigMapper {
     constructor() { }
 

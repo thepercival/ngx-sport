@@ -5,7 +5,9 @@ import { SportConfig } from '../config';
 import { SportMapper } from '../mapper';
 import { JsonSportConfig } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportConfigMapper {
     constructor(private sportMapper: SportMapper) { }
 

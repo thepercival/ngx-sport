@@ -7,7 +7,9 @@ import { RoundNumber } from '../number';
 import { SportMapper } from '../../sport/mapper';
 import { JsonRoundNumber } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RoundNumberMapper {
     constructor(
         private planningConfigMapper: PlanningConfigMapper,

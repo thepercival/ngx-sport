@@ -4,7 +4,9 @@ import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
 import { JsonLeague } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class LeagueMapper {
     constructor(private associationMapper: AssociationMapper) { }
 

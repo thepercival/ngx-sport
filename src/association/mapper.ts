@@ -3,7 +3,9 @@ import { TheCache } from '../cache';
 import { Injectable } from '@angular/core';
 import { JsonAssociation } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AssociationMapper {
 
     constructor() { }

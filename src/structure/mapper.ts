@@ -5,12 +5,13 @@ import { RoundMapper } from '../round/mapper';
 import { RoundNumber } from '../round/number';
 import { RoundNumberMapper } from '../round/number/mapper';
 import { Structure } from '../structure';
-import { Game } from '../game';
 import { PlanningMapper } from '../planning/mapper';
 import { JsonStructure } from './json';
 import { JsonRound } from '../round/json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class StructureMapper {
     constructor(private roundNumberMapper: RoundNumberMapper, private roundMapper: RoundMapper, private planningMapper: PlanningMapper) { }
 

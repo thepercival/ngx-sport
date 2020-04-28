@@ -4,7 +4,9 @@ import { TheCache } from '../cache';
 import { Sport } from '../sport';
 import { JsonSport } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportMapper {
     constructor() { }
 

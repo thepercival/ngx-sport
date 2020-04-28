@@ -7,7 +7,9 @@ import { Sport } from '../../sport';
 import { SportCustom } from '../custom';
 import { SportScoreConfig } from '../scoreconfig';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportScoreConfigService {
 
     constructor() {
