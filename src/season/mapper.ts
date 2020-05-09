@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Season } from '../season';
 import { JsonSeason } from './json';
+import { TheCache } from '../cache';
 
 @Injectable({
     providedIn: 'root'
@@ -9,14 +10,23 @@ import { JsonSeason } from './json';
 export class SeasonMapper {
     constructor() { }
 
-    toObject(json: JsonSeason, season?: Season): Season {
+    toObject(json: JsonSeason, disableCache?: boolean): Season {
+        let season;
+        if (disableCache !== true) {
+            season = TheCache.seasons[json.id];
+        }
         if (season === undefined) {
             season = new Season(json.name);
             season.setId(json.id);
+            TheCache.seasons[season.getId()] = season;
         }
+        this.updateObject(json, season);
+        return season;
+    }
+
+    updateObject(json: JsonSeason, season: Season) {
         season.setStartDateTime(new Date(json.startDateTime));
         season.setEndDateTime(new Date(json.endDateTime));
-        return season;
     }
 
     toJson(season: Season): JsonSeason {

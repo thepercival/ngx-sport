@@ -24,22 +24,25 @@ export class CompetitionMapper {
         private sportConfigMapper: SportConfigMapper
     ) { }
 
-    toObject(json: JsonCompetition, competition?: Competition): Competition {
-        if (competition === undefined) {
-            const league = this.leagueMapper.toObject(json.league);
-            const season = this.seasonMapper.toObject(json.season);
-            competition = new Competition(league, season);
-        }
+    toObject(json: JsonCompetition, disableCache?: boolean): Competition {
+        const league = this.leagueMapper.toObject(json.league, disableCache);
+        const season = this.seasonMapper.toObject(json.season, disableCache);
+        const competition = new Competition(league, season);
+
         competition.setId(json.id);
-        competition.setRuleSet(json.ruleSet);
-        competition.setState(json.state);
-        competition.setStartDateTime(new Date(json.startDateTime));
+        this.updateObject(json, competition);
 
         json.sports.map(jsonSport => this.sportMapper.toObject(jsonSport));
         json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competition));
         json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
         json.sportConfigs.forEach(jsonSportConfig => this.sportConfigMapper.toObject(jsonSportConfig, competition));
         return competition;
+    }
+
+    updateObject(json: JsonCompetition, competition: Competition) {
+        competition.setRuleSet(json.ruleSet);
+        competition.setState(json.state);
+        competition.setStartDateTime(new Date(json.startDateTime));
     }
 
     toJson(competition: Competition): JsonCompetition {
