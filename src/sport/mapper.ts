@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { TheCache } from '../cache';
 import { Sport } from '../sport';
 import { JsonSport } from './json';
 
@@ -12,12 +11,8 @@ export class SportMapper {
 
     toObject(json: JsonSport, sport?: Sport): Sport {
         if (sport === undefined) {
-            sport = TheCache.sports[json.name];
-        }
-        if (sport === undefined) {
             sport = new Sport(json.name);
             sport.setId(json.id);
-            TheCache.sports[sport.getName()] = sport;
         }
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
