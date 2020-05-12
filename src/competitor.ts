@@ -7,7 +7,7 @@ export class Competitor {
     static readonly MAX_LENGTH_INFO = 200;
     static readonly MAX_LENGTH_IMAGEURL = 150;
 
-    protected id: number;
+    protected id: string | number;
     protected name: string;
     protected abbreviation: string;
     protected registered: boolean;
@@ -20,11 +20,11 @@ export class Competitor {
         this.setAssociation(association);
     }
 
-    getId(): number {
+    getId(): string | number {
         return this.id;
     }
 
-    setId(id: number): void {
+    setId(id: string | number): void {
         this.id = id;
     }
 

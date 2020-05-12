@@ -1,5 +1,5 @@
 export interface JsonCompetitor {
-    id?: number;
+    id?: string | number;
     name?: string;
     abbreviation?: string;
     registered?: boolean;

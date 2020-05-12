@@ -36,7 +36,6 @@ export class CompetitorMapper {
 
     toJson(competitor: Competitor): JsonCompetitor {
         return {
-            id: competitor.getId(),
             name: competitor.getName(),
             abbreviation: competitor.getAbbreviation(),
             registered: competitor.getRegistered(),
