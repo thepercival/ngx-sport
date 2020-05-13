@@ -22,9 +22,6 @@ export class RoundNumberMapper {
         roundNumber.setId(json.id);
         roundNumber.setHasPlanning(json.hasPlanning);
 
-        // roundNumber.getFields().forEach( field => {
-        //     field.getSport();
-        //  });
         if (json.planningConfig !== undefined) {
             this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
         }
