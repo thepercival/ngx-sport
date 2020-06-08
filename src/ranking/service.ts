@@ -116,7 +116,6 @@ export class RankingService {
             // if (nrOfIterations > this.maxPlaces) {
             //     console.error('should not be happening for ranking calc');
             //     break;
-            // quit
             // }
         }
         return rankedItems;
