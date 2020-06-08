@@ -149,7 +149,7 @@ export class NameService {
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {
         if (round.getQualifyGroups().length === 1) {
-            return false;
+            return true;
         }
         let depthAll;
         return round.getQualifyGroups().every(qualifyGroup => {
