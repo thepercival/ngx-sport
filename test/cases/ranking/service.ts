@@ -1,20 +1,25 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Game, PlanningService, QualifyGroup, RankingService, Round, StructureService } from '../../../public_api';
 import { Competitor } from '../../../src/competitor';
-import { getMapper } from '../../createmapper';
-import { jsonCompetition } from '../../data/competition';
-import { setScoreSingle } from '../../helper';
+import { getCompetitionMapper, getGameMapper } from '../../helpers/mappers';
+import { jsonBaseCompetition } from '../../data/competition';
 import { State } from '../../../src/state';
+import { Round } from '../../../src/round';
+import { setScoreSingle } from '../../helpers/setscores';
+import { StructureService } from '../../../src/structure/service';
+import { RankingService } from '../../../src/ranking/service';
+import { getDefaultStructureOptions } from '../../helpers/getdefaultstructureoptions';
+import { jsonGames3Places } from '../../data/games/3places';
+import { QualifyGroup } from '../../../src/qualify/group';
+import { jsonGames4Places } from '../../data/games/4places';
 
 describe('Ranking/Service', () => {
 
     it('rule descriptions', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -31,25 +36,28 @@ describe('Ranking/Service', () => {
     });
 
     it('multiple equal ranked', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 0, 0);
         setScoreSingle(pouleOne, 1, 3, 0, 0);
         setScoreSingle(pouleOne, 2, 3, 0, 0);
 
+        const equalRank = 1;
+
         const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
-        items.forEach(item => expect(item.getRank()).to.equal(1));
+        items.forEach(item => expect(item.getRank()).to.equal(equalRank));
+
+        const equalItems = rankingService.getItemsByRank(items, equalRank);
+        expect(equalItems.length).to.equal(pouleOne.getPlaces().length)
 
         // cached items
         const cachedItems = rankingService.getItemsForPoule(pouleOne);
@@ -57,17 +65,15 @@ describe('Ranking/Service', () => {
     });
 
     it('single ranked, state played', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -82,17 +88,14 @@ describe('Ranking/Service', () => {
     });
 
     it('single ranked, state progress && played', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
         setScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
@@ -111,18 +114,16 @@ describe('Ranking/Service', () => {
     });
 
     it('horizontal ranked EC/WC', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 6);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         const pouleTwo = rootRound.getPoule(2);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -147,20 +148,18 @@ describe('Ranking/Service', () => {
     });
 
     it('horizontal ranked no single rule', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6);
+        const structureService = new StructureService(getDefaultStructureOptions());
+        const structure = structureService.create(competition, 6, 2);
         const rootRound: Round = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         const pouleTwo = rootRound.getPoule(2);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -178,19 +177,17 @@ describe('Ranking/Service', () => {
     });
 
     it('get competitor', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+
         const placeOne = pouleOne.getPlace(1);
         const competitor = new Competitor(competition.getLeague().getAssociation(), 'test');
         placeOne.setCompetitor(competitor);
@@ -202,24 +199,21 @@ describe('Ranking/Service', () => {
     });
 
     it('single ranked, EC/WC', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 1, 0);
-        setScoreSingle(pouleOne, 1, 3, 1, 0);
-        setScoreSingle(pouleOne, 1, 4, 0, 1);
-        setScoreSingle(pouleOne, 2, 3, 2, 0);
-        setScoreSingle(pouleOne, 2, 4, 1, 0);
         setScoreSingle(pouleOne, 3, 4, 1, 0);
+        setScoreSingle(pouleOne, 4, 1, 1, 0);
+        setScoreSingle(pouleOne, 3, 2, 0, 2);
+        setScoreSingle(pouleOne, 1, 3, 1, 0);
+        setScoreSingle(pouleOne, 2, 4, 1, 0);
 
         const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
@@ -236,17 +230,14 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 1, mostPoints', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);
@@ -261,24 +252,21 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 2, fewestGames', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 5, 0);
-        setScoreSingle(pouleOne, 1, 3, 0, 1);
-        setScoreSingle(pouleOne, 1, 4, 1, 1);
-        setScoreSingle(pouleOne, 2, 3, 0, 0);
-        // setScoreSingle(pouleOne, 2, 4, 0, 1);
         setScoreSingle(pouleOne, 3, 4, 0, 1);
+        setScoreSingle(pouleOne, 4, 1, 1, 1);
+        setScoreSingle(pouleOne, 3, 2, 0, 0);
+        setScoreSingle(pouleOne, 1, 3, 0, 1);
+        // setScoreSingle(pouleOne, 2, 4, 0, 1);        
 
         const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
@@ -289,24 +277,22 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 3, fewestGames', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         // setScoreSingle(pouleOne, 1, 2, 1, 0);
-        setScoreSingle(pouleOne, 1, 3, 1, 0);
-        setScoreSingle(pouleOne, 1, 4, 1, 1);
-        setScoreSingle(pouleOne, 2, 3, 0, 0);
-        setScoreSingle(pouleOne, 2, 4, 0, 5);
         setScoreSingle(pouleOne, 3, 4, 3, 0);
+        setScoreSingle(pouleOne, 4, 1, 1, 1);
+        setScoreSingle(pouleOne, 3, 2, 0, 0);
+        setScoreSingle(pouleOne, 1, 3, 1, 0);
+        setScoreSingle(pouleOne, 2, 4, 0, 5);
+
         const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
@@ -316,17 +302,14 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 4, mostScoreed', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         setScoreSingle(pouleOne, 1, 2, 1, 1);
         setScoreSingle(pouleOne, 1, 3, 2, 1);
@@ -340,17 +323,14 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 5, against eachother , no games', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -366,17 +346,14 @@ describe('Ranking/Service', () => {
     });
 
     it('variation 5, against eachother , equal', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
-        const planningService = new PlanningService(competition);
-        planningService.create(rootRound.getNumber());
-
         const pouleOne = rootRound.getPoule(1);
+        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
 
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);

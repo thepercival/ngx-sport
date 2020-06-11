@@ -35,9 +35,6 @@ export class NameService {
         }
 
         const nrOfRoundsToGo = this.getMaxDepth(round);
-        if (nrOfRoundsToGo > 5) {
-            return '?';
-        }
         if (nrOfRoundsToGo >= 1) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         }

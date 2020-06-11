@@ -11,7 +11,7 @@ import {
     StructureService,
 } from '../../../../public_api';
 import { SportIdToNumberMap } from '../../../../src/planning/place';
-import { getMapper } from '../../../createmapper';
+import { getMapper } from '../../../helpers/mappers';
 import { jsonCompetition } from '../../../data/competition';
 
 

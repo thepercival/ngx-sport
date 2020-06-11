@@ -5,7 +5,7 @@ import { Place, SportPlanningConfigService, StructureService } from '../../../pu
 import { PlaceCombination } from '../../../src/place/combination';
 import { GameGenerator } from '../../../src/planning/gamegenerator';
 import { PlanningGameRound } from '../../../src/planning/gameround';
-import { getMapper } from '../../createmapper';
+import { getMapper } from '../../helpers/mappers';
 import { jsonCompetition } from '../../data/competition';
 
 

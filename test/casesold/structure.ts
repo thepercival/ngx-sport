@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import { QualifyGroup, StructureService } from '../../public_api';
-import { getMapper } from '../createmapper';
+import { getMapper } from '../helpers/mappers';
 import { jsonCompetition } from '../data/competition';
 
 describe('Structure', () => {

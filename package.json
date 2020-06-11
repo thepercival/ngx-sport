@@ -89,7 +89,7 @@
   },
   "nyc": {
     "include": [
-      "src/planning/service.ts"
+      "src/ranking/end/service.ts"
     ],
     "reporter": [
       "html",

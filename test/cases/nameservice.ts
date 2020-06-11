@@ -7,8 +7,13 @@ import { PlanningPeriod } from '../../src/planning/period';
 import { QualifyGroup } from '../../src/qualify/group';
 import { Referee } from '../../src/referee';
 import { StructureService } from '../../src/structure/service';
-import { getMapper } from '../createmapper';
-import { jsonCompetition } from '../data/competition';
+import { getCompetitionMapper, getGameMapper } from '../helpers/mappers';
+import { jsonBaseCompetition } from '../data/competition';
+
+// import { setScoreSingle } from '../helpers/setscores';
+import { getDefaultStructureOptions } from '../helpers/getdefaultstructureoptions';
+import { jsonGames2Places } from '../data/games/2places';
+// import { createGames } from '../helpers/creategames';
 
 describe('NameService', () => {
 
@@ -27,10 +32,9 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 8, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const rootRound = structure.getRootRound();
@@ -54,18 +58,17 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // root needs no ranking, unequal depth
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 4, 2);
             const rootRound = structure.getRootRound();
 
             structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
-            expect(nameService.getRoundName(rootRound)).to.equal('1<sup>ste</sup> ronde');
+            expect(nameService.getRoundName(rootRound)).to.equal('&frac12; finale');
 
             structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
@@ -74,7 +77,7 @@ describe('NameService', () => {
 
         // root needs ranking
         {
-            const structureService2 = new StructureService();
+            const structureService2 = new StructureService(getDefaultStructureOptions());
             const structure2 = structureService2.create(competition, 16, 4);
             const rootRound2 = structure2.getRootRound();
 
@@ -93,14 +96,13 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
 
 
         // root needs ranking, depth 2
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 16, 8);
             const rootRound = structure.getRootRound();
 
@@ -154,12 +156,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 89, 30);
             const rootRound = structure.getRootRound();
 
@@ -178,12 +179,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 3);
             const rootRound = structure.getRootRound();
 
@@ -209,12 +209,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 9, 3);
             const rootRound = structure.getRootRound();
 
@@ -271,12 +270,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 3, 1);
             const rootRound = structure.getRootRound();
 
@@ -284,13 +282,9 @@ describe('NameService', () => {
             const competitor = new Competitor(competition.getLeague().getAssociation(), 'competitor 1');
             firstPlace.setCompetitor(competitor);
 
-            const planningService = new PlanningService(competition);
-            planningService.create(rootRound.getNumber());
-
-            const game = rootRound.getGames()[0];
+            const game = getGameMapper().toObject(jsonGames2Places[0], firstPlace.getPoule());
             const gamePlaces = game.getPlaces();
-
-            expect(nameService.getPlacesFromName(gamePlaces, false, false)).to.equal('A2 & A3');
+            expect(nameService.getPlacesFromName(gamePlaces, false, false)).to.equal('A1 & A2');
         }
     });
 
@@ -298,12 +292,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 12, 3);
             const rootRound = structure.getRootRound();
 
@@ -352,12 +345,11 @@ describe('NameService', () => {
 
         const nameService = new NameService();
 
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         // basics
         {
-            const structureService = new StructureService();
+            const structureService = new StructureService(getDefaultStructureOptions());
             const structure = structureService.create(competition, 3, 1);
             const rootRound = structure.getRootRound();
 
@@ -365,39 +357,24 @@ describe('NameService', () => {
             const competitor = new Competitor(competition.getLeague().getAssociation(), 'competitor 1');
             firstPlace.setCompetitor(competitor);
 
-            const referee = new Referee(competition, 'CDK');
+            const game = getGameMapper().toObject(jsonGames2Places[0], firstPlace.getPoule());
+            expect(nameService.getRefereeName(game)).to.equal('');
+
+            const referee = new Referee(competition);
+            referee.setInitials('CDK');
             referee.setName('Co Du');
-
-            const planningService = new PlanningService(competition);
-            planningService.create(rootRound.getNumber());
-
-            const game = rootRound.getGames()[0];
+            game.setReferee(referee);
 
             expect(nameService.getRefereeName(game)).to.equal('CDK');
             expect(nameService.getRefereeName(game, false)).to.equal('CDK');
             expect(nameService.getRefereeName(game, true)).to.equal('Co Du');
 
-            rootRound.getNumber().getPlanningConfig().setSelfReferee(true);
-            planningService.create(rootRound.getNumber());
+            game.setReferee(undefined);
+            game.setRefereePlace(firstPlace);
 
-            const gameSelf = rootRound.getGames()[0];
-
-            expect(nameService.getRefereeName(gameSelf)).to.equal('competitor 1');
-            expect(nameService.getRefereeName(gameSelf, false)).to.equal('competitor 1');
-            expect(nameService.getRefereeName(gameSelf, true)).to.equal('competitor 1');
-
-            const gameSelfLast = rootRound.getGames()[2];
-
-            expect(nameService.getRefereeName(gameSelfLast)).to.equal('A2');
-            expect(nameService.getRefereeName(gameSelfLast, false)).to.equal('A2');
-            expect(nameService.getRefereeName(gameSelfLast, true)).to.equal('poule A nr. 2');
-
-            const gameSelfMiddle = rootRound.getGames()[1];
-            gameSelfMiddle.setRefereePlace(undefined);
-
-            expect(nameService.getRefereeName(gameSelfMiddle)).to.equal('');
-            expect(nameService.getRefereeName(gameSelfMiddle, false)).to.equal('');
-            expect(nameService.getRefereeName(gameSelfMiddle, true)).to.equal('');
+            expect(nameService.getRefereeName(game)).to.equal('competitor 1');
+            expect(nameService.getRefereeName(game, false)).to.equal('competitor 1');
+            expect(nameService.getRefereeName(game, true)).to.equal('competitor 1');
         }
     });
 

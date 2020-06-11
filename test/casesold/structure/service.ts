@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 
 import { StructureService } from '../../../public_api';
 import { QualifyGroup, HorizontalPoule } from '../../../public_api';
-import { getMapper } from '../../createmapper';
+import { getMapper } from '../../helpers/mappers';
 import { jsonCompetition } from '../../data/competition';
 import { check332astructure } from './332a';
 
@@ -394,17 +394,17 @@ describe('Structure/Service', () => {
         const horPoule5c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 5);
         const horPoule6c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 6);
 
-        const hasHorPoule = ( qualifyGroup: QualifyGroup, horPoule: HorizontalPoule ): boolean => {
-            return qualifyGroup.getHorizontalPoules().find( horPouleIt => horPouleIt === horPoule ) !== undefined;
+        const hasHorPoule = (qualifyGroup: QualifyGroup, horPoule: HorizontalPoule): boolean => {
+            return qualifyGroup.getHorizontalPoules().find(horPouleIt => horPouleIt === horPoule) !== undefined;
         };
-        expect(hasHorPoule( qualifyGroup12, horPoule1c)).to.equal(true);
-        expect(hasHorPoule( qualifyGroup12, horPoule2c)).to.equal(true);
-        expect(hasHorPoule( qualifyGroup12, horPoule3c)).to.equal(false);
-        expect(hasHorPoule( qualifyGroup12, horPoule4c)).to.equal(false);
-        expect(hasHorPoule( qualifyGroup56, horPoule5c)).to.equal(true);
-        expect(hasHorPoule( qualifyGroup56, horPoule6c)).to.equal(true);
-        expect(hasHorPoule( qualifyGroup56, horPoule3c)).to.equal(false);
-        expect(hasHorPoule( qualifyGroup56, horPoule4c)).to.equal(false);
+        expect(hasHorPoule(qualifyGroup12, horPoule1c)).to.equal(true);
+        expect(hasHorPoule(qualifyGroup12, horPoule2c)).to.equal(true);
+        expect(hasHorPoule(qualifyGroup12, horPoule3c)).to.equal(false);
+        expect(hasHorPoule(qualifyGroup12, horPoule4c)).to.equal(false);
+        expect(hasHorPoule(qualifyGroup56, horPoule5c)).to.equal(true);
+        expect(hasHorPoule(qualifyGroup56, horPoule6c)).to.equal(true);
+        expect(hasHorPoule(qualifyGroup56, horPoule3c)).to.equal(false);
+        expect(hasHorPoule(qualifyGroup56, horPoule4c)).to.equal(false);
     });
 
     it('qualifygroups mergable 33', () => {

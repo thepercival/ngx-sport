@@ -105,9 +105,9 @@ export class RankingService {
             const rank = nrOfIterations + 1;
             bestItems.sort((unrankedA, unrankedB) => {
                 if (unrankedA.getPlaceLocation().getPouleNr() === unrankedB.getPlaceLocation().getPouleNr()) {
-                    return unrankedA.getPlaceLocation().getPlaceNr() > unrankedB.getPlaceLocation().getPlaceNr() ? 1 : -1;
+                    return unrankedA.getPlaceLocation().getPlaceNr() - unrankedB.getPlaceLocation().getPlaceNr();
                 }
-                return unrankedA.getPlaceLocation().getPouleNr() > unrankedB.getPlaceLocation().getPouleNr() ? 1 : -1;
+                return unrankedA.getPlaceLocation().getPouleNr() - unrankedB.getPlaceLocation().getPouleNr();
             });
             bestItems.forEach(bestItem => {
                 unrankedItems.splice(unrankedItems.indexOf(bestItem), 1);

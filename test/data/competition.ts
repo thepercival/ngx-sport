@@ -1,8 +1,8 @@
-import { JsonCompetition } from '../../src/competition/mapper';
+import { JsonCompetition } from '../../src/competition/json';
 import { RankingService } from '../../src/ranking/service';
 import { SportConfig } from '../../src/sport/config';
 
-export const jsonCompetition: JsonCompetition = {
+export const jsonBaseCompetition: JsonCompetition = {
     'league': {
         'name': 'ssaxasx',
         'association': {
@@ -45,6 +45,15 @@ export const jsonCompetition: JsonCompetition = {
             },
             'number': 1,
             'name': '1'
+        },
+        {
+            'sport': {
+                'name': 'voetbal',
+                'team': true,
+                'customId': 11
+            },
+            'number': 2,
+            'name': '2'
         }
     ],
     'referees': [],

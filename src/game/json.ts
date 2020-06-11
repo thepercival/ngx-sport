@@ -10,5 +10,5 @@ export interface JsonGame {
     startDateTime?: string;
     refereeRank?: number;
     refereePlaceId?: number;
-    scores?: JsonGameScore[];
+    scores: JsonGameScore[];
 }
