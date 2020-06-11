@@ -38,14 +38,11 @@ export class NameService {
         if (nrOfRoundsToGo >= 1) {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         }
-        // if (round.getNrOfPlaces() > 1) {
         if (round.getNrOfPlaces() === 2 && sameName === false) {
             const rank = round.getStructureNumber() + 1;
             return this.getHtmlNumber(rank) + '/' + this.getHtmlNumber(rank + 1) + ' plaats';
         }
         return 'finale';
-        // }
-        // return round.getParentQualifyGroup() ? this.getWinnersLosersDescription(round.getParentQualifyGroup().getWinnersOrLosers()) : '';
     }
 
     getPouleName(poule: Poule, withPrefix: boolean): string {
