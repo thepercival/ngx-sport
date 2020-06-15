@@ -76,9 +76,9 @@
     "travis-deploy-once": "travis-deploy-once",
     "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
     "copy-to-vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
-    "test": "mocha -r test/hook.js --recursive test/cases/**/*.ts",
+    "test": "mocha -r test/hook.js --recursive 'test/cases/**/*.ts'",
     "coverage": "nyc npm run test",
-    "test1": "mocha -r test/hook.js --recursive test/cases/planning/service.ts",
+    "test1": "mocha -r test/hook.js 'test/cases/structure.ts'",
     "profile": "ngc -p tsconfig-profile.json",
     "help": "nyc help"
   },
@@ -89,7 +89,7 @@
   },
   "nyc": {
     "include": [
-      "src/ranking/end/service.ts"
+      "src/structure.ts"
     ],
     "reporter": [
       "html",

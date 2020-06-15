@@ -1,6 +1,6 @@
 export interface JsonReferee {
     id?: number;
-    rank: number;
+    priority: number;
     initials: string;
     name?: string;
     emailaddress?: string;

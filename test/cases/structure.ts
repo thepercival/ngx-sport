@@ -2,21 +2,22 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import { QualifyGroup, StructureService } from '../../public_api';
-import { getMapper } from '../helpers/mappers';
-import { jsonCompetition } from '../data/competition';
+import { getCompetitionMapper } from '../helpers/mappers';
+import { jsonBaseCompetition } from '../data/competition';
+import { getDefaultStructureOptions } from '../helpers/getdefaultstructureoptions';
 
 describe('Structure', () => {
 
     it('basics', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 16, 4);
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
+        expect(structure.getLastRoundNumber()).to.equal(firstRoundNumber);
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
@@ -33,10 +34,9 @@ describe('Structure', () => {
     });
 
     it('setStructureNumbers', () => {
-        const competitionMapper = getMapper('competition');
-        const competition = competitionMapper.toObject(jsonCompetition);
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService();
+        const structureService = new StructureService(getDefaultStructureOptions());
         const structure = structureService.create(competition, 16, 4);
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
@@ -56,5 +56,19 @@ describe('Structure', () => {
         expect(rootRound.getPoule(4).getStructureNumber()).to.equal(4);
         expect(rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1).getStructureNumber()).to.equal(5);
         expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getPoule(1).getStructureNumber()).to.equal(6);
+    });
+
+    it('planning', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureService = new StructureService(getDefaultStructureOptions());
+        const structure = structureService.create(competition, 16, 4);
+        expect(structure.hasPlanning()).to.equal(false);
+        const rootRound = structure.getRootRound();
+        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+        structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
+        expect(structure.hasPlanning()).to.equal(false);
+        structure.getFirstRoundNumber().setHasPlanning(true);
+        expect(structure.hasPlanning()).to.equal(false);
     });
 });

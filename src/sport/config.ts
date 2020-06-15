@@ -1,6 +1,7 @@
 import { Competition } from '../competition';
 import { Sport } from '../sport';
 import { Game } from '../game';
+import { Field } from '../field';
 
 export class SportConfig {
 
@@ -17,6 +18,7 @@ export class SportConfig {
     protected losePointsExt: number;
     protected pointsCalculation: number;
     protected nrOfGamePlaces: number;
+    protected fields: Field[] = [];
 
     constructor(protected sport: Sport, protected competition: Competition) {
         this.competition.getSportConfigs().push(this);
@@ -96,5 +98,9 @@ export class SportConfig {
 
     getCompetition(): Competition {
         return this.competition;
+    }
+
+    getFields(): Field[] {
+        return this.fields;
     }
 }

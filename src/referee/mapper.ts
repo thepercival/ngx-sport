@@ -12,7 +12,7 @@ export class RefereeMapper {
 
     toObject(json: JsonReferee, competition: Competition, referee?: Referee): Referee {
         if (referee === undefined) {
-            referee = new Referee(competition, json.rank);
+            referee = new Referee(competition, json.priority);
         }
         referee.setId(json.id);
         referee.setInitials(json.initials);
@@ -25,7 +25,7 @@ export class RefereeMapper {
     toJson(referee: Referee): JsonReferee {
         return {
             id: referee.getId(),
-            rank: referee.getRank(),
+            priority: referee.getPriority(),
             initials: referee.getInitials(),
             name: referee.getName(),
             emailaddress: referee.getEmailaddress(),

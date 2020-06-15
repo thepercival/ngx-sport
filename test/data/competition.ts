@@ -14,13 +14,6 @@ export const jsonBaseCompetition: JsonCompetition = {
         'startDateTime': '2018-12-17T11:33:15.710Z',
         'endDateTime': '2018-12-17T11:33:15.710Z'
     },
-    'sports': [
-        {
-            'name': 'voetbal',
-            'team': true,
-            'customId': 11
-        }
-    ],
     'sportConfigs': [
         {
             'winPoints': 3.0,
@@ -34,28 +27,18 @@ export const jsonBaseCompetition: JsonCompetition = {
                 'name': 'voetbal',
                 'team': true,
                 'customId': 11
-            }
+            },
+            'fields': [
+                {
+                    'rank': 1,
+                    'name': '1'
+                },
+                {
+                    'rank': 2,
+                    'name': '2'
+                }
+            ],
         }],
-    'fields': [
-        {
-            'sport': {
-                'name': 'voetbal',
-                'team': true,
-                'customId': 11
-            },
-            'number': 1,
-            'name': '1'
-        },
-        {
-            'sport': {
-                'name': 'voetbal',
-                'team': true,
-                'customId': 11
-            },
-            'number': 2,
-            'name': '2'
-        }
-    ],
     'referees': [],
     'startDateTime': '2030-01-01T12:00:00.000Z',
     'state': 1,

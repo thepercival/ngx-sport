@@ -18,9 +18,7 @@ export class CompetitionMapper {
     constructor(
         private leagueMapper: LeagueMapper,
         private seasonMapper: SeasonMapper,
-        private sportMapper: SportMapper,
         private refereeMapper: RefereeMapper,
-        private fieldMapper: FieldMapper,
         private sportConfigMapper: SportConfigMapper
     ) { }
 
@@ -32,8 +30,6 @@ export class CompetitionMapper {
         competition.setId(json.id);
         this.updateObject(json, competition);
 
-        json.sports.map(jsonSport => this.sportMapper.toObject(jsonSport));
-        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competition));
         json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
         json.sportConfigs.forEach(jsonSportConfig => this.sportConfigMapper.toObject(jsonSportConfig, competition));
         return competition;
@@ -50,7 +46,6 @@ export class CompetitionMapper {
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
             sportConfigs: competition.getSportConfigs().map(sport => this.sportConfigMapper.toJson(sport)),
-            fields: competition.getFields().map(field => this.fieldMapper.toJson(field)),
             referees: competition.getReferees().map(referee => this.refereeMapper.toJson(referee)),
             ruleSet: competition.getRuleSet(),
             startDateTime: competition.getStartDateTime().toISOString(),

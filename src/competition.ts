@@ -14,7 +14,6 @@ export class Competition {
     protected startDateTime: Date;
     protected state: number;
     protected referees: Referee[] = [];
-    protected fields: Field[] = [];
     protected sportConfigs: SportConfig[] = [];
 
     constructor(league: League, season: Season) {
@@ -75,31 +74,22 @@ export class Competition {
         return this.getLeague().getName() + ' ' + this.getSeason().getName();
     }
 
-    getNrOfFields(sport: Sport): number {
-        return this.getFields().filter(field => field.getSport() === sport).length;
-    }
-
     getFields(): Field[] {
-        return this.fields;
+        let fields = [];
+        this.getSportConfigs().forEach(sportConfig => fields = fields.concat(sportConfig.getFields()));
+        return fields;
     }
 
-    getField(number: number): Field {
-        return this.fields.find(fieldIt => number === fieldIt.getNumber());
-    }
-
-    removeField(field: Field) {
-        const index = this.fields.indexOf(field);
-        if (index > -1) {
-            this.fields.splice(index, 1);
-        }
+    getField(priority: number): Field {
+        return this.getFields().find(field => field.getPriority() === priority);
     }
 
     getReferees(): Referee[] {
         return this.referees;
     }
 
-    getReferee(rank: number): Referee {
-        return this.referees.find(refereeIt => rank === refereeIt.getRank());
+    getReferee(priority: number): Referee {
+        return this.referees.find(refereeIt => priority === refereeIt.getPriority());
     }
 
     removeReferee(referee: Referee) {
@@ -107,10 +97,10 @@ export class Competition {
         if (index > -1) {
             const referees = this.referees.splice(index, 1);
             referees.shift();
-            let rank = referee.getRank();
+            let priority = referee.getPriority();
             while (referees.length > 0) {
                 const removedReferee = referees.shift();
-                removedReferee.setRank(rank++);
+                removedReferee.setPriority(priority++);
                 this.referees.push(removedReferee);
             }
         }

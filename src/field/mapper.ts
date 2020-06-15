@@ -1,33 +1,30 @@
 import { Injectable } from '@angular/core';
 
-import { Competition } from '../competition';
 import { Field } from '../field';
-import { SportMapper } from '../sport/mapper';
 import { JsonField } from './json';
+import { SportConfig } from '../sport/config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FieldMapper {
 
-    constructor(private sportMapper: SportMapper) { }
+    constructor() { }
 
-    toObject(json: JsonField, competition: Competition, field?: Field): Field {
+    toObject(json: JsonField, sportConfig: SportConfig, field?: Field): Field {
         if (field === undefined) {
-            field = new Field(competition, json.number);
+            field = new Field(sportConfig, json.priority);
         }
         field.setId(json.id);
         field.setName(json.name);
-        field.setSport(this.sportMapper.toObject(json.sport));
         return field;
     }
 
     toJson(field: Field): JsonField {
         return {
             id: field.getId(),
-            number: field.getNumber(),
-            name: field.getName(),
-            sport: this.sportMapper.toJson(field.getSport())
+            priority: field.getPriority(),
+            name: field.getName()
         };
     }
 }

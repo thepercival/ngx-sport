@@ -10,27 +10,35 @@ import { SportScoreConfigService } from '../scoreconfig/service';
 import { SportConfigMapper } from './mapper';
 import { JsonSportConfig } from './json';
 import { SportMapper } from '../mapper';
+import { JsonField } from '../../field/json';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SportConfigService {
+    private scoreConfigService: SportScoreConfigService;
+    private sportConfigMapper: SportConfigMapper;
+    private sportMapper: SportMapper;
 
     constructor(
-        private scoreConfigService: SportScoreConfigService,
-        private sportConfigMapper: SportConfigMapper,
-        private sportMapper: SportMapper) {
+        scoreConfigService: SportScoreConfigService,
+        sportConfigMapper: SportConfigMapper,
+        sportMapper: SportMapper,
+    ) {
+        this.scoreConfigService = scoreConfigService;
+        this.sportConfigMapper = sportConfigMapper;
+        this.sportMapper = sportMapper;
     }
 
     createDefault(sport: Sport, competition: Competition, structure?: Structure): SportConfig {
-        const config = this.sportConfigMapper.toObject(this.createDefaultJson(sport), competition);
+        const config = this.sportConfigMapper.toObject(this.createDefaultJson(sport, []), competition);
         if (structure) {
             this.addToStructure(config, structure);
         }
         return config;
     }
 
-    createDefaultJson(sport: Sport): JsonSportConfig {
+    createDefaultJson(sport: Sport, fields: JsonField[]): JsonSportConfig {
         return {
             sport: this.sportMapper.toJson(sport),
             winPoints: this.getDefaultWinPoints(sport),
@@ -39,7 +47,8 @@ export class SportConfigService {
             drawPointsExt: this.getDefaultDrawPointsExt(sport),
             losePointsExt: this.getDefaultLosePointsExt(sport),
             pointsCalculation: SportConfig.POINTS_CALC_GAMEPOINTS,
-            nrOfGamePlaces: SportConfig.DEFAULT_NROFGAMEPLACES
+            nrOfGamePlaces: SportConfig.DEFAULT_NROFGAMEPLACES,
+            fields: fields
         };
     }
 
@@ -93,10 +102,7 @@ export class SportConfigService {
             sportConfigs.splice(index, 1);
         }
         const sport = config.getSport();
-        const fields = competition.getFields();
-        fields.filter(field => field.getSport() === sport).forEach(field => {
-            competition.removeField(field);
-        });
+
         let roundNumber = structure.getFirstRoundNumber();
         while (roundNumber) {
             const scoreConfigs = roundNumber.getSportScoreConfigs();

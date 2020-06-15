@@ -26,6 +26,7 @@ export class RoundNumber {
         this.previous = previous;
         this.number = previous === undefined ? 1 : previous.getNumber() + 1;
         this.competition = competition;
+        this.hasPlanning = false;
     }
 
     getId(): number {

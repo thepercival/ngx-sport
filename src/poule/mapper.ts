@@ -20,12 +20,6 @@ export class PouleMapper {
             return (placeA.number > placeB.number) ? 1 : -1;
         });
         json.places.map(jsonPlace => this.placeMapper.toObject(jsonPlace, poule));
-        if (json.games !== undefined) {
-            json.games.forEach(jsonGame => {
-                const game = poule.getGames().find(gameIt => gameIt.getId() === jsonGame.id);
-                this.gameMapper.toObject(jsonGame, poule, game);
-            });
-        }
         return poule;
     }
 

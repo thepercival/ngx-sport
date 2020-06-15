@@ -7,12 +7,13 @@ import { PlanningPeriod } from '../../src/planning/period';
 import { QualifyGroup } from '../../src/qualify/group';
 import { Referee } from '../../src/referee';
 import { StructureService } from '../../src/structure/service';
-import { getCompetitionMapper, getGameMapper } from '../helpers/mappers';
+import { getCompetitionMapper, getGameMapper, getPlanningMapper } from '../helpers/mappers';
 import { jsonBaseCompetition } from '../data/competition';
 
 // import { setScoreSingle } from '../helpers/setscores';
 import { getDefaultStructureOptions } from '../helpers/getdefaultstructureoptions';
 import { jsonGames2Places } from '../data/games/2places';
+import { createGames } from '../helpers/gamescreator';
 // import { createGames } from '../helpers/creategames';
 
 describe('NameService', () => {
@@ -282,9 +283,10 @@ describe('NameService', () => {
             const competitor = new Competitor(competition.getLeague().getAssociation(), 'competitor 1');
             firstPlace.setCompetitor(competitor);
 
-            const game = getGameMapper().toObject(jsonGames2Places[0], firstPlace.getPoule());
+            createGames(structure.getFirstRoundNumber());
+            const game = firstPlace.getPoule().getGames()[0];
             const gamePlaces = game.getPlaces();
-            expect(nameService.getPlacesFromName(gamePlaces, false, false)).to.equal('A1 & A2');
+            expect(nameService.getPlacesFromName(gamePlaces, false, false)).to.equal('A2 & A3');
         }
     });
 
@@ -357,7 +359,8 @@ describe('NameService', () => {
             const competitor = new Competitor(competition.getLeague().getAssociation(), 'competitor 1');
             firstPlace.setCompetitor(competitor);
 
-            const game = getGameMapper().toObject(jsonGames2Places[0], firstPlace.getPoule());
+            createGames(structure.getFirstRoundNumber());
+            const game = firstPlace.getPoule().getGames()[0];
             expect(nameService.getRefereeName(game)).to.equal('');
 
             const referee = new Referee(competition);

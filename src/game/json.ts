@@ -5,10 +5,10 @@ export interface JsonGame {
     id?: number;
     places: JsonGamePlace[];
     batchNr: number;
-    fieldNr: number;
+    fieldPriority: number;
     state: number;
     startDateTime?: string;
-    refereeRank?: number;
-    refereePlaceId?: number;
+    refereePriority?: number;
+    refereePlaceLocId?: string;
     scores: JsonGameScore[];
 }

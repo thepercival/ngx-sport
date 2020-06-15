@@ -9,18 +9,18 @@ export class Referee {
 
     protected id: number;
     protected competition: Competition;
-    protected rank: number;
+    protected priority: number;
     protected initials: string;
     protected name: string;
     protected emailaddress: string;
     protected info: string;
 
-    constructor(competition: Competition, rank?: number) {
+    constructor(competition: Competition, priority?: number) {
         this.setCompetition(competition);
-        if (rank === undefined) {
-            rank = competition.getReferees().length;
+        if (priority === undefined) {
+            priority = competition.getReferees().length;
         }
-        this.setRank(rank);
+        this.setPriority(priority);
     }
 
     getId(): number {
@@ -40,12 +40,12 @@ export class Referee {
         this.competition.getReferees().push(this);
     }
 
-    getRank(): number {
-        return this.rank;
+    getPriority(): number {
+        return this.priority;
     }
 
-    setRank(rank: number): void {
-        this.rank = rank;
+    setPriority(priority: number): void {
+        this.priority = priority;
     }
 
     getInitials(): string {

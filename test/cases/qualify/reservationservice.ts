@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getGameMapper } from '../../helpers/mappers';
+import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
 import { Round } from '../../../src/round';
 import { QualifyGroup } from '../../../src/qualify/group';
@@ -11,9 +11,8 @@ import { setScoreSingle } from '../../helpers/setscores';
 import { QualifyService } from '../../../src/qualify/service';
 import { RankingService } from '../../../src/ranking/service';
 import { Competitor } from '../../../src/competitor';
-import { jsonGames5Places } from '../../data/games/5places';
 import { QualifyReservationService } from '../../../src/qualify/reservationservice';
-import { jsonGames3Places } from '../../data/games/3places';
+import { createGames } from '../../helpers/gamescreator';
 
 describe('QualifyReservationService', () => {
 
@@ -28,12 +27,12 @@ describe('QualifyReservationService', () => {
         structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames5Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
             pouleOne.getPlace(nr).setCompetitor(competitor);
         }
+
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -75,31 +74,28 @@ describe('QualifyReservationService', () => {
         structureService.addPoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
             pouleOne.getPlace(nr).setCompetitor(competitor);
         }
         const pouleTwo = rootRound.getPoule(2);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
         for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
             pouleTwo.getPlace(nr).setCompetitor(competitor);
         }
         const pouleThree = rootRound.getPoule(3);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleThree));
         for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
             const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr;
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
             pouleThree.getPlace(nr).setCompetitor(competitor);
         }
         const pouleFour = rootRound.getPoule(4);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleFour));
         for (let nr = 1; nr <= pouleFour.getPlaces().length; nr++) {
             const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + pouleThree.getPlaces().length + nr;
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
             pouleFour.getPlace(nr).setCompetitor(competitor);
         }
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);
@@ -161,24 +157,23 @@ describe('QualifyReservationService', () => {
         structureService.removePoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
             pouleOne.getPlace(nr).setCompetitor(competitor);
         }
         const pouleTwo = rootRound.getPoule(2);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
         for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
             const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
             pouleTwo.getPlace(nr).setCompetitor(competitor);
         }
         const pouleThree = rootRound.getPoule(3);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleThree));
         for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
             const name = '' + (pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr);
             const competitor = new Competitor(competition.getLeague().getAssociation(), name);
             pouleThree.getPlace(nr).setCompetitor(competitor);
         }
+
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);

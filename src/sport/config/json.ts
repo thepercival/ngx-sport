@@ -1,4 +1,5 @@
 import { JsonSport } from "../json";
+import { JsonField } from "../../field/json";
 
 export interface JsonSportConfig {
     id?: number;
@@ -10,4 +11,5 @@ export interface JsonSportConfig {
     losePointsExt: number;
     pointsCalculation: number;
     nrOfGamePlaces: number;
+    fields: JsonField[];
 }

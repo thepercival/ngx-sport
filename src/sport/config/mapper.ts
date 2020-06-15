@@ -4,12 +4,13 @@ import { Competition } from '../../competition';
 import { SportConfig } from '../config';
 import { SportMapper } from '../mapper';
 import { JsonSportConfig } from './json';
+import { FieldMapper } from '../../field/mapper';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SportConfigMapper {
-    constructor(private sportMapper: SportMapper) { }
+    constructor(private sportMapper: SportMapper, private fieldMapper: FieldMapper) { }
 
     toObject(json: JsonSportConfig, competition: Competition, config?: SportConfig): SportConfig {
         if (config === undefined) {
@@ -24,6 +25,7 @@ export class SportConfigMapper {
         config.setLosePointsExt(json.losePointsExt);
         config.setPointsCalculation(json.pointsCalculation);
         config.setNrOfGamePlaces(json.nrOfGamePlaces);
+        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, config));
         return config;
     }
 
@@ -37,7 +39,8 @@ export class SportConfigMapper {
             drawPointsExt: config.getDrawPointsExt(),
             losePointsExt: config.getLosePointsExt(),
             pointsCalculation: config.getPointsCalculation(),
-            nrOfGamePlaces: config.getNrOfGamePlaces()
+            nrOfGamePlaces: config.getNrOfGamePlaces(),
+            fields: config.getFields().map(field => this.fieldMapper.toJson(field)),
         };
     }
 }

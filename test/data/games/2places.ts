@@ -13,7 +13,7 @@ export const jsonGames2Places: JsonGame[] = [{
         }
     ],
     batchNr: 1,
-    fieldNr: 1,
+    fieldRank: 1,
     state: State.Created,
     scores: []
 }];

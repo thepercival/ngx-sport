@@ -1,8 +1,5 @@
-import { JsonSport } from "../sport/json";
-
 export interface JsonField {
     id?: number;
-    number: number;
+    priority: number;
     name: string;
-    sport: JsonSport;
 }

@@ -1,19 +1,18 @@
 import { Competition } from './competition';
 import { Sport } from './sport';
+import { SportConfig } from './sport/config';
 
 export class Field {
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 3;
 
     protected id: number;
-    protected competition: Competition;
-    protected number: number;
+    protected priority: number;
     protected name: string;
-    protected sport: Sport;
 
-    constructor(competition: Competition, number: number) {
-        this.setCompetition(competition);
-        this.setNumber(number);
+    constructor(protected sportConfig: SportConfig, priority: number) {
+        this.sportConfig.getFields().push(this);
+        this.setPriority(priority);
     }
 
     getId(): number {
@@ -24,21 +23,16 @@ export class Field {
         this.id = id;
     }
 
-    getCompetition(): Competition {
-        return this.competition;
+    getSportConfig(): SportConfig {
+        return this.sportConfig;
     }
 
-    protected setCompetition(competition: Competition): void {
-        this.competition = competition;
-        this.competition.getFields().push(this);
+    getPriority(): number {
+        return this.priority;
     }
 
-    getNumber(): number {
-        return this.number;
-    }
-
-    setNumber(number: number): void {
-        this.number = number;
+    setPriority(priority: number): void {
+        this.priority = priority;
     }
 
     getName(): string {
@@ -47,13 +41,5 @@ export class Field {
 
     setName(name: string): void {
         this.name = name;
-    }
-
-    getSport(): Sport {
-        return this.sport;
-    }
-
-    setSport(sport: Sport): void {
-        this.sport = sport;
     }
 }

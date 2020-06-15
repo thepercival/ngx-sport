@@ -7,6 +7,7 @@ import { Referee } from './referee';
 import { Round } from './round';
 import { SportConfig } from './sport/config';
 import { State } from './state';
+import { SportScoreConfig } from './sport/scoreconfig';
 
 export class Game {
     static readonly RESULT_HOME = 1;
@@ -141,12 +142,12 @@ export class Game {
     }
 
     getSportConfig(): SportConfig {
-        return this.getRound().getNumber().getCompetition().getSportConfig(this.getField().getSport());
+        return this.getField().getSportConfig();
     }
 
-    getSportScoreConfig() {
+    getSportScoreConfig(): SportScoreConfig {
         if (this.field) {
-            return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSport());
+            return this.getRound().getNumber().getValidSportScoreConfig(this.getField().getSportConfig().getSport());
         }
         return this.getRound().getNumber().getValidSportScoreConfigs()[0];
     }

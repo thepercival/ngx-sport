@@ -10,9 +10,9 @@ import { setScoreSingle } from '../../helpers/setscores';
 import { StructureService } from '../../../src/structure/service';
 import { RankingService } from '../../../src/ranking/service';
 import { getDefaultStructureOptions } from '../../helpers/getdefaultstructureoptions';
-import { jsonGames3Places } from '../../data/games/3places';
 import { QualifyGroup } from '../../../src/qualify/group';
 import { jsonGames4Places } from '../../data/games/4places';
+import { createGames } from '../../helpers/gamescreator';
 
 describe('Ranking/Service', () => {
 
@@ -44,7 +44,7 @@ describe('Ranking/Service', () => {
 
         const pouleOne = rootRound.getPoule(1);
 
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 0, 0);
         setScoreSingle(pouleOne, 1, 3, 0, 0);
@@ -73,7 +73,7 @@ describe('Ranking/Service', () => {
 
         const pouleOne = rootRound.getPoule(1);
 
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -95,8 +95,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
         setScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
         setScoreSingle(pouleOne, 2, 3, 3, 2, State.InProgress);
@@ -121,9 +120,9 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         const pouleTwo = rootRound.getPoule(2);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
+
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -157,9 +156,9 @@ describe('Ranking/Service', () => {
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
         const pouleTwo = rootRound.getPoule(2);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleTwo));
+
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
@@ -186,7 +185,7 @@ describe('Ranking/Service', () => {
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+        createGames(structure.getFirstRoundNumber());
 
         const placeOne = pouleOne.getPlace(1);
         const competitor = new Competitor(competition.getLeague().getAssociation(), 'test');
@@ -206,7 +205,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+        createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 1, 0);
         setScoreSingle(pouleOne, 3, 4, 1, 0);
@@ -237,8 +236,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);
         setScoreSingle(pouleOne, 2, 3, 2, 3);
@@ -259,8 +257,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 5, 0);
         setScoreSingle(pouleOne, 3, 4, 0, 1);
         setScoreSingle(pouleOne, 4, 1, 1, 1);
@@ -284,7 +281,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
+        createGames(structure.getFirstRoundNumber());
 
         // setScoreSingle(pouleOne, 1, 2, 1, 0);
         setScoreSingle(pouleOne, 3, 4, 3, 0);
@@ -309,8 +306,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames3Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 1, 1);
         setScoreSingle(pouleOne, 1, 3, 2, 1);
         setScoreSingle(pouleOne, 2, 3, 1, 0);
@@ -330,8 +326,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
         // setScoreSingle(pouleOne, 1, 3, 1, 0);
@@ -353,8 +348,7 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-        jsonGames4Places.forEach(jsonGames => getGameMapper().toObject(jsonGames, pouleOne));
-
+        createGames(structure.getFirstRoundNumber());
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
         setScoreSingle(pouleOne, 1, 3, 1, 0);

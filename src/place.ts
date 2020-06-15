@@ -57,14 +57,6 @@ export class Place {
         this.number = number;
     }
 
-    getStructureNumber(): number {
-        return this.structureNumber;
-    }
-
-    setStructureNumber(structureNumber: number): void {
-        this.structureNumber = structureNumber;
-    }
-
     getName(): string {
         return this.name;
     }
@@ -119,7 +111,7 @@ export class Place {
      */
     getLocationId(): string {
         if (this.locationId === undefined) {
-            this.locationId = this.poule.getRound().getStructureNumber() + '.' + this.poule.getNumber() + '.' + this.number;
+            this.locationId = this.poule.getStructureNumber() + '.' + this.number;
         }
         return this.locationId;
     }
