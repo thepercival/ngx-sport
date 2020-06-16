@@ -99,9 +99,9 @@ export class RoundNumber {
             games = games.concat(poule.getGames());
         });
         if (order === Game.ORDER_BY_BATCH) {
-            games.sort((g1, g2) => {
+            games.sort((g1: Game, g2: Game) => {
                 if (g1.getBatchNr() === g2.getBatchNr() && g1.getField()) {
-                    return g1.getField().getNumber() - g2.getField().getNumber();
+                    return g1.getField().getPriority() - g2.getField().getPriority();
                 }
                 return g1.getBatchNr() - g2.getBatchNr();
             });

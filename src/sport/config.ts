@@ -103,4 +103,8 @@ export class SportConfig {
     getFields(): Field[] {
         return this.fields;
     }
+
+    getField(priority: number): Field {
+        return this.fields.find(fieldIt => priority === fieldIt.getPriority());
+    }
 }
