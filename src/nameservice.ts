@@ -23,10 +23,20 @@ export class NameService {
     * als verschillde namen geef dan xde ronde met tooltip van de namen
     */
     getRoundNumberName(roundNumber: RoundNumber): string {
-        if (this.roundsHaveSameName(roundNumber)) {
+        if (this.roundsHaveSameName(roundNumber) && roundNumber.getRounds().length > 0) {
             return this.getRoundName(roundNumber.getRounds()[0], true);
         }
         return this.getHtmlNumber(roundNumber.getNumber()) + ' ronde';
+    }
+
+    getRoundNumbersName(startRoundNumber: RoundNumber): string {
+        if (startRoundNumber.getNumber() === 1) {
+            return 'alle ronden';
+        }
+        if (startRoundNumber.hasNext()) {
+            return 'vanaf de ' + this.getRoundNumberName(startRoundNumber);
+        }
+        return 'alleen de ' + this.getRoundNumberName(startRoundNumber);
     }
 
     getRoundName(round: Round, sameName: boolean = false): string {
