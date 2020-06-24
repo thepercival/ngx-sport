@@ -30,11 +30,11 @@ export const jsonBaseCompetition: JsonCompetition = {
             },
             'fields': [
                 {
-                    'rank': 1,
+                    'priority': 1,
                     'name': '1'
                 },
                 {
-                    'rank': 2,
+                    'priority': 2,
                     'name': '2'
                 }
             ],

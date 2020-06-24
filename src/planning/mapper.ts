@@ -54,7 +54,7 @@ export class PlanningMapper {
         });
     }
 
-    protected getReferences(roundNumber: RoundNumber): PlanningReferences {
+    getReferences(roundNumber: RoundNumber): PlanningReferences {
         let roundNumberReferences = this.roundNumbersReferences[roundNumber.getNumber()];
         if (roundNumberReferences) {
             return roundNumberReferences;

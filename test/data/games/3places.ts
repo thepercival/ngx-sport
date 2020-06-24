@@ -14,7 +14,7 @@ export const jsonGames3Places: JsonGame[] = [
             }
         ],
         batchNr: 1,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -30,7 +30,7 @@ export const jsonGames3Places: JsonGame[] = [
             }
         ],
         batchNr: 2,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -46,7 +46,7 @@ export const jsonGames3Places: JsonGame[] = [
             }
         ],
         batchNr: 3,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     }

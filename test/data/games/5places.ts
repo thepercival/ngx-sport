@@ -14,7 +14,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 1,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -30,7 +30,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 1,
-        fieldRank: 2,
+        fieldPriority: 2,
         state: State.Created,
         scores: []
     },
@@ -46,7 +46,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 2,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -62,7 +62,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 2,
-        fieldRank: 2,
+        fieldPriority: 2,
         state: State.Created,
         scores: []
     },
@@ -78,7 +78,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 3,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -94,7 +94,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 3,
-        fieldRank: 2,
+        fieldPriority: 2,
         state: State.Created,
         scores: []
     },
@@ -110,7 +110,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 4,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -126,7 +126,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 4,
-        fieldRank: 2,
+        fieldPriority: 2,
         state: State.Created,
         scores: []
     },
@@ -142,7 +142,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 5,
-        fieldRank: 1,
+        fieldPriority: 1,
         state: State.Created,
         scores: []
     },
@@ -158,7 +158,7 @@ export const jsonGames5Places: JsonGame[] = [
             }
         ],
         batchNr: 5,
-        fieldRank: 2,
+        fieldPriority: 2,
         state: State.Created,
         scores: []
     }
