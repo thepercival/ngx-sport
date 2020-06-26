@@ -69,7 +69,7 @@ export class SportConfigService {
     }
 
     protected getDefaultLosePointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.IceHockey ? 1 : 0;
+        return sport.getCustomId() !== SportCustom.IceHockey ? 0 : 1;
     }
 
     copy(sourceConfig: SportConfig, competition: Competition): SportConfig {
