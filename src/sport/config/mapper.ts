@@ -16,6 +16,7 @@ export class SportConfigMapper {
         if (config === undefined) {
             const sport = this.sportMapper.toObject(json.sport);
             config = new SportConfig(sport, competition);
+            json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, config));
         }
         config.setId(json.id);
         config.setWinPoints(json.winPoints);
@@ -25,7 +26,6 @@ export class SportConfigMapper {
         config.setLosePointsExt(json.losePointsExt);
         config.setPointsCalculation(json.pointsCalculation);
         config.setNrOfGamePlaces(json.nrOfGamePlaces);
-        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, config));
         return config;
     }
 
