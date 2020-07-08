@@ -138,4 +138,26 @@ export class SportConfigService {
             || sportConfigA.getNrOfGamePlaces() !== sportConfigB.getNrOfGamePlaces()
         );
     }
+
+    public getMaxNrOfGamePlaces(sportConfigs: SportConfig[], teamup: boolean, selfReferee: boolean): number {
+        let maxNrOfGamePlaces = 0;
+
+        for (let sportConfig of sportConfigs) {
+            const nrOfGamePlaces = this.getNrOfGamePlaces(sportConfig.getNrOfGamePlaces(), teamup, selfReferee);
+            if (nrOfGamePlaces > maxNrOfGamePlaces) {
+                maxNrOfGamePlaces = nrOfGamePlaces;
+            }
+        }
+        return maxNrOfGamePlaces;
+    }
+
+    protected getNrOfGamePlaces(nrOfGamePlaces: number, teamup: boolean, selfReferee: boolean): number {
+        if (teamup) {
+            nrOfGamePlaces *= 2;
+        }
+        if (selfReferee) {
+            nrOfGamePlaces++;
+        }
+        return nrOfGamePlaces;
+    }
 }

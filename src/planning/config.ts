@@ -7,6 +7,10 @@ export class PlanningConfig {
     static readonly TEAMUP_MAX = 6;
     static readonly DEFAULTNROFHEADTOHEAD = 1;
 
+    static readonly SELFREFEREE_DISABLED = 0;
+    static readonly SELFREFEREE_OTHERPOULES = 1;
+    static readonly SELFREFEREE_SAMEPOULE = 2;
+
     protected id: number;
     protected extension: boolean;
     protected enableTime: boolean;
@@ -15,7 +19,7 @@ export class PlanningConfig {
     protected minutesBetweenGames: number;
     protected minutesAfter: number;
     protected teamup: boolean;
-    protected selfReferee: boolean;
+    protected selfReferee: number;
     protected nrOfHeadtohead: number;
 
     constructor(protected roundNumber: RoundNumber) {
@@ -86,12 +90,16 @@ export class PlanningConfig {
         this.teamup = teamup;
     }
 
-    getSelfReferee(): boolean {
+    getSelfReferee(): number {
         return this.selfReferee;
     }
 
-    setSelfReferee(selfReferee: boolean) {
+    setSelfReferee(selfReferee: number) {
         this.selfReferee = selfReferee;
+    }
+
+    selfRefereeEnabled(): boolean {
+        return this.selfReferee !== PlanningConfig.SELFREFEREE_DISABLED;
     }
 
     getNrOfHeadtohead(): number {

@@ -7,6 +7,6 @@ export interface JsonPlanningConfig {
     minutesBetweenGames: number;
     minutesAfter: number;
     teamup: boolean;
-    selfReferee: boolean;
+    selfReferee: number;
     nrOfHeadtohead: number;
 }

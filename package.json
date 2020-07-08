@@ -12,7 +12,7 @@
     "@angular/common": "^9.1.4"
   },
   "devDependencies": {
-    "@angular-devkit/schematics": "^9.1.9",
+    "@angular-devkit/schematics": "^9.1.10",
     "@angular/common": "^9.1.11",
     "@angular/compiler": "^9.1.11",
     "@angular/compiler-cli": "^9.1.11",
