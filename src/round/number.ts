@@ -101,7 +101,8 @@ export class RoundNumber {
         if (order === Game.ORDER_BY_BATCH) {
             games.sort((g1: Game, g2: Game) => {
                 if (g1.getBatchNr() === g2.getBatchNr() && g1.getField()) {
-                    return g1.getField().getPriority() - g2.getField().getPriority();
+                    const retVal = g1.getField().getPriority() - g2.getField().getPriority();
+                    return this.isFirst() ? retVal : -retVal;
                 }
                 return g1.getBatchNr() - g2.getBatchNr();
             });
