@@ -19,8 +19,8 @@ export class NameService {
     }
 
     /**
-    *  als allemaal dezelfde naam dan geef die naam
-    * als verschillde namen geef dan xde ronde met tooltip van de namen
+    *   als allemaal dezelfde naam dan geef die naam
+    *   als verschillende namen geef dan xde ronde met tooltip van de namen
     */
     getRoundNumberName(roundNumber: RoundNumber): string {
         if (this.roundsHaveSameName(roundNumber) && roundNumber.getRounds().length > 0) {
