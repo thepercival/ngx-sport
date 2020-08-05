@@ -12,7 +12,6 @@ import {
 import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
 import { setScoreSingle } from '../../helpers/setscores';
-import { getDefaultStructureOptions } from '../../helpers/getdefaultstructureoptions';
 import { createGames } from '../../helpers/gamescreator';
 
 describe('QualifyService', () => {
@@ -20,7 +19,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, five places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 5);
         const rootRound: Round = structure.getRootRound();
 
@@ -66,7 +65,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, five places, filter poule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 6);
         const rootRound: Round = structure.getRootRound();
 
@@ -112,7 +111,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, nine places, multiple rules', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 9);
         const rootRound: Round = structure.getRootRound();
 
@@ -185,7 +184,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 9);
         const rootRound: Round = structure.getRootRound();
 

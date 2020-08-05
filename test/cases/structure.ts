@@ -4,14 +4,13 @@ import { describe, it } from 'mocha';
 import { QualifyGroup, StructureService } from '../../public_api';
 import { getCompetitionMapper } from '../helpers/mappers';
 import { jsonBaseCompetition } from '../data/competition';
-import { getDefaultStructureOptions } from '../helpers/getdefaultstructureoptions';
 
 describe('Structure', () => {
 
     it('basics', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 16, 4);
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
@@ -36,7 +35,7 @@ describe('Structure', () => {
     it('setStructureNumbers', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 16, 4);
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
@@ -61,7 +60,7 @@ describe('Structure', () => {
     it('planning', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 16, 4);
         expect(structure.hasPlanning()).to.equal(false);
         const rootRound = structure.getRootRound();

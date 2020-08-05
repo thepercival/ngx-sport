@@ -11,7 +11,6 @@ import { getCompetitionMapper, getGameMapper, getPlanningMapper } from '../helpe
 import { jsonBaseCompetition } from '../data/competition';
 
 // import { setScoreSingle } from '../helpers/setscores';
-import { getDefaultStructureOptions } from '../helpers/getdefaultstructureoptions';
 import { jsonGames2Places } from '../data/games/2places';
 import { createGames } from '../helpers/gamescreator';
 // import { createGames } from '../helpers/creategames';
@@ -35,7 +34,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 8, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const rootRound = structure.getRootRound();
@@ -63,7 +62,7 @@ describe('NameService', () => {
 
         // root needs no ranking, unequal depth
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 4, 2);
             const rootRound = structure.getRootRound();
 
@@ -78,7 +77,7 @@ describe('NameService', () => {
 
         // root needs ranking
         {
-            const structureService2 = new StructureService(getDefaultStructureOptions());
+            const structureService2 = new StructureService([]);
             const structure2 = structureService2.create(competition, 16, 4);
             const rootRound2 = structure2.getRootRound();
 
@@ -103,7 +102,7 @@ describe('NameService', () => {
 
         // root needs ranking, depth 2
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 16, 8);
             const rootRound = structure.getRootRound();
 
@@ -161,7 +160,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 89, 30);
             const rootRound = structure.getRootRound();
 
@@ -184,7 +183,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 3);
             const rootRound = structure.getRootRound();
 
@@ -214,7 +213,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 9, 3);
             const rootRound = structure.getRootRound();
 
@@ -275,7 +274,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 3, 1);
             const rootRound = structure.getRootRound();
 
@@ -298,7 +297,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 12, 3);
             const rootRound = structure.getRootRound();
 
@@ -351,7 +350,7 @@ describe('NameService', () => {
 
         // basics
         {
-            const structureService = new StructureService(getDefaultStructureOptions());
+            const structureService = new StructureService([]);
             const structure = structureService.create(competition, 3, 1);
             const rootRound = structure.getRootRound();
 

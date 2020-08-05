@@ -9,7 +9,6 @@ import { Round } from '../../../src/round';
 import { setScoreSingle } from '../../helpers/setscores';
 import { StructureService } from '../../../src/structure/service';
 import { RankingService } from '../../../src/ranking/service';
-import { getDefaultStructureOptions } from '../../helpers/getdefaultstructureoptions';
 import { QualifyGroup } from '../../../src/qualify/group';
 import { jsonGames4Places } from '../../data/games/4places';
 import { createGames } from '../../helpers/gamescreator';
@@ -19,7 +18,7 @@ describe('Ranking/Service', () => {
     it('rule descriptions', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -38,7 +37,7 @@ describe('Ranking/Service', () => {
     it('multiple equal ranked', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -67,7 +66,7 @@ describe('Ranking/Service', () => {
     it('single ranked, state played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -90,7 +89,7 @@ describe('Ranking/Service', () => {
     it('single ranked, state progress && played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -115,7 +114,7 @@ describe('Ranking/Service', () => {
     it('horizontal ranked EC/WC', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 6);
         const rootRound: Round = structure.getRootRound();
 
@@ -149,7 +148,7 @@ describe('Ranking/Service', () => {
     it('horizontal ranked no single rule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 6, 2);
         const rootRound: Round = structure.getRootRound();
 
@@ -178,7 +177,7 @@ describe('Ranking/Service', () => {
     it('get competitor', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -200,7 +199,7 @@ describe('Ranking/Service', () => {
     it('single ranked, EC/WC', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
@@ -231,7 +230,7 @@ describe('Ranking/Service', () => {
     it('variation 1, mostPoints', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -252,7 +251,7 @@ describe('Ranking/Service', () => {
     it('variation 2, fewestGames', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
@@ -276,7 +275,7 @@ describe('Ranking/Service', () => {
     it('variation 3, fewestGames', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
@@ -301,7 +300,7 @@ describe('Ranking/Service', () => {
     it('variation 4, mostScoreed', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -321,7 +320,7 @@ describe('Ranking/Service', () => {
     it('variation 5, against eachother , no games', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 
@@ -343,7 +342,7 @@ describe('Ranking/Service', () => {
     it('variation 5, against eachother , equal', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 4);
         const rootRound: Round = structure.getRootRound();
 

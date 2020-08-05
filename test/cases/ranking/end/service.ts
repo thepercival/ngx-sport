@@ -4,7 +4,6 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper } from '../../../helpers/mappers';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { setScoreSingle } from '../../../helpers/setscores';
-import { getDefaultStructureOptions } from '../../../helpers/getdefaultstructureoptions';
 import { StructureService } from '../../../../src/structure/service';
 import { Round } from '../../../../src/round';
 import { Competitor } from '../../../../src/competitor';
@@ -19,7 +18,7 @@ describe('EndRankingService', () => {
     it('one poule of three places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -45,7 +44,7 @@ describe('EndRankingService', () => {
     it('one poule of three places, with no competitor', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -69,7 +68,7 @@ describe('EndRankingService', () => {
     it('one poule of three places, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
@@ -95,7 +94,7 @@ describe('EndRankingService', () => {
     it('2 roundnumbers, five places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 5);
         const rootRound: Round = structure.getRootRound();
 

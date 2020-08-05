@@ -6,7 +6,6 @@ import { jsonBaseCompetition } from '../../data/competition';
 import { Round } from '../../../src/round';
 import { QualifyGroup } from '../../../src/qualify/group';
 import { StructureService } from '../../../src/structure/service';
-import { getDefaultStructureOptions } from '../../helpers/getdefaultstructureoptions';
 import { setScoreSingle } from '../../helpers/setscores';
 import { QualifyService } from '../../../src/qualify/service';
 import { RankingService } from '../../../src/ranking/service';
@@ -19,7 +18,7 @@ describe('QualifyReservationService', () => {
     it('free and reserve', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 5);
         const rootRound: Round = structure.getRootRound();
 
@@ -61,7 +60,7 @@ describe('QualifyReservationService', () => {
     it('getFreeAndLeastAvailabe', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 12, 4);
         const rootRound: Round = structure.getRootRound();
 
@@ -147,7 +146,7 @@ describe('QualifyReservationService', () => {
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService(getDefaultStructureOptions());
+        const structureService = new StructureService([]);
         const structure = structureService.create(competition, 9);
         const rootRound: Round = structure.getRootRound();
 
