@@ -24,7 +24,7 @@ export class StructureService {
     private sportConfigService: SportConfigService;
 
     constructor(
-        private structureOptions: StructureOptions/*,
+        private placeRanges: PlaceRange[]/*,
         private sportConfigService: SportConfigService,*/
         /*private planningConfigService: PlanningConfigService*/) {
         this.planningConfigService = new PlanningConfigService();
@@ -441,28 +441,25 @@ export class StructureService {
     }
 
     protected checkRanges(nrOfPlaces: number, nrOfPoules?: number) {
-        if (nrOfPlaces < this.structureOptions.placeRange.min) {
-            throw new Error('er moeten minimaal ' + this.structureOptions.placeRange.min + ' deelnemers zijn');
+        if (this.placeRanges.length === 0) {
+            return;
         }
-        if (nrOfPlaces > this.structureOptions.placeRange.max) {
-            throw new Error('er mogen maximaal ' + this.structureOptions.placeRange.max + ' deelnemers zijn');
+        const placeRange = this.placeRanges.find(placeRangeIt => {
+            return nrOfPlaces >= placeRangeIt.min && nrOfPlaces <= placeRangeIt.max;
+        });
+        if (placeRange === undefined) {
+            throw new Error('het aantal deelnemers is kleiner dan het minimum of groter dan het maximum');
         }
         if (nrOfPoules === undefined) {
             return;
         }
-        if (nrOfPoules < this.structureOptions.pouleRange.min) {
-            throw new Error('er moeten minimaal ' + this.structureOptions.pouleRange.min + ' poules zijn');
-        }
-        if (nrOfPoules > this.structureOptions.pouleRange.max) {
-            throw new Error('er mogen maximaal ' + this.structureOptions.pouleRange.max + ' poules zijn');
-        }
         const flooredNrOfPlacesPerPoule = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
-        if (flooredNrOfPlacesPerPoule < this.structureOptions.placesPerPouleRange.min) {
-            throw new Error('er moeten minimaal ' + this.structureOptions.placesPerPouleRange.min + ' deelnemers per poule zijn');
+        if (flooredNrOfPlacesPerPoule < placeRange.placesPerPoule.min) {
+            throw new Error('vanaf ' + placeRange.min + ' deelnemers moeten er minimaal ' + placeRange.placesPerPoule.min + ' deelnemers per poule zijn');
         }
         const ceiledNrOfPlacesPerPoule = this.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
-        if (ceiledNrOfPlacesPerPoule > this.structureOptions.placesPerPouleRange.max) {
-            throw new Error('er mogen maximaal ' + this.structureOptions.placesPerPouleRange.max + ' deelnemers per poule zijn');
+        if (ceiledNrOfPlacesPerPoule > placeRange.placesPerPoule.max) {
+            throw new Error('vanaf ' + placeRange.min + ' deelnemers mogen er maximaal ' + placeRange.placesPerPoule.max + ' deelnemers per poule zijn');
         }
     }
 
@@ -527,8 +524,6 @@ export class StructureService {
     }
 }
 
-export interface StructureOptions {
-    pouleRange: VoetbalRange;
-    placeRange: VoetbalRange;
-    placesPerPouleRange: VoetbalRange;
+export interface PlaceRange extends VoetbalRange {
+    placesPerPoule: VoetbalRange;
 }
