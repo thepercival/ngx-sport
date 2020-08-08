@@ -227,4 +227,49 @@ describe('QualifyService', () => {
 
         expect(winnersPoule.getPlace(4).getCompetitor()).to.equal(undefined);
     });
+
+    /**
+    * When second place is multiple and both second places are ranked completely equal
+    */
+    it('same winnerslosers for second place multiple rule', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureService = new StructureService([]);
+        const structure = structureService.create(competition, 6, 2);
+        const rootRound: Round = structure.getRootRound();
+
+        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
+        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 3);
+
+        const pouleOne = rootRound.getPoule(1);
+        for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
+            const competitor = new Competitor(competition.getLeague().getAssociation(), pouleOne.getNumber() + '.' + nr);
+            pouleOne.getPlace(nr).setCompetitor(competitor);
+        }
+        const pouleTwo = rootRound.getPoule(2);
+        for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
+            const competitor = new Competitor(competition.getLeague().getAssociation(), pouleTwo.getNumber() + '.' + nr);
+            pouleTwo.getPlace(nr).setCompetitor(competitor);
+        }
+
+        createGames(structure.getFirstRoundNumber());
+        setScoreSingle(pouleOne, 1, 2, 1, 0);
+        setScoreSingle(pouleOne, 3, 1, 0, 1);
+        setScoreSingle(pouleOne, 2, 3, 1, 0);
+        setScoreSingle(pouleTwo, 1, 2, 1, 0);
+        setScoreSingle(pouleTwo, 3, 1, 0, 1);
+        setScoreSingle(pouleTwo, 2, 3, 1, 0);
+
+        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        qualifyService.setQualifiers();
+
+        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1);
+
+        expect(winnersPoule.getPlace(3).getCompetitor()).to.not.equal(undefined);
+        expect(winnersPoule.getPlace(3).getCompetitor().getName()).to.equal('1.2');
+
+        const losersPoule = rootRound.getChild(QualifyGroup.LOSERS, 1).getPoule(1);
+        expect(losersPoule.getPlace(1).getCompetitor()).to.not.equal(undefined);
+        expect(losersPoule.getPlace(1).getCompetitor().getName()).to.equal('2.2');
+    });
 });

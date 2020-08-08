@@ -39,8 +39,8 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const rootRound = structure.getRootRound();
 
-        for (let i = 1; i < 4; i++) { structureService.addQualifier(rootRound, QualifyGroup.WINNERS); }
-        for (let i = 1; i < 4; i++) { structureService.addQualifier(rootRound, QualifyGroup.LOSERS); }
+        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
+        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 4);
 
         const secondRoundNumberName = nameService.getRoundNumberName(firstRoundNumber.getNext());
         // all equal

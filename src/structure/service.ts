@@ -155,11 +155,14 @@ export class StructureService {
     }
 
     addQualifier(round: Round, winnersOrLosers: number) {
-        if (round.getNrOfPlacesChildren() >= round.getNrOfPlaces()) {
+        const nrOfPlaces = round.getNrOfPlacesChildren(winnersOrLosers);
+        const placesToAdd = nrOfPlaces === 0 ? 2 : 1;
+
+        if ((round.getNrOfPlacesChildren() + placesToAdd) > round.getNrOfPlaces()) {
             throw new Error('er mogen maximaal ' + round.getNrOfPlacesChildren() + ' deelnemers naar de volgende ronde');
         }
-        const nrOfPlaces = round.getNrOfPlacesChildren(winnersOrLosers);
-        const newNrOfPlaces = nrOfPlaces + (nrOfPlaces === 0 ? 2 : 1);
+
+        const newNrOfPlaces = nrOfPlaces + placesToAdd;
         this.updateQualifyGroups(round, winnersOrLosers, newNrOfPlaces);
 
         const qualifyRuleService = new QualifyRuleService(round);
