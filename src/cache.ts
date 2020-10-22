@@ -1,7 +1,7 @@
 export class TheCache {
     static sports = {};
     static associations = {};
-    static competitors = {};
+    static teams = {};
     static seasons = {};
     static leagues = {};
     // static externals = {};

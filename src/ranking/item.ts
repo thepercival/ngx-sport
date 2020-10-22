@@ -108,7 +108,7 @@ export class UnrankedRoundItem {
 }
 
 export class EndRankingItem {
-    constructor(private uniqueRank: number, private rank: number, private name: string) {
+    constructor(private uniqueRank: number, private rank: number, private placeLocation: PlaceLocation) {
     }
 
     getUniqueRank(): number {
@@ -119,7 +119,7 @@ export class EndRankingItem {
         return this.rank;
     }
 
-    getName(): string {
-        return this.name;
+    getPlaceLocation(): PlaceLocation {
+        return this.placeLocation;
     }
 }

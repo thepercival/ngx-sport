@@ -25,7 +25,7 @@ export class RankingItemsGetter {
 
     getUnrankedItems(places: Place[], games: Game[]): UnrankedRoundItem[] {
         const items = places.map(place => {
-            return new UnrankedRoundItem(this.round, place.getLocation(), place.getPenaltyPoints());
+            return new UnrankedRoundItem(this.round, place, place.getPenaltyPoints());
         });
         games.forEach(game => {
             if ((game.getState() & this.gameStates) === 0) {
@@ -48,8 +48,8 @@ export class RankingItemsGetter {
                     subReceived = this.getNrOfUnits(finalSubScore, homeAway, GameScore.RECEIVED);
                 }
                 game.getPlaces(homeAway).forEach(gamePlace => {
-                    const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getLocation().getPlaceNr()
-                        && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getLocation().getPouleNr());
+                    const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getPlaceNr()
+                        && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getPouleNr());
                     if (item === undefined) {
                         return;
                     }

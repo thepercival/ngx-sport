@@ -8,9 +8,10 @@ import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { Round } from './round';
 import { RoundNumber } from './round/number';
+import { PlaceLocationMap } from './place/location/map';
 
 export class NameService {
-    constructor() {
+    constructor(private placeLocationMap: PlaceLocationMap) {
     }
 
     getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
@@ -64,15 +65,23 @@ export class NameService {
         const secondLetter = pouleStructureNumber % 26;
         if (pouleStructureNumber >= 26) {
             const firstLetter = (pouleStructureNumber - secondLetter) / 26;
-            pouleName += (String.fromCharCode('A'.charCodeAt(0) + (firstLetter - 1)));
+            pouleName += this.getPouleLetter(firstLetter);
         }
-        pouleName += (String.fromCharCode('A'.charCodeAt(0) + secondLetter));
+        pouleName += this.getPouleLetter(secondLetter + 1);
         return pouleName;
     }
 
-    getPlaceName(place: Place, competitorName = false, longName = false): string {
-        if (competitorName === true && place.getCompetitor() !== undefined) {
-            return place.getCompetitor().getName();
+    getPouleLetter(structureNumber: number): string {
+        return (String.fromCharCode('A'.charCodeAt(0) + structureNumber - 1));
+    }
+
+    getPlaceName(place: Place, p_competitorName = false, longName = false): string {
+        let competitorName = p_competitorName && this.placeLocationMap;
+        if (competitorName) {
+            const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
+            if (particpant !== undefined) {
+                return particpant.getName();
+            }
         }
         if (longName === true) {
             return this.getPouleName(place.getPoule(), true) + ' nr. ' + place.getNumber();
@@ -81,9 +90,13 @@ export class NameService {
         return name + place.getNumber();
     }
 
-    getPlaceFromName(place: Place, competitorName, longName = false): string {
-        if (competitorName === true && place.getCompetitor() !== undefined) {
-            return place.getCompetitor().getName();
+    getPlaceFromName(place: Place, p_competitorName, longName = false): string {
+        let competitorName = p_competitorName && this.placeLocationMap;
+        if (competitorName) {
+            const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
+            if (particpant !== undefined) {
+                return particpant.getName();
+            }
         }
 
         const parentQualifyGroup = place.getRound().getParentQualifyGroup();

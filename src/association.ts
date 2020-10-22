@@ -1,4 +1,5 @@
 import { Competitor } from './competitor';
+import { Team } from './team';
 
 export class Association {
     static readonly MIN_LENGTH_NAME = 2;
@@ -10,7 +11,7 @@ export class Association {
     protected description: string;
     protected parent: Association;
     protected children: Association[];
-    protected competitors: Competitor[] = [];
+    protected teams: Team[] = [];
 
     constructor(name: string, parent?: Association) {
         this.children = [];
@@ -76,7 +77,7 @@ export class Association {
         return this.children;
     }
 
-    getCompetitors(): Competitor[] {
-        return this.competitors;
+    getTeams(): Team[] {
+        return this.teams;
     }
 }

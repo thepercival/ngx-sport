@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { StructureService } from '../../../public_api';
-import { QualifyGroup, HorizontalPoule } from '../../../public_api';
-import { getMapper } from '../../helpers/mappers';
-import { jsonCompetition } from '../../data/competition';
+import { StructureService } from '../../../../public_api';
+import { QualifyGroup, HorizontalPoule } from '../../../../public_api';
+import { getMapper } from '../../../helpers/mappers';
+import { jsonCompetition } from '../../../data/competition';
 import { check332astructure } from './332a';
 
 describe('Structure/Service', () => {

@@ -1,6 +1,6 @@
 export class PlaceLocation {
     public constructor(
-        private pouleNr: number, private placeNr: number
+        protected pouleNr: number, protected placeNr: number
     ) { }
 
     getPouleNr(): number {

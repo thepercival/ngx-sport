@@ -9,6 +9,7 @@ import { Sport } from '../sport';
 import { SportConfig } from '../sport/config';
 import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
+import { PouleStructure } from '../poule/structure';
 
 export class RoundNumber {
     protected competition: Competition;
@@ -93,6 +94,13 @@ export class RoundNumber {
         return poules;
     }
 
+    createPouleStructure(): PouleStructure {
+        const pouleStructure = new PouleStructure();
+        this.getPoules().forEach(poule => pouleStructure.push(poule.getPlaces().length));
+        pouleStructure.sort((a: number, b: number) => { return b - a; });
+        return pouleStructure;
+    }
+
     getGames(order?: number): Game[] {
         let games = [];
         this.getPoules().forEach(poule => {
@@ -132,20 +140,6 @@ export class RoundNumber {
             nrOfPlaces += poule.getPlaces().length;
         });
         return nrOfPlaces;
-    }
-
-    getCompetitors(): Competitor[] {
-        let competitors = [];
-        this.getRounds().forEach(round => {
-            competitors = competitors.concat(round.getCompetitors());
-        });
-        return competitors;
-    }
-
-    getNrOfCompetitors(): number {
-        let nrOfCompetitors = 0;
-        this.getRounds().forEach(round => { nrOfCompetitors += round.getNrOfCompetitors(); });
-        return nrOfCompetitors;
     }
 
     needsRanking(): boolean {

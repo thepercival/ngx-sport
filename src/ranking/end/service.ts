@@ -6,6 +6,7 @@ import { Structure } from '../../structure';
 import { EndRankingItem } from '../item';
 import { RankingService } from '../service';
 import { State } from '../../state';
+import { Place } from '../../place';
 
 /* eslint:disable:no-bitwise */
 
@@ -40,7 +41,7 @@ export class EndRankingService {
         const items: EndRankingItem[] = [];
         const nrOfDropouts: number = round.getNrOfPlaces() - round.getNrOfPlacesChildren();
         for (let i = 0; i < nrOfDropouts; i++) {
-            items.push(new EndRankingItem(this.currentRank, this.currentRank++, 'nog onbekend'));
+            items.push(new EndRankingItem(this.currentRank, this.currentRank++, undefined));
         }
         return items;
     }
@@ -70,12 +71,10 @@ export class EndRankingService {
     }
 
     protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingService: RankingService): EndRankingItem[] {
-        const rankedPlaceLocations: PlaceLocation[] = rankingService.getPlaceLocationsForHorizontalPoule(horizontalPoule);
-        rankedPlaceLocations.splice(0, horizontalPoule.getNrOfQualifiers());
-        return rankedPlaceLocations.map(rankedPlaceLocation => {
-            const competitor = rankingService.getCompetitor(rankedPlaceLocation);
-            const name = competitor ? competitor.getName() : 'onbekend';
-            return new EndRankingItem(this.currentRank, this.currentRank++, name);
+        const rankedPlaces: Place[] = rankingService.getPlacesForHorizontalPoule(horizontalPoule);
+        rankedPlaces.splice(0, horizontalPoule.getNrOfQualifiers());
+        return rankedPlaces.map(place => {
+            return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
         });
     }
 }

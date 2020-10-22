@@ -1,4 +1,3 @@
-import { Competitor } from './competitor';
 import { Game } from './game';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
@@ -7,25 +6,21 @@ import { QualifyGroup } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
 import { Round } from './round';
 
-export class Place {
+export class Place extends PlaceLocation {
     protected id: number;
     protected poule: Poule;
-    protected number: number;
     protected structureNumber: number;
     protected locationId: string;
     protected penaltyPoints = 0;
     protected name: string;
-    protected competitor: Competitor;
     protected fromQualifyRule: QualifyRule;
     protected toQualifyRules: QualifyRule[] = [];
     protected horizontalPouleWinners: HorizontalPoule;
     protected horizontalPouleLosers: HorizontalPoule;
+    protected qualifiedPlace: Place;
 
     constructor(poule: Poule, number?: number) {
-        if (number === undefined) {
-            number = poule.getPlaces().length + 1;
-        }
-        this.setNumber(number);
+        super(poule.getNumber(), number === undefined ? poule.getPlaces().length + 1 : number);
         poule.addPlace(this);
     }
 
@@ -50,11 +45,7 @@ export class Place {
     }
 
     getNumber(): number {
-        return this.number;
-    }
-
-    setNumber(number: number): void {
-        this.number = number;
+        return this.placeNr;
     }
 
     getName(): string {
@@ -63,14 +54,6 @@ export class Place {
 
     setName(name: string): void {
         this.name = name;
-    }
-
-    getCompetitor(): Competitor {
-        return this.competitor;
-    }
-
-    setCompetitor(competitor: Competitor): void {
-        this.competitor = competitor;
     }
 
     getPenaltyPoints(): number {
@@ -100,18 +83,11 @@ export class Place {
     }
 
     /**
-     * within round
-     */
-    getLocation(): PlaceLocation {
-        return new PlaceLocation(this.getPoule().getNumber(), this.getNumber());
-    }
-
-    /**
      * within roundnumber
      */
     getLocationId(): string {
         if (this.locationId === undefined) {
-            this.locationId = this.poule.getStructureNumber() + '.' + this.number;
+            this.locationId = this.poule.getStructureNumber() + '.' + this.placeNr;
         }
         return this.locationId;
     }
@@ -149,5 +125,20 @@ export class Place {
         return this.getPoule().getGames().filter(gameIt => {
             return gameIt.getPlaces().find(gamePlace => gamePlace.getPlace() === this) !== undefined;
         });
+    }
+
+    getQualifiedPlace(): Place {
+        return this.qualifiedPlace;
+    }
+
+    setQualifiedPlace(place?: Place): void {
+        this.qualifiedPlace = place;
+    }
+
+    getStartLocation(): PlaceLocation {
+        if (this.qualifiedPlace === undefined) {
+            return this;
+        }
+        return this.qualifiedPlace.getStartLocation();
     }
 }

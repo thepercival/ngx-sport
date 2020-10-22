@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { CompetitorMapper } from '../competitor/mapper';
 import { Poule } from '../poule';
 import { Place } from '../place';
 import { JsonPlace } from './json';
@@ -9,7 +8,7 @@ import { JsonPlace } from './json';
     providedIn: 'root'
 })
 export class PlaceMapper {
-    constructor(private competitorMapper: CompetitorMapper) {
+    constructor() {
     }
 
     toObject(json: JsonPlace, poule: Poule, place?: Place): Place {
@@ -18,11 +17,6 @@ export class PlaceMapper {
         }
         place.setId(json.id);
         // poule.setName(json.name);
-        let competitor;
-        if (json.competitor) {
-            competitor = this.competitorMapper.toObject(json.competitor, poule.getCompetition().getLeague().getAssociation());
-        }
-        place.setCompetitor(competitor);
         place.setPenaltyPoints(json.penaltyPoints);
         return place;
     }
@@ -32,7 +26,6 @@ export class PlaceMapper {
             id: place.getId(),
             number: place.getNumber(),
             name: place.getName(),
-            competitor: place.getCompetitor() ? this.competitorMapper.toJson(place.getCompetitor()) : undefined,
             penaltyPoints: place.getPenaltyPoints()
         };
     }

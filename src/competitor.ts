@@ -1,23 +1,13 @@
-import { Association } from './association';
+import { Competition } from './competition';
+import { PlaceLocation } from './place/location';
 
-export class Competitor {
-    static readonly MIN_LENGTH_NAME = 2;
-    static readonly MAX_LENGTH_NAME = 30;
-    static readonly MAX_LENGTH_ABBREVIATION = 7;
-    static readonly MAX_LENGTH_INFO = 200;
-    static readonly MAX_LENGTH_IMAGEURL = 150;
-
+export class CompetitorBase extends PlaceLocation {
     protected id: string | number;
-    protected name: string;
-    protected abbreviation: string;
     protected registered: boolean;
     protected info: string;
-    protected imageUrl: string;
-    protected association: Association;
 
-    constructor(association: Association, name: string) {
-        this.setName(name);
-        this.setAssociation(association);
+    constructor(protected competition: Competition, pouleNr: number, placeNr: number) {
+        super(pouleNr, placeNr);
     }
 
     getId(): string | number {
@@ -26,22 +16,6 @@ export class Competitor {
 
     setId(id: string | number): void {
         this.id = id;
-    }
-
-    getName(): string {
-        return this.name;
-    }
-
-    setName(name: string): void {
-        this.name = name;
-    }
-
-    getAbbreviation(): string {
-        return this.abbreviation;
-    }
-
-    setAbbreviation(abbreviation: string): void {
-        this.abbreviation = abbreviation;
     }
 
     getRegistered(): boolean {
@@ -60,20 +34,24 @@ export class Competitor {
         this.info = info;
     }
 
-    getImageUrl(): string {
-        return this.imageUrl;
+    getCompetition(): Competition {
+        return this.competition;
     }
 
-    setImageUrl(imageUrl: string): void {
-        this.imageUrl = imageUrl;
+    setPouleNr(pouleNr: number) {
+        this.pouleNr = pouleNr;
     }
 
-    getAssociation(): Association {
-        return this.association;
+    setPlaceNr(placeNr: number) {
+        this.placeNr = placeNr;
     }
+}
 
-    protected setAssociation(association: Association): void {
-        this.association = association;
-        this.association.getCompetitors().push(this);
-    }
+
+export interface Competitor extends PlaceLocation {
+    getId(): string | number;
+    getName(): string;
+    getRegistered(): boolean;
+    getInfo(): string;
+    getCompetition(): Competition;
 }

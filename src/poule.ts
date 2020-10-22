@@ -81,17 +81,6 @@ export class Poule {
         return this.getPlaces().find(place => place.getNumber() === number);
     }
 
-    getCompetitors(): Competitor[] {
-        const competitors: Competitor[] = [];
-        this.getPlaces().forEach(place => {
-            const competitor = place.getCompetitor();
-            if (competitor !== undefined) {
-                competitors.push(competitor);
-            }
-        });
-        return competitors;
-    }
-
     getGames(): Game[] {
         return this.games;
     }

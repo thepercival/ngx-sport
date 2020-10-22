@@ -1,6 +1,7 @@
 import { PlanningConfig } from '../config';
 import { RoundNumber } from '../../round/number';
 import { Injectable } from '@angular/core';
+import { PouleStructure } from '../../poule/structure';
 
 @Injectable({
     providedIn: 'root'
@@ -40,16 +41,16 @@ export class PlanningConfigService {
         return 5;
     }
 
-    public selfRefereeAvailable(nrOfPoules: number, nrOfPlaces: number, nrOfGamePlaces: number): boolean {
-        return this.selfRefereeSamePouleAvailable(nrOfPoules, nrOfPlaces, nrOfGamePlaces)
-            || this.selfRefereeOtherPoulesAvailable(nrOfPoules);
+    public selfRefereeAvailable(pouleStructure: PouleStructure, nrOfGamePlaces: number): boolean {
+        return this.selfRefereeSamePouleAvailable(pouleStructure, nrOfGamePlaces)
+            || this.selfRefereeOtherPoulesAvailable(pouleStructure);
     }
 
-    public selfRefereeOtherPoulesAvailable(nrOfPoules: number): boolean {
-        return nrOfPoules > 1;
+    public selfRefereeOtherPoulesAvailable(pouleStructure: PouleStructure): boolean {
+        return pouleStructure.getNrOfPoules() > 1;
     }
 
-    public selfRefereeSamePouleAvailable(nrOfPoules: number, nrOfPlaces: number, nrOfGamePlaces: number): boolean {
-        return Math.floor(nrOfPlaces / nrOfPoules) >= (nrOfGamePlaces + 1);
+    public selfRefereeSamePouleAvailable(pouleStructure: PouleStructure, nrOfGamePlaces: number): boolean {
+        return pouleStructure.getSmallestPoule() > nrOfGamePlaces;
     }
 }

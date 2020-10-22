@@ -61,6 +61,12 @@ export class RankingService {
         });
     }
 
+    getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {
+        return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
+            return rankingItem.getPlace();
+        });
+    }
+
     getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): RankedRoundItem[] {
         const unrankedRoundItems: UnrankedRoundItem[] = [];
         horizontalPoule.getPlaces().forEach(place => {
@@ -90,10 +96,6 @@ export class RankingService {
 
     getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
         return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
-    }
-
-    getCompetitor(placeLocation: PlaceLocation): Competitor {
-        return this.round.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr()).getCompetitor();
     }
 
     private rankItems(unrankedItems: UnrankedRoundItem[], againstEachOther: boolean): RankedRoundItem[] {

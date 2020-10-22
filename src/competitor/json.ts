@@ -1,8 +1,8 @@
-export interface JsonCompetitor {
+import { JsonPlaceLocation } from "../place/location/json";
+
+export interface JsonCompetitor extends JsonPlaceLocation {
+    name: string;
     id?: string | number;
-    name?: string;
-    abbreviation?: string;
     registered?: boolean;
     info?: string;
-    imageUrl?: string;
 }

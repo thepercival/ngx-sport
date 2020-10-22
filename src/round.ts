@@ -175,20 +175,6 @@ export class Round {
         return this.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
     }
 
-    getCompetitors(): Competitor[] {
-        let competitors: Competitor[] = [];
-        for (const poule of this.getPoules()) {
-            competitors = competitors.concat(poule.getCompetitors());
-        }
-        return competitors;
-    }
-
-    getNrOfCompetitors(): number {
-        let nrOfCompetitors = 0;
-        this.getPoules().forEach(poule => nrOfCompetitors += poule.getCompetitors().length);
-        return nrOfCompetitors;
-    }
-
     getGames(): Game[] {
         const games = [];
         this.getPoules().forEach(poule => {

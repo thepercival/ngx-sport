@@ -53,8 +53,8 @@ export class QualifyService {
         const fromPlace = ruleSingle.getFromPlace();
         const poule = fromPlace.getPoule();
         const rank = fromPlace.getNumber();
-        const competitor = this.getQualifiedCompetitor(poule, rank);
-        ruleSingle.getToPlace().setCompetitor(competitor);
+        const qualifiedPlace = this.getQualifiedPlace(poule, rank);
+        ruleSingle.getToPlace().setQualifiedPlace(qualifiedPlace);
         this.reservationService.reserve(ruleSingle.getToPlace().getPoule().getNumber(), poule);
         return ruleSingle.getToPlace();
     }
@@ -64,7 +64,7 @@ export class QualifyService {
         const toPlaces = ruleMultiple.getToPlaces();
         if (!this.isRoundFinished()) {
             toPlaces.forEach((toPlace) => {
-                toPlace.setCompetitor(undefined);
+                toPlace.setQualifiedPlace(undefined);
                 changedPlaces.push(toPlace);
             });
             return changedPlaces;
@@ -79,21 +79,20 @@ export class QualifyService {
         toPlaces.forEach(toPlace => {
             const toPouleNumber = toPlace.getPoule().getNumber();
             const rankedPlaceLocation = this.reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankedPlaceLocations);
-            toPlace.setCompetitor(this.rankingService.getCompetitor(rankedPlaceLocation));
+            toPlace.setQualifiedPlace(round.getPlace(rankedPlaceLocation));
             changedPlaces.push(toPlace);
             rankedPlaceLocations.splice(rankedPlaceLocations.indexOf(rankedPlaceLocation), 1);
         });
         return changedPlaces;
     }
 
-    protected getQualifiedCompetitor(poule: Poule, rank: number): Competitor {
+    protected getQualifiedPlace(poule: Poule, rank: number): Place {
         if (!this.isPouleFinished(poule)) {
             return undefined;
         }
         const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
         const rankingItem = this.rankingService.getItemByRank(pouleRankingItems, rank);
-        const place = poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
-        return place.getCompetitor();
+        return poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr());
     }
 
     protected isRoundFinished(): boolean {

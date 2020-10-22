@@ -1,17 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Competitor } from '../../../src/competitor';
 import { getCompetitionMapper, getGameMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
-import { State } from '../../../src/state';
-import { Round } from '../../../src/round';
+
 import { setScoreSingle } from '../../helpers/setscores';
-import { StructureService } from '../../../src/structure/service';
-import { RankingService } from '../../../src/ranking/service';
-import { QualifyGroup } from '../../../src/qualify/group';
-import { jsonGames4Places } from '../../data/games/4places';
 import { createGames } from '../../helpers/gamescreator';
+import { PlaceLocationMap, QualifyGroup, RankingService, Round, State, StructureService } from '../../../public_api';
+import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
 
 describe('Ranking/Service', () => {
 
@@ -172,28 +168,6 @@ describe('Ranking/Service', () => {
         const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
         expect(placeLocations.length).to.equal(0);
-    });
-
-    it('get competitor', () => {
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-
-        const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3);
-        const rootRound: Round = structure.getRootRound();
-
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-
-        const pouleOne = rootRound.getPoule(1);
-        createGames(structure.getFirstRoundNumber());
-
-        const placeOne = pouleOne.getPlace(1);
-        const competitor = new Competitor(competition.getLeague().getAssociation(), 'test');
-        placeOne.setCompetitor(competitor);
-        const placeTwo = pouleOne.getPlace(2);
-
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
-        expect(rankingService.getCompetitor(placeOne.getLocation())).to.equal(competitor);
-        expect(rankingService.getCompetitor(placeTwo.getLocation())).to.equal(undefined);
     });
 
     it('single ranked, EC/WC', () => {

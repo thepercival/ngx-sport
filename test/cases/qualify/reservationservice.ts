@@ -12,6 +12,8 @@ import { RankingService } from '../../../src/ranking/service';
 import { Competitor } from '../../../src/competitor';
 import { QualifyReservationService } from '../../../src/qualify/reservationservice';
 import { createGames } from '../../helpers/gamescreator';
+import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
+import { PlaceLocationMap } from '../../../src/place/location/map';
 
 describe('QualifyReservationService', () => {
 
@@ -26,10 +28,6 @@ describe('QualifyReservationService', () => {
         structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
         const pouleOne = rootRound.getPoule(1);
-        for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
-            pouleOne.getPlace(nr).setCompetitor(competitor);
-        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -73,27 +71,10 @@ describe('QualifyReservationService', () => {
         structureService.addPoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
 
         const pouleOne = rootRound.getPoule(1);
-        for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
-            pouleOne.getPlace(nr).setCompetitor(competitor);
-        }
         const pouleTwo = rootRound.getPoule(2);
-        for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
-            pouleTwo.getPlace(nr).setCompetitor(competitor);
-        }
         const pouleThree = rootRound.getPoule(3);
-        for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
-            const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr;
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
-            pouleThree.getPlace(nr).setCompetitor(competitor);
-        }
         const pouleFour = rootRound.getPoule(4);
-        for (let nr = 1; nr <= pouleFour.getPlaces().length; nr++) {
-            const name = pouleOne.getPlaces().length + pouleTwo.getPlaces().length + pouleThree.getPlaces().length + nr;
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + name);
-            pouleFour.getPlace(nr).setCompetitor(competitor);
-        }
+
         createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 1, 2);
@@ -130,7 +111,7 @@ describe('QualifyReservationService', () => {
 
 
         const fromPlaceLocations = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0].getPlaces().map(place => {
-            return place.getLocation();
+            return place;
         });
 
         // none available
@@ -145,10 +126,11 @@ describe('QualifyReservationService', () => {
 
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-
         const structureService = new StructureService([]);
         const structure = structureService.create(competition, 9);
-        const rootRound: Round = structure.getRootRound();
+        const firstRoundNumber = structure.getFirstRoundNumber();
+        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const rootRound = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -156,21 +138,9 @@ describe('QualifyReservationService', () => {
         structureService.removePoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
 
         const pouleOne = rootRound.getPoule(1);
-        for (let nr = 1; nr <= pouleOne.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + nr);
-            pouleOne.getPlace(nr).setCompetitor(competitor);
-        }
         const pouleTwo = rootRound.getPoule(2);
-        for (let nr = 1; nr <= pouleTwo.getPlaces().length; nr++) {
-            const competitor = new Competitor(competition.getLeague().getAssociation(), '' + (pouleOne.getPlaces().length + nr));
-            pouleTwo.getPlace(nr).setCompetitor(competitor);
-        }
         const pouleThree = rootRound.getPoule(3);
-        for (let nr = 1; nr <= pouleThree.getPlaces().length; nr++) {
-            const name = '' + (pouleOne.getPlaces().length + pouleTwo.getPlaces().length + nr);
-            const competitor = new Competitor(competition.getLeague().getAssociation(), name);
-            pouleThree.getPlace(nr).setCompetitor(competitor);
-        }
+
 
         createGames(structure.getFirstRoundNumber());
 
@@ -189,6 +159,6 @@ describe('QualifyReservationService', () => {
 
         const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1);
 
-        expect(winnersPoule.getPlace(4).getCompetitor()).to.equal(undefined);
+        expect(placeLocationMap.getCompetitor(winnersPoule.getPlace(4))).to.equal(undefined);
     });
 });

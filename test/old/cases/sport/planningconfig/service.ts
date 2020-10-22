@@ -9,10 +9,10 @@ import {
     SportPlanningConfigService,
     SportScoreConfigService,
     StructureService,
-} from '../../../../public_api';
+} from '../../../../../public_api';
 import { SportIdToNumberMap } from '../../../../src/planning/place';
-import { getMapper } from '../../../helpers/mappers';
-import { jsonCompetition } from '../../../data/competition';
+import { getMapper } from '../../../../helpers/mappers';
+import { jsonCompetition } from '../../../../data/competition';
 
 
 describe('Sport/PlanningConfig/Service', () => {
