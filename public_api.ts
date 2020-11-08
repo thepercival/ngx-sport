@@ -38,6 +38,7 @@ export * from './src/league';
 export * from './src/league/mapper';
 export * from './src/league/json';
 export * from './src/nameservice';
+export * from './src/period';
 export * from './src/planning/period';
 export * from './src/planning/mapper';
 export * from './src/place/location';
@@ -82,7 +83,10 @@ export * from './src/sport/config/json';
 export * from './src/sport/config/service';
 export * from './src/sport/scoreconfig';
 export * from './src/sport/scoreconfig/mapper';
-export * from './src/sport/scoreconfig/service';
+export * from './src/sport/formation';
+export * from './src/sport/formation/mapper';
+export * from './src/sport/formation/line';
+export * from './src/sport/formation/line/mapper';
 export * from './src/sport';
 export * from './src/sport/mapper';
 export * from './src/sport/json';
@@ -96,7 +100,7 @@ export * from './src/state';
 export * from './src/structure/service';
 export * from './src/structure/mapper';
 export * from './src/structure/json';
-
+export * from './src/team';
 export * from './src/ngx-sport.module';
 // export { registerLocaleData as ɵregisterLocaleData } from './src/i18n/locale_data';
 

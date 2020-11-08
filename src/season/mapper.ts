@@ -16,7 +16,7 @@ export class SeasonMapper {
             season = TheCache.seasons[json.id];
         }
         if (season === undefined) {
-            season = new Season(json.name);
+            season = new Season(json.name, new Date(json.startDateTime), new Date(json.endDateTime));
             season.setId(json.id);
             TheCache.seasons[season.getId()] = season;
         }

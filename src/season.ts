@@ -1,13 +1,14 @@
-export class Season {
+import { Period } from "./period";
+
+export class Season extends Period {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 9;
 
     protected id: string | number;
     protected name: string;
-    protected startDateTime: Date;
-    protected endDateTime: Date;
 
-    constructor(name: string) {
+    constructor(name: string, startDateTime: Date, endDateTime: Date) {
+        super(startDateTime, endDateTime);
         this.setName(name);
     }
 
@@ -27,16 +28,8 @@ export class Season {
         this.name = name;
     }
 
-    getStartDateTime(): Date {
-        return this.startDateTime;
-    }
-
     setStartDateTime(startDateTime: Date): void {
         this.startDateTime = startDateTime;
-    }
-
-    getEndDateTime(): Date {
-        return this.endDateTime;
     }
 
     setEndDateTime(endDateTime: Date): void {
