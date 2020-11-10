@@ -40,36 +40,37 @@ export class SportConfigService {
 
     createDefaultJson(sport: Sport, fields: JsonField[]): JsonSportConfig {
         return {
+            id: 0,
             sport: this.sportMapper.toJson(sport),
             winPoints: this.getDefaultWinPoints(sport),
             drawPoints: this.getDefaultDrawPoints(sport),
             winPointsExt: this.getDefaultWinPointsExt(sport),
             drawPointsExt: this.getDefaultDrawPointsExt(sport),
             losePointsExt: this.getDefaultLosePointsExt(sport),
-            pointsCalculation: SportConfig.POINTS_CALC_GAMEPOINTS,
-            nrOfGamePlaces: SportConfig.DEFAULT_NROFGAMEPLACES,
+            pointsCalculation: SportConfig.Points_Calc_GamePoints,
+            nrOfGamePlaces: SportConfig.Default_NrOfGamePlaces,
             fields: fields
         };
     }
 
     protected getDefaultWinPoints(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? 3 : 1;
+        return sport.getCustomId() !== SportCustom.Chess ? SportConfig.Default_WinPoints : 1;
     }
 
     protected getDefaultDrawPoints(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? 1 : 0.5;
+        return sport.getCustomId() !== SportCustom.Chess ? SportConfig.Default_DrawPoints : 0.5;
     }
 
     protected getDefaultWinPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? 2 : 1;
+        return sport.getCustomId() !== SportCustom.Chess ? SportConfig.Default_WinPointsExt : 1;
     }
 
     protected getDefaultDrawPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? 1 : 0.5;
+        return sport.getCustomId() !== SportCustom.Chess ? SportConfig.Default_DrawPointsExt : 0.5;
     }
 
     protected getDefaultLosePointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.IceHockey ? 0 : 1;
+        return sport.getCustomId() !== SportCustom.IceHockey ? SportConfig.Default_LosePointsExt : 1;
     }
 
     copy(sourceConfig: SportConfig, competition: Competition): SportConfig {
@@ -85,7 +86,7 @@ export class SportConfigService {
     }
 
     addToStructure(config: SportConfig, structure: Structure) {
-        let roundNumber: RoundNumber = structure.getFirstRoundNumber();
+        let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
         while (roundNumber !== undefined) {
             if (roundNumber.hasPrevious() === false || roundNumber.getSportScoreConfigs().length > 0) {
                 this.scoreConfigService.createDefault(config.getSport(), roundNumber);
@@ -103,13 +104,15 @@ export class SportConfigService {
         }
         const sport = config.getSport();
 
-        let roundNumber = structure.getFirstRoundNumber();
+        let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
         while (roundNumber) {
             const scoreConfigs = roundNumber.getSportScoreConfigs();
             const scoreConfig = scoreConfigs.find(scoreConfigIt => scoreConfigIt.getSport() === sport);
-            const idxScore = scoreConfigs.indexOf(scoreConfig);
-            if (idxScore >= 0) {
-                scoreConfigs.splice(idxScore, 1);
+            if (scoreConfig !== undefined) {
+                const idxScore = scoreConfigs.indexOf(scoreConfig);
+                if (idxScore >= 0) {
+                    scoreConfigs.splice(idxScore, 1);
+                }
             }
             roundNumber = roundNumber.getNext();
         }
@@ -122,8 +125,8 @@ export class SportConfigService {
             || sportConfig.getWinPointsExt() !== this.getDefaultWinPointsExt(sport)
             || sportConfig.getDrawPointsExt() !== this.getDefaultDrawPointsExt(sport)
             || sportConfig.getLosePointsExt() !== this.getDefaultLosePointsExt(sport)
-            || sportConfig.getPointsCalculation() !== SportConfig.POINTS_CALC_GAMEPOINTS
-            || sportConfig.getNrOfGamePlaces() !== SportConfig.DEFAULT_NROFGAMEPLACES
+            || sportConfig.getPointsCalculation() !== SportConfig.Points_Calc_GamePoints
+            || sportConfig.getNrOfGamePlaces() !== SportConfig.Default_NrOfGamePlaces
         );
     }
 

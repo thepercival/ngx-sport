@@ -2,7 +2,7 @@ import { JsonSport } from "../json";
 import { JsonField } from "../../field/json";
 
 export interface JsonSportConfig {
-    id?: number;
+    id: number;
     sport: JsonSport;
     winPoints: number;
     drawPoints: number;

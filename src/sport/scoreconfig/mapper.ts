@@ -29,19 +29,20 @@ export class SportScoreConfigMapper {
     }
 
     toJson(scoreConfig: SportScoreConfig): JsonSportScoreConfig {
+        const nextScoreConfig = scoreConfig.getNext();
         return {
             id: scoreConfig.getId(),
             sport: this.sportMapper.toJson(scoreConfig.getSport()),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
             enabled: scoreConfig.getEnabled(),
-            next: scoreConfig.getNext() !== undefined ? this.toJson(scoreConfig.getNext()) : undefined
+            next: nextScoreConfig ? this.toJson(nextScoreConfig) : undefined
         };
     }
 }
 
 export interface JsonSportScoreConfig {
-    id?: number;
+    id: number;
     sport: JsonSport;
     direction: number;
     maximum: number;

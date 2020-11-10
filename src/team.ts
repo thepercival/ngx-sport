@@ -7,15 +7,12 @@ export class Team {
     static readonly MAX_LENGTH_INFO = 200;
     static readonly MAX_LENGTH_IMAGEURL = 150;
 
-    protected id: string | number;
-    protected name: string;
-    protected abbreviation: string;
-    protected imageUrl: string;
-    protected association: Association;
+    protected id: string | number = 0;
+    protected abbreviation: string | undefined;
+    protected imageUrl: string | undefined;
 
-    constructor(association: Association, name: string) {
-        this.setName(name);
-        this.setAssociation(association);
+    constructor(protected association: Association, protected name: string) {
+        this.association.getTeams().push(this);
     }
 
     getId(): string | number {
@@ -34,15 +31,15 @@ export class Team {
         this.name = name;
     }
 
-    getAbbreviation(): string {
+    getAbbreviation(): string | undefined {
         return this.abbreviation;
     }
 
-    setAbbreviation(abbreviation: string): void {
+    setAbbreviation(abbreviation: string | undefined): void {
         this.abbreviation = abbreviation;
     }
 
-    getImageUrl(): string {
+    getImageUrl(): string | undefined {
         return this.imageUrl;
     }
 
@@ -52,11 +49,6 @@ export class Team {
 
     getAssociation(): Association {
         return this.association;
-    }
-
-    protected setAssociation(association: Association): void {
-        this.association = association;
-        this.association.getTeams().push(this);
     }
 }
 

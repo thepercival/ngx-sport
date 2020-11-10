@@ -1,7 +1,6 @@
 import { Place } from '../place';
-import { QualifyGroup } from '../qualify/group';
+import { QualifyGroup, Round } from '../qualify/group';
 import { QualifyRuleMultiple } from '../qualify/rule/multiple';
-import { Round } from '../round';
 
 /**
  * QualifyGroup.WINNERS
@@ -15,57 +14,39 @@ import { Round } from '../round';
  *
  **/
 export class HorizontalPoule {
-    protected round: Round;
-    protected qualifyGroup: QualifyGroup;
-    protected number: number;
+    protected qualifyGroup: QualifyGroup | undefined;
     protected places: Place[] = [];
-    protected multipleRule: QualifyRuleMultiple;
+    protected multipleRule: QualifyRuleMultiple | undefined;
 
-    constructor(round: Round, number: number) {
-        this.setRound(round);
-        this.setNumber(number);
+    constructor(protected round: Round, protected number: number) {
     }
 
     getRound(): Round {
         return this.round;
     }
 
-    setRound(round: Round): void {
-        // if( this.round != undefined ){ // remove from old round
-        //     var index = this.round.getPoules().indexOf(this);
-        //     if (index > -1) {
-        //         this.round.getPoules().splice(index, 1);
-        //     }
-        // }
-        this.round = round;
-        // this.round.getPoules().push(this);
-    }
-
     getWinnersOrLosers(): number {
-        return this.getQualifyGroup() ? this.getQualifyGroup().getWinnersOrLosers() : QualifyGroup.DROPOUTS;
+        const qualifyGroup = this.getQualifyGroup();
+        return qualifyGroup ? qualifyGroup.getWinnersOrLosers() : QualifyGroup.DROPOUTS;
     }
 
     getNumber(): number {
         return this.number;
     }
 
-    setNumber(number: number): void {
-        this.number = number;
-    }
-
     getPlaceNumber(): number {
         if (this.getWinnersOrLosers() !== QualifyGroup.LOSERS) {
             return this.number;
         }
-        const nrOfPlaceNubers = this.getQualifyGroup().getRound().getHorizontalPoules(QualifyGroup.WINNERS).length;
+        const nrOfPlaceNubers = this.round.getHorizontalPoules(QualifyGroup.WINNERS).length;
         return nrOfPlaceNubers - (this.number - 1);
     }
 
-    getQualifyGroup(): QualifyGroup {
+    getQualifyGroup(): QualifyGroup | undefined {
         return this.qualifyGroup;
     }
 
-    setQualifyGroup(qualifyGroup: QualifyGroup) {
+    setQualifyGroup(qualifyGroup?: QualifyGroup) {
 
         // this is done in horizontalpouleservice
         // if( this.qualifyGroup != undefined ){ // remove from old round
@@ -75,16 +56,14 @@ export class HorizontalPoule {
         //     }
         // }
         this.qualifyGroup = qualifyGroup;
-        if (qualifyGroup !== undefined) {
-            this.qualifyGroup.getHorizontalPoules().push(this);
-        }
+        this.qualifyGroup?.getHorizontalPoules().push(this);
     }
 
-    getQualifyRuleMultiple(): QualifyRuleMultiple {
+    getQualifyRuleMultiple(): QualifyRuleMultiple | undefined {
         return this.multipleRule;
     }
 
-    setQualifyRuleMultiple(multipleRule: QualifyRuleMultiple) {
+    setQualifyRuleMultiple(multipleRule: QualifyRuleMultiple | undefined) {
         this.getPlaces().forEach(place => place.setToQualifyRule(this.getWinnersOrLosers(), multipleRule));
         this.multipleRule = multipleRule;
     }
@@ -107,20 +86,22 @@ export class HorizontalPoule {
     // }
 
     isBorderPoule(): boolean {
-        if (!this.getQualifyGroup() || !this.getQualifyGroup().isBorderGroup()) {
+        const qualifyGroup = this.getQualifyGroup();
+        if (qualifyGroup === undefined || !qualifyGroup.isBorderGroup()) {
             return false;
         }
-        const horPoules = this.getQualifyGroup().getHorizontalPoules();
+        const horPoules = qualifyGroup.getHorizontalPoules();
         return horPoules[horPoules.length - 1] === this;
     }
 
-    getNrOfQualifiers() {
-        if (this.getQualifyGroup() === undefined) {
+    getNrOfQualifiers(): number {
+        const qualifyGroup = this.getQualifyGroup();
+        if (qualifyGroup === undefined) {
             return 0;
         }
         if (!this.isBorderPoule()) {
             return this.getPlaces().length;
         }
-        return this.getPlaces().length - (this.getQualifyGroup().getNrOfToPlacesTooMuch());
+        return this.getPlaces().length - qualifyGroup.getNrOfToPlacesTooMuch();
     }
 }

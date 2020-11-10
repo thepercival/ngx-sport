@@ -2,26 +2,22 @@ import { Game } from './game';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { QualifyGroup } from './qualify/group';
+import { QualifyGroup, Round } from './qualify/group';
 import { QualifyRule } from './qualify/rule';
-import { Round } from './round';
 
 export class Place extends PlaceLocation {
-    protected id: number;
-    protected poule: Poule;
-    protected structureNumber: number;
-    protected locationId: string;
+    protected id: number = 0;
+    protected structureNumber: number = 0;
     protected penaltyPoints = 0;
-    protected name: string;
-    protected fromQualifyRule: QualifyRule;
+    protected fromQualifyRule: QualifyRule | undefined;
     protected toQualifyRules: QualifyRule[] = [];
-    protected horizontalPouleWinners: HorizontalPoule;
-    protected horizontalPouleLosers: HorizontalPoule;
-    protected qualifiedPlace: Place;
+    protected horizontalPouleWinners: HorizontalPoule | undefined;
+    protected horizontalPouleLosers: HorizontalPoule | undefined;
+    protected qualifiedPlace: Place | undefined;
 
-    constructor(poule: Poule, number?: number) {
+    constructor(protected poule: Poule, number?: number) {
         super(poule.getNumber(), number === undefined ? poule.getPlaces().length + 1 : number);
-        poule.addPlace(this);
+        this.poule.getPlaces().push(this);
     }
 
     getId(): number {
@@ -36,24 +32,12 @@ export class Place extends PlaceLocation {
         return this.poule;
     }
 
-    setPoule(poule: Poule) {
-        this.poule = poule;
-    }
-
     getRound(): Round {
         return this.getPoule().getRound();
     }
 
     getNumber(): number {
         return this.placeNr;
-    }
-
-    getName(): string {
-        return this.name;
-    }
-
-    setName(name: string): void {
-        this.name = name;
     }
 
     getPenaltyPoints(): number {
@@ -64,11 +48,11 @@ export class Place extends PlaceLocation {
         this.penaltyPoints = penaltyPoints;
     }
 
-    getFromQualifyRule(): QualifyRule {
+    getFromQualifyRule(): QualifyRule | undefined {
         return this.fromQualifyRule;
     }
 
-    setFromQualifyRule(qualifyRule: QualifyRule): void {
+    setFromQualifyRule(qualifyRule?: QualifyRule): void {
         this.fromQualifyRule = qualifyRule;
     }
 
@@ -76,8 +60,8 @@ export class Place extends PlaceLocation {
         return this.toQualifyRules;
     }
 
-    getToQualifyRule(winnersOrLosers: number): QualifyRule {
-        return this.toQualifyRules.find(function (qualifyRuleIt) {
+    getToQualifyRule(winnersOrLosers: number): QualifyRule | undefined {
+        return this.toQualifyRules.find((qualifyRuleIt: QualifyRule) => {
             return (qualifyRuleIt.getWinnersOrLosers() === winnersOrLosers);
         });
     }
@@ -86,13 +70,10 @@ export class Place extends PlaceLocation {
      * within roundnumber
      */
     getLocationId(): string {
-        if (this.locationId === undefined) {
-            this.locationId = this.poule.getStructureNumber() + '.' + this.placeNr;
-        }
-        return this.locationId;
+        return this.poule.getStructureNumber() + '.' + this.placeNr;
     }
 
-    setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule): void {
+    setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule | undefined): void {
         const toQualifyRuleOld = this.getToQualifyRule(winnersOrLosers);
         if (toQualifyRuleOld !== undefined) {
             // toQualifyRuleOld.removeFromPlace( this );
@@ -106,11 +87,11 @@ export class Place extends PlaceLocation {
         }
     }
 
-    getHorizontalPoule(winnersOrLosers: number): HorizontalPoule {
+    getHorizontalPoule(winnersOrLosers: number): HorizontalPoule | undefined {
         return (winnersOrLosers === QualifyGroup.WINNERS) ? this.horizontalPouleWinners : this.horizontalPouleLosers;
     }
 
-    setHorizontalPoule(winnersOrLosers: number, horizontalPoule: HorizontalPoule) {
+    setHorizontalPoule(winnersOrLosers: number, horizontalPoule: HorizontalPoule | undefined) {
         if (winnersOrLosers === QualifyGroup.WINNERS) {
             this.horizontalPouleWinners = horizontalPoule;
         } else {
@@ -127,7 +108,7 @@ export class Place extends PlaceLocation {
         });
     }
 
-    getQualifiedPlace(): Place {
+    getQualifiedPlace(): Place | undefined {
         return this.qualifiedPlace;
     }
 

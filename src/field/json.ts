@@ -1,5 +1,5 @@
 export interface JsonField {
-    id?: number;
+    id: number;
     priority: number;
-    name: string;
+    name: string | undefined;
 }

@@ -1,6 +1,6 @@
 
 export interface JsonPlace {
-    id?: number;
+    id: number;
     number: number;
     name?: string;
     penaltyPoints: number;

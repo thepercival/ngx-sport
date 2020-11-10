@@ -21,9 +21,15 @@ export class GameMapper {
         const game = new Game(poule, json.batchNr);
         game.setId(json.id);
         game.setState(json.state);
-        game.setField(planningMapperCache.fields[json.fieldPriority]);
-        game.setReferee(planningMapperCache.referees[json.refereePriority]);
-        game.setRefereePlace(planningMapperCache.places[json.refereePlaceLocId]);
+        if (json.fieldPriority) {
+            game.setField(planningMapperCache.fields[json.fieldPriority]);
+        }
+        if (json.refereePriority) {
+            game.setReferee(planningMapperCache.referees[json.refereePriority]);
+        }
+        if (json.refereePlaceLocId) {
+            game.setRefereePlace(planningMapperCache.places[json.refereePlaceLocId]);
+        }
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         json.scores.map(jsonScore => this.scoreMapper.toObject(jsonScore, game));
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toObject(jsonGamePlace, game, planningMapperCache));
@@ -45,11 +51,11 @@ export class GameMapper {
             id: game.getId(),
             places: game.getPlaces().map(gamePlace => this.gamePlaceMapper.toJson(gamePlace)),
             batchNr: game.getBatchNr(),
-            fieldPriority: game.getField().getPriority(),
+            fieldPriority: game.getField()?.getPriority(),
             state: game.getState(),
-            refereePriority: game.getReferee() ? game.getReferee().getPriority() : undefined,
-            refereePlaceLocId: game.getRefereePlace() ? game.getRefereePlace().getLocationId() : undefined,
-            startDateTime: game.getStartDateTime() ? game.getStartDateTime().toISOString() : undefined,
+            refereePriority: game.getReferee()?.getPriority(),
+            refereePlaceLocId: game.getRefereePlace()?.getLocationId(),
+            startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJson(score))
         };
     }

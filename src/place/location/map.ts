@@ -2,7 +2,7 @@ import { PlaceLocation } from "../location";
 import { Competitor } from "../../competitor";
 
 export class PlaceLocationMap {
-    private map = {};
+    private map: CompetitorMap = {};
 
     constructor(competitors: Competitor[]) {
         competitors.forEach(competitor => {
@@ -17,4 +17,8 @@ export class PlaceLocationMap {
     public getCompetitor(placeLocation: PlaceLocation): Competitor {
         return this.map[this.getPlaceLocationId(placeLocation)];
     }
+}
+
+interface CompetitorMap {
+    [key: string]: Competitor;
 }

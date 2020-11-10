@@ -6,11 +6,10 @@ export class Field {
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 3;
 
-    protected id: number;
-    protected priority: number;
-    protected name: string;
+    protected id: number = 0;
+    protected name: string | undefined;
 
-    constructor(protected sportConfig: SportConfig, priority: number) {
+    constructor(protected sportConfig: SportConfig, protected priority: number) {
         this.sportConfig.getFields().push(this);
         this.setPriority(priority);
     }
@@ -35,11 +34,11 @@ export class Field {
         this.priority = priority;
     }
 
-    getName(): string {
+    getName(): string | undefined {
         return this.name;
     }
 
-    setName(name: string): void {
+    setName(name: string | undefined): void {
         this.name = name;
     }
 }

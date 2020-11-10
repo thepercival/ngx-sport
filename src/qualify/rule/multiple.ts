@@ -1,7 +1,7 @@
 import { HorizontalPoule } from '../../poule/horizontal';
 import { Place } from '../../place';
-import { Round } from '../../round';
 import { QualifyRule } from '../rule';
+import { QualifyGroup, Round } from '../group';
 
 export class QualifyRuleMultiple extends QualifyRule {
     private toPlaces: Place[] = [];
@@ -32,7 +32,8 @@ export class QualifyRuleMultiple extends QualifyRule {
     }
 
     getWinnersOrLosers(): number {
-        return this.fromHorizontalPoule.getQualifyGroup().getWinnersOrLosers();
+        const qualifyGroup = this.fromHorizontalPoule.getQualifyGroup();
+        return qualifyGroup ? qualifyGroup.getWinnersOrLosers() : QualifyGroup.DROPOUTS;
     }
 
     addToPlace(toPlace: Place) {

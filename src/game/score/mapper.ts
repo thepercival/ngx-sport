@@ -1,6 +1,7 @@
 import { GameScore } from '../score';
 import { Game } from '../../game';
 import { Injectable } from '@angular/core';
+import { JsonGameScore } from './json';
 
 @Injectable({
     providedIn: 'root'
@@ -26,12 +27,4 @@ export class GameScoreMapper {
             number: gameScore.getNumber()
         };
     }
-}
-
-export interface JsonGameScore {
-    id?: number;
-    home: number;
-    away: number;
-    phase: number;
-    number: number;
 }

@@ -4,10 +4,9 @@ export class Season extends Period {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 9;
 
-    protected id: string | number;
-    protected name: string;
+    protected id: string | number = 0;
 
-    constructor(name: string, startDateTime: Date, endDateTime: Date) {
+    constructor(protected name: string, startDateTime: Date, endDateTime: Date) {
         super(startDateTime, endDateTime);
         this.setName(name);
     }

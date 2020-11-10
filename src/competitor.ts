@@ -2,9 +2,9 @@ import { Competition } from './competition';
 import { PlaceLocation } from './place/location';
 
 export class CompetitorBase extends PlaceLocation {
-    protected id: string | number;
-    protected registered: boolean;
-    protected info: string;
+    protected id: string | number = 0;
+    protected registered: boolean = false;
+    protected info: string | undefined;
 
     constructor(protected competition: Competition, pouleNr: number, placeNr: number) {
         super(pouleNr, placeNr);
@@ -26,7 +26,7 @@ export class CompetitorBase extends PlaceLocation {
         this.registered = registered;
     }
 
-    getInfo(): string {
+    getInfo(): string | undefined {
         return this.info;
     }
 
@@ -52,6 +52,6 @@ export interface Competitor extends PlaceLocation {
     getId(): string | number;
     getName(): string;
     getRegistered(): boolean;
-    getInfo(): string;
+    getInfo(): string | undefined;
     getCompetition(): Competition;
 }

@@ -1,26 +1,30 @@
 import { RoundNumber } from '../round/number';
 
 export class PlanningConfig {
-    static readonly DEFAULTEXTENSION = false;
-    static readonly DEFAULTENABLETIME = true;
-    static readonly TEAMUP_MIN = 4;
-    static readonly TEAMUP_MAX = 6;
-    static readonly DEFAULTNROFHEADTOHEAD = 1;
+    static readonly Default_Extension = false;
+    static readonly Default_EnableTime = true;
+    static readonly Default_Teamup = false;
+    static readonly Teamup_Min = 4;
+    static readonly Teamup_Max = 6;
+    static readonly Default_NrOfHeadtohead = 1;
+    static readonly Default_MinutesAfter = 5;
+    static readonly Default_MinutesPerGame = 20;
+    static readonly Default_MinutesPerGameExt = 5;
+    static readonly Default_MinutesBetweenGames = 5;
+    static readonly SelfReferee_Disabled = 0;
+    static readonly SelfReferee_Poule_Other = 1;
+    static readonly SelfReferee_Poule_Same = 2;
 
-    static readonly SELFREFEREE_DISABLED = 0;
-    static readonly SELFREFEREE_OTHERPOULES = 1;
-    static readonly SELFREFEREE_SAMEPOULE = 2;
-
-    protected id: number;
-    protected extension: boolean;
-    protected enableTime: boolean;
-    protected minutesPerGame: number;
-    protected minutesPerGameExt: number;
-    protected minutesBetweenGames: number;
-    protected minutesAfter: number;
-    protected teamup: boolean;
-    protected selfReferee: number;
-    protected nrOfHeadtohead: number;
+    protected id: number = 0;
+    protected extension: boolean = PlanningConfig.Default_Extension;
+    protected enableTime: boolean = PlanningConfig.Default_EnableTime;
+    protected minutesPerGame: number = PlanningConfig.Default_MinutesPerGame;
+    protected minutesPerGameExt: number = 0;
+    protected minutesBetweenGames: number = 0;
+    protected minutesAfter: number = PlanningConfig.Default_MinutesAfter;
+    protected teamup: boolean = PlanningConfig.Default_Teamup;
+    protected selfReferee: number = PlanningConfig.SelfReferee_Disabled;
+    protected nrOfHeadtohead: number = PlanningConfig.Default_NrOfHeadtohead;
 
     constructor(protected roundNumber: RoundNumber) {
         this.roundNumber.setPlanningConfig(this);
@@ -99,7 +103,7 @@ export class PlanningConfig {
     }
 
     selfRefereeEnabled(): boolean {
-        return this.selfReferee !== PlanningConfig.SELFREFEREE_DISABLED;
+        return this.selfReferee !== PlanningConfig.SelfReferee_Disabled;
     }
 
     getNrOfHeadtohead(): number {

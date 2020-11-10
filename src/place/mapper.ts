@@ -16,7 +16,6 @@ export class PlaceMapper {
             place = new Place(poule, json.number);
         }
         place.setId(json.id);
-        // poule.setName(json.name);
         place.setPenaltyPoints(json.penaltyPoints);
         return place;
     }
@@ -25,7 +24,6 @@ export class PlaceMapper {
         return {
             id: place.getId(),
             number: place.getNumber(),
-            name: place.getName(),
             penaltyPoints: place.getPenaltyPoints()
         };
     }

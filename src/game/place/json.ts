@@ -1,5 +1,5 @@
 export interface JsonGamePlace {
-    id?: number;
+    id: number;
     placeNr: number;
     homeaway: boolean;
 }

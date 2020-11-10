@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { JsonTeam } from './json';
 import { Association } from '../association';
-import { TheCache } from '../cache';
 import { Team } from '../team';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TeamMapper {
+    protected cache: TeamMap = {};
+
     constructor() { }
 
     toObject(json: JsonTeam, association: Association, disableCache?: boolean): Team {
         let team;
         if (disableCache !== true) {
-            team = TheCache.teams[json.id];
+            team = this.cache[json.id];
         }
         if (team === undefined) {
             team = new Team(association, json.name);
             team.setId(json.id);
-            TheCache.teams[team.getId()] = team;
+            this.cache[team.getId()] = team;
         }
         this.updateObject(json, team);
         return team;
@@ -31,9 +32,14 @@ export class TeamMapper {
 
     toJson(team: Team): JsonTeam {
         return {
+            id: team.getId(),
             name: team.getName(),
             abbreviation: team.getAbbreviation(),
             imageUrl: team.getImageUrl()
         };
     }
+}
+
+interface TeamMap {
+    [key: string]: Team;
 }

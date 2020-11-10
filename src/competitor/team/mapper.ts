@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { Association } from '../../association';
-import { Competitor } from '../../competitor';
-import { TheCache } from '../../cache';
 import { Competition } from '../../competition';
 import { TeamCompetitor } from '../team';
 import { JsonCompetitor } from '../json';
@@ -15,7 +12,7 @@ import { JsonTeamCompetitor } from './json';
 export class TeamCompetitorMapper {
     constructor(private teamMapper: TeamMapper) { }
 
-    toObject(json: JsonTeamCompetitor, competition: Competition, disableCache?: boolean): TeamCompetitor {
+    toObject(json: JsonTeamCompetitor, competition: Competition): TeamCompetitor {
 
         const competitor = new TeamCompetitor(competition, json.pouleNr, json.placeNr,
             this.teamMapper.toObject(json.team, competition.getLeague().getAssociation())
@@ -26,12 +23,13 @@ export class TeamCompetitorMapper {
     }
 
     updateObject(json: JsonCompetitor, teamCompetitor: TeamCompetitor) {
-        teamCompetitor.setRegistered(json.registered);
-        teamCompetitor.setInfo(json.info);
+        json.registered ? teamCompetitor.setRegistered(json.registered) : undefined;
+        json.info ? teamCompetitor.setInfo(json.info) : undefined;
     }
 
     toJson(teamCompetitor: TeamCompetitor): JsonTeamCompetitor {
         return {
+            id: teamCompetitor.getId(),
             name: teamCompetitor.getName(),
             registered: teamCompetitor.getRegistered(),
             info: teamCompetitor.getInfo(),

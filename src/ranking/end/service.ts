@@ -1,7 +1,6 @@
 import { PlaceLocation } from '../../place/location';
 import { HorizontalPoule } from '../../poule/horizontal';
-import { QualifyGroup } from '../../qualify/group';
-import { Round } from '../../round';
+import { QualifyGroup, Round } from '../../qualify/group';
 import { Structure } from '../../structure';
 import { EndRankingItem } from '../item';
 import { RankingService } from '../service';
@@ -12,7 +11,7 @@ import { Place } from '../../place';
 
 export class EndRankingService {
 
-    private currentRank: number;
+    private currentRank: number = 1;
 
     constructor(private structure: Structure, private ruleSet: number) {
     }
@@ -47,13 +46,13 @@ export class EndRankingService {
     }
 
     protected getDropouts(round: Round): EndRankingItem[] {
-        const rankingService = new RankingService(round, this.ruleSet);
+        const rankingService = new RankingService(this.ruleSet);
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {
             [QualifyGroup.WINNERS, QualifyGroup.LOSERS].every(winnersOrLosers => {
                 round.getHorizontalPoules(winnersOrLosers).every(horizontalPoule => {
-                    if (horizontalPoule.getQualifyGroup() && horizontalPoule.getQualifyGroup().getNrOfToPlacesTooMuch() === 0) {
+                    if (horizontalPoule.getQualifyGroup()?.getNrOfToPlacesTooMuch() === 0) {
                         return nrOfDropouts > 0;
                     }
                     const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule, rankingService);

@@ -6,16 +6,13 @@ export class Association {
     static readonly MAX_LENGTH_NAME = 20;
     static readonly MAX_LENGTH_DESCRIPTION = 50;
 
-    protected id: string | number;
-    protected name: string;
-    protected description: string;
-    protected parent: Association;
-    protected children: Association[];
+    protected id: string | number = 0;
+    protected description: string | undefined;
+    protected parent: Association | undefined;
+    protected children: Association[] = [];
     protected teams: Team[] = [];
 
-    constructor(name: string, parent?: Association) {
-        this.children = [];
-        this.setName(name);
+    constructor(protected name: string, parent?: Association) {
         if (parent !== undefined) {
             this.setParent(parent);
         }
@@ -37,15 +34,15 @@ export class Association {
         this.name = name;
     }
 
-    getDescription(): string {
+    getDescription(): string | undefined {
         return this.description;
     }
 
-    setDescription(description: string): void {
+    setDescription(description: string | undefined): void {
         this.description = description;
     }
 
-    getParent(): Association {
+    getParent(): Association | undefined {
         return this.parent;
     }
 
@@ -65,12 +62,13 @@ export class Association {
         }
     }
 
-    getAncestors(ancestors: Association[] = []) {
-        if (this.getParent() === undefined) {
+    getAncestors(ancestors: Association[] = []): Association[] {
+        const parent = this.getParent();
+        if (parent === undefined) {
             return ancestors;
         }
-        ancestors.push(this.getParent());
-        return this.getParent().getAncestors(ancestors);
+        ancestors.push(parent);
+        return parent.getAncestors(ancestors);
     }
 
     getChildren(): Association[] {

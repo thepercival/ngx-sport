@@ -3,15 +3,10 @@ import { Place } from '../place';
 
 export class GamePlace {
 
-    protected id: number;
-    protected game: Game;
-    protected place: Place;
-    protected homeaway: boolean;
+    protected id: number = 0;
 
-    constructor(game: Game, place: Place, homeaway: boolean) {
-        this.setGame(game);
-        this.setPlace(place);
-        this.setHomeaway(homeaway);
+    constructor(protected game: Game, protected place: Place, protected homeaway: boolean) {
+        this.game.getPlaces().push(this);
     }
 
     getId(): number {
@@ -26,24 +21,11 @@ export class GamePlace {
         return this.game;
     }
 
-    private setGame(game: Game) {
-        game.getPlaces().push(this);
-        this.game = game;
-    }
-
     getPlace(): Place {
         return this.place;
     }
 
-    private setPlace(place: Place) {
-        this.place = place;
-    }
-
     getHomeaway(): boolean {
         return this.homeaway;
-    }
-
-    private setHomeaway(homeaway: boolean): void {
-        this.homeaway = homeaway;
     }
 }

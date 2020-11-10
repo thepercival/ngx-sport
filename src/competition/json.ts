@@ -5,7 +5,7 @@ import { JsonReferee } from "../referee/json";
 import { JsonSportConfig } from "../sport/config/json";
 
 export interface JsonCompetition {
-    id?: string | number;
+    id: string | number;
     league: JsonLeague;
     season: JsonSeason;
     referees: JsonReferee[];

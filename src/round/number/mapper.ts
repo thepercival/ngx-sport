@@ -38,12 +38,15 @@ export class RoundNumberMapper {
     }
 
     toJson(roundNumber: RoundNumber): JsonRoundNumber {
+        const nextRoundNumber = roundNumber.getNext();
+        const planningConfig = roundNumber.getPlanningConfig();
         return {
             id: roundNumber.getId(),
             number: roundNumber.getNumber(),
-            planningConfig: roundNumber.getPlanningConfig() ? this.planningConfigMapper.toJson(roundNumber.getPlanningConfig()) : undefined,
+            planningConfig: planningConfig ? this.planningConfigMapper.toJson(planningConfig) : undefined,
             sportScoreConfigs: roundNumber.getSportScoreConfigs().map(config => this.sportScoreConfigMapper.toJson(config)),
-            next: roundNumber.hasNext() ? this.toJson(roundNumber.getNext()) : undefined
+            next: nextRoundNumber ? this.toJson(nextRoundNumber) : undefined,
+            hasPlanning: false
         };
     }
 }

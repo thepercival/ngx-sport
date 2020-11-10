@@ -1,5 +1,6 @@
+import { RoundNumber } from '../../round/number';
 import { HorizontalPoule } from '../../poule/horizontal';
-import { Round } from '../../round';
+import { Round } from '..//group';
 import { StructureService } from '../../structure/service';
 import { QualifyGroup } from '../group';
 
@@ -12,7 +13,14 @@ export class QualifyGroupService {
 
     splitFrom(horizontalPoule: HorizontalPoule) {
         const qualifyGroup = horizontalPoule.getQualifyGroup();
-        const nrOfPlacesChildRound = qualifyGroup.getChildRound().getNrOfPlaces();
+        if (qualifyGroup === undefined) {
+            throw new Error('de kwalificatiegroep kan niet gevonden worden');
+        }
+        const childRound = qualifyGroup.getChildRound();
+        if (childRound === undefined) {
+            return;
+        }
+        const nrOfPlacesChildRound = childRound.getNrOfPlaces();
         const horizontalPoules = qualifyGroup.getHorizontalPoules();
         const idx = horizontalPoules.indexOf(horizontalPoule);
         if (idx < 0) {
@@ -25,18 +33,20 @@ export class QualifyGroupService {
         while ((newNrOfQualifiers / newNrOfPoules) < 2) {
             newNrOfPoules--;
         }
-        this.structureService.updateRound(qualifyGroup.getChildRound(), newNrOfQualifiers, newNrOfPoules);
+        this.structureService.updateRound(childRound, newNrOfQualifiers, newNrOfPoules);
 
-        const newQualifyGroup = new QualifyGroup(round, qualifyGroup.getWinnersOrLosers(), qualifyGroup.getNumber() /*+ 1* is index*/);
+        let nextRoundNumber: RoundNumber | undefined = round.getNumber().getNext();
+        if (!nextRoundNumber) {
+            nextRoundNumber = this.structureService.createRoundNumber(round);
+        }
+        const newQualifyGroup = new QualifyGroup(round, qualifyGroup.getWinnersOrLosers(), nextRoundNumber /*+ 1* is index*/);
         this.renumber(round, qualifyGroup.getWinnersOrLosers());
-        const nextRoundNumber = round.getNumber().hasNext() ? round.getNumber().getNext() : this.structureService.createRoundNumber(round);
-        const newChildRound = new Round(nextRoundNumber, newQualifyGroup);
         const splittedNrOfQualifiers = nrOfPlacesChildRound - newNrOfQualifiers;
         let splittedNrOfPoules = this.structureService.calculateNewNrOfPoules(qualifyGroup, newNrOfQualifiers);
         while ((splittedNrOfQualifiers / splittedNrOfPoules) < 2) {
             splittedNrOfPoules--;
         }
-        this.structureService.updateRound(newChildRound, splittedNrOfQualifiers, splittedNrOfPoules);
+        this.structureService.updateRound(newQualifyGroup.getChildRound(), splittedNrOfQualifiers, splittedNrOfPoules);
 
         splittedPoules.forEach(splittedPoule => {
             splittedPoule.setQualifyGroup(newQualifyGroup);

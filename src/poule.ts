@@ -1,25 +1,20 @@
 import { Competition } from './competition';
-import { Competitor } from './competitor';
 import { Game } from './game';
 import { Place } from './place';
-import { Round } from './round';
+import { Round } from './qualify/group';
 import { State } from './state';
 
 export class Poule {
-    protected id: number;
-    protected round: Round;
+    protected id: number = 0;
     protected number: number;
-    protected structureNumber: number;
-    protected name: string;
+    protected structureNumber: number = 0;
+    protected name: string | undefined;
     protected places: Place[] = [];
     protected games: Game[] = [];
 
-    constructor(round: Round, number?: number) {
-        if (number === undefined) {
-            number = round.getPoules().length + 1;
-        }
-        this.setRound(round);
-        this.setNumber(number);
+    constructor(protected round: Round, number?: number) {
+        this.round.getPoules().push(this);
+        this.number = number ? number : (round.getPoules().length + 1);
     }
 
     getId(): number {
@@ -34,27 +29,12 @@ export class Poule {
         return this.round;
     }
 
-    protected setRound(round: Round): void {
-        // if( this.round != undefined ){ // remove from old round
-        //     var index = this.round.getPoules().indexOf(this);
-        //     if (index > -1) {
-        //         this.round.getPoules().splice(index, 1);
-        //     }
-        // }
-        this.round = round;
-        this.round.getPoules().push(this);
-    }
-
     getCompetition(): Competition {
         return this.getRound().getCompetition();
     }
 
     getNumber(): number {
         return this.number;
-    }
-
-    setNumber(number: number): void {
-        this.number = number;
     }
 
     getStructureNumber(): number {
@@ -65,11 +45,11 @@ export class Poule {
         this.structureNumber = structureNumber;
     }
 
-    getName(): string {
+    getName(): string | undefined {
         return this.name;
     }
 
-    setName(name: string): void {
+    setName(name: string | undefined): void {
         this.name = name;
     }
 
@@ -77,7 +57,7 @@ export class Poule {
         return this.places;
     }
 
-    getPlace(number: number): Place {
+    getPlace(number: number): Place | undefined {
         return this.getPlaces().find(place => place.getNumber() === number);
     }
 
@@ -101,13 +81,5 @@ export class Poule {
     next(): Poule {
         const poules = this.getRound().getPoules();
         return poules[this.getNumber()];
-    }
-
-    addPlace(place: Place) {
-        if (place.getNumber() <= this.getPlaces().length) {
-            throw new Error('pouleplek kan niet toegevoegd worden, omdat het nummer van de plek kleiner is dan het aantal huidige plekken');
-        }
-        place.setPoule(this);
-        this.getPlaces().push(place);
     }
 }

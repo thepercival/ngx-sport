@@ -1,33 +1,29 @@
 import { Competition } from '../competition';
-import { Competitor } from '../competitor';
 import { Game } from '../game';
 import { Place } from '../place';
 import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
-import { Round } from '../round';
 import { Sport } from '../sport';
 import { SportConfig } from '../sport/config';
 import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
 import { PouleStructure } from '../poule/structure';
+import { Round } from '../qualify/group';
 
 export class RoundNumber {
+    protected id: number = 0;
     protected competition: Competition;
     protected number: number;
-    protected previous: RoundNumber;
-    protected next: RoundNumber;
+    protected next: RoundNumber | undefined;
     protected rounds: Round[] = [];
-    protected planningConfig: PlanningConfig;
+    protected planningConfig: PlanningConfig | undefined;
     protected sportScoreConfigs: SportScoreConfig[] = [];
-    protected id: number;
-    protected hasPlanning: boolean;
+    protected hasPlanning: boolean = false;;
 
-    constructor(competition: Competition, previous?: RoundNumber) {
+    constructor(competition: Competition, protected previous?: RoundNumber) {
         this.competition = competition;
-        this.previous = previous;
-        this.number = previous === undefined ? 1 : previous.getNumber() + 1;
+        this.number = this.previous === undefined ? 1 : this.previous.getNumber() + 1;
         this.competition = competition;
-        this.hasPlanning = false;
     }
 
     getId(): number {
@@ -42,13 +38,13 @@ export class RoundNumber {
         return this.next !== undefined;
     }
 
-    getNext(): RoundNumber {
+    getNext(): RoundNumber | undefined {
         return this.next;
     }
 
     createNext(): RoundNumber {
         this.next = new RoundNumber(this.getCompetition(), this);
-        return this.getNext();
+        return this.next;
     }
 
     removeNext() {
@@ -59,7 +55,7 @@ export class RoundNumber {
         return this.previous !== undefined;
     }
 
-    getPrevious(): RoundNumber {
+    getPrevious(): RoundNumber | undefined {
         return this.previous;
     }
 
@@ -71,18 +67,16 @@ export class RoundNumber {
         return this.number;
     }
 
-    getFirst() {
-        if (this.getPrevious() !== undefined) {
-            return this.getPrevious().getFirst();
-        }
-        return this;
+    getFirst(): RoundNumber {
+        const previous = this.getPrevious();
+        return previous ? previous.getFirst() : this;
     }
 
-    isFirst() {
+    isFirst(): boolean {
         return (this.getPrevious() === undefined);
     }
 
-    getRounds() {
+    getRounds(): Round[] {
         return this.rounds;
     }
 
@@ -102,15 +96,19 @@ export class RoundNumber {
     }
 
     getGames(order?: number): Game[] {
-        let games = [];
+        let games: Game[] = [];
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
         if (order === Game.ORDER_BY_BATCH) {
             games.sort((g1: Game, g2: Game) => {
-                if (g1.getBatchNr() === g2.getBatchNr() && g1.getField()) {
-                    const retVal = g1.getField().getPriority() - g2.getField().getPriority();
-                    return this.isFirst() ? retVal : -retVal;
+                if (g1.getBatchNr() === g2.getBatchNr()) {
+                    const field1 = g1.getField();
+                    const field2 = g2.getField();
+                    if (field1 && field2) {
+                        const retVal = field1.getPriority() - field2.getPriority();
+                        return this.isFirst() ? retVal : -retVal;
+                    }
                 }
                 return g1.getBatchNr() - g2.getBatchNr();
             });
@@ -127,7 +125,7 @@ export class RoundNumber {
     }
 
     getPlaces(): Place[] {
-        let places = [];
+        let places: Place[] = [];
         this.getPoules().forEach(poule => {
             places = places.concat(poule.getPlaces());
         });
@@ -171,22 +169,24 @@ export class RoundNumber {
         this.planningConfig = config;
     }
 
-    getPlanningConfig(): PlanningConfig {
+    getPlanningConfig(): PlanningConfig | undefined {
         return this.planningConfig;
     }
 
-    getValidPlanningConfig(): PlanningConfig {
-        if (this.planningConfig !== undefined) {
-            return this.planningConfig;
+    getValidPlanningConfig(): PlanningConfig | undefined {
+        const planningConfig = this.planningConfig;
+        if (planningConfig !== undefined) {
+            return planningConfig;
         }
-        return this.getPrevious().getValidPlanningConfig();
+        const previous = this.getPrevious();
+        return previous?.getValidPlanningConfig();
     }
 
     getSportScoreConfigs(): SportScoreConfig[] {
         return this.sportScoreConfigs;
     }
 
-    getSportScoreConfig(sport: Sport): SportScoreConfig {
+    getSportScoreConfig(sport: Sport): SportScoreConfig | undefined {
         return this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
     }
 
@@ -194,24 +194,24 @@ export class RoundNumber {
         this.sportScoreConfigs.push(sportScoreConfig);
     }
 
-    getValidSportScoreConfigs(): SportScoreConfig[] {
+    getValidSportScoreConfigs(): (SportScoreConfig | undefined)[] {
         return this.getSportConfigs().map(sportConfig => this.getValidSportScoreConfig(sportConfig.getSport()));
     }
 
-    getValidSportScoreConfig(sport: Sport): SportScoreConfig {
+    getValidSportScoreConfig(sport: Sport): SportScoreConfig | undefined {
         const sportScoreConfig = this.getSportScoreConfig(sport);
         if (sportScoreConfig !== undefined) {
             return sportScoreConfig;
         }
-        return this.getPrevious().getValidSportScoreConfig(sport);
+        return this.getPrevious()?.getValidSportScoreConfig(sport);
     }
 
-    getFirstStartDateTime(): Date {
+    getFirstStartDateTime(): Date | undefined {
         const games = this.getGames(Game.ORDER_BY_BATCH);
         return games[0].getStartDateTime();
     }
 
-    getLastStartDateTime(): Date {
+    getLastStartDateTime(): Date | undefined {
         const games = this.getGames(Game.ORDER_BY_BATCH);
         return games[games.length - 1].getStartDateTime();
     }

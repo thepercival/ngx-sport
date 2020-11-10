@@ -5,15 +5,12 @@ export class Sport {
 
     static readonly TEMPDEFAULT = 2;
 
-    protected id: string | number;
-    protected name: string;
+    protected id: string | number = 0;
     // protected scoreUnitName: string;
     // protected scoreSubUnitName: string;
-    protected team: boolean;
-    protected customId: number;
+    protected customId: number | undefined;
 
-    constructor(name: string) {
-        this.setName(name);
+    constructor(protected name: string, protected team: boolean) {
     }
 
     getId(): string | number {
@@ -60,7 +57,7 @@ export class Sport {
         this.team = team;
     }
 
-    getCustomId(): number {
+    getCustomId(): number | undefined {
         return this.customId;
     }
 

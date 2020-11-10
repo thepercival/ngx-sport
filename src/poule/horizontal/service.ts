@@ -1,6 +1,5 @@
 import { Place } from '../../place';
-import { QualifyGroup } from '../../qualify/group';
-import { Round } from '../../round';
+import { QualifyGroup, Round } from '../../qualify/group';
 import { HorizontalPoule } from '../horizontal';
 
 export class HorizontalPouleService {
@@ -25,12 +24,11 @@ export class HorizontalPouleService {
     protected remove() {
         this.winnersAndLosers.forEach(winnersOrLosers => {
             const horizontalPoules = this.round.getHorizontalPoules(winnersOrLosers);
-            while (horizontalPoules.length > 0) {
-                const horizontalPoule = horizontalPoules.pop();
-
+            let horizontalPoule: HorizontalPoule | undefined;
+            while (horizontalPoule = horizontalPoules.pop()) {
                 const places = horizontalPoule.getPlaces();
-                while (places.length > 0) {
-                    const place = places.pop();
+                let place: Place | undefined;
+                while (place = places.pop()) {
                     place.setHorizontalPoule(winnersOrLosers, undefined);
                 }
             }
@@ -113,6 +111,9 @@ export class HorizontalPouleService {
             let qualifiersAdded = 0;
             while (qualifiersAdded < creator.nrOfQualifiers) {
                 const roundHorizontalPoule = roundHorizontalPoules.shift();
+                if (!roundHorizontalPoule) {
+                    break;
+                }
                 roundHorizontalPoule.setQualifyGroup(creator.qualifyGroup);
                 qualifiersAdded += roundHorizontalPoule.getPlaces().length;
             }

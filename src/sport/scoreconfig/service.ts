@@ -17,9 +17,6 @@ export class SportScoreConfigService {
 
     createDefault(sport: Sport, roundNumber: RoundNumber) {
         const scoreConfig = new SportScoreConfig(sport, roundNumber, undefined);
-        scoreConfig.setDirection(SportScoreConfig.UPWARDS);
-        scoreConfig.setMaximum(0);
-        scoreConfig.setEnabled(true);
         if (this.hasNext(sport.getCustomId())) {
             const subScoreConfig = new SportScoreConfig(sport, roundNumber, scoreConfig);
             subScoreConfig.setDirection(SportScoreConfig.UPWARDS);
@@ -29,7 +26,7 @@ export class SportScoreConfigService {
         return scoreConfig;
     }
 
-    protected hasNext(customId: number): boolean {
+    protected hasNext(customId?: number): boolean {
         if (
             customId === SportCustom.Badminton
             || customId === SportCustom.Darts
@@ -63,10 +60,11 @@ export class SportScoreConfigService {
         ) {
             return false;
         }
-        if (sportScoreConfig.getNext() === undefined) {
+        const nextSportScoreConfig = sportScoreConfig.getNext();
+        if (nextSportScoreConfig === undefined) {
             return true;
         }
-        return this.isDefault(sportScoreConfig.getNext());
+        return this.isDefault(nextSportScoreConfig);
     }
 
     areEqual(sportScoreConfigA: SportScoreConfig, sportScoreConfigB: SportScoreConfig): boolean {
@@ -75,18 +73,20 @@ export class SportScoreConfigService {
         ) {
             return false;
         }
-        if (sportScoreConfigA.getNext() !== undefined && sportScoreConfigB.getNext() !== undefined) {
-            return this.areEqual(sportScoreConfigA.getNext(), sportScoreConfigB.getNext());
+        const nextSportScoreConfigA = sportScoreConfigA.getNext();
+        const nextSportScoreConfigB = sportScoreConfigB.getNext();
+        if (nextSportScoreConfigA !== undefined && nextSportScoreConfigB !== undefined) {
+            return this.areEqual(nextSportScoreConfigA, nextSportScoreConfigB);
         }
         return sportScoreConfigA.getNext() === sportScoreConfigB.getNext();
     }
 
-    getFinalScore(game: Game, useSubScore?: boolean): GameScoreHomeAway {
+    getFinalScore(game: Game, useSubScore?: boolean): GameScoreHomeAway | undefined {
         if (game.getScores().length === 0) {
             return undefined;
         }
         if (useSubScore === undefined) {
-            useSubScore = game.getSportScoreConfig().useSubScore();
+            useSubScore = game.getSportScoreConfig()?.useSubScore();
         }
         if (useSubScore) {
             let home = 0;

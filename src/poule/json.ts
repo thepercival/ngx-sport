@@ -1,9 +1,8 @@
 import { JsonPlace } from "../place/json";
 import { JsonGame } from "../game/json";
 
-
 export interface JsonPoule {
-    id?: number;
+    id: number;
     number: number;
     name?: string;
     places: JsonPlace[];

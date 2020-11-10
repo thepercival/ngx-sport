@@ -1,4 +1,4 @@
-import { Competitor, CompetitorBase } from '../competitor';
+import { Competitor, CompetitorBase } from '.';
 import { Competition } from '../competition';
 import { Team } from '../team';
 

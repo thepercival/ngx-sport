@@ -6,13 +6,10 @@ export class League {
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_SPORT = 30;
 
-    protected id: string | number;
-    protected name: string;
-    protected abbreviation: string;
-    protected association: Association;
+    protected id: string | number = 0;
+    protected abbreviation: string | undefined;
 
-    constructor(name: string) {
-        this.setName(name);
+    constructor(protected association: Association, protected name: string) {
     }
 
     getId(): string | number {
@@ -31,19 +28,15 @@ export class League {
         this.name = name;
     }
 
-    getAbbreviation(): string {
+    getAbbreviation(): string | undefined {
         return this.abbreviation;
     }
 
-    setAbbreviation(abbreviation: string): void {
+    setAbbreviation(abbreviation: string | undefined): void {
         this.abbreviation = abbreviation;
     }
 
     getAssociation(): Association {
         return this.association;
-    }
-
-    setAssociation(association: Association): void {
-        this.association = association;
     }
 }

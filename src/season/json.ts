@@ -1,8 +1,6 @@
-import { Season } from '../season';
+import { JsonPeriod } from '../period/json';
 
-export interface JsonSeason {
-    id?: string | number;
+export interface JsonSeason extends JsonPeriod {
+    id: string | number;
     name: string;
-    startDateTime: string;
-    endDateTime: string;
 }

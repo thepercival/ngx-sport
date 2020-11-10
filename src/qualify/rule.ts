@@ -1,4 +1,4 @@
-import { Round } from '../round';
+import { Round } from './group';
 
 export abstract class QualifyRule {
     constructor() { }

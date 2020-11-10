@@ -66,7 +66,7 @@
     "url": "https://github.com/thepercival/ngx-sport.git"
   },
   "scripts": {
-    "build": "ng-packagr -p package.json",
+    "build": "ng-packagr -p package.json -c tsconfig.json",
     "build-fct": "npm run build && npm run copy-to-fct",
     "build-sup": "npm run build && npm run copy-to-sup",
     "build-vob": "npm run build && npm run copy-to-vob",
@@ -86,6 +86,7 @@
       "entryFile": "public_api.ts"
     }
   },
+  "sideEffects": false,
   "nyc": {
     "include": [
       "src/**/*.ts"

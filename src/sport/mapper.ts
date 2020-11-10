@@ -2,23 +2,24 @@ import { Injectable } from '@angular/core';
 
 import { Sport } from '../sport';
 import { JsonSport } from './json';
-import { TheCache } from '../cache';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SportMapper {
+    protected cache: SportMap = {};
+
     constructor() { }
 
     toObject(json: JsonSport, disableCache?: boolean): Sport {
         let sport;
         if (disableCache !== true) {
-            sport = TheCache.sports[json.name];
+            sport = this.cache[json.name];
         }
         if (sport === undefined) {
-            sport = new Sport(json.name);
+            sport = new Sport(json.name, json.team);
             sport.setId(json.id);
-            TheCache.sports[sport.getName()] = sport;
+            this.cache[sport.getName()] = sport;
         }
         this.updateObject(json, sport);
         return sport;
@@ -28,11 +29,14 @@ export class SportMapper {
         // sport.setScoreUnitName(json.scoreUnitName);
         // sport.setScoreSubUnitName(json.scoreSubUnitName);
         sport.setTeam(json.team);
-        sport.setCustomId(json.customId);
+        if (json.customId) {
+            sport.setCustomId(json.customId);
+        }
     }
 
     toJson(sport: Sport): JsonSport {
         return {
+            id: sport.getId(),
             name: sport.getName(),
             // scoreUnitName: sport.getScoreUnitName(),
             // scoreSubUnitName: sport.getScoreSubUnitName(),
@@ -40,4 +44,8 @@ export class SportMapper {
             customId: sport.getCustomId()
         };
     }
+}
+
+interface SportMap {
+    [key: string]: Sport;
 }

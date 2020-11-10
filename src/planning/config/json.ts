@@ -1,5 +1,5 @@
 export interface JsonPlanningConfig {
-    id?: number;
+    id: number;
     extension: boolean;
     enableTime: boolean;
     minutesPerGame: number;

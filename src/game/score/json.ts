@@ -1,6 +1,6 @@
 
 export interface JsonGameScore {
-    id?: number;
+    id: number;
     home: number;
     away: number;
     phase: number;

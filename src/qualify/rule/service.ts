@@ -1,9 +1,8 @@
 import { Place } from '../../place';
-import { QualifyGroup } from '../../qualify/group';
+import { QualifyGroup, Round } from '../../qualify/group';
 import { QualifyRule } from '../../qualify/rule';
 import { QualifyRuleMultiple } from '../../qualify/rule/multiple';
 import { QualifyRuleSingle } from '../../qualify/rule/single';
-import { Round } from '../../round';
 import { QualifyReservationService } from '../reservationservice';
 import { QualifyRuleQueue } from './queue';
 
@@ -34,9 +33,12 @@ export class QualifyRuleService {
                 if (toQualifyRule.isMultiple()) {
                     toPlaces = toPlaces.concat((<QualifyRuleMultiple>toQualifyRule).getToPlaces());
                 } else {
-                    toPlaces.push((<QualifyRuleSingle>toQualifyRule).getToPlace());
+                    const toPlace = (<QualifyRuleSingle>toQualifyRule).getToPlace();
+                    if (toPlace) {
+                        toPlaces.push(toPlace);
+                    }
                 }
-                toPlaces.forEach(toPlace => toPlace.setFromQualifyRule(undefined));
+                toPlaces.forEach((toPlace: Place) => toPlace.setFromQualifyRule(undefined));
             });
             toQualifyRules.splice(0, toQualifyRules.length);
         });
@@ -73,6 +75,9 @@ export class QualifyRuleService {
             let startEnd = QualifyRuleQueue.START;
             while (toHorPoules.length > 0) {
                 const toHorPoule = startEnd === QualifyRuleQueue.START ? toHorPoules.shift() : toHorPoules.pop();
+                if (!toHorPoule) {
+                    continue;
+                }
                 toHorPoule.getPlaces().forEach(place => {
                     this.connectPlaceWithRule(place, queue, startEnd, qualifyReservationService);
                 });
@@ -99,6 +104,9 @@ export class QualifyRuleService {
         let oneQualifyRuleConnected = false;
         while (!oneQualifyRuleConnected && !queue.isEmpty()) {
             const qualifyRule = queue.remove(startEnd);
+            if (!qualifyRule) {
+                break;
+            }
             if (!qualifyRule.isMultiple() && !reservationService.isFree(childPlace.getPoule().getNumber(), (<QualifyRuleSingle>qualifyRule).getFromPoule())) {
                 unfreeQualifyRules.push(qualifyRule);
                 continue;
@@ -109,12 +117,18 @@ export class QualifyRuleService {
         if (startEnd === QualifyRuleQueue.END) {
             unfreeQualifyRules.reverse();
         }
-        if (!oneQualifyRuleConnected && unfreeQualifyRules.length > 0) {
-            setToPlacesAndReserve(unfreeQualifyRules.shift());
+        if (!oneQualifyRuleConnected) {
+            const unfreeQualifyRule = unfreeQualifyRules.shift();
+            if (unfreeQualifyRule) {
+                setToPlacesAndReserve(unfreeQualifyRule);
+            }
         }
 
         while (unfreeQualifyRules.length > 0) {
-            queue.add(startEnd, unfreeQualifyRules.shift());
+            const unfreeQualifyRule = unfreeQualifyRules.shift();
+            if (unfreeQualifyRule) {
+                queue.add(startEnd, unfreeQualifyRule);
+            }
         }
     }
 }

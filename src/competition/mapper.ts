@@ -25,7 +25,7 @@ export class CompetitionMapper {
     toObject(json: JsonCompetition, disableCache?: boolean): Competition {
         const league = this.leagueMapper.toObject(json.league, disableCache);
         const season = this.seasonMapper.toObject(json.season, disableCache);
-        const competition = new Competition(league, season);
+        const competition = new Competition(league, season, new Date(json.startDateTime));
 
         competition.setId(json.id);
         this.updateObject(json, competition);
@@ -38,11 +38,11 @@ export class CompetitionMapper {
     updateObject(json: JsonCompetition, competition: Competition) {
         competition.setRuleSet(json.ruleSet);
         competition.setState(json.state);
-        competition.setStartDateTime(new Date(json.startDateTime));
     }
 
     toJson(competition: Competition): JsonCompetition {
         return {
+            id: competition.getId(),
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
             sportConfigs: competition.getSportConfigs().map(sport => this.sportConfigMapper.toJson(sport)),

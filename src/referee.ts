@@ -7,20 +7,16 @@ export class Referee {
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_INFO = 200;
 
-    protected id: number;
-    protected competition: Competition;
+    protected id: number = 0;
     protected priority: number;
-    protected initials: string;
-    protected name: string;
-    protected emailaddress: string;
-    protected info: string;
+    protected initials: string | undefined;
+    protected name: string | undefined;
+    protected emailaddress: string | undefined;
+    protected info: string | undefined;
 
-    constructor(competition: Competition, priority?: number) {
-        this.setCompetition(competition);
-        if (priority === undefined) {
-            priority = competition.getReferees().length;
-        }
-        this.setPriority(priority);
+    constructor(protected competition: Competition, priority?: number) {
+        this.competition.getReferees().push(this);
+        this.priority = priority ? priority : competition.getReferees().length;
     }
 
     getId(): number {
@@ -35,11 +31,6 @@ export class Referee {
         return this.competition;
     }
 
-    protected setCompetition(competition: Competition): void {
-        this.competition = competition;
-        this.competition.getReferees().push(this);
-    }
-
     getPriority(): number {
         return this.priority;
     }
@@ -48,35 +39,35 @@ export class Referee {
         this.priority = priority;
     }
 
-    getInitials(): string {
+    getInitials(): string | undefined {
         return this.initials;
     }
 
-    setInitials(initials: string): void {
+    setInitials(initials: string | undefined): void {
         this.initials = initials;
     }
 
-    getName(): string {
+    getName(): string | undefined {
         return this.name;
     }
 
-    setName(name: string): void {
+    setName(name: string | undefined): void {
         this.name = name;
     }
 
-    getInfo(): string {
+    getInfo(): string | undefined {
         return this.info;
     }
 
-    setInfo(info: string): void {
+    setInfo(info: string | undefined): void {
         this.info = info;
     }
 
-    getEmailaddress(): string {
+    getEmailaddress(): string | undefined {
         return this.emailaddress;
     }
 
-    setEmailaddress(emailaddress: string): void {
+    setEmailaddress(emailaddress: string | undefined): void {
         this.emailaddress = emailaddress;
     }
 }

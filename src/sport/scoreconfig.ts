@@ -5,14 +5,14 @@ export class SportScoreConfig {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
-    protected id: number;
-    protected previous: SportScoreConfig;
-    protected direction: number;
-    protected maximum: number;
-    protected enabled: boolean;
-    protected next: SportScoreConfig;
+    protected id: number = 0;
+    protected previous: SportScoreConfig | undefined;
+    protected direction: number = SportScoreConfig.UPWARDS;
+    protected maximum: number = 0;
+    protected enabled: boolean = true;
+    protected next: SportScoreConfig | undefined;
 
-    constructor(protected sport: Sport, protected roundNumber: RoundNumber, previous: SportScoreConfig) {
+    constructor(protected sport: Sport, protected roundNumber: RoundNumber, previous?: SportScoreConfig) {
         if (previous === undefined) {
             roundNumber.getSportScoreConfigs().push(this);
         } else {
@@ -28,6 +28,7 @@ export class SportScoreConfig {
         this.id = id;
     }
 
+    // moet direction opgenomen worden in constructor
     getDirection(): number {
         return this.direction;
     }
@@ -72,7 +73,7 @@ export class SportScoreConfig {
         return this.previous !== undefined;
     }
 
-    getPrevious(): SportScoreConfig {
+    getPrevious(): SportScoreConfig | undefined {
         return this.previous;
     }
 
@@ -84,17 +85,15 @@ export class SportScoreConfig {
     }
 
     getFirst(): SportScoreConfig {
-        if (this.hasPrevious()) {
-            return this.getPrevious().getLast();
-        }
-        return this;
+        const previous = this.getPrevious();
+        return previous ? previous.getLast() : this;
     }
 
     isFirst(): boolean {
         return !this.hasPrevious();
     }
 
-    getNext(): SportScoreConfig {
+    getNext(): SportScoreConfig | undefined {
         return this.next;
     }
 
@@ -107,10 +106,8 @@ export class SportScoreConfig {
     }
 
     getLast(): SportScoreConfig {
-        if (this.hasNext()) {
-            return this.getNext().getLast();
-        }
-        return this;
+        const next = this.getNext();
+        return next ? next.getLast() : this;
     }
 
     isLast(): boolean {
@@ -118,11 +115,8 @@ export class SportScoreConfig {
     }
 
     getCalculate(): SportScoreConfig {
-        const first = this.getFirst();
-        if (first.hasNext() && first.getNext().getEnabled()) {
-            return first.getNext();
-        }
-        return this;
+        const firstNext = this.getFirst().getNext();
+        return firstNext?.getEnabled() ? firstNext : this;
     }
 
     useSubScore(): boolean {

@@ -1,11 +1,11 @@
+import { Round } from '../qualify/group';
 import { Game } from '../game';
 import { GameScore } from '../game/score';
 import { GameScoreHomeAway } from '../game/score/homeaway';
 import { Place } from '../place';
-import { Round } from '../round';
+
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
 import { UnrankedRoundItem } from './item';
-import { SportScoreConfig } from '../sport/scoreconfig';
 
 /* eslint:disable:no-bitwise */
 
@@ -31,9 +31,12 @@ export class RankingItemsGetter {
             if ((game.getState() & this.gameStates) === 0) {
                 return;
             }
-            const useSubScore = game.getSportScoreConfig().useSubScore();
+            const useSubScore = game.getSportScoreConfig()?.useSubScore();
             const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
-            let finalSubScore;
+            if (!finalScore) {
+                return;
+            }
+            let finalSubScore: GameScoreHomeAway | undefined;
             if (useSubScore) {
                 finalSubScore = this.sportScoreConfigService.getFinalSubScore(game);
             }
@@ -43,7 +46,7 @@ export class RankingItemsGetter {
                 const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED);
                 let subScored = 0;
                 let subReceived = 0;
-                if (useSubScore) {
+                if (finalSubScore) {
                     subScored = this.getNrOfUnits(finalSubScore, homeAway, GameScore.SCORED);
                     subReceived = this.getNrOfUnits(finalSubScore, homeAway, GameScore.RECEIVED);
                 }

@@ -1,15 +1,8 @@
 import { Formation } from '../formation';
 
 export class FormationLine {
-    protected formation: Formation;
-
-    constructor(formation: Formation, protected number: number, protected nrOfPlayers: number) {
-        this.setFormation(formation);
-    }
-
-    protected setFormation(formation: Formation) {
-        formation.getLines().push(this);
-        this.formation = formation;
+    constructor(protected formation: Formation, protected number: number, protected nrOfPlayers: number) {
+        this.formation.getLines().push(this);
     }
 
     public getNrOfPlayers(): number {

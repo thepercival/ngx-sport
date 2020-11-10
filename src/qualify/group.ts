@@ -1,27 +1,32 @@
+import { RoundNumber } from '../round/number';
 import { HorizontalPoule } from '../poule/horizontal';
-import { Round } from '../round';
+import { Competition } from '../competition';
+import { Game } from '../game';
+import { Place } from '../place';
+import { PlaceLocation } from '../place/location';
+import { Poule } from '../poule';
+import { State } from '../state';
 
 export class QualifyGroup {
     static readonly WINNERS = 1;
     static readonly DROPOUTS = 2;
     static readonly LOSERS = 3;
 
-    protected round: Round;
-
-    protected id: number;
-    protected winnersOrLosers: number;
-    protected number: number;
+    protected id: number = 0;
+    protected winnersOrLosers: number = QualifyGroup.DROPOUTS;
+    protected number: number
     protected childRound: Round;
     protected horizontalPoules: HorizontalPoule[] = [];
 
-    constructor(round: Round, winnersOrLosers: number, number?: number) {
+    constructor(protected round: Round, winnersOrLosers: number, nextRoundNumber: RoundNumber, number?: number) {
+        this.number = number ? number : this.round.getQualifyGroups(winnersOrLosers).length;
         this.setWinnersOrLosers(winnersOrLosers);
-        if (number === undefined) {
-            this.setRound(round);
-        } else {
-            this.insertRoundAt(round, number);
-        }
+        this.round.getQualifyGroups(this.getWinnersOrLosers()).splice(this.number, 0, this);
+        this.childRound = new Round(nextRoundNumber, this);
+    }
 
+    protected addToRoundQualifyGroups() {
+        this.round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
     }
 
     getId(): number {
@@ -34,25 +39,6 @@ export class QualifyGroup {
 
     getRound(): Round {
         return this.round;
-    }
-
-    protected insertRoundAt(round: Round, insertAt: number) {
-
-        // if (this.round !== undefined && this.round !== round) {
-        //     const index = this.fromRound.getToQualifyRules().indexOf(this);
-        //     if (index > -1) {
-        //         this.fromRound.getToQualifyRules().splice(index, 1);
-        //     }
-        // }
-        // if (round !== undefined) {
-        round.getQualifyGroups(this.getWinnersOrLosers()).splice(insertAt, 0, this);
-        // }
-        this.round = round;
-    }
-
-    setRound(round: Round) {
-        round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
-        this.round = round;
     }
 
     getWinnersOrLosers(): number {
@@ -73,19 +59,6 @@ export class QualifyGroup {
 
     getChildRound(): Round {
         return this.childRound;
-    }
-
-    setChildRound(childRound: Round): void {
-        // if (this.ChildRound !== undefined && this.ChildRound !== round) {
-        //     const index = this.ChildRound.getFromQualifyRules().indexOf(this);
-        //     if (index > -1) {
-        //         this.ChildRound.getFromQualifyRules().splice(index, 1);
-        //     }
-        // }
-        // if (round !== undefined) {
-        //     round.getFromQualifyRules().push(this);
-        // }
-        this.childRound = childRound;
     }
 
     getHorizontalPoules(): HorizontalPoule[] {
@@ -112,13 +85,220 @@ export class QualifyGroup {
     }
 
     getNrOfToPlacesTooMuch(): number {
-        return this.getNrOfPlaces() - this.getChildRound().getNrOfPlaces();
+        return this.getNrOfPlaces() - (this.childRound ? this.childRound.getNrOfPlaces() : 0);
     }
 
     getNrOfQualifiers(): number {
         let nrOfQualifiers = 0;
         this.getHorizontalPoules().forEach(horizontalPoule => nrOfQualifiers += horizontalPoule.getNrOfQualifiers());
         return nrOfQualifiers;
+    }
+}
+
+export class Round {
+    static readonly ORDER_NUMBER_POULE = 1;
+    static readonly ORDER_POULE_NUMBER = 2;
+
+    // there are some patterns here, cross, inside-outside and custom
+    static readonly QUALIFYORDER_CROSS = 1;
+    static readonly QUALIFYORDER_RANK = 2;
+    static readonly QUALIFYORDER_CUSTOM1 = 4;
+    static readonly QUALIFYORDER_CUSTOM2 = 5;
+
+    protected id: number = 0;
+    protected number: RoundNumber;
+    protected name: string | undefined;
+    protected poules: Poule[] = [];
+    protected losersQualifyGroups: QualifyGroup[] = [];
+    protected winnersQualifyGroups: QualifyGroup[] = [];
+    protected losersHorizontalPoules: HorizontalPoule[] = [];
+    protected winnersHorizontalPoules: HorizontalPoule[] = [];
+    // protected nrOfDropoutPlaces: number;
+    protected structureNumber: number = 0;
+    protected parentQualifyGroup: QualifyGroup | undefined;
+
+    constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {
+        this.number = roundNumber;
+        this.number.getRounds().push(this);
+        // this.setValue();
+    }
+
+    getId(): number {
+        return this.id;
+    }
+
+    setId(id: number): void {
+        this.id = id;
+    }
+
+    getCompetition(): Competition {
+        return this.getNumber().getCompetition();
+    }
+
+    getParent(): Round | undefined {
+        return this.getParentQualifyGroup()?.getRound();
+    }
+
+    getParentQualifyGroup(): QualifyGroup | undefined {
+        return this.parentQualifyGroup;
+    }
+
+    getNumber(): RoundNumber {
+        return this.number;
+    }
+
+    getNumberAsValue(): number {
+        return this.number.getNumber();
+    }
+
+    getStructureNumber(): number {
+        return this.structureNumber;
+    }
+
+    setStructureNumber(structureNumber: number): void {
+        this.structureNumber = structureNumber;
+    }
+
+    getQualifyGroups(winnersOrLosers?: number): QualifyGroup[] {
+        if (winnersOrLosers === undefined) {
+            return this.winnersQualifyGroups.concat(this.losersQualifyGroups);
+        }
+        return (winnersOrLosers === QualifyGroup.WINNERS) ? this.winnersQualifyGroups : this.losersQualifyGroups;
+    }
+
+    getQualifyGroupsLosersReversed() {
+        return this.winnersQualifyGroups.concat(this.losersQualifyGroups.slice().reverse());
+    }
+
+    getQualifyGroup(winnersOrLosers: number, qualifyGroupNumber: number): QualifyGroup | undefined {
+        return this.getQualifyGroups(winnersOrLosers).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
+    }
+
+    getBorderQualifyGroup(winnersOrLosers: number): QualifyGroup {
+        const qualifyGroups = this.getQualifyGroups(winnersOrLosers);
+        return qualifyGroups[qualifyGroups.length - 1];
+    }
+
+    getNrOfDropoutPlaces(): number {
+        // if (this.nrOfDropoutPlaces === undefined) {
+        // @TODO performance check
+        return this.getNrOfPlaces() - this.getNrOfPlacesChildren();
+        // }
+        // return this.nrOfDropoutPlaces;
+    }
+
+    // setNrOfDropoutPlaces(nrOfDropoutPlaces: number): void {
+    //     this.nrOfDropoutPlaces = nrOfDropoutPlaces;
+    // }
+
+    getChildren(): Round[] {
+        return this.getQualifyGroups().map(qualifyGroup => qualifyGroup.getChildRound());
+    }
+
+    getChild(winnersOrLosers: number, qualifyGroupNumber: number): Round | undefined {
+        return this.getQualifyGroup(winnersOrLosers, qualifyGroupNumber)?.getChildRound();
+    }
+
+    isRoot(): boolean {
+        return this.getParent() === undefined;
+    }
+
+    getName(): string | undefined {
+        return this.name;
+    }
+
+    setName(name: string): void {
+        this.name = name;
+    }
+
+    getPoules(): Poule[] {
+        return this.poules;
+    }
+
+    getPoule(number: number): Poule | undefined {
+        return this.getPoules().find(poule => poule.getNumber() === number);
+    }
+
+    getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
+        if (winnersOrLosers === QualifyGroup.WINNERS) {
+            return this.winnersHorizontalPoules;
+        }
+        return this.losersHorizontalPoules;
+    }
+
+    getHorizontalPoule(winnersOrLosers: number, number: number): HorizontalPoule | undefined {
+        return this.getHorizontalPoules(winnersOrLosers).find(horPoule => horPoule.getNumber() === number);
+    }
+
+    getFirstPlace(winnersOrLosers: number): Place | undefined {
+        return this.getHorizontalPoule(winnersOrLosers, 1)?.getFirstPlace();
+    }
+
+    getPlaces(order?: number): Place[] {
+        let places: Place[] = [];
+        if (order === Round.ORDER_NUMBER_POULE) {
+            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
+                places = places.concat(poule.getPlaces());
+            });
+        } else {
+            this.getPoules().forEach((poule) => {
+                places = places.concat(poule.getPlaces());
+            });
+        }
+        return places;
+    }
+
+    getPlace(placeLocation: PlaceLocation): Place | undefined {
+        return this.getPoule(placeLocation.getPouleNr())?.getPlace(placeLocation.getPlaceNr());
+    }
+
+    getGames(): Game[] {
+        const games: Game[] = [];
+        this.getPoules().forEach(poule => {
+            poule.getGames().forEach(game => games.push(game));
+        });
+        return games;
+    }
+
+    getNrOfGames(): number {
+        let nrOfGames = 0;
+        this.getPoules().forEach(poule => {
+            nrOfGames += poule.getGames().length;
+        });
+        return nrOfGames;
+    }
+
+    getState(): number {
+        if (this.getPoules().every(poule => poule.getState() === State.Finished)) {
+            return State.Finished;
+        } else if (this.getPoules().some(poule => poule.getState() !== State.Created)) {
+            return State.InProgress;
+        }
+        return State.Created;
+    }
+
+    hasBegun(): boolean {
+        return this.getState() > State.Created;
+    }
+
+    needsRanking(): boolean {
+        return this.getPoules().some(function (pouleIt) {
+            return pouleIt.needsRanking();
+        });
+    }
+
+    getNrOfPlaces(): number {
+        let nrOfPlaces = 0;
+        this.getPoules().forEach(poule => nrOfPlaces += poule.getPlaces().length);
+        return nrOfPlaces;
+    }
+
+    getNrOfPlacesChildren(winnersOrLosers?: number): number {
+        let nrOfPlacesChildRounds = 0;
+        this.getQualifyGroups(winnersOrLosers).forEach(qualifyGroup => {
+            nrOfPlacesChildRounds += qualifyGroup.getChildRound().getNrOfPlaces();
+        });
+        return nrOfPlacesChildRounds;
     }
 }
 

@@ -5,21 +5,16 @@ import { Season } from './season';
 import { State } from './state';
 import { SportConfig } from './sport/config';
 import { Sport } from './sport';
+import { RankingService } from './ranking/service';
 
 export class Competition {
-    protected id: string | number;
-    protected league: League;
-    protected season: Season;
-    protected ruleSet: number;
-    protected startDateTime: Date;
-    protected state: number;
+    protected id: string | number = 0;
+    protected ruleSet: number = RankingService.RULESSET_WC;
+    protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sportConfigs: SportConfig[] = [];
 
-    constructor(league: League, season: Season) {
-        this.setLeague(league);
-        this.setSeason(season);
-        this.setState(State.Created);
+    constructor(protected league: League, protected season: Season, protected startDateTime: Date) {
     }
 
     getId(): string | number {
@@ -34,16 +29,8 @@ export class Competition {
         return this.league;
     }
 
-    setLeague(league: League): void {
-        this.league = league;
-    }
-
     getSeason(): Season {
         return this.season;
-    }
-
-    setSeason(season: Season): void {
-        this.season = season;
     }
 
     getRuleSet(): number {
@@ -56,10 +43,6 @@ export class Competition {
 
     getStartDateTime(): Date {
         return this.startDateTime;
-    }
-
-    setStartDateTime(dateTime: Date): void {
-        this.startDateTime = dateTime;
     }
 
     getState(): number {
@@ -75,12 +58,12 @@ export class Competition {
     }
 
     getFields(): Field[] {
-        let fields = [];
+        let fields: Field[] = [];
         this.getSportConfigs().forEach(sportConfig => fields = fields.concat(sportConfig.getFields()));
         return fields;
     }
 
-    getField(priority: number): Field {
+    getField(priority: number): Field | undefined {
         return this.getFields().find(field => field.getPriority() === priority);
     }
 
@@ -88,7 +71,7 @@ export class Competition {
         return this.referees;
     }
 
-    getReferee(priority: number): Referee {
+    getReferee(priority: number): Referee | undefined {
         return this.referees.find(refereeIt => priority === refereeIt.getPriority());
     }
 
@@ -98,8 +81,8 @@ export class Competition {
             const referees = this.referees.splice(index, 1);
             referees.shift();
             let priority = referee.getPriority();
-            while (referees.length > 0) {
-                const removedReferee = referees.shift();
+            let removedReferee: Referee | undefined;
+            while (removedReferee = referees.shift()) {
                 removedReferee.setPriority(priority++);
                 this.referees.push(removedReferee);
             }

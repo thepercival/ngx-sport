@@ -4,19 +4,14 @@ import { GameScoreHomeAway } from './score/homeaway';
 export class GameScore extends GameScoreHomeAway {
     static readonly SCORED = 1;
     static readonly RECEIVED = 2;
-    protected id: number;
-    protected game: Game;
-    protected phase: number;
+    protected id: number = 0;
     protected number: number;
 
-    constructor(game: Game, home: number, away: number, phase: number, number?: number) {
+    constructor(protected game: Game, home: number, away: number, protected phase: number, number?: number) {
         super(home, away);
         this.setGame(game);
         this.setPhase(phase);
-        if (!number) {
-            number = game.getScores().length;
-        }
-        this.setNumber(number);
+        this.number = number ? number : game.getScores().length;
     }
 
     getId(): number {
@@ -46,9 +41,5 @@ export class GameScore extends GameScoreHomeAway {
 
     getNumber(): number {
         return this.number;
-    }
-
-    private setNumber(number: number): void {
-        this.number = number;
     }
 }

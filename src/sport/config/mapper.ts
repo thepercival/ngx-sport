@@ -15,8 +15,9 @@ export class SportConfigMapper {
     toObject(json: JsonSportConfig, competition: Competition, config?: SportConfig): SportConfig {
         if (config === undefined) {
             const sport = this.sportMapper.toObject(json.sport);
-            config = new SportConfig(sport, competition);
-            json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, config));
+            const newConfig = new SportConfig(sport, competition);
+            json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, newConfig));
+            config = newConfig;
         }
         config.setId(json.id);
         config.setWinPoints(json.winPoints);

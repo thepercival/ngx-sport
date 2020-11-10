@@ -1,6 +1,6 @@
 import { PlaceLocation } from '../place/location';
 import { Place } from '../place';
-import { Round } from '../round';
+import { Round } from '../qualify/group';
 
 export class RankedRoundItem {
     constructor(private unranked: UnrankedRoundItem, private uniqueRank: number, private rank: number
@@ -23,8 +23,8 @@ export class RankedRoundItem {
         return this.unranked;
     }
 
-    getPlace(): Place {
-        return this.unranked.getRound().getPlace(this.unranked.getPlaceLocation());
+    getPlace(): Place | undefined {
+        return this.unranked.getRound().getPlace(this.getPlaceLocation());
     }
 }
 
@@ -108,7 +108,7 @@ export class UnrankedRoundItem {
 }
 
 export class EndRankingItem {
-    constructor(private uniqueRank: number, private rank: number, private placeLocation: PlaceLocation) {
+    constructor(private uniqueRank: number, private rank: number, private placeLocation?: PlaceLocation) {
     }
 
     getUniqueRank(): number {
@@ -119,7 +119,7 @@ export class EndRankingItem {
         return this.rank;
     }
 
-    getPlaceLocation(): PlaceLocation {
+    getPlaceLocation(): PlaceLocation | undefined {
         return this.placeLocation;
     }
 }

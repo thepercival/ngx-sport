@@ -2,12 +2,7 @@ import { Game } from '../../game';
 
 export class GameScoreHomeAway {
 
-    protected home: number;
-    protected away: number;
-
-    constructor(home: number, away: number) {
-        this.setHome(home);
-        this.setAway(away);
+    constructor(protected home: number, protected away: number) {
     }
 
     getHome(): number {

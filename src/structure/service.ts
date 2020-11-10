@@ -1,13 +1,11 @@
-import { QualifyGroup } from '../../src/qualify/group';
+import { QualifyGroup, Round } from '../qualify/group';
 import { Competition } from '../competition';
 import { Place } from '../place';
-import { PlanningConfigService } from '../planning/config/service';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { HorizontalPouleService, HorizontolPoulesCreator } from '../poule/horizontal/service';
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
-import { Round } from '../round';
 import { RoundNumber } from '../round/number';
 import { SportConfigService } from '../sport/config/service';
 import { SportScoreConfigService } from '../sport/scoreconfig/service';
@@ -16,18 +14,17 @@ import { VoetbalRange } from '../range';
 import { SportMapper } from '../sport/mapper';
 import { SportConfigMapper } from '../sport/config/mapper';
 import { FieldMapper } from '../field/mapper';
+import { PlanningConfig } from '../planning/config';
 
 export class StructureService {
     static readonly DefaultNrOfPlaces = 5;
 
-    private planningConfigService: PlanningConfigService;
     private sportConfigService: SportConfigService;
 
     constructor(
         private placeRanges: PlaceRange[]/*,
         private sportConfigService: SportConfigService,*/
         /*private planningConfigService: PlanningConfigService*/) {
-        this.planningConfigService = new PlanningConfigService();
         this.sportConfigService = new SportConfigService(
             new SportScoreConfigService(),
             new SportConfigMapper(new SportMapper(), new FieldMapper()),
@@ -37,7 +34,7 @@ export class StructureService {
 
     create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        this.planningConfigService.createDefault(firstRoundNumber);
+        new PlanningConfig(firstRoundNumber);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
@@ -67,7 +64,7 @@ export class StructureService {
         structure.setStructureNumbers();
     }
 
-    addPlaceToRootRound(round: Round): Place {
+    addPlaceToRootRound(round: Round): Place | undefined {
         const newNrOfPlaces = round.getNrOfPlaces() + 1;
         const nrOfPoules = round.getPoules().length;
         this.checkRanges(newNrOfPlaces, nrOfPoules);
@@ -295,13 +292,15 @@ export class StructureService {
         if (roundNrOfPlaces < 4 && newNrOfPlacesChildren >= 2) {
             newNrOfPlacesChildren = 0;
         }
-        const getNewQualifyGroup = (removedQualifyGroups): HorizontolPoulesCreator => {
+        const getNewQualifyGroup = (removedQualifyGroups: QualifyGroup[]): HorizontolPoulesCreator => {
             let qualifyGroup = removedQualifyGroups.shift();
             let nrOfQualifiers;
             if (qualifyGroup === undefined) {
-                qualifyGroup = new QualifyGroup(round, winnersOrLosers);
-                const nextRoundNumber = round.getNumber().hasNext() ? round.getNumber().getNext() : this.createRoundNumber(round);
-                const tmp = new Round(nextRoundNumber, qualifyGroup);
+                let nextRoundNumber = round.getNumber().getNext();
+                if (!nextRoundNumber) {
+                    nextRoundNumber = this.createRoundNumber(round);
+                }
+                qualifyGroup = new QualifyGroup(round, winnersOrLosers, nextRoundNumber);
                 nrOfQualifiers = newNrOfPlacesChildren;
             } else {
                 round.getQualifyGroups(winnersOrLosers).push(qualifyGroup);
@@ -404,7 +403,7 @@ export class StructureService {
 
     private refillRound(round: Round, nrOfPlaces: number, nrOfPoules: number): Round {
         if (nrOfPlaces <= 0) {
-            return;
+            return round;
         }
 
         if (((nrOfPlaces / nrOfPoules) < 2)) {
@@ -426,10 +425,8 @@ export class StructureService {
     }
 
     protected getRoot(round: Round): Round {
-        if (!round.isRoot()) {
-            return this.getRoot(round.getParent());
-        }
-        return round;
+        const parent = round.getParent();
+        return parent ? this.getRoot(parent) : round;
     }
 
     getNrOfPlacesPerPoule(nrOfPlaces: number, nrOfPoules: number, floor: boolean): number {
@@ -466,7 +463,7 @@ export class StructureService {
         }
     }
 
-    getDefaultNrOfPoules(nrOfPlaces): number {
+    getDefaultNrOfPoules(nrOfPlaces: number): number {
         this.checkRanges(nrOfPlaces);
         switch (nrOfPlaces) {
             case 2:

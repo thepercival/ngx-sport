@@ -1,5 +1,5 @@
 export interface JsonAssociation {
-    id?: string | number;
+    id: string | number;
     name: string;
     description?: string;
     parent?: JsonAssociation;

@@ -1,6 +1,6 @@
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
-import { Round } from '../round';
+import { Round } from './group';
 
 export class QualifyReservationService {
     private reservations: PouleNumberReservations[] = [];
@@ -12,14 +12,14 @@ export class QualifyReservationService {
     }
 
     isFree(toPouleNumber: number, fromPoule: Poule): boolean {
-        return !this.get(toPouleNumber).fromPoules.some(fromPouleIt => fromPouleIt === fromPoule);
+        return !this.get(toPouleNumber)?.fromPoules.some(fromPouleIt => fromPouleIt === fromPoule);
     }
 
     reserve(toPouleNumber: number, fromPoule: Poule) {
-        this.get(toPouleNumber).fromPoules.push(fromPoule);
+        this.get(toPouleNumber)?.fromPoules.push(fromPoule);
     }
 
-    protected get(toPouleNumber: number): PouleNumberReservations {
+    protected get(toPouleNumber: number): PouleNumberReservations | undefined {
         return this.reservations.find(reservationIt => reservationIt.toPouleNr === toPouleNumber);
     }
 
@@ -29,11 +29,11 @@ export class QualifyReservationService {
      * @param fromPlaceLocations
      */
     getFreeAndLeastAvailabe(toPouleNumber: number, fromRound: Round, fromPlaceLocations: PlaceLocation[]): PlaceLocation {
-        let retPlaceLocation: PlaceLocation;
-        let leastNrOfPoulesAvailable;
+        let retPlaceLocation: PlaceLocation | undefined;
+        let leastNrOfPoulesAvailable: number | undefined;
         fromPlaceLocations.forEach(fromPlaceLocation => {
             const fromPoule = fromRound.getPoule(fromPlaceLocation.getPouleNr());
-            if (!this.isFree(toPouleNumber, fromPoule)) {
+            if (!fromPoule || !this.isFree(toPouleNumber, fromPoule)) {
                 return;
             }
             const nrOfPoulesAvailable = this.getNrOfPoulesAvailable(fromPoule, toPouleNumber + 1);

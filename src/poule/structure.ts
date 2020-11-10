@@ -16,6 +16,19 @@ export class PouleStructure extends Array<number> {
         return this[this.length - 1];
     }
 
+    public selfRefereeAvailable(nrOfGamePlaces: number): boolean {
+        return this.selfRefereeSamePouleAvailable(nrOfGamePlaces)
+            || this.selfRefereeOtherPoulesAvailable();
+    }
+
+    public selfRefereeOtherPoulesAvailable(): boolean {
+        return this.getNrOfPoules() > 1;
+    }
+
+    public selfRefereeSamePouleAvailable(nrOfGamePlaces: number): boolean {
+        return this.getSmallestPoule() > nrOfGamePlaces;
+    }
+
     /*public getNrOfPoulesByNrOfPlaces(): array {
         nrOfPoulesByNrOfPlaces = [];
         foreach(this.toArray() as pouleNrOfPlaces) {

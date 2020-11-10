@@ -3,10 +3,9 @@ import { GamePlace } from './game/place';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { Place } from './place';
-import { QualifyGroup } from './qualify/group';
+import { QualifyGroup, Round } from './qualify/group';
 import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
-import { Round } from './round';
 import { RoundNumber } from './round/number';
 import { PlaceLocationMap } from './place/location/map';
 
@@ -90,8 +89,8 @@ export class NameService {
         return name + place.getNumber();
     }
 
-    getPlaceFromName(place: Place, p_competitorName, longName = false): string {
-        let competitorName = p_competitorName && this.placeLocationMap;
+    getPlaceFromName(place: Place, competitorName: boolean, longName: boolean): string {
+        competitorName = competitorName ? (this.placeLocationMap !== undefined) : false;
         if (competitorName) {
             const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
             if (particpant !== undefined) {
@@ -105,7 +104,7 @@ export class NameService {
         }
 
         const fromQualifyRule = place.getFromQualifyRule();
-        if (fromQualifyRule.isMultiple()) {
+        if (fromQualifyRule?.isMultiple()) {
             if (longName) {
                 return this.getHorizontalPouleName((<QualifyRuleMultiple>fromQualifyRule).getFromHorizontalPoule());
             }
@@ -154,12 +153,14 @@ export class NameService {
         return name;
     }
 
-    getRefereeName(game: Game, longName?: boolean): string {
-        if (game.getReferee() !== undefined) {
-            return longName ? game.getReferee().getName() : game.getReferee().getInitials();
+    getRefereeName(game: Game, longName: boolean | undefined): string | undefined {
+        const referee = game.getReferee();
+        if (referee) {
+            return longName ? referee.getName() : referee.getInitials();
         }
-        if (game.getRefereePlace() !== undefined) {
-            return this.getPlaceName(game.getRefereePlace(), true, longName);
+        const refereePlace = game.getRefereePlace();
+        if (refereePlace) {
+            return this.getPlaceName(refereePlace, true, longName);
         }
         return '';
     }
@@ -168,7 +169,7 @@ export class NameService {
         if (round.getQualifyGroups().length === 1) {
             return true;
         }
-        let depthAll;
+        let depthAll: number;
         return round.getQualifyGroups().every(qualifyGroup => {
             const qualifyGroupMaxDepth = this.getMaxDepth(qualifyGroup.getChildRound());
             if (depthAll === undefined) {
@@ -179,7 +180,7 @@ export class NameService {
     }
 
     private roundsHaveSameName(roundNumber: RoundNumber): boolean {
-        let roundNameAll;
+        let roundNameAll: string;
         return roundNumber.getRounds().every((round) => {
             const roundName = this.getRoundName(round, true);
             if (roundNameAll === undefined) {
@@ -198,8 +199,9 @@ export class NameService {
         if (!round.needsRanking()) {
             return false;
         }
-        if (!round.isRoot()) {
-            return this.roundAndParentsNeedsRanking(round.getParent());
+        const parent = round.getParent();
+        if (parent) {
+            return this.roundAndParentsNeedsRanking(parent);
         }
         return true;
     }

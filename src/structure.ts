@@ -1,5 +1,4 @@
-import { QualifyGroup } from './qualify/group';
-import { Round } from './round';
+import { QualifyGroup, Round } from './qualify/group';
 import { RoundNumber } from './round/number';
 
 
@@ -16,10 +15,11 @@ export class Structure {
 
     getLastRoundNumber(): RoundNumber {
         const getLastRoundNumber = (roundNumber: RoundNumber): RoundNumber => {
-            if (!roundNumber.hasNext()) {
+            const nextRoundNumber = roundNumber.getNext();
+            if (!nextRoundNumber) {
                 return roundNumber;
             }
-            return getLastRoundNumber(roundNumber.getNext());
+            return getLastRoundNumber(nextRoundNumber);
         };
         return getLastRoundNumber(this.getFirstRoundNumber());
     }
@@ -32,17 +32,17 @@ export class Structure {
         const roundNumbers: RoundNumber[] = [];
         const addRoundNumber = (roundNumber: RoundNumber) => {
             roundNumbers.push(roundNumber);
-            if (roundNumber.hasNext()) {
-                addRoundNumber(roundNumber.getNext());
+            const nextRoundNumber = roundNumber.getNext();
+            if (nextRoundNumber) {
+                addRoundNumber(nextRoundNumber);
             }
         };
         addRoundNumber(this.getFirstRoundNumber());
         return roundNumbers;
     }
 
-    getRoundNumber(initRoundNumberAsValue: number): RoundNumber {
-        const getRoundNumber = (roundNumberAsValue: number, roundNumber: RoundNumber): RoundNumber => {
-
+    getRoundNumber(initRoundNumberAsValue: number): RoundNumber | undefined {
+        const getRoundNumber = (roundNumberAsValue: number, roundNumber?: RoundNumber): RoundNumber | undefined => {
             if (roundNumber === undefined) {
                 return undefined;
             }
@@ -59,10 +59,11 @@ export class Structure {
     }
 
     protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
-        if (!roundNumber.hasNext() || !roundNumber.getHasPlanning()) {
+        const nextRoundNumber = roundNumber.getNext();
+        if (!nextRoundNumber || !roundNumber.getHasPlanning()) {
             return roundNumber.getHasPlanning();
         }
-        return this.hasRoundNumberPlanning(roundNumber.getNext());
+        return this.hasRoundNumberPlanning(nextRoundNumber);
     }
 
     setStructureNumbers() {
@@ -79,15 +80,16 @@ export class Structure {
         };
         let pouleNr = 1;
         const setPouleStructureNumbers = (roundNumber: RoundNumber) => {
-            const rounds = roundNumber.getRounds();
+            const rounds: Round[] = roundNumber.getRounds();
             rounds.sort((roundA, roundB) => {
                 return (roundA.getStructureNumber() > roundB.getStructureNumber()) ? 1 : -1;
             });
             rounds.forEach(round => {
                 round.getPoules().forEach(poule => poule.setStructureNumber(pouleNr++));
             });
-            if (roundNumber.hasNext()) {
-                setPouleStructureNumbers(roundNumber.getNext());
+            const nextRoundNumber = roundNumber.getNext();
+            if (nextRoundNumber) {
+                setPouleStructureNumbers(nextRoundNumber);
             }
         };
         setRoundStructureNumbers(this.rootRound);
