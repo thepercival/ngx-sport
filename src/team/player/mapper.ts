@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Association } from '../../association';
 import { Period } from '../../period';
+import { Association } from '../../association';
 import { Person } from '../../person';
 import { TeamMapper } from '../mapper';
-import { Player } from '../player';
 import { JsonPlayer } from './json';
+import { Player } from '../player';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlayerMapper {
 
-    constructor(protected teamMapper: TeamMapper) { }
+    constructor(protected teamMapper: TeamMapper) {
+    }
 
-    toObject(json: JsonPlayer, person: Person, association: Association): Player {
-
+    toObject(json: JsonPlayer, association: Association, person: Person): Player {
         const player = new Player(
             this.teamMapper.toObject(json.team, association),
             person,
-            new Period(new Date(json.startDateTime), new Date(json.endDateTime)),
+            new Period(new Date(json.start), new Date(json.end)),
             json.line);
 
         player.setId(json.id);
@@ -30,8 +30,8 @@ export class PlayerMapper {
         return {
             id: player.getId(),
             team: this.teamMapper.toJson(player.getTeam()),
-            startDateTime: player.getPeriod().getStartDateTime().toISOString(),
-            endDateTime: player.getPeriod().getEndDateTime().toISOString(),
+            start: player.getPeriod().getStartDateTime().toISOString(),
+            end: player.getPeriod().getEndDateTime().toISOString(),
             line: player.getLine()
         };
     }

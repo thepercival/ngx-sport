@@ -1,9 +1,10 @@
+import { JsonPerson } from '../../person/json';
+import { JsonPeriod } from '../../period/json';
 import { JsonTeam } from "../json";
 
-export interface JsonPlayer {
+export interface JsonPlayer extends JsonPeriod {
     id: number;
     team: JsonTeam;
-    startDateTime: string;
-    endDateTime: string;
     line: number;
+    person?: JsonPerson;
 }

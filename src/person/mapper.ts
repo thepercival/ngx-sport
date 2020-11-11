@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { PlayerMapper } from '../team/player/mapper';
 import { Association } from '../association';
 import { Person } from '../person';
-import { PlayerMapper } from '../team/player/mapper';
+import { TeamMapper } from '../team/mapper';
 import { JsonPerson } from './json';
 
 @Injectable({
@@ -9,18 +10,19 @@ import { JsonPerson } from './json';
 })
 export class PersonMapper {
 
-    constructor(protected playerMapper: PlayerMapper) { }
+    constructor(protected teamMapper: TeamMapper, protected playerMapper: PlayerMapper) {
+    }
 
     toObject(json: JsonPerson, association: Association, existingPerson: Person | undefined): Person {
         const person = existingPerson ? existingPerson : new Person(json.firstName, json.nameInsertion, json.lastName);
         person.setId(json.id);
         if (json.players) {
-            json.players.forEach(jsonPlayer => this.playerMapper.toObject(jsonPlayer, person, association));
+            json.players.forEach(jsonPlayer => this.playerMapper.toObject(jsonPlayer, association, person));
         }
         return person;
     }
 
-    toJson(person: Person): JsonPerson {
+    toJsonn(person: Person): JsonPerson {
         return {
             id: +person.getId(),
             firstName: person.getLastName(),
