@@ -6,7 +6,7 @@ export class Player {
     protected id: number = 0;
 
     constructor(protected team: Team, protected person: Person, protected period: Period, protected line: number) {
-
+        person.getPlayers().push(this);
     }
 
     getId(): number {

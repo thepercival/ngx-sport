@@ -7,8 +7,8 @@ import { SeasonMapper } from '../season/mapper';
 import { SportMapper } from '../sport/mapper';
 import { RefereeMapper } from '../referee/mapper';
 import { SportConfigMapper } from '../sport/config/mapper';
-import { FieldMapper } from '../field/mapper';
 import { JsonCompetition } from './json';
+import { TeamCompetitorMapper } from '../competitor/team/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +19,8 @@ export class CompetitionMapper {
         private leagueMapper: LeagueMapper,
         private seasonMapper: SeasonMapper,
         private refereeMapper: RefereeMapper,
-        private sportConfigMapper: SportConfigMapper
+        private sportConfigMapper: SportConfigMapper,
+        private teamCompetitorMapper: TeamCompetitorMapper
     ) { }
 
     toObject(json: JsonCompetition, disableCache?: boolean): Competition {
@@ -32,6 +33,9 @@ export class CompetitionMapper {
 
         json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
         json.sportConfigs.forEach(jsonSportConfig => this.sportConfigMapper.toObject(jsonSportConfig, competition));
+        if (json.teamCompetitors) {
+            json.teamCompetitors.forEach(jsonteamCompetitor => this.teamCompetitorMapper.toObject(jsonteamCompetitor, competition));
+        };
         return competition;
     }
 

@@ -1,4 +1,4 @@
-import { Poule } from '../../src/poule';
+import { Poule } from '../../public_api';
 import { RoundNumber } from '../../src/round/number';
 import { JsonGame } from '../../src/game/json';
 import { jsonGames2Places } from '../data/games/2places';
@@ -16,7 +16,7 @@ export function createGames(roundNumber: RoundNumber) {
             return jsonGames3Places;
         } else if (poule.getPlaces().length === 4) {
             return jsonGames4Places;
-        } else if (poule.getPlaces().length === 5) {
+        } else /*if (poule.getPlaces().length === 5)*/ {
             return jsonGames5Places;
         }
     };

@@ -8,9 +8,10 @@ import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { RoundNumber } from './round/number';
 import { PlaceLocationMap } from './place/location/map';
+import { FormationLineDef } from './sport/formation';
 
 export class NameService {
-    constructor(private placeLocationMap: PlaceLocationMap) {
+    constructor(private placeLocationMap?: PlaceLocationMap) {
     }
 
     getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
@@ -76,7 +77,7 @@ export class NameService {
 
     getPlaceName(place: Place, p_competitorName = false, longName = false): string {
         let competitorName = p_competitorName && this.placeLocationMap;
-        if (competitorName) {
+        if (competitorName && this.placeLocationMap) {
             const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
             if (particpant !== undefined) {
                 return particpant.getName();
@@ -91,7 +92,7 @@ export class NameService {
 
     getPlaceFromName(place: Place, competitorName: boolean, longName: boolean): string {
         competitorName = competitorName ? (this.placeLocationMap !== undefined) : false;
-        if (competitorName) {
+        if (competitorName && this.placeLocationMap) {
             const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
             if (particpant !== undefined) {
                 return particpant.getName();
@@ -163,6 +164,19 @@ export class NameService {
             return this.getPlaceName(refereePlace, true, longName);
         }
         return '';
+    }
+
+    getFormationLineName(number: FormationLineDef): string {
+        if (number === FormationLineDef.Goalkeeper) {
+            return 'keeper';
+        } else if (number === FormationLineDef.Defense) {
+            return 'verdediging';
+        } else if (number === FormationLineDef.Midfield) {
+            return 'middenveld';
+        } else if (number === FormationLineDef.Forward) {
+            return 'aanval';
+        }
+        return 'alle linies';
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {

@@ -15,7 +15,7 @@ export class TeamCompetitorMapper {
     toObject(json: JsonTeamCompetitor, competition: Competition): TeamCompetitor {
 
         const competitor = new TeamCompetitor(competition, json.pouleNr, json.placeNr,
-            this.teamMapper.toObject(json.team, competition.getLeague().getAssociation())
+            this.teamMapper.toObject(json.team, competition.getAssociation())
         );
         competitor.setId(json.id);
         this.updateObject(json, competitor);

@@ -6,6 +6,9 @@ import { State } from './state';
 import { SportConfig } from './sport/config';
 import { Sport } from './sport';
 import { RankingService } from './ranking/service';
+import { Association } from './association';
+import { TeamCompetitor } from './competitor/team';
+import { TeamCompetitorMapper } from './competitor/team/mapper';
 
 export class Competition {
     protected id: string | number = 0;
@@ -13,6 +16,7 @@ export class Competition {
     protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sportConfigs: SportConfig[] = [];
+    protected teamCompetitors: TeamCompetitor[] = [];
 
     constructor(protected league: League, protected season: Season, protected startDateTime: Date) {
     }
@@ -27,6 +31,10 @@ export class Competition {
 
     getLeague(): League {
         return this.league;
+    }
+
+    getAssociation(): Association {
+        return this.getLeague().getAssociation();
     }
 
     getSeason(): Season {
@@ -111,5 +119,9 @@ export class Competition {
 
     getFirstSportConfig(): SportConfig {
         return this.sportConfigs[0];
+    }
+
+    getTeamCompetitors(): TeamCompetitor[] {
+        return this.teamCompetitors;
     }
 }

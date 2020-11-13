@@ -44,4 +44,13 @@ export class Person {
         }
         return name;
     }
+
+    public getPlayers(): Player[] {
+        return this.players;
+    }
+
+    public getPlayer(date?: Date): Player | undefined {
+        const searchDate = date ? date : new Date();
+        return this.getPlayers().find(player => player.getPeriod().isIn(searchDate))
+    }
 }

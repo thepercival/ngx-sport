@@ -28,6 +28,9 @@ export class TeamMapper {
     updateObject(json: JsonTeam, team: Team) {
         team.setName(json.name);
         team.setAbbreviation(json.abbreviation);
+        if (json.imageUrl) {
+            team.setImageUrl(json.imageUrl);
+        }
     }
 
     toJson(team: Team): JsonTeam {

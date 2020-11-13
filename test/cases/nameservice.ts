@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { StructureService } from '../../src/structure/service';
 import { getCompetitionMapper } from '../helpers/mappers';
 import { jsonBaseCompetition } from '../data/competition';
 
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { NameService, PlaceLocationMap, QualifyGroup, Referee } from '../../public_api';
+import { StructureService, NameService, PlaceLocationMap, QualifyGroup, Referee } from '../../public_api';
 
 describe('NameService', () => {
 

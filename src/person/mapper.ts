@@ -22,7 +22,7 @@ export class PersonMapper {
         return person;
     }
 
-    toJsonn(person: Person): JsonPerson {
+    toJson(person: Person): JsonPerson {
         return {
             id: +person.getId(),
             firstName: person.getLastName(),
