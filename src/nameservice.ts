@@ -8,7 +8,7 @@ import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { RoundNumber } from './round/number';
 import { PlaceLocationMap } from './place/location/map';
-import { FormationLineDef } from './sport/formation';
+import { SportCustom } from './sport/custom';
 
 export class NameService {
     constructor(private placeLocationMap?: PlaceLocationMap) {
@@ -166,14 +166,14 @@ export class NameService {
         return '';
     }
 
-    getFormationLineName(number: FormationLineDef): string {
-        if (number === FormationLineDef.Goalkeeper) {
+    getFormationLineName(line: number): string {
+        if (line === SportCustom.Football_Line_GoalKepeer) {
             return 'keeper';
-        } else if (number === FormationLineDef.Defense) {
+        } else if (line === SportCustom.Football_Line_Defense) {
             return 'verdediging';
-        } else if (number === FormationLineDef.Midfield) {
+        } else if (line === SportCustom.Football_Line_Midfield) {
             return 'middenveld';
-        } else if (number === FormationLineDef.Forward) {
+        } else if (line === SportCustom.Football_Line_Forward) {
             return 'aanval';
         }
         return 'alle linies';

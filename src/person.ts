@@ -4,7 +4,7 @@ export class Person {
     protected id: string | number = 0;
     protected players: Player[] = [];
 
-    constructor(protected firstName: string, protected nameInsertion: string, protected lastName: string) {
+    constructor(protected firstName: string, protected nameInsertion: string | undefined, protected lastName: string) {
 
     }
 
@@ -20,7 +20,7 @@ export class Person {
         return this.firstName;
     }
 
-    public getNameInsertion(): string {
+    public getNameInsertion(): string | undefined {
         return this.nameInsertion;
     }
 
@@ -30,7 +30,7 @@ export class Person {
 
     public getName(): string {
         let name = this.firstName.substr(0, 1);
-        if (this.nameInsertion?.length > 0) {
+        if (this.nameInsertion) {
             if (name.length > 0) {
                 name += " ";
             }

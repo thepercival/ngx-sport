@@ -15,6 +15,12 @@ export abstract class SportCustom {
     static readonly Baseball = 13;
     static readonly IceHockey = 14;
 
+    static readonly Football_Line_GoalKepeer = 1;
+    static readonly Football_Line_Defense = 2;
+    static readonly Football_Line_Midfield = 4;
+    static readonly Football_Line_Forward = 8;
+    static readonly Football_Line_All = 15;
+
     static get(): number[] {
         return [
             SportCustom.Badminton,

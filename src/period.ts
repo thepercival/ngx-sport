@@ -12,7 +12,10 @@ export class Period {
         return this.endDateTime;
     }
 
-    isIn(date: Date): boolean {
+    isIn(date?: Date): boolean {
+        if (date === undefined) {
+            date = new Date();
+        }
         return date.getTime() >= this.startDateTime.getTime() && date.getTime() <= this.endDateTime.getTime();
     }
 }
