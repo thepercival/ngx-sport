@@ -2,6 +2,7 @@ import { Player } from './team/player';
 
 export class Person {
     protected id: string | number = 0;
+    protected imageUrl: string | undefined;
     protected players: Player[] = [];
 
     constructor(protected firstName: string, protected nameInsertion: string | undefined, protected lastName: string) {
@@ -52,5 +53,13 @@ export class Person {
     public getPlayer(date?: Date): Player | undefined {
         const searchDate = date ? date : new Date();
         return this.getPlayers().find(player => player.getPeriod().isIn(searchDate))
+    }
+
+    getImageUrl(): string | undefined {
+        return this.imageUrl;
+    }
+
+    setImageUrl(imageUrl: string): void {
+        this.imageUrl = imageUrl;
     }
 }

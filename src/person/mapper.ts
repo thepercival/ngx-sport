@@ -9,13 +9,24 @@ import { JsonPerson } from './json';
     providedIn: 'root'
 })
 export class PersonMapper {
+    protected cache: PersonMap = new PersonMap();
 
     constructor(protected teamMapper: TeamMapper, protected playerMapper: PlayerMapper) {
     }
 
-    toObject(json: JsonPerson, association: Association, existingPerson: Person | undefined): Person {
-        const person = existingPerson ? existingPerson : new Person(json.firstName, json.nameInsertion, json.lastName);
-        person.setId(json.id);
+    toObject(json: JsonPerson, association: Association, disableCache?: boolean): Person {
+        let cachedPerson = (disableCache !== true) ? this.cache.get(json.id) : undefined;
+        let person: Person;
+        if (cachedPerson === undefined) {
+            person = new Person(json.firstName, json.nameInsertion, json.lastName);
+            person.setId(json.id);
+            this.cache.set(+person.getId(), person);
+        } else {
+            person = cachedPerson;
+        }
+        if (json.imageUrl) {
+            person.setImageUrl(json.imageUrl);
+        }
         if (json.players) {
             json.players.forEach(jsonPlayer => this.playerMapper.toObject(jsonPlayer, association, person));
         }
@@ -30,5 +41,9 @@ export class PersonMapper {
             lastName: person.getLastName()
         };
     }
+}
+
+export class PersonMap extends Map<number, Person> {
+
 }
 

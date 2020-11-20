@@ -5,5 +5,6 @@ export interface JsonPerson {
     firstName: string;
     nameInsertion?: string;
     lastName: string;
+    imageUrl?: string;
     players?: JsonPlayer[];
 }
