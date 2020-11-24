@@ -14,11 +14,15 @@ export class PersonMapper {
     constructor(protected teamMapper: TeamMapper, protected playerMapper: PlayerMapper) {
     }
 
+    protected createObject(json: JsonPerson): Person {
+        return new Person(json.firstName, json.nameInsertion, json.lastName);
+    }
+
     toObject(json: JsonPerson, association: Association, disableCache?: boolean): Person {
         let cachedPerson = (disableCache !== true) ? this.cache.get(json.id) : undefined;
         let person: Person;
         if (cachedPerson === undefined) {
-            person = new Person(json.firstName, json.nameInsertion, json.lastName);
+            person = this.createObject(json);
             person.setId(json.id);
             this.cache.set(+person.getId(), person);
         } else {

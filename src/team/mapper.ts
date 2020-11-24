@@ -7,19 +7,19 @@ import { Team } from '../team';
     providedIn: 'root'
 })
 export class TeamMapper {
-    protected cache: TeamMap = {};
+    protected cache: TeamMap = new TeamMap();
 
     constructor() { }
 
     toObject(json: JsonTeam, association: Association, disableCache?: boolean): Team {
         let team;
         if (disableCache !== true) {
-            team = this.cache[json.id];
+            team = this.cache.get(+json.id);
         }
         if (team === undefined) {
             team = new Team(association, json.name);
             team.setId(json.id);
-            this.cache[team.getId()] = team;
+            this.cache.set(+team.getId(), team);
         }
         this.updateObject(json, team);
         return team;
@@ -43,6 +43,7 @@ export class TeamMapper {
     }
 }
 
-interface TeamMap {
-    [key: string]: Team;
+
+export class TeamMap extends Map<number, Team> {
+
 }

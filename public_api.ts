@@ -97,6 +97,7 @@ export * from './src/structure/service';
 export * from './src/structure/mapper';
 export * from './src/structure/json';
 export * from './src/team';
+export * from './src/team/mapper';
 export * from './src/team/player';
 export * from './src/team/player/json';
 export * from './src/team/player/mapper';

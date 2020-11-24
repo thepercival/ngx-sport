@@ -18,4 +18,8 @@ export class Period {
         }
         return date.getTime() >= this.startDateTime.getTime() && date.getTime() <= this.endDateTime.getTime();
     }
+
+    overlaps(period: Period): boolean {
+        return (period.getEndDateTime() > this.getStartDateTime() && period.getStartDateTime() < this.getEndDateTime());
+    }
 }

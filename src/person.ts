@@ -1,3 +1,5 @@
+import { Period } from './period';
+import { Team } from './team';
 import { Player } from './team/player';
 
 export class Person {
@@ -46,20 +48,46 @@ export class Person {
         return name;
     }
 
-    public getPlayers(): Player[] {
-        return this.players;
-    }
-
-    public getPlayer(date?: Date): Player | undefined {
-        const searchDate = date ? date : new Date();
-        return this.getPlayers().find(player => player.getPeriod().isIn(searchDate))
-    }
-
     getImageUrl(): string | undefined {
         return this.imageUrl;
     }
 
     setImageUrl(imageUrl: string): void {
         this.imageUrl = imageUrl;
+    }
+
+    public getPlayers(team?: Team, period?: Period, line?: number): Player[] {
+        const filters: { (player: Player): boolean; }[] = [];
+        if (team) {
+            filters.push((player: Player) => player.getTeam() === team);
+        }
+        if (period) {
+            filters.push((player: Player) => player.getPeriod().overlaps(period));
+        }
+        if (line) {
+            filters.push((player: Player) => player.getLine() === line);
+        }
+        if (filters.length === 0) {
+            return this.players;
+        }
+        return this.players.filter((player: Player): boolean => {
+            return filters.every(filter => filter(player));
+        });
+    }
+
+    public getPlayer(team: Team, date?: Date): Player | undefined {
+        const checkDate = date ? date : new Date();
+        const filters: { (player: Player): boolean; }[] = [
+            (player: Player) => player.getTeam() === team,
+            (player: Player) => player.getPeriod().isIn(checkDate)
+        ]
+        return this.players.find((player: Player): boolean => {
+            return filters.every(filter => filter(player));
+        });
+    }
+
+    public getPlayerOneTeamSim(date?: Date): Player | undefined {
+        const checkDate = date ? date : new Date();
+        return this.players.find((player: Player): boolean => player.getPeriod().isIn(checkDate));
     }
 }
