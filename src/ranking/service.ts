@@ -275,8 +275,8 @@ export class RankingService {
             if ((p_gameIt.getState() & this.gameStates) === 0) {
                 return;
             }
-            const inHome = places.some(place => p_gameIt.isParticipating(place, Game.HOME));
-            const inAway = places.some(place => p_gameIt.isParticipating(place, Game.AWAY));
+            const inHome = places.some(place => p_gameIt.isParticipating(place, Game.Home));
+            const inAway = places.some(place => p_gameIt.isParticipating(place, Game.Away));
             if (inHome && inAway) {
                 gamesRet.push(p_gameIt);
             }

@@ -40,7 +40,7 @@ export class RankingItemsGetter {
             if (useSubScore) {
                 finalSubScore = this.sportScoreConfigService.getFinalSubScore(game);
             }
-            [Game.HOME, Game.AWAY].forEach(homeAway => {
+            [Game.Home, Game.Away].forEach(homeAway => {
                 const points = this.getNrOfPoints(finalScore, homeAway, game);
                 const scored = this.getNrOfUnits(finalScore, homeAway, GameScore.SCORED);
                 const received = this.getNrOfUnits(finalScore, homeAway, GameScore.RECEIVED);
@@ -72,31 +72,22 @@ export class RankingItemsGetter {
         if (finalScore === undefined) {
             return 0;
         }
-        if (this.isWin(finalScore, homeAway)) {
-            if (game.getFinalPhase() === Game.PHASE_REGULARTIME) {
+        if (finalScore.getResult(homeAway) === Game.Result_Win) {
+            if (game.getFinalPhase() === Game.Phase_RegularTime) {
                 return game.getSportConfig().getWinPoints();
-            } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+            } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
                 return game.getSportConfig().getWinPointsExt();
             }
-        } else if (this.isDraw(finalScore)) {
-            if (game.getFinalPhase() === Game.PHASE_REGULARTIME) {
+        } else if (finalScore.getResult(homeAway) === Game.Result_Draw) {
+            if (game.getFinalPhase() === Game.Phase_RegularTime) {
                 return game.getSportConfig().getDrawPoints();
-            } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+            } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
                 return game.getSportConfig().getDrawPointsExt();
             }
-        } else if (game.getFinalPhase() === Game.PHASE_EXTRATIME) {
+        } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
             return game.getSportConfig().getLosePointsExt();
         }
         return 0;
-    }
-
-    private isWin(finalScore: GameScoreHomeAway, homeAway: boolean): boolean {
-        return (finalScore.getResult() === Game.RESULT_HOME && homeAway === Game.HOME)
-            || (finalScore.getResult() === Game.RESULT_AWAY && homeAway === Game.AWAY);
-    }
-
-    private isDraw(finalScore: GameScoreHomeAway): boolean {
-        return finalScore.getResult() === Game.RESULT_DRAW;
     }
 
     private getNrOfUnits(finalScore: GameScoreHomeAway, homeAway: boolean, scoredReceived: number): number {
@@ -107,6 +98,6 @@ export class RankingItemsGetter {
     }
 
     private getGameScorePart(gameScoreHomeAway: GameScoreHomeAway, homeAway: boolean): number {
-        return homeAway === Game.HOME ? gameScoreHomeAway.getHome() : gameScoreHomeAway.getAway();
+        return homeAway === Game.Home ? gameScoreHomeAway.getHome() : gameScoreHomeAway.getAway();
     }
 }

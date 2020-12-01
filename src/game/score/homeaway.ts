@@ -21,10 +21,13 @@ export class GameScoreHomeAway {
         this.away = away;
     }
 
-    getResult(): number {
+    getResult(homeAway: boolean): number {
         if (this.getHome() === this.getAway()) {
-            return Game.RESULT_DRAW;
+            return Game.Result_Draw;
         }
-        return (this.getHome() > this.getAway()) ? Game.RESULT_HOME : Game.RESULT_AWAY;
+        if (homeAway === Game.Home) {
+            return (this.getHome() > this.getAway()) ? Game.Result_Win : Game.Result_Lost;
+        }
+        return (this.getAway() > this.getHome()) ? Game.Result_Win : Game.Result_Lost;
     }
 }

@@ -100,7 +100,7 @@ export class RoundNumber {
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
-        if (order === Game.ORDER_BY_BATCH) {
+        if (order === Game.Order_By_Batch) {
             games.sort((g1: Game, g2: Game) => {
                 if (g1.getBatchNr() === g2.getBatchNr()) {
                     const field1 = g1.getField();
@@ -207,12 +207,12 @@ export class RoundNumber {
     }
 
     getFirstStartDateTime(): Date | undefined {
-        const games = this.getGames(Game.ORDER_BY_BATCH);
+        const games = this.getGames(Game.Order_By_Batch);
         return games[0].getStartDateTime();
     }
 
     getLastStartDateTime(): Date | undefined {
-        const games = this.getGames(Game.ORDER_BY_BATCH);
+        const games = this.getGames(Game.Order_By_Batch);
         return games[games.length - 1].getStartDateTime();
     }
 

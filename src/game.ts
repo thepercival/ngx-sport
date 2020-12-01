@@ -10,15 +10,15 @@ import { SportScoreConfig } from './sport/scoreconfig';
 import { Round } from './qualify/group';
 
 export class Game {
-    static readonly RESULT_HOME = 1;
-    static readonly RESULT_DRAW = 2;
-    static readonly RESULT_AWAY = 3;
-    static readonly HOME = true;
-    static readonly AWAY = false;
-    static readonly ORDER_BY_BATCH = 1;
-    static readonly PHASE_REGULARTIME = 1;
-    static readonly PHASE_EXTRATIME = 2;
-    static readonly PHASE_PENALTIES = 4;
+    static readonly Result_Win = 1;
+    static readonly Result_Draw = 2;
+    static readonly Result_Lost = 3;
+    static readonly Home = true;
+    static readonly Away = false;
+    static readonly Order_By_Batch = 1;
+    static readonly Phase_RegularTime = 1;
+    static readonly Phase_ExtraTime = 2;
+    static readonly Phase_Penalties = 4;
 
     protected id: number = 0;
     protected field: Field | undefined;
@@ -98,10 +98,10 @@ export class Game {
     }
 
     getHomeAway(place: Place): boolean | undefined {
-        if (this.isParticipating(place, Game.HOME)) {
-            return Game.HOME;
-        } else if (this.isParticipating(place, Game.AWAY)) {
-            return Game.AWAY;
+        if (this.isParticipating(place, Game.Home)) {
+            return Game.Home;
+        } else if (this.isParticipating(place, Game.Away)) {
+            return Game.Away;
         }
         return undefined;
     }
