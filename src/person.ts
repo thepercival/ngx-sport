@@ -85,9 +85,4 @@ export class Person {
             return filters.every(filter => filter(player));
         });
     }
-
-    public getPlayerOneTeamSim(date?: Date): Player | undefined {
-        const checkDate = date ? date : new Date();
-        return this.players.find((player: Player): boolean => player.getPeriod().isIn(checkDate));
-    }
 }

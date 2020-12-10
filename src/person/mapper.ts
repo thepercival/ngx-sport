@@ -40,7 +40,7 @@ export class PersonMapper {
     toJson(person: Person): JsonPerson {
         return {
             id: +person.getId(),
-            firstName: person.getLastName(),
+            firstName: person.getFirstName(),
             nameInsertion: person.getNameInsertion(),
             lastName: person.getLastName()
         };
