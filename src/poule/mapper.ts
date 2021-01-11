@@ -16,9 +16,7 @@ export class PouleMapper {
         const poule = existingPoule ? existingPoule : new Poule(round, json.number);
         poule.setId(json.id);
         poule.setName(json.name);
-        json.places.sort((placeA, placeB) => {
-            return (placeA.number > placeB.number) ? 1 : -1;
-        });
+        json.places.sort((placeA, placeB) => (placeA.number > placeB.number) ? 1 : -1);
         json.places.map(jsonPlace => this.placeMapper.toObject(jsonPlace, poule));
         return poule;
     }

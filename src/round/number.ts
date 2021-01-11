@@ -3,12 +3,11 @@ import { Game } from '../game';
 import { Place } from '../place';
 import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
-import { Sport } from '../sport';
-import { SportConfig } from '../sport/config';
-import { SportScoreConfig } from '../sport/scoreconfig';
 import { State } from '../state';
 import { PouleStructure } from '../poule/structure';
 import { Round } from '../qualify/group';
+import { GameAmountConfig } from 'src/planning/gameAmountConfig';
+import { CompetitionSport } from 'src/competition/sport';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -17,7 +16,8 @@ export class RoundNumber {
     protected next: RoundNumber | undefined;
     protected rounds: Round[] = [];
     protected planningConfig: PlanningConfig | undefined;
-    protected sportScoreConfigs: SportScoreConfig[] = [];
+    protected gameAmountConfigs: GameAmountConfig[] = [];
+
     protected hasPlanning: boolean = false;;
 
     constructor(competition: Competition, protected previous?: RoundNumber) {
@@ -157,12 +157,8 @@ export class RoundNumber {
         return this.getRounds().some(round => round.hasBegun());
     }
 
-    getSportConfigs(): SportConfig[] {
-        return this.getCompetition().getSportConfigs();
-    }
-
-    getSportConfig(sport: Sport): SportConfig {
-        return this.getCompetition().getSportConfig(sport);
+    getCompetitionSports(): CompetitionSport[] {
+        return this.getCompetition().getSports();
     }
 
     setPlanningConfig(config: PlanningConfig) {
@@ -182,28 +178,28 @@ export class RoundNumber {
         return previous?.getValidPlanningConfig();
     }
 
-    getSportScoreConfigs(): SportScoreConfig[] {
-        return this.sportScoreConfigs;
+    getGameAmountConfigs(): GameAmountConfig[] {
+        return this.gameAmountConfigs;
     }
 
-    getSportScoreConfig(sport: Sport): SportScoreConfig | undefined {
-        return this.sportScoreConfigs.find(sportScoreConfigIt => sportScoreConfigIt.getSport() === sport);
+    getGameAmountConfig(competitionSport: CompetitionSport): GameAmountConfig | undefined {
+        return this.gameAmountConfigs.find(gameAmountConfigIt => gameAmountConfigIt.getCompetitionSport() === competitionSport);
     }
 
-    setSportScoreConfig(sportScoreConfig: SportScoreConfig) {
-        this.sportScoreConfigs.push(sportScoreConfig);
+    setGameAmountConfig(gameAmountConfig: GameAmountConfig) {
+        this.gameAmountConfigs.push(gameAmountConfig);
     }
 
-    getValidSportScoreConfigs(): (SportScoreConfig | undefined)[] {
-        return this.getSportConfigs().map(sportConfig => this.getValidSportScoreConfig(sportConfig.getSport()));
+    getValidGameAmountConfigs(): (GameAmountConfig | undefined)[] {
+        return this.getCompetitionSports().map(competitionSport => this.getValidGameAmountConfig(competitionSport));
     }
 
-    getValidSportScoreConfig(sport: Sport): SportScoreConfig | undefined {
-        const sportScoreConfig = this.getSportScoreConfig(sport);
-        if (sportScoreConfig !== undefined) {
-            return sportScoreConfig;
+    getValidGameAmountConfig(competitionSport: CompetitionSport): GameAmountConfig | undefined {
+        const gameAmountConfig = this.getGameAmountConfig(competitionSport);
+        if (gameAmountConfig !== undefined) {
+            return gameAmountConfig;
         }
-        return this.getPrevious()?.getValidSportScoreConfig(sport);
+        return this.getPrevious()?.getValidGameAmountConfig(competitionSport);
     }
 
     getFirstStartDateTime(): Date | undefined {

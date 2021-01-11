@@ -1,39 +1,46 @@
 import { JsonCompetition } from '../../src/competition/json';
 import { RankingService } from '../../src/ranking/service';
-import { SportConfig } from '../../src/sport/config';
 
 export const jsonBaseCompetition: JsonCompetition = {
+    'id': 0,
     'league': {
+        'id': 0,
         'name': 'ssaxasx',
         'association': {
+            'id': 0,
             'name': 'username'
         }
     },
     'season': {
+        'id': 0,
         'name': '123',
-        'startDateTime': '2018-12-17T11:33:15.710Z',
-        'endDateTime': '2018-12-17T11:33:15.710Z'
+        'start': '2018-12-17T11:33:15.710Z',
+        'end': '2018-12-17T11:33:15.710Z'
     },
     'sportConfigs': [
         {
+            'id': 0,
             'winPoints': 3.0,
             'drawPoints': 1.0,
             'winPointsExt': 2.0,
             'drawPointsExt': 1.0,
             'losePointsExt': 0.0,
-            'nrOfGamePlaces': SportConfig.DEFAULT_NROFGAMEPLACES,
-            'pointsCalculation': SportConfig.POINTS_CALC_GAMEPOINTS,
+            'nrOfGamePlaces': SportConfig.Default_NrOfGamePlaces,
+            'pointsCalculation': SportConfig.Points_Calc_GamePoints,
             'sport': {
+                'id': 0,
                 'name': 'voetbal',
                 'team': true,
                 'customId': 11
             },
             'fields': [
                 {
+                    'id': 0,
                     'priority': 1,
                     'name': '1'
                 },
                 {
+                    'id': 0,
                     'priority': 2,
                     'name': '2'
                 }

@@ -33,3 +33,7 @@ export class RefereeMapper {
         };
     }
 }
+
+export interface RefereeMap {
+    [key: number]: Referee;
+}

@@ -7,11 +7,17 @@ import { JsonRound } from '../round/json';
 import { JsonRoundNumber } from '../round/number/json';
 import { Structure } from '../structure';
 import { Place } from '../place';
-import { Referee } from '../referee';
 import { Field } from '../field';
 import { Competition } from '../competition';
 import { Poule } from '../poule';
 import { Round } from '../qualify/group';
+import { SportMapper } from '../sport/mapper';
+import { CompetitionSport } from 'src/competition/sport';
+import { Sport } from 'src/sport';
+import { PlaceMap } from 'src/place/mapper';
+import { RefereeMap } from 'src/referee/mapper';
+import { FieldMap } from 'src/field/mapper';
+import { CompetitionSportMap } from 'src/competition/sport/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +25,7 @@ import { Round } from '../qualify/group';
 export class PlanningMapper {
     private roundNumbersReferenceMap: RoundNumbersReferenceMap = {};
 
-    constructor(private gameMapper: GameMapper) { }
+    constructor(private gameMapper: GameMapper, private sportMapper: SportMapper) { }
 
     toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber | undefined {
         const firstRoundNumber = structure.getFirstRoundNumber();
@@ -40,11 +46,20 @@ export class PlanningMapper {
     }
     protected toRounds(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
         if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
+            const gameMode = roundNumber.getValidPlanningConfig()?.getGameMode();
+            const competition = roundNumber.getCompetition();
             jsonRound.poules.forEach(jsonPoule => {
                 const poule = round.getPoule(jsonPoule.number);
-                if (poule && jsonPoule.games !== undefined) {
-                    jsonPoule.games.forEach(jsonGame => {
-                        this.gameMapper.toNewObject(jsonGame, poule, this.getReferences(roundNumber));
+                if (!poule) {
+                    return;
+                }
+                if (gameMode === Sport.GAMEMODE_AGAINST && jsonPoule.againstGames !== undefined) {
+                    jsonPoule.againstGames.forEach(jsonGame => {
+                        this.gameMapper.toNewAgainst(jsonGame, poule, this.getReferences(roundNumber));
+                    });
+                } else if (gameMode === Sport.GAMEMODE_TOGETHER && jsonPoule.togetherGames !== undefined) {
+                    jsonPoule.togetherGames.forEach(jsonGame => {
+                        this.gameMapper.toNewTogether(jsonGame, poule, this.getReferences(roundNumber));
                     });
                 }
             });
@@ -68,14 +83,13 @@ export class PlanningMapper {
             poule.getPlaces().forEach((place: Place) => places[place.getLocationId()] = place);
         });
 
-        roundNumberReferences = {
+        this.roundNumbersReferenceMap[roundNumber.getNumber()] = {
             places: places,
             referees: this.roundNumbersReferenceMap[0].referees,
+            sports: this.roundNumbersReferenceMap[0].sports,
             fields: this.roundNumbersReferenceMap[0].fields
         };
-
-        this.roundNumbersReferenceMap[roundNumber.getNumber()] = roundNumberReferences;
-        return roundNumberReferences;
+        return this.roundNumbersReferenceMap[roundNumber.getNumber()];
     }
 
     initCache(competition: Competition) {
@@ -83,10 +97,14 @@ export class PlanningMapper {
         this.roundNumbersReferenceMap[0] = {
             places: {},
             referees: {},
+            sports: {},
             fields: {}
         };
         competition.getReferees().forEach(referee => this.roundNumbersReferenceMap[0].referees[referee.getPriority()] = referee);
-        competition.getFields().forEach(field => this.roundNumbersReferenceMap[0].fields[field.getPriority()] = field);
+        competition.getSports().forEach((competitionSport: CompetitionSport) => {
+            this.roundNumbersReferenceMap[0].sports[competitionSport.getId()] = competitionSport;
+            competitionSport.getFields().forEach((field: Field) => this.roundNumbersReferenceMap[0].fields[field.getPriority()] = field);
+        });
     }
 }
 
@@ -97,18 +115,6 @@ export interface RoundNumbersReferenceMap {
 export interface PlanningReferences {
     places: PlaceMap,
     referees: RefereeMap,
+    sports: CompetitionSportMap,
     fields: FieldMap
 }
-
-interface PlaceMap {
-    [key: string]: Place;
-}
-
-interface RefereeMap {
-    [key: number]: Referee;
-}
-
-interface FieldMap {
-    [key: number]: Field;
-}
-

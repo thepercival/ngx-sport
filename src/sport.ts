@@ -1,24 +1,18 @@
+import { Identifiable } from "./identifiable";
 
-export class Sport {
+export class Sport extends Identifiable {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
-
-    static readonly TEMPDEFAULT = 2;
-
-    protected id: string | number = 0;
-    // protected scoreUnitName: string;
-    // protected scoreSubUnitName: string;
+    static readonly GAMEMODE_TOGETHER = 1;
+    static readonly GAMEMODE_AGAINST = 2;
     protected customId: number | undefined;
 
-    constructor(protected name: string, protected team: boolean) {
-    }
-
-    getId(): string | number {
-        return this.id;
-    }
-
-    setId(id: string | number): void {
-        this.id = id;
+    constructor(
+        protected name: string,
+        protected team: boolean,
+        protected gameMode: number,
+        protected nrOfGamePlaces: number) {
+        super();
     }
 
     getName(): string {
@@ -29,32 +23,24 @@ export class Sport {
         this.name = name;
     }
 
-    // getScoreUnitName(): string {
-    //     return this.scoreUnitName;
-    // }
-
-    // setScoreUnitName(name: string): void {
-    //     this.scoreUnitName = name;
-    // }
-
-    // getScoreSubUnitName(): string {
-    //     return this.scoreSubUnitName;
-    // }
-
-    // setScoreSubUnitName(name: string): void {
-    //     this.scoreSubUnitName = name;
-    // }
-
-    // hasScoreSubUnitName(): boolean {
-    //     return this.scoreSubUnitName === undefined;
-    // }
-
     getTeam(): boolean {
         return this.team;
     }
 
-    setTeam(team: boolean): void {
-        this.team = team;
+    // setTeam(team: boolean): void {
+    //     this.team = team;
+    // }
+
+    getGameMode(): number {
+        return this.gameMode;
+    }
+
+    // setGameMode(gameMode: number): void {
+    //     this.gameMode = gameMode;
+    // }
+
+    getNrOfGamePlaces(): number {
+        return this.nrOfGamePlaces;
     }
 
     getCustomId(): number | undefined {

@@ -46,15 +46,50 @@ describe('Structure', () => {
         structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
         structure.setStructureNumbers();
+        const childOfRootRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(childOfRootRound).to.not.equal(undefined);
+        if (childOfRootRound) {
+            expect(childOfRootRound.getStructureNumber()).to.equal(0);
+        }
 
-        expect(rootRound.getChild(QualifyGroup.WINNERS, 1).getStructureNumber()).to.equal(0);
         expect(rootRound.getStructureNumber()).to.equal(2);
-        expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getStructureNumber()).to.equal(14);
+        const loserChildOfRootRound = rootRound.getChild(QualifyGroup.LOSERS, 1);
+        expect(loserChildOfRootRound).to.not.equal(undefined);
+        if (loserChildOfRootRound) {
+            expect(loserChildOfRootRound.getStructureNumber()).to.equal(14);
+        }
 
-        expect(rootRound.getPoule(1).getStructureNumber()).to.equal(1);
-        expect(rootRound.getPoule(4).getStructureNumber()).to.equal(4);
-        expect(rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1).getStructureNumber()).to.equal(5);
-        expect(rootRound.getChild(QualifyGroup.LOSERS, 1).getPoule(1).getStructureNumber()).to.equal(6);
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (pouleOne) {
+            expect(pouleOne.getStructureNumber()).to.equal(1);
+        }
+        const pouleFour = rootRound.getPoule(4);
+        expect(pouleFour).to.not.equal(undefined);
+        if (pouleFour) {
+            expect(pouleFour.getStructureNumber()).to.equal(4);
+        }
+
+        const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (winnersRound) {
+            const winnersPoule = winnersRound.getPoule(1);
+            expect(winnersPoule).to.not.equal(undefined);
+            if (winnersPoule) {
+                expect(winnersPoule.getStructureNumber()).to.equal(5);
+            }
+
+        }
+
+        const losersRound = rootRound.getChild(QualifyGroup.LOSERS, 1);
+        expect(losersRound).to.not.equal(undefined);
+        if (losersRound) {
+            const losersPoule = losersRound.getPoule(1);
+            expect(losersPoule).to.not.equal(undefined);
+            if (losersPoule) {
+                expect(losersPoule.getStructureNumber()).to.equal(6);
+            }
+        }
     });
 
     it('planning', () => {

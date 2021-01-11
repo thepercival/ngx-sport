@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../../competition';
 import { PlanningConfigMapper } from '../../planning/config/mapper';
-import { SportScoreConfigMapper } from '../../sport/scoreconfig/mapper';
+import { SportScoreConfigMapper } from '../../score/config/mapper';
 import { RoundNumber } from '../number';
 import { SportMapper } from '../../sport/mapper';
 import { JsonRoundNumber } from './json';

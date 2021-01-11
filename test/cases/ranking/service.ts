@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getGameMapper } from '../../helpers/mappers';
+import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
 
 import { setScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
-import { PlaceLocationMap, QualifyGroup, RankingService, Round, State, StructureService } from '../../../public_api';
-import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
+import { Poule, QualifyGroup, RankingService, Round, State, StructureService } from '../../../public_api';
 
 describe('Ranking/Service', () => {
 
@@ -18,15 +17,15 @@ describe('Ranking/Service', () => {
         const structure = structureService.create(competition, 3);
         const rootRound: Round = structure.getRootRound();
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const ruleDescriptions = rankingService.getRuleDescriptions();
         expect(ruleDescriptions.length).to.equal(5);
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_EC);
+        const rankingService2 = new RankingService(RankingService.RULESSET_EC);
         const ruleDescriptions2 = rankingService2.getRuleDescriptions();
         expect(ruleDescriptions2.length).to.equal(5);
 
-        const rankingService3 = new RankingService(rootRound, 0);
+        const rankingService3 = new RankingService(0);
         expect(() => rankingService3.getRuleDescriptions()).to.throw(Error);
     });
 
@@ -38,7 +37,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 0, 0);
@@ -47,7 +49,7 @@ describe('Ranking/Service', () => {
 
         const equalRank = 1;
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
         items.forEach(item => expect(item.getRank()).to.equal(equalRank));
 
@@ -67,19 +69,39 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
-
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 2, 1);
         setScoreSingle(pouleOne, 1, 3, 3, 1);
         setScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(1));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(2));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
     });
 
     it('single ranked, state progress && played', () => {
@@ -90,19 +112,40 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
         setScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
         setScoreSingle(pouleOne, 2, 3, 3, 2, State.InProgress);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC, State.InProgress + State.Finished);
+        const rankingService = new RankingService(RankingService.RULESSET_WC, State.InProgress + State.Finished);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(1));
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(2));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
+
+        const rankingService2 = new RankingService(RankingService.RULESSET_WC);
         const items2 = rankingService2.getItemsForPoule(pouleOne);
         items2.forEach(item => expect(item.getRank()).to.equal(1));
     });
@@ -115,7 +158,15 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -127,14 +178,14 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleTwo, 1, 3, 6, 2);
         setScoreSingle(pouleTwo, 2, 3, 6, 4);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0];
         const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
         expect(placeLocations[0].getPouleNr()).to.equal(2);
         expect(placeLocations[1].getPouleNr()).to.equal(1);
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_EC);
+        const rankingService2 = new RankingService(RankingService.RULESSET_EC);
         const placeLocations2 = rankingService2.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
         expect(placeLocations2[0].getPouleNr()).to.equal(2);
@@ -151,7 +202,15 @@ describe('Ranking/Service', () => {
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -163,7 +222,7 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleTwo, 1, 3, 6, 2);
         setScoreSingle(pouleTwo, 2, 3, 6, 4);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0];
         const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
@@ -178,6 +237,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
 
         setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -187,18 +250,40 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleOne, 1, 3, 1, 0);
         setScoreSingle(pouleOne, 2, 4, 1, 0);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(2));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(1));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(2));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(1));
 
 
-        const rankingService2 = new RankingService(rootRound, RankingService.RULESSET_EC);
+        const rankingService2 = new RankingService(RankingService.RULESSET_EC);
         const items2 = rankingService2.getItemsForPoule(pouleOne);
 
-        expect(rankingService2.getItemByRank(items2, 1).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService2.getItemByRank(items2, 2).getPlace()).to.equal(pouleOne.getPlace(2));
+        const rankingItemOne2 = rankingService2.getItemByRank(items2, 1);
+        expect(rankingItemOne2).to.not.equal(undefined);
+        if (!rankingItemOne2) {
+            return;
+        }
+        expect(rankingItemOne2.getPlace()).to.equal(pouleOne.getPlace(1));
+
+        const rankingItemTwo2 = rankingService2.getItemByRank(items2, 2);
+        expect(rankingItemTwo2).to.not.equal(undefined);
+        if (!rankingItemTwo2) {
+            return;
+        }
+        expect(rankingItemTwo2.getPlace()).to.equal(pouleOne.getPlace(2));
     });
 
     it('variation 1, mostPoints', () => {
@@ -209,17 +294,38 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 1, 2);
         setScoreSingle(pouleOne, 1, 3, 1, 3);
         setScoreSingle(pouleOne, 2, 3, 2, 3);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(3));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(1));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(3));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(2));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(1));
     });
 
     it('variation 2, fewestGames', () => {
@@ -230,6 +336,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 5, 0);
         setScoreSingle(pouleOne, 3, 4, 0, 1);
@@ -238,12 +348,29 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleOne, 1, 3, 0, 1);
         // setScoreSingle(pouleOne, 2, 4, 0, 1);        
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(4));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(4));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(1));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
     });
 
     it('variation 3, fewestGames', () => {
@@ -254,6 +381,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
 
         // setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -263,12 +394,29 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleOne, 1, 3, 1, 0);
         setScoreSingle(pouleOne, 2, 4, 0, 5);
 
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(4));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(1));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(4));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
     });
 
     it('variation 4, mostScoreed', () => {
@@ -279,16 +427,37 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         setScoreSingle(pouleOne, 1, 2, 1, 1);
         setScoreSingle(pouleOne, 1, 3, 2, 1);
         setScoreSingle(pouleOne, 2, 3, 1, 0);
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 1).getPlace()).to.equal(pouleOne.getPlace(1));
-        expect(rankingService.getItemByRank(items, 2).getPlace()).to.equal(pouleOne.getPlace(2));
-        expect(rankingService.getItemByRank(items, 3).getPlace()).to.equal(pouleOne.getPlace(3));
+        const rankingItemOne = rankingService.getItemByRank(items, 1);
+        expect(rankingItemOne).to.not.equal(undefined);
+        if (!rankingItemOne) {
+            return;
+        }
+        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(1));
+
+        const rankingItemTwo = rankingService.getItemByRank(items, 2);
+        expect(rankingItemTwo).to.not.equal(undefined);
+        if (!rankingItemTwo) {
+            return;
+        }
+        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(2));
+
+        const rankingItemThree = rankingService.getItemByRank(items, 3);
+        expect(rankingItemThree).to.not.equal(undefined);
+        if (!rankingItemThree) {
+            return;
+        }
+        expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
     });
 
     it('variation 5, against eachother , no games', () => {
@@ -299,6 +468,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -307,10 +480,15 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleOne, 2, 3, 0, 1);
         setScoreSingle(pouleOne, 2, 4, 0, 1);
         // setScoreSingle(pouleOne, 3, 4, 3, 0);
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        expect(rankingService.getItemByRank(items, 4).getPlace()).to.equal(pouleOne.getPlace(2));
+        const rankingItemFour = rankingService.getItemByRank(items, 4);
+        expect(rankingItemFour).to.not.equal(undefined);
+        if (!rankingItemFour) {
+            return;
+        }
+        expect(rankingItemFour.getPlace()).to.equal(pouleOne.getPlace(2));
     });
 
     it('variation 5, against eachother , equal', () => {
@@ -321,6 +499,10 @@ describe('Ranking/Service', () => {
         const rootRound: Round = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         createGames(structure.getFirstRoundNumber());
         // 3 gelijk laten eindigen
         setScoreSingle(pouleOne, 1, 2, 1, 0);
@@ -329,12 +511,17 @@ describe('Ranking/Service', () => {
         setScoreSingle(pouleOne, 2, 3, 0, 1);
         setScoreSingle(pouleOne, 2, 4, 0, 1);
         setScoreSingle(pouleOne, 3, 4, 1, 0);
-        const rankingService = new RankingService(rootRound, RankingService.RULESSET_WC);
+        const rankingService = new RankingService(RankingService.RULESSET_WC);
         const items = rankingService.getItemsForPoule(pouleOne);
 
         expect(items[0].getRank()).to.equal(1);
         expect(items[1].getRank()).to.equal(1);
         expect(items[2].getRank()).to.equal(1);
-        expect(rankingService.getItemByRank(items, 4).getPlace()).to.equal(pouleOne.getPlace(2));
+        const rankingItemFour = rankingService.getItemByRank(items, 4);
+        expect(rankingItemFour).to.not.equal(undefined);
+        if (!rankingItemFour) {
+            return;
+        }
+        expect(rankingItemFour.getPlace()).to.equal(pouleOne.getPlace(2));
     });
 });

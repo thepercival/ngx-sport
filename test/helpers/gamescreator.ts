@@ -23,7 +23,8 @@ export function createGames(roundNumber: RoundNumber) {
     const planningMapper = getPlanningMapper();
     planningMapper.initCache(roundNumber.getCompetition());
     const references = planningMapper.getReferences(roundNumber);
+    const sportConfig = roundNumber.getCompetition().getFirstSportConfig();
     roundNumber.getPoules().forEach((poule: Poule) => {
-        getJson(poule).forEach(jsonGame => getGameMapper().toNewObject(jsonGame, poule, references));
+        getJson(poule).forEach(jsonGame => getGameMapper().toNewObject(jsonGame, sportConfig, poule, references));
     });
 }

@@ -1,31 +1,24 @@
-import { Sport } from '../sport';
-import { RoundNumber } from '../round/number';
+import { Round } from '../qualify/group';
+import { Identifiable } from '../identifiable';
+import { CompetitionSport } from '../competition/sport';
 
-export class SportScoreConfig {
+export class ScoreConfig extends Identifiable {
     static readonly UPWARDS = 1;
     static readonly DOWNWARDS = 2;
 
-    protected id: number = 0;
-    protected previous: SportScoreConfig | undefined;
-    protected direction: number = SportScoreConfig.UPWARDS;
+    protected previous: ScoreConfig | undefined;
+    protected direction: number = ScoreConfig.UPWARDS;
     protected maximum: number = 0;
     protected enabled: boolean = true;
-    protected next: SportScoreConfig | undefined;
+    protected next: ScoreConfig | undefined;
 
-    constructor(protected sport: Sport, protected roundNumber: RoundNumber, previous?: SportScoreConfig) {
+    constructor(protected competitionSport: CompetitionSport, protected round: Round, previous?: ScoreConfig) {
+        super();
         if (previous === undefined) {
-            roundNumber.getSportScoreConfigs().push(this);
+            round.getScoreConfigs().push(this);
         } else {
             this.setPrevious(previous);
         }
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number) {
-        this.id = id;
     }
 
     // moet direction opgenomen worden in constructor
@@ -57,34 +50,30 @@ export class SportScoreConfig {
         this.enabled = enabled;
     }
 
-    getSport(): Sport {
-        return this.sport;
+    getCompetitionSport(): CompetitionSport {
+        return this.competitionSport;
     }
 
-    setSport(sport: Sport) {
-        this.sport = sport;
-    }
-
-    getRoundNumber(): RoundNumber {
-        return this.roundNumber;
+    getRound(): Round {
+        return this.round;
     }
 
     hasPrevious(): boolean {
         return this.previous !== undefined;
     }
 
-    getPrevious(): SportScoreConfig | undefined {
+    getPrevious(): ScoreConfig | undefined {
         return this.previous;
     }
 
-    private setPrevious(previous: SportScoreConfig) {
+    private setPrevious(previous: ScoreConfig) {
         this.previous = previous;
         if (this.previous !== undefined) {
             this.previous.setNext(this);
         }
     }
 
-    getFirst(): SportScoreConfig {
+    getFirst(): ScoreConfig {
         const previous = this.getPrevious();
         return previous ? previous.getLast() : this;
     }
@@ -93,11 +82,11 @@ export class SportScoreConfig {
         return !this.hasPrevious();
     }
 
-    getNext(): SportScoreConfig | undefined {
+    getNext(): ScoreConfig | undefined {
         return this.next;
     }
 
-    setNext(next: SportScoreConfig) {
+    setNext(next: ScoreConfig) {
         this.next = next;
     }
 
@@ -105,7 +94,7 @@ export class SportScoreConfig {
         return this.next !== undefined;
     }
 
-    getLast(): SportScoreConfig {
+    getLast(): ScoreConfig {
         const next = this.getNext();
         return next ? next.getLast() : this;
     }
@@ -114,7 +103,7 @@ export class SportScoreConfig {
         return !this.hasNext();
     }
 
-    getCalculate(): SportScoreConfig {
+    getCalculate(): ScoreConfig {
         const firstNext = this.getFirst().getNext();
         return firstNext?.getEnabled() ? firstNext : this;
     }

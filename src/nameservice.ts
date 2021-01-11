@@ -75,7 +75,7 @@ export class NameService {
         return (String.fromCharCode('A'.charCodeAt(0) + structureNumber - 1));
     }
 
-    getPlaceName(place: Place, p_competitorName = false, longName = false): string {
+    getPlaceName(place: Place, p_competitorName?: boolean, longName?: boolean): string {
         let competitorName = p_competitorName && this.placeLocationMap;
         if (competitorName && this.placeLocationMap) {
             const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
@@ -90,7 +90,7 @@ export class NameService {
         return name + place.getNumber();
     }
 
-    getPlaceFromName(place: Place, competitorName: boolean, longName: boolean): string {
+    getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
         competitorName = competitorName ? (this.placeLocationMap !== undefined) : false;
         if (competitorName && this.placeLocationMap) {
             const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
@@ -120,7 +120,7 @@ export class NameService {
         return name + ' ' + this.getPouleName(fromPlace.getPoule(), false);
     }
 
-    getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName: boolean): string {
+    getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName?: boolean): string {
         return gamePlaces.map(gamePlace => this.getPlaceFromName(gamePlace.getPlace(), competitorName, longName)).join(' & ');
     }
 
@@ -154,7 +154,7 @@ export class NameService {
         return name;
     }
 
-    getRefereeName(game: Game, longName: boolean | undefined): string | undefined {
+    getRefereeName(game: Game, longName?: boolean): string | undefined {
         const referee = game.getReferee();
         if (referee) {
             return longName ? referee.getName() : referee.getInitials();

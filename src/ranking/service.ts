@@ -7,6 +7,7 @@ import { RankingItemsGetter } from './itemsgetter';
 import { RankedRoundItem, UnrankedRoundItem } from './item';
 import { State } from '../state';
 import { Round } from '../qualify/group';
+import { AgainstGame } from 'src/game/against';
 
 /* eslint:disable:no-bitwise */
 
@@ -275,8 +276,8 @@ export class RankingService {
             if ((p_gameIt.getState() & this.gameStates) === 0) {
                 return;
             }
-            const inHome = places.some(place => p_gameIt.isParticipating(place, Game.Home));
-            const inAway = places.some(place => p_gameIt.isParticipating(place, Game.Away));
+            const inHome = places.some(place => p_gameIt.isParticipating(place, AgainstGame.Home));
+            const inAway = places.some(place => p_gameIt.isParticipating(place, AgainstGame.Away));
             if (inHome && inAway) {
                 gamesRet.push(p_gameIt);
             }

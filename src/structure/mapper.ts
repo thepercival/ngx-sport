@@ -16,7 +16,7 @@ export class StructureMapper {
 
     toObject(json: JsonStructure, competition: Competition): Structure {
         const firstRoundNumber = this.roundNumberMapper.toObject(json.firstRoundNumber, competition);
-        const rootRound = this.roundMapper.toObject(json.rootRound, new Round(firstRoundNumber));
+        const rootRound = this.roundMapper.toObject(json.rootRound, new Round(firstRoundNumber, undefined));
         const structure = new Structure(firstRoundNumber, rootRound);
         structure.setStructureNumbers();
         this.planningMapper.toObject(json, structure, 1);

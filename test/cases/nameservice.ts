@@ -38,8 +38,12 @@ describe('NameService', () => {
 
         structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
         structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 4);
-
-        const secondRoundNumberName = nameService.getRoundNumberName(firstRoundNumber.getNext());
+        const secondRoundNumber = firstRoundNumber.getNext();
+        expect(secondRoundNumber).to.not.equal(undefined);
+        if (secondRoundNumber === undefined) {
+            return;
+        }
+        const secondRoundNumberName = nameService.getRoundNumberName(secondRoundNumber);
         // all equal
         expect(secondRoundNumberName).to.equal('finale');
 
@@ -47,7 +51,7 @@ describe('NameService', () => {
 
         structureService.addQualifier(losersChildRound, QualifyGroup.LOSERS);
         // not all equal
-        const newSecondRoundNumberName = nameService.getRoundNumberName(firstRoundNumber.getNext());
+        const newSecondRoundNumberName = nameService.getRoundNumberName(secondRoundNumber);
         expect(newSecondRoundNumberName).to.equal('2<sup>de</sup> ronde');
     });
 
@@ -87,8 +91,12 @@ describe('NameService', () => {
             // child needs ranking
             structureService2.addQualifier(rootRound2, QualifyGroup.WINNERS);
             structureService2.addQualifier(rootRound2, QualifyGroup.WINNERS);
-
-            expect(nameService2.getRoundName(rootRound2.getChild(QualifyGroup.WINNERS, 1))).to.equal('2<sup>de</sup> ronde');
+            const childOfRootRound2 = rootRound2.getChild(QualifyGroup.WINNERS, 1)
+            expect(childOfRootRound2).to.not.equal(undefined);
+            if (childOfRootRound2 === undefined) {
+                return;
+            }
+            expect(nameService2.getRoundName(childOfRootRound2)).to.equal('2<sup>de</sup> ronde');
         }
 
     });
@@ -163,14 +171,26 @@ describe('NameService', () => {
 
         // basics
         {
-            expect(nameService.getPouleName(rootRound.getPoule(1), false)).to.equal('A');
-            expect(nameService.getPouleName(rootRound.getPoule(1), true)).to.equal('poule A');
+            const pouleOne = rootRound.getPoule(1);
+            expect(pouleOne).to.not.equal(undefined);
+            if (pouleOne) {
+                expect(nameService.getPouleName(pouleOne, false)).to.equal('A');
+                expect(nameService.getPouleName(pouleOne, true)).to.equal('poule A');
+            }
 
-            expect(nameService.getPouleName(rootRound.getPoule(27), false)).to.equal('AA');
-            expect(nameService.getPouleName(rootRound.getPoule(27), true)).to.equal('poule AA');
+            const poule27 = rootRound.getPoule(27);
+            expect(poule27).to.not.equal(undefined);
+            if (poule27) {
+                expect(nameService.getPouleName(poule27, false)).to.equal('AA');
+                expect(nameService.getPouleName(poule27, true)).to.equal('poule AA');
+            }
 
-            expect(nameService.getPouleName(rootRound.getPoule(30), false)).to.equal('AD');
-            expect(nameService.getPouleName(rootRound.getPoule(30), true)).to.equal('wed. AD');
+            const poule30 = rootRound.getPoule(30);
+            expect(poule30).to.not.equal(undefined);
+            if (poule30) {
+                expect(nameService.getPouleName(poule30, false)).to.equal('AD');
+                expect(nameService.getPouleName(poule30, true)).to.equal('wed. AD');
+            }
         }
     });
 
@@ -180,25 +200,35 @@ describe('NameService', () => {
         const structureService = new StructureService([]);
         const structure = structureService.create(competition, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap([createTeamCompetitors(competition, firstRoundNumber).shift()]);
+        const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
+        expect(firstTeamCompetitor).to.not.equal(undefined);
+        if (!firstTeamCompetitor) {
+            return
+        }
+        const placeLocationMap = new PlaceLocationMap([firstTeamCompetitor]);
         const nameService = new NameService(placeLocationMap);
         const rootRound = structure.getRootRound();
 
         // basics
         {
             const firstPlace = rootRound.getFirstPlace(QualifyGroup.WINNERS);
-
-            expect(nameService.getPlaceName(firstPlace, false, false)).to.equal('A1');
-            expect(nameService.getPlaceName(firstPlace, true, false)).to.equal('tc 1.1');
-            expect(nameService.getPlaceName(firstPlace, false, true)).to.equal('poule A nr. 1');
-            expect(nameService.getPlaceName(firstPlace, true, true)).to.equal('tc 1.1');
-
+            expect(firstPlace).to.not.equal(undefined);
+            if (firstPlace) {
+                expect(nameService.getPlaceName(firstPlace, false, false)).to.equal('A1');
+                expect(nameService.getPlaceName(firstPlace, true, false)).to.equal('tc 1.1');
+                expect(nameService.getPlaceName(firstPlace, false, true)).to.equal('poule A nr. 1');
+                expect(nameService.getPlaceName(firstPlace, true, true)).to.equal('tc 1.1');
+            }
             const lastPlace = rootRound.getFirstPlace(QualifyGroup.LOSERS);
+            expect(lastPlace).to.not.equal(undefined);
+            if (lastPlace) {
+                expect(nameService.getPlaceName(lastPlace)).to.equal('A3');
+                expect(nameService.getPlaceName(lastPlace, true, false)).to.equal('A3');
+                expect(nameService.getPlaceName(lastPlace, false, true)).to.equal('poule A nr. 3');
+                expect(nameService.getPlaceName(lastPlace, true, true)).to.equal('poule A nr. 3');
+            }
 
-            expect(nameService.getPlaceName(lastPlace)).to.equal('A3');
-            expect(nameService.getPlaceName(lastPlace, true, false)).to.equal('A3');
-            expect(nameService.getPlaceName(lastPlace, false, true)).to.equal('poule A nr. 3');
-            expect(nameService.getPlaceName(lastPlace, true, true)).to.equal('poule A nr. 3');
+
         }
     });
 
@@ -208,7 +238,12 @@ describe('NameService', () => {
         const structureService = new StructureService([]);
         const structure = structureService.create(competition, 9, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap([createTeamCompetitors(competition, firstRoundNumber).shift()]);
+        const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
+        expect(firstTeamCompetitor).to.not.equal(undefined);
+        if (!firstTeamCompetitor) {
+            return
+        }
+        const placeLocationMap = new PlaceLocationMap([firstTeamCompetitor]);
         const nameService = new NameService(placeLocationMap);
         const rootRound = structure.getRootRound();
 
@@ -216,46 +251,81 @@ describe('NameService', () => {
         {
             const firstPlace = rootRound.getFirstPlace(QualifyGroup.WINNERS);
 
-            structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-            structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-            structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+            structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
 
-            expect(nameService.getPlaceFromName(firstPlace, false, false)).to.equal('A1');
-            expect(nameService.getPlaceFromName(firstPlace, true, false)).to.equal('tc 1.1');
-            expect(nameService.getPlaceFromName(firstPlace, false, true)).to.equal('poule A nr. 1');
-            expect(nameService.getPlaceFromName(firstPlace, true, true)).to.equal('tc 1.1');
-
+            expect(firstPlace).to.not.equal(undefined);
+            if (firstPlace) {
+                expect(nameService.getPlaceFromName(firstPlace, false, false)).to.equal('A1');
+                expect(nameService.getPlaceFromName(firstPlace, true, false)).to.equal('tc 1.1');
+                expect(nameService.getPlaceFromName(firstPlace, false, true)).to.equal('poule A nr. 1');
+                expect(nameService.getPlaceFromName(firstPlace, true, true)).to.equal('tc 1.1');
+            }
             const lastPlace = rootRound.getFirstPlace(QualifyGroup.LOSERS);
-
-            expect(nameService.getPlaceFromName(lastPlace, false, false)).to.equal('C3');
-            expect(nameService.getPlaceFromName(lastPlace, true, false)).to.equal('C3');
-            expect(nameService.getPlaceFromName(lastPlace, false, true)).to.equal('poule C nr. 3');
-            expect(nameService.getPlaceFromName(lastPlace, true, true)).to.equal('poule C nr. 3');
+            expect(lastPlace).to.not.equal(undefined);
+            if (lastPlace) {
+                expect(nameService.getPlaceFromName(lastPlace, false, false)).to.equal('C3');
+                expect(nameService.getPlaceFromName(lastPlace, true, false)).to.equal('C3');
+                expect(nameService.getPlaceFromName(lastPlace, false, true)).to.equal('poule C nr. 3');
+                expect(nameService.getPlaceFromName(lastPlace, true, true)).to.equal('poule C nr. 3');
+            }
 
             const winnersChildRound = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS).getChildRound();
-            const winnersLastPlace = winnersChildRound.getPoule(1).getPlace(2);
+            expect(winnersChildRound).to.not.equal(undefined);
+            if (!winnersChildRound) {
+                return
+            }
 
-            expect(nameService.getPlaceFromName(winnersLastPlace, false, false)).to.equal('?2');
-            expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('beste nummer 2');
+            const poule1WinnersChildRound = winnersChildRound.getPoule(1);
+            expect(poule1WinnersChildRound).to.not.equal(undefined);
+            if (!poule1WinnersChildRound) {
+                return
+            }
+            const winnersLastPlace = poule1WinnersChildRound.getPlace(2);
+            expect(winnersLastPlace).to.not.equal(undefined);
+            if (winnersLastPlace) {
+                expect(nameService.getPlaceFromName(winnersLastPlace, false, false)).to.equal('?2');
+                expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('beste nummer 2');
+            }
 
-            const winnersFirstPlace = winnersChildRound.getPoule(1).getPlace(1);
-
-            expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('A1');
-            expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('poule A nr. 1');
+            const winnersFirstPlace = poule1WinnersChildRound.getPlace(1);
+            expect(winnersFirstPlace).to.not.equal(undefined);
+            if (winnersFirstPlace) {
+                expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('A1');
+                expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('poule A nr. 1');
+            }
 
             structureService.addQualifier(winnersChildRound, QualifyGroup.WINNERS);
             const doubleWinnersChildRound = winnersChildRound.getBorderQualifyGroup(QualifyGroup.WINNERS).getChildRound();
-
-            const doubleWinnersFirstPlace = doubleWinnersChildRound.getPoule(1).getPlace(1);
-
-            expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, false)).to.equal('D1');
-            expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, true)).to.equal('winnaar D');
+            expect(doubleWinnersChildRound).to.not.equal(undefined);
+            if (doubleWinnersChildRound) {
+                const pouleTmp = doubleWinnersChildRound.getPoule(1);
+                expect(pouleTmp).to.not.equal(undefined);
+                if (pouleTmp) {
+                    const doubleWinnersFirstPlace = pouleTmp.getPlace(1);
+                    expect(doubleWinnersFirstPlace).to.not.equal(undefined);
+                    if (doubleWinnersFirstPlace) {
+                        expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, false)).to.equal('D1');
+                        expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, true)).to.equal('winnaar D');
+                    }
+                }
+            }
 
             structureService.addQualifier(winnersChildRound, QualifyGroup.LOSERS);
             const winnersLosersChildRound = winnersChildRound.getBorderQualifyGroup(QualifyGroup.LOSERS).getChildRound();
-
-            const winnersLosersFirstPlace = winnersLosersChildRound.getPoule(1).getPlace(1);
-
+            expect(winnersLosersChildRound).to.not.equal(undefined);
+            if (!winnersLosersChildRound) {
+                return;
+            }
+            const pouleOnewinnersLosersChildRound = winnersLosersChildRound.getPoule(1);
+            expect(pouleOnewinnersLosersChildRound).to.not.equal(undefined);
+            if (!pouleOnewinnersLosersChildRound) {
+                return;
+            }
+            const winnersLosersFirstPlace = pouleOnewinnersLosersChildRound.getPlace(1);
+            expect(winnersLosersFirstPlace).to.not.equal(undefined);
+            if (!winnersLosersFirstPlace) {
+                return;
+            }
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false)).to.equal('D2');
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false, true)).to.equal('verliezer D');
         }
@@ -273,6 +343,10 @@ describe('NameService', () => {
         // basics
         {
             const firstPlace = rootRound.getFirstPlace(QualifyGroup.WINNERS);
+            expect(firstPlace).to.not.equal(undefined);
+            if (!firstPlace) {
+                return;
+            }
 
             createGames(structure.getFirstRoundNumber());
             const game = firstPlace.getPoule().getGames()[0];
@@ -347,6 +421,10 @@ describe('NameService', () => {
         // basics
         {
             const firstPlace = rootRound.getFirstPlace(QualifyGroup.WINNERS);
+            expect(firstPlace).to.not.equal(undefined);
+            if (!firstPlace) {
+                return;
+            }
 
             createGames(structure.getFirstRoundNumber());
             const game = firstPlace.getPoule().getGames()[0];

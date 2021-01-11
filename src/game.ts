@@ -1,45 +1,31 @@
 import { Field } from './field';
-import { GamePlace } from './game/place';
-import { GameScore } from './game/score';
 import { Place } from './place';
 import { Poule } from './poule';
 import { Referee } from './referee';
-import { SportConfig } from './sport/config';
+import { CompetitionSport } from './competition/sport';
 import { State } from './state';
-import { SportScoreConfig } from './sport/scoreconfig';
+import { ScoreConfig } from './score/config';
 import { Round } from './qualify/group';
+import { Identifiable } from './identifiable';
+import { AgainstGamePlace } from './game/place/against';
+import { TogetherGamePlace } from './game/place/together';
 
-export class Game {
-    static readonly Result_Win = 1;
-    static readonly Result_Draw = 2;
-    static readonly Result_Lost = 3;
-    static readonly Home = true;
-    static readonly Away = false;
+export abstract class Game extends Identifiable {
     static readonly Order_By_Batch = 1;
     static readonly Phase_RegularTime = 1;
     static readonly Phase_ExtraTime = 2;
     static readonly Phase_Penalties = 4;
 
-    protected id: number = 0;
     protected field: Field | undefined;
     protected referee: Referee | undefined;
     protected refereePlace: Place | undefined;
     protected startDateTime: Date | undefined;
     protected state: number;
-    protected scores: GameScore[] = [];
-    protected places: GamePlace[] = [];
+    protected places: (AgainstGamePlace | TogetherGamePlace)[] = [];
 
-    constructor(protected poule: Poule, protected batchNr: number) {
-        poule.getGames().push(this);
+    constructor(protected poule: Poule, protected batchNr: number, protected competitionSport: CompetitionSport) {
+        super();
         this.state = State.Created;
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     getPoule(): Poule {
@@ -82,30 +68,6 @@ export class Game {
         this.startDateTime = startDateTime;
     }
 
-    getPlaces(homeaway?: boolean): GamePlace[] {
-        if (homeaway !== undefined) {
-            return this.places.filter(place => place.getHomeaway() === homeaway);
-        }
-        return this.places;
-    }
-
-    setPlaces(places: GamePlace[]): void {
-        this.places = places;
-    }
-
-    isParticipating(place: Place, homeaway?: boolean): boolean {
-        return this.getPlaces(homeaway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
-    }
-
-    getHomeAway(place: Place): boolean | undefined {
-        if (this.isParticipating(place, Game.Home)) {
-            return Game.Home;
-        } else if (this.isParticipating(place, Game.Away)) {
-            return Game.Away;
-        }
-        return undefined;
-    }
-
     getState(): number {
         return this.state;
     }
@@ -118,29 +80,15 @@ export class Game {
         return this.getPoule().getRound();
     }
 
-    getScores(): GameScore[] {
-        return this.scores;
+    getCompetitionSport(): CompetitionSport {
+        return this.competitionSport;
     }
 
-    getFinalPhase(): number {
-        if (this.scores.length === 0) {
-            return 0;
-        }
-        return this.scores[this.scores.length - 1].getPhase();
+    getScoreConfig(): ScoreConfig | undefined {
+        return this.getRound().getValidScoreConfig(this.competitionSport);
     }
 
-    getSportConfig(): SportConfig {
-        if (this.field) {
-            return this.field.getSportConfig();
-        }
-        return this.getRound().getNumber().getCompetition().getFirstSportConfig();
-    }
-
-    getSportScoreConfig(): SportScoreConfig | undefined {
-        const roundNumber = this.getRound().getNumber();
-        if (this.field) {
-            return roundNumber.getValidSportScoreConfig(this.field.getSportConfig().getSport());
-        }
-        return roundNumber.getValidSportScoreConfigs()[0];
+    getPlaces(): (AgainstGamePlace | TogetherGamePlace)[] {
+        return this.places;
     }
 }

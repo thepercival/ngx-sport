@@ -17,7 +17,7 @@ export class SportMapper {
             sport = this.cache[json.name];
         }
         if (sport === undefined) {
-            sport = new Sport(json.name, json.team);
+            sport = new Sport(json.name, json.team, json.gameMode, json.nrOfGamePlaces);
             sport.setId(json.id);
             this.cache[sport.getName()] = sport;
         }
@@ -26,9 +26,7 @@ export class SportMapper {
     }
 
     updateObject(json: JsonSport, sport: Sport) {
-        // sport.setScoreUnitName(json.scoreUnitName);
-        // sport.setScoreSubUnitName(json.scoreSubUnitName);
-        sport.setTeam(json.team);
+        // sport.setTeam(json.team);
         if (json.customId) {
             sport.setCustomId(json.customId);
         }
@@ -38,9 +36,9 @@ export class SportMapper {
         return {
             id: sport.getId(),
             name: sport.getName(),
-            // scoreUnitName: sport.getScoreUnitName(),
-            // scoreSubUnitName: sport.getScoreSubUnitName(),
             team: sport.getTeam(),
+            gameMode: sport.getGameMode(),
+            nrOfGamePlaces: sport.getNrOfGamePlaces(),
             customId: sport.getCustomId()
         };
     }

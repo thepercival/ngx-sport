@@ -3,22 +3,25 @@ import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
 import { State } from './state';
-import { SportConfig } from './sport/config';
 import { Sport } from './sport';
 import { RankingService } from './ranking/service';
 import { Association } from './association';
 import { TeamCompetitor } from './competitor/team';
 import { TeamCompetitorMapper } from './competitor/team/mapper';
+import { CompetitionSport } from './competition/sport';
+import { CompetitionSportMapper } from './competition/sport/mapper';
 
 export class Competition {
     protected id: string | number = 0;
+    protected startDateTime: Date;
     protected ruleSet: number = RankingService.RULESSET_WC;
     protected state: number = State.Created;
     protected referees: Referee[] = [];
-    protected sportConfigs: SportConfig[] = [];
+    protected sports: CompetitionSport[] = [];
     protected teamCompetitors: TeamCompetitor[] = [];
 
-    constructor(protected league: League, protected season: Season, protected startDateTime: Date) {
+    constructor(protected league: League, protected season: Season) {
+        this.startDateTime = season.getStartDateTime();
     }
 
     getId(): string | number {
@@ -53,6 +56,10 @@ export class Competition {
         return this.startDateTime;
     }
 
+    setStartDateTime(date: Date) {
+        this.startDateTime = date;
+    }
+
     getState(): number {
         return this.state;
     }
@@ -67,7 +74,7 @@ export class Competition {
 
     getFields(): Field[] {
         let fields: Field[] = [];
-        this.getSportConfigs().forEach(sportConfig => fields = fields.concat(sportConfig.getFields()));
+        this.getSports().forEach(sport => fields = fields.concat(sport.getFields()));
         return fields;
     }
 
@@ -97,29 +104,21 @@ export class Competition {
         }
     }
 
-    getSports() {
-        return this.sportConfigs.map(sportConfig => sportConfig.getSport());
+    getSports(): CompetitionSport[] {
+        return this.sports;
     }
 
-    getSportConfigs(): SportConfig[] {
-        return this.sportConfigs;
-    }
-
-    getSportConfig(sport?: Sport): SportConfig {
-        const sportConfig = this.sportConfigs.find(sportConfigIt => sportConfigIt.getSport() === sport);
-        if (sportConfig !== undefined) {
-            return sportConfig;
-        }
-        return this.getFirstSportConfig();
+    getSport(sport?: Sport): CompetitionSport | undefined {
+        return this.sports.find(sportIt => sportIt.getSport() === sport);
     }
 
     hasMultipleSportConfigs(): boolean {
-        return this.sportConfigs.length > 1;
+        return this.sports.length > 1;
     }
 
-    getFirstSportConfig(): SportConfig {
-        return this.sportConfigs[0];
-    }
+    // getFirstSportConfig(): SportConfig {
+    //     return this.sportConfigs[0];
+    // }
 
     getTeamCompetitors(): TeamCompetitor[] {
         return this.teamCompetitors;

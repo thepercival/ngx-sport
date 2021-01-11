@@ -1,5 +1,5 @@
 import { JsonPlanningConfig } from "../../planning/config/json";
-import { JsonSportScoreConfig } from "../../sport/scoreconfig/mapper";
+import { JsonSportScoreConfig } from "../../score/config/mapper";
 
 export interface JsonRoundNumber {
     id: number;

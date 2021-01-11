@@ -1,31 +1,26 @@
-import { Game } from '../game';
+import { Identifiable } from 'src/identifiable';
 import { Place } from '../place';
+import { AgainstGame } from './against';
+import { AgainstGamePlace } from './place/against';
+import { TogetherGamePlace } from './place/together';
+import { TogetherGame } from './together';
 
-export class GamePlace {
-
-    protected id: number = 0;
-
-    constructor(protected game: Game, protected place: Place, protected homeaway: boolean) {
-        this.game.getPlaces().push(this);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    getGame(): Game {
-        return this.game;
+export abstract class GamePlace extends Identifiable {
+    constructor(protected game: AgainstGame | TogetherGame, protected place: Place) {
+        super();
     }
 
     getPlace(): Place {
         return this.place;
     }
 
-    getHomeaway(): boolean {
-        return this.homeaway;
+    getGame(): AgainstGame | TogetherGame {
+        return this.game;
+    }
+
+    getGames(): (AgainstGame | TogetherGame)[] {
+        return this.getGame().getPoule().getGames().filter((gameIt: TogetherGame | AgainstGame) => {
+            return gameIt.getPlaces().find((gamePlace: (AgainstGamePlace | TogetherGamePlace)) => gamePlace.getPlace() === this.place) !== undefined;
+        });
     }
 }

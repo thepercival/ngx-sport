@@ -1,8 +1,8 @@
 import { JsonLeague } from "../league/json";
 import { JsonSeason } from "../season/json";
 import { JsonReferee } from "../referee/json";
-import { JsonSportConfig } from "../sport/config/json";
 import { JsonTeamCompetitor } from '../competitor/team/json';
+import { JsonCompetitionSport } from "./sport/json";
 
 export interface JsonCompetition {
     id: string | number;
@@ -12,6 +12,6 @@ export interface JsonCompetition {
     ruleSet: number;
     startDateTime: string;
     state: number;
-    sportConfigs: JsonSportConfig[];
+    sports: JsonCompetitionSport[];
     teamCompetitors?: JsonTeamCompetitor[];
 }

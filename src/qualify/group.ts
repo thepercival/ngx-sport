@@ -6,6 +6,9 @@ import { Place } from '../place';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { State } from '../state';
+import { CompetitionSport } from 'src/competition/sport';
+import { ScoreConfig } from 'src/score/config';
+import { QualifyAgainstConfig } from './againstConfig';
 
 export class QualifyGroup {
     static readonly WINNERS = 1;
@@ -115,9 +118,10 @@ export class Round {
     protected winnersHorizontalPoules: HorizontalPoule[] = [];
     // protected nrOfDropoutPlaces: number;
     protected structureNumber: number = 0;
-    protected parentQualifyGroup: QualifyGroup | undefined;
+    protected scoreConfigs: ScoreConfig[] = [];
+    protected qualifyAgainstConfigs: QualifyAgainstConfig[] = [];
 
-    constructor(roundNumber: RoundNumber, parentQualifyGroup?: QualifyGroup) {
+    constructor(roundNumber: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
         this.number = roundNumber;
         this.number.getRounds().push(this);
         // this.setValue();
@@ -300,5 +304,54 @@ export class Round {
         });
         return nrOfPlacesChildRounds;
     }
+
+    getScoreConfigs(): ScoreConfig[] {
+        return this.scoreConfigs;
+    }
+
+    getScoreConfig(competitionSport: CompetitionSport): ScoreConfig | undefined {
+        return this.scoreConfigs.find(scoreConfigIt => scoreConfigIt.getCompetitionSport() === competitionSport);
+    }
+
+    setScoreConfig(scoreConfig: ScoreConfig) {
+        this.scoreConfigs.push(scoreConfig);
+    }
+
+    getValidScoreConfigs(): (ScoreConfig | undefined)[] {
+        return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidScoreConfig(competitionSport));
+    }
+
+    getValidScoreConfig(competitionSport: CompetitionSport): ScoreConfig | undefined {
+        const scoreConfig = this.getScoreConfig(competitionSport);
+        if (scoreConfig !== undefined) {
+            return scoreConfig;
+        }
+        return this.getParent()?.getValidScoreConfig(competitionSport);
+    }
+
+    getQualifyAgainstConfigs(): QualifyAgainstConfig[] {
+        return this.qualifyAgainstConfigs;
+    }
+
+    getQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig | undefined {
+        return this.qualifyAgainstConfigs.find(qualifyAgainstConfigIt => qualifyAgainstConfigIt.getCompetitionSport() === competitionSport);
+    }
+
+    setQualifyAgainstConfig(qualifyagainstConfig: QualifyAgainstConfig) {
+        this.qualifyAgainstConfigs.push(qualifyagainstConfig);
+    }
+
+    getValidQualifyAgainstConfigs(): (QualifyAgainstConfig | undefined)[] {
+        return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidQualifyAgainstConfig(competitionSport));
+    }
+
+    getValidQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig | undefined {
+        const qualifyAgainstConfig = this.getQualifyAgainstConfig(competitionSport);
+        if (qualifyAgainstConfig !== undefined) {
+            return qualifyAgainstConfig;
+        }
+        return this.getParent()?.getValidQualifyAgainstConfig(competitionSport);
+    }
+
 }
 

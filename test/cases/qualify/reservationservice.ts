@@ -3,8 +3,7 @@ import { describe, it } from 'mocha';
 
 import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
-import { Round } from '../../../src/round';
-import { QualifyGroup } from '../../../src/qualify/group';
+import { QualifyGroup, Round } from '../../../src/qualify/group';
 import { StructureService } from '../../../src/structure/service';
 import { setScoreSingle } from '../../helpers/setscores';
 import { QualifyService } from '../../../src/qualify/service';
@@ -28,6 +27,10 @@ describe('QualifyReservationService', () => {
         structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -46,6 +49,10 @@ describe('QualifyReservationService', () => {
         qualifyService.setQualifiers();
 
         const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
         const resService = new QualifyReservationService(winnersRound);
 
         expect(resService.isFree(1, pouleOne)).to.equal(true);
@@ -67,13 +74,33 @@ describe('QualifyReservationService', () => {
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-
-        structureService.addPoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
+        let winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
+        structureService.addPoule(winnersRound);
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
         const pouleThree = rootRound.getPoule(3);
+        expect(pouleThree).to.not.equal(undefined);
+        if (!pouleThree) {
+            return;
+        }
         const pouleFour = rootRound.getPoule(4);
+        expect(pouleFour).to.not.equal(undefined);
+        if (!pouleFour) {
+            return;
+        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -93,7 +120,11 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();
 
-        const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
         const resService = new QualifyReservationService(winnersRound);
 
         resService.reserve(1, pouleOne);
@@ -135,12 +166,28 @@ describe('QualifyReservationService', () => {
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.removePoule(rootRound.getChild(QualifyGroup.WINNERS, 1));
+        let winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
+        structureService.removePoule(winnersRound);
 
         const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
         const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
         const pouleThree = rootRound.getPoule(3);
-
+        expect(pouleThree).to.not.equal(undefined);
+        if (!pouleThree) {
+            return;
+        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -157,8 +204,28 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();
 
-        const winnersPoule = rootRound.getChild(QualifyGroup.WINNERS, 1).getPoule(1);
+        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
 
-        expect(placeLocationMap.getCompetitor(winnersPoule.getPlace(4))).to.equal(undefined);
+        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        expect(winnersRound).to.not.equal(undefined);
+        if (!winnersRound) {
+            return;
+        }
+
+        const winnersPoule = winnersRound.getPoule(1);
+        expect(winnersPoule).to.not.equal(undefined);
+        if (!winnersPoule) {
+            return;
+        }
+        const winnersPlace = winnersPoule.getPlace(4);
+        expect(winnersPlace).to.not.equal(undefined);
+        if (!winnersPlace) {
+            return;
+        }
+        expect(placeLocationMap.getCompetitor(winnersPlace)).to.equal(undefined);
     });
 });

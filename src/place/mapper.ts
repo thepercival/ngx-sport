@@ -28,3 +28,7 @@ export class PlaceMapper {
         };
     }
 }
+
+export interface PlaceMap {
+    [key: string]: Place;
+}

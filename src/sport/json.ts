@@ -1,8 +1,8 @@
 export interface JsonSport {
     id: string | number;
     name: string;
-    // scoreUnitName: string;
-    // scoreSubUnitName?: string;
     team: boolean;
+    gameMode: number;
+    nrOfGamePlaces: number;
     customId: number | undefined;
 }

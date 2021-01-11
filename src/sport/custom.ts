@@ -14,6 +14,8 @@ export abstract class SportCustom {
     static readonly Volleyball = 12;
     static readonly Baseball = 13;
     static readonly IceHockey = 14;
+    static readonly Sjoelen = 15;
+    // static readonly Shuffleboard = 16;
 
     static readonly Football_Line_GoalKepeer = 1;
     static readonly Football_Line_Defense = 2;
@@ -36,7 +38,8 @@ export abstract class SportCustom {
             SportCustom.Tennis,
             SportCustom.Football,
             SportCustom.Volleyball,
-            SportCustom.IceHockey
+            SportCustom.IceHockey,
+            SportCustom.Sjoelen
         ];
     }
 }

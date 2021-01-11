@@ -7,12 +7,12 @@ import { HorizontalPouleService, HorizontolPoulesCreator } from '../poule/horizo
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { RoundNumber } from '../round/number';
-import { SportConfigService } from '../sport/config/service';
-import { SportScoreConfigService } from '../sport/scoreconfig/service';
+import { SportConfigService } from '../competition/sport/service';
+import { SportScoreConfigService } from '../score/config/service';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
 import { SportMapper } from '../sport/mapper';
-import { SportConfigMapper } from '../sport/config/mapper';
+import { SportConfigMapper } from '../competition/sport/mapper';
 import { FieldMapper } from '../field/mapper';
 import { PlanningConfig } from '../planning/config';
 

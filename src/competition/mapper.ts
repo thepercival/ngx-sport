@@ -6,7 +6,7 @@ import { LeagueMapper } from '../league/mapper';
 import { SeasonMapper } from '../season/mapper';
 import { SportMapper } from '../sport/mapper';
 import { RefereeMapper } from '../referee/mapper';
-import { SportConfigMapper } from '../sport/config/mapper';
+import { CompetitionSportMapper } from './sport/mapper';
 import { JsonCompetition } from './json';
 import { TeamCompetitorMapper } from '../competitor/team/mapper';
 
@@ -19,20 +19,21 @@ export class CompetitionMapper {
         private leagueMapper: LeagueMapper,
         private seasonMapper: SeasonMapper,
         private refereeMapper: RefereeMapper,
-        private sportConfigMapper: SportConfigMapper,
+        private competitionSportMapper: CompetitionSportMapper,
         private teamCompetitorMapper: TeamCompetitorMapper
     ) { }
 
     toObject(json: JsonCompetition, disableCache?: boolean): Competition {
         const league = this.leagueMapper.toObject(json.league, disableCache);
         const season = this.seasonMapper.toObject(json.season, disableCache);
-        const competition = new Competition(league, season, new Date(json.startDateTime));
+        const competition = new Competition(league, season);
+        competition.setStartDateTime(new Date(json.startDateTime));
 
         competition.setId(json.id);
         this.updateObject(json, competition);
 
         json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
-        json.sportConfigs.forEach(jsonSportConfig => this.sportConfigMapper.toObject(jsonSportConfig, competition));
+        json.sports.forEach(jsonSport => this.competitionSportMapper.toObject(jsonSport, competition));
         if (json.teamCompetitors) {
             json.teamCompetitors.forEach(jsonteamCompetitor => this.teamCompetitorMapper.toObject(jsonteamCompetitor, competition));
         };
@@ -49,7 +50,7 @@ export class CompetitionMapper {
             id: competition.getId(),
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
-            sportConfigs: competition.getSportConfigs().map(sport => this.sportConfigMapper.toJson(sport)),
+            sports: competition.getSports().map(sport => this.competitionSportMapper.toJson(sport)),
             referees: competition.getReferees().map(referee => this.refereeMapper.toJson(referee)),
             ruleSet: competition.getRuleSet(),
             startDateTime: competition.getStartDateTime().toISOString(),

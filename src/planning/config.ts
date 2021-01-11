@@ -1,6 +1,8 @@
+import { Identifiable } from 'src/identifiable';
+import { Sport } from 'src/sport';
 import { RoundNumber } from '../round/number';
 
-export class PlanningConfig {
+export class PlanningConfig extends Identifiable {
     static readonly Default_Extension = false;
     static readonly Default_EnableTime = true;
     static readonly Default_Teamup = false;
@@ -15,8 +17,8 @@ export class PlanningConfig {
     static readonly SelfReferee_Poule_Other = 1;
     static readonly SelfReferee_Poule_Same = 2;
 
-    protected id: number = 0;
     protected extension: boolean = PlanningConfig.Default_Extension;
+    protected gameMode: number = Sport.GAMEMODE_AGAINST;
     protected enableTime: boolean = PlanningConfig.Default_EnableTime;
     protected minutesPerGame: number = PlanningConfig.Default_MinutesPerGame;
     protected minutesPerGameExt: number = 0;
@@ -27,15 +29,16 @@ export class PlanningConfig {
     protected nrOfHeadtohead: number = PlanningConfig.Default_NrOfHeadtohead;
 
     constructor(protected roundNumber: RoundNumber) {
+        super();
         this.roundNumber.setPlanningConfig(this);
     }
 
-    getId(): number {
-        return this.id;
+    getGameMode(): number {
+        return this.gameMode;
     }
 
-    setId(id: number) {
-        this.id = id;
+    setGameMode(gameMode: number) {
+        this.gameMode = gameMode;
     }
 
     getExtension(): boolean {
@@ -86,14 +89,6 @@ export class PlanningConfig {
         this.minutesAfter = minutesAfter;
     }
 
-    getTeamup(): boolean {
-        return this.teamup;
-    }
-
-    setTeamup(teamup: boolean) {
-        this.teamup = teamup;
-    }
-
     getSelfReferee(): number {
         return this.selfReferee;
     }
@@ -104,14 +99,6 @@ export class PlanningConfig {
 
     selfRefereeEnabled(): boolean {
         return this.selfReferee !== PlanningConfig.SelfReferee_Disabled;
-    }
-
-    getNrOfHeadtohead(): number {
-        return this.nrOfHeadtohead;
-    }
-
-    setNrOfHeadtohead(nrOfHeadtohead: number) {
-        this.nrOfHeadtohead = nrOfHeadtohead;
     }
 
     getMaximalNrOfMinutesPerGame(): number {

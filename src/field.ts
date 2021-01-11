@@ -1,29 +1,20 @@
-import { Competition } from './competition';
-import { Sport } from './sport';
-import { SportConfig } from './sport/config';
+import { CompetitionSport } from './competition/sport';
+import { Identifiable } from './identifiable';
 
-export class Field {
+export class Field extends Identifiable {
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 3;
 
-    protected id: number = 0;
     protected name: string | undefined;
 
-    constructor(protected sportConfig: SportConfig, protected priority: number) {
-        this.sportConfig.getFields().push(this);
+    constructor(protected competitionSport: CompetitionSport, protected priority: number) {
+        super();
+        this.competitionSport.getFields().push(this);
         this.setPriority(priority);
     }
 
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    getSportConfig(): SportConfig {
-        return this.sportConfig;
+    getCompetitionSport(): CompetitionSport {
+        return this.competitionSport;
     }
 
     getPriority(): number {
