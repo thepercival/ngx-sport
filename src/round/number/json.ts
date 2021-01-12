@@ -1,11 +1,12 @@
+
 import { JsonPlanningConfig } from "../../planning/config/json";
-import { JsonSportScoreConfig } from "../../score/config/mapper";
+import { JsonGameAmountConfig } from "../../planning/gameAmountConfig/json";
 
 export interface JsonRoundNumber {
     id: number;
     number: number;
     hasPlanning: boolean;
     planningConfig?: JsonPlanningConfig;
-    sportScoreConfigs?: JsonSportScoreConfig[];
+    gameAmountConfigs?: JsonGameAmountConfig[];
     next?: JsonRoundNumber;
 }

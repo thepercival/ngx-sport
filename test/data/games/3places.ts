@@ -1,5 +1,4 @@
-import { JsonGame } from '../../../src/game/json';
-import { State } from '../../../src/state';
+import { JsonGame } from "../../../public_api";
 
 export const jsonGames3Places: JsonGame[] = [
     {

@@ -1,12 +1,11 @@
-import { Game } from 'src/game';
-import { CompetitionSport } from 'src/competition/sport';
-import { QualifyAgainstConfig } from 'src/qualify/againstConfig';
-import { Place } from 'src/place';
-import { Poule } from 'src/poule';
-import { State } from 'src/state';
-import { GamePlace } from './place';
+import { Game } from '../game';
+import { CompetitionSport } from '../competition/sport';
+import { QualifyAgainstConfig } from '../qualify/againstConfig';
+import { Place } from '../place';
+import { Poule } from '../poule';
+import { State } from '../state';
 import { AgainstGamePlace } from './place/against';
-import { AgainstScore } from 'src/score/against';
+import { AgainstScore } from '../score/against';
 
 export class AgainstGame extends Game {
     static readonly Result_Win = 1;

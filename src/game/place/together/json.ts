@@ -1,4 +1,4 @@
-import { JsonTogetherScore } from "src/score/together/json";
+import { JsonTogetherScore } from "../../../score/together/json";
 import { JsonGamePlace } from "../json";
 
 export interface JsonTogetherGamePlace extends JsonGamePlace {

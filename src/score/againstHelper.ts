@@ -1,4 +1,4 @@
-import { AgainstGame } from "src/game/against";
+import { AgainstGame } from "../game/against";
 
 
 export class AgainstScoreHelper {

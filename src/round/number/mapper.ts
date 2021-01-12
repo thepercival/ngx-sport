@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { Competition } from '../../competition';
 import { PlanningConfigMapper } from '../../planning/config/mapper';
-import { SportScoreConfigMapper } from '../../score/config/mapper';
 import { RoundNumber } from '../number';
-import { SportMapper } from '../../sport/mapper';
 import { JsonRoundNumber } from './json';
+import { GameAmountConfigMapper } from '../../planning/gameAmountConfig/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +12,7 @@ import { JsonRoundNumber } from './json';
 export class RoundNumberMapper {
     constructor(
         private planningConfigMapper: PlanningConfigMapper,
-        private sportScoreConfigMapper: SportScoreConfigMapper,
-        private sportMapper: SportMapper
+        private gameAmountConfigMapper: GameAmountConfigMapper
     ) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
@@ -25,10 +23,9 @@ export class RoundNumberMapper {
         if (json.planningConfig !== undefined) {
             this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
         }
-        if (json.sportScoreConfigs) {
-            json.sportScoreConfigs.forEach(jsonSportScoreConfig => {
-                const sport = this.sportMapper.toObject(jsonSportScoreConfig.sport);
-                this.sportScoreConfigMapper.toObject(jsonSportScoreConfig, sport, roundNumber);
+        if (json.gameAmountConfigs) {
+            json.gameAmountConfigs.forEach(jsonGameAmountConfig => {
+                this.gameAmountConfigMapper.toObject(jsonGameAmountConfig, roundNumber);
             });
         }
         if (json.next !== undefined) {
@@ -44,7 +41,7 @@ export class RoundNumberMapper {
             id: roundNumber.getId(),
             number: roundNumber.getNumber(),
             planningConfig: planningConfig ? this.planningConfigMapper.toJson(planningConfig) : undefined,
-            sportScoreConfigs: roundNumber.getSportScoreConfigs().map(config => this.sportScoreConfigMapper.toJson(config)),
+            gameAmountConfigs: roundNumber.getGameAmountConfigs().map(config => this.gameAmountConfigMapper.toJson(config)),
             next: nextRoundNumber ? this.toJson(nextRoundNumber) : undefined,
             hasPlanning: false
         };

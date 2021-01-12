@@ -3,16 +3,10 @@ import { describe, it } from 'mocha';
 
 import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
-import { QualifyGroup, Round } from '../../../src/qualify/group';
-import { StructureService } from '../../../src/structure/service';
 import { setScoreSingle } from '../../helpers/setscores';
-import { QualifyService } from '../../../src/qualify/service';
-import { RankingService } from '../../../src/ranking/service';
-import { Competitor } from '../../../src/competitor';
-import { QualifyReservationService } from '../../../src/qualify/reservationservice';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { PlaceLocationMap } from '../../../src/place/location/map';
+import { PlaceLocationMap, QualifyGroup, QualifyReservationService, QualifyService, RankingService, Round, StructureService } from '../../../public_api';
 
 describe('QualifyReservationService', () => {
 

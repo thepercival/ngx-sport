@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSport } from 'src/competition/sport';
+import { CompetitionSport } from '../competition/sport';
 
 import { Field } from '../field';
 import { JsonField } from './json';

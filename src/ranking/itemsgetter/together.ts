@@ -1,14 +1,11 @@
 
-import { AgainstScoreHelper } from 'src/score/againstHelper';
-import { AgainstScore } from 'src/score/against';
+
 import { RankingItemsGetter } from '../itemsgetter';
-import { TogetherGame } from 'src/game/together';
-import { AgainstGame } from 'src/game/against';
-import { Round } from 'src/qualify/group';
-import { Place } from 'src/place';
+import { TogetherGame } from '../../game/together';
+import { Round } from '../../qualify/group';
+import { Place } from '../../place';
 import { UnrankedRoundItem } from '../item';
-import { Game } from 'src/game';
-import { TogetherGamePlace } from 'src/game/place/together';
+import { TogetherGamePlace } from '../../game/place/together';
 
 /* eslint:disable:no-bitwise */
 

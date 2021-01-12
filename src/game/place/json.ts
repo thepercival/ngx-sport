@@ -1,4 +1,4 @@
-import { JsonIdentifiable } from "src/identifiable/json";
+import { JsonIdentifiable } from "../../identifiable/json";
 
 export interface JsonGamePlace extends JsonIdentifiable {
     placeNr: number;

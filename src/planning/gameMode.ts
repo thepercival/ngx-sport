@@ -1,0 +1,1 @@
+export enum GameMode { Together = 1, Against }

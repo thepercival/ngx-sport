@@ -41,7 +41,6 @@ export class CompetitionMapper {
     }
 
     updateObject(json: JsonCompetition, competition: Competition) {
-        competition.setRuleSet(json.ruleSet);
         competition.setState(json.state);
     }
 
@@ -50,9 +49,9 @@ export class CompetitionMapper {
             id: competition.getId(),
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
+            rankingRuleSet: competition.getRankingRuleSet(),
             sports: competition.getSports().map(sport => this.competitionSportMapper.toJson(sport)),
             referees: competition.getReferees().map(referee => this.refereeMapper.toJson(referee)),
-            ruleSet: competition.getRuleSet(),
             startDateTime: competition.getStartDateTime().toISOString(),
             state: competition.getState()
         };

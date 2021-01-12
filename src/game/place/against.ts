@@ -1,4 +1,4 @@
-import { Place } from 'src/place';
+import { Place } from '../../place';
 import { AgainstGame } from '../against';
 import { GamePlace } from '../place';
 

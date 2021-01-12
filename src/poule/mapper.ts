@@ -27,7 +27,8 @@ export class PouleMapper {
             number: poule.getNumber(),
             name: poule.getName(),
             places: poule.getPlaces().map(place => this.placeMapper.toJson(place)),
-            games: poule.getGames().map(game => this.gameMapper.toJson(game))
+            againstGames: poule.getAgainstGames().map(game => this.gameMapper.toJsonAgainst(game)),
+            togetherGames: poule.getTogetherGames().map(game => this.gameMapper.toJsonTogether(game))
         };
     }
 }

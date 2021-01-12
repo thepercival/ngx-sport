@@ -1,5 +1,5 @@
-import { JsonCompetitionSport } from "src/competition/sport/json";
-import { JsonIdentifiable } from "src/identifiable/json";
+import { JsonCompetitionSport } from "../../competition/sport/json";
+import { JsonIdentifiable } from "../../identifiable/json";
 
 export interface JsonGameAmountConfig extends JsonIdentifiable {
     competitionSport: JsonCompetitionSport;

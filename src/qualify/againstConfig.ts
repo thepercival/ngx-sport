@@ -1,6 +1,7 @@
 import { Round } from './group';
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
+import { PointsCalculationType } from '../ranking/poulePointsCalculationType';
 
 export class QualifyAgainstConfig extends Identifiable {
     static readonly Default_WinPoints = 3;
@@ -9,17 +10,12 @@ export class QualifyAgainstConfig extends Identifiable {
     static readonly Default_DrawPointsExt = 1;
     static readonly Default_LosePointsExt = 0;
 
-    static readonly Points_Calc_GamePoints = 0;
-    static readonly Points_Calc_ScorePoints = 1;
-    static readonly Points_Calc_Both = 2;
-
     protected winPoints: number = QualifyAgainstConfig.Default_WinPoints;
     protected drawPoints: number = QualifyAgainstConfig.Default_DrawPoints;
     protected winPointsExt: number = QualifyAgainstConfig.Default_WinPointsExt;
     protected drawPointsExt: number = QualifyAgainstConfig.Default_DrawPointsExt;
     protected losePointsExt: number = QualifyAgainstConfig.Default_LosePointsExt;
-    protected pointsCalculation: number = QualifyAgainstConfig.Points_Calc_GamePoints;
-
+    protected pointsCalculation: number = PointsCalculationType.AgainstGamePoints;
 
     constructor(protected competitionSport: CompetitionSport, protected round: Round) {
         super();

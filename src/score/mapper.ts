@@ -1,14 +1,10 @@
-import { Score } from '../score';
-import { Game } from '../game';
 import { Injectable } from '@angular/core';
-import { JsonScore } from './json';
 import { JsonAgainstScore } from './against/json';
-import { AgainstGame } from 'src/game/against';
+import { AgainstGame } from '../game/against';
 import { AgainstScore } from './against';
-import { AgainstScoreHelper } from './againstHelper';
 import { TogetherScore } from './together';
 import { JsonTogetherScore } from './together/json';
-import { TogetherGamePlace } from 'src/game/place/together';
+import { TogetherGamePlace } from '../game/place/together';
 
 @Injectable({
     providedIn: 'root'

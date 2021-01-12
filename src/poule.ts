@@ -2,12 +2,12 @@ import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
 import { TogetherGame } from './game/together';
+import { Identifiable } from './identifiable';
 import { Place } from './place';
 import { Round } from './qualify/group';
 import { State } from './state';
 
-export class Poule {
-    protected id: number = 0;
+export class Poule extends Identifiable {
     protected number: number;
     protected structureNumber: number = 0;
     protected name: string | undefined;
@@ -15,16 +15,9 @@ export class Poule {
     protected games: (AgainstGame | TogetherGame)[] = [];
 
     constructor(protected round: Round, number?: number) {
+        super();
         this.round.getPoules().push(this);
         this.number = number ? number : (round.getPoules().length);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     getRound(): Round {
@@ -65,6 +58,14 @@ export class Poule {
 
     getGames(): (AgainstGame | TogetherGame)[] {
         return this.games;
+    }
+
+    getAgainstGames(): AgainstGame[] {
+        return <AgainstGame[]>this.games;
+    }
+
+    getTogetherGames(): TogetherGame[] {
+        return <TogetherGame[]>this.games;
     }
 
     getState(): number {

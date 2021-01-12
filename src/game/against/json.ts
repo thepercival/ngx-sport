@@ -1,5 +1,5 @@
 
-import { JsonAgainstScore } from 'src/score/against/json';
+import { JsonAgainstScore } from '../../score/against/json';
 import { JsonGame } from '../json';
 import { JsonAgainstGamePlace } from '../place/against/json';
 

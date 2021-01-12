@@ -4,32 +4,24 @@ import { Referee } from './referee';
 import { Season } from './season';
 import { State } from './state';
 import { Sport } from './sport';
-import { RankingService } from './ranking/service';
 import { Association } from './association';
 import { TeamCompetitor } from './competitor/team';
-import { TeamCompetitorMapper } from './competitor/team/mapper';
 import { CompetitionSport } from './competition/sport';
-import { CompetitionSportMapper } from './competition/sport/mapper';
+import { RankingRuleSet } from './ranking/ruleSet';
+import { Identifiable } from './identifiable';
+import { RankingItemsGetterTogether } from './ranking/itemsgetter/together';
 
-export class Competition {
-    protected id: string | number = 0;
+export class Competition extends Identifiable {
     protected startDateTime: Date;
-    protected ruleSet: number = RankingService.RULESSET_WC;
+    protected rankingRuleSet: RankingRuleSet = RankingRuleSet.WC
     protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sports: CompetitionSport[] = [];
     protected teamCompetitors: TeamCompetitor[] = [];
 
     constructor(protected league: League, protected season: Season) {
+        super();
         this.startDateTime = season.getStartDateTime();
-    }
-
-    getId(): string | number {
-        return this.id;
-    }
-
-    setId(id: string | number): void {
-        this.id = id;
     }
 
     getLeague(): League {
@@ -44,12 +36,12 @@ export class Competition {
         return this.season;
     }
 
-    getRuleSet(): number {
-        return this.ruleSet;
+    getRankingRuleSet(): RankingRuleSet {
+        return this.rankingRuleSet;
     }
 
-    setRuleSet(ruleSet: number): void {
-        this.ruleSet = ruleSet;
+    setRankingRuleSet(rankingRuleSet: RankingRuleSet): void {
+        this.rankingRuleSet = rankingRuleSet;
     }
 
     getStartDateTime(): Date {

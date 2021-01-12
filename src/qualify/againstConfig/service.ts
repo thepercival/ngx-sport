@@ -1,40 +1,46 @@
 import { Injectable } from '@angular/core';
 
-import { RoundNumber } from '../../round/number';
-import { CompetitionSport } from 'src/competition/sport';
+import { CompetitionSport } from '../../competition/sport';
 import { QualifyAgainstConfig } from '../againstConfig';
-import { JsonQualifyAgainstConfig } from './json';
-import { Sport } from 'src/sport';
-import { SportCustom } from 'src/sport/custom';
-import { CompetitionSportMapper } from 'src/competition/sport/mapper';
+import { Sport } from '../../sport';
+import { SportCustom } from '../../sport/custom';
 import { Round } from '../group';
-import { QualifyAgainstConfigMapper } from './mapper';
+import { PointsCalculationType } from '../../ranking/poulePointsCalculationType';
+import { GameMode } from '../../planning/gameMode';
 
 @Injectable({
     providedIn: 'root'
 })
 export class QualifyAgainstConfigService {
 
-    constructor(private competitionSportMapper: CompetitionSportMapper,
-        private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper) {
+    constructor(/*private competitionSportMapper: CompetitionSportMapper,
+        private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper*/) {
     }
 
-    createDefaultJson(competitionSport: CompetitionSport): JsonQualifyAgainstConfig {
-        const sport = competitionSport.getSport();
-        return {
-            id: 0,
-            competitionSport: this.competitionSportMapper.toJson(competitionSport),
-            winPoints: this.getDefaultWinPoints(sport),
-            drawPoints: this.getDefaultDrawPoints(sport),
-            winPointsExt: this.getDefaultWinPointsExt(sport),
-            drawPointsExt: this.getDefaultDrawPointsExt(sport),
-            losePointsExt: this.getDefaultLosePointsExt(sport),
-            pointsCalculation: QualifyAgainstConfig.Points_Calc_GamePoints
-        };
-    }
+    // createDefaultJson(competitionSport: CompetitionSport): JsonQualifyAgainstConfig {
+    //     const sport = competitionSport.getSport();
+    //     return {
+    //         id: 0,
+    //         competitionSport: this.competitionSportMapper.toJson(competitionSport),
+    //         winPoints: this.getDefaultWinPoints(sport),
+    //         drawPoints: this.getDefaultDrawPoints(sport),
+    //         winPointsExt: this.getDefaultWinPointsExt(sport),
+    //         drawPointsExt: this.getDefaultDrawPointsExt(sport),
+    //         losePointsExt: this.getDefaultLosePointsExt(sport),
+    //         pointsCalculation: PointsCalculationType.AgainstGamePoints
+    //     };
+    // }
 
     createDefault(competitionSport: CompetitionSport, round: Round): QualifyAgainstConfig {
-        return this.qualifyAgainstConfigMapper.toObject(this.createDefaultJson(competitionSport), round);
+        const config = new QualifyAgainstConfig(competitionSport, round);
+        const sport = competitionSport.getSport();
+        config.setWinPoints(this.getDefaultWinPoints(sport));
+        config.setDrawPoints(this.getDefaultDrawPoints(sport));
+        config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
+        config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
+        config.setLosePointsExt(this.getDefaultLosePointsExt(sport));
+        config.setPointsCalculation(this.getDefaultPointCalculationType(round));
+        return config;
     }
 
     copy(competitionSport: CompetitionSport, round: Round, sourceConfig: QualifyAgainstConfig): QualifyAgainstConfig {
@@ -48,23 +54,30 @@ export class QualifyAgainstConfigService {
         return config;
     }
 
-    protected getDefaultWinPoints(sport: Sport): number {
+    getDefaultPointCalculationType(round: Round): PointsCalculationType {
+        if (round.getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
+            return PointsCalculationType.AgainstGamePoints;
+        }
+        return PointsCalculationType.ScorePoints;
+    }
+
+    getDefaultWinPoints(sport: Sport): number {
         return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_WinPoints : 1;
     }
 
-    protected getDefaultDrawPoints(sport: Sport): number {
+    getDefaultDrawPoints(sport: Sport): number {
         return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_DrawPoints : 0.5;
     }
 
-    protected getDefaultWinPointsExt(sport: Sport): number {
+    getDefaultWinPointsExt(sport: Sport): number {
         return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_WinPointsExt : 1;
     }
 
-    protected getDefaultDrawPointsExt(sport: Sport): number {
+    getDefaultDrawPointsExt(sport: Sport): number {
         return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_DrawPointsExt : 0.5;
     }
 
-    protected getDefaultLosePointsExt(sport: Sport): number {
+    getDefaultLosePointsExt(sport: Sport): number {
         return sport.getCustomId() !== SportCustom.IceHockey ? QualifyAgainstConfig.Default_LosePointsExt : 1;
     }
 }

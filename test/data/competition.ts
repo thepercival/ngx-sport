@@ -1,5 +1,4 @@
-import { JsonCompetition } from '../../src/competition/json';
-import { RankingService } from '../../src/ranking/service';
+import { JsonCompetition } from "../../public_api";
 
 export const jsonBaseCompetition: JsonCompetition = {
     'id': 0,

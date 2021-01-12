@@ -1,5 +1,5 @@
-import { AgainstGame } from 'src/game/against';
-import { Score } from 'src/score';
+import { AgainstGame } from '../game/against';
+import { Score } from '../score';
 import { AgainstScoreHelper } from './againstHelper';
 
 export class AgainstScore extends Score {

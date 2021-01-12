@@ -3,8 +3,6 @@ import { Identifiable } from "./identifiable";
 export class Sport extends Identifiable {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
-    static readonly GAMEMODE_TOGETHER = 1;
-    static readonly GAMEMODE_AGAINST = 2;
     protected customId: number | undefined;
 
     constructor(

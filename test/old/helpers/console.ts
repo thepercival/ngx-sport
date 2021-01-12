@@ -1,9 +1,4 @@
-// import { Game, GameScore, Poule, NameService } from '../public_api';
-// import { State } from '../src/state';
 
-import { Game } from "../../../src/game";
-
-// import { PlanningResourceBatch } from '../src/planning/resource/batch';
 const colors = require('colors');
 
 export function consoleBatch(batch: PlanningResourceBatch) {

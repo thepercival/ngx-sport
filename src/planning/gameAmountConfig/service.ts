@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Competition } from '../../competition';
 import { RoundNumber } from '../../round/number';
-import { Sport } from '../../sport';
-import { Structure } from '../../structure';
-import { SportCustom } from '../../sport/custom';
-import { SportMapper } from '../../sport/mapper';
-import { JsonField } from '../../field/json';
-import { ScoreConfigService } from 'src/score/config/service';
-import { CompetitionSport } from 'src/competition/sport';
+import { CompetitionSport } from '../../competition/sport';
 import { GameAmountConfig } from '../gameAmountConfig';
+import { GameMode } from '../gameMode';
 
 @Injectable({
     providedIn: 'root'
@@ -21,8 +15,8 @@ export class GameAmountConfigService {
 
     createDefault(competitionSport: CompetitionSport, roundNumber: RoundNumber): GameAmountConfig {
         const gameMode = roundNumber.getValidPlanningConfig()?.getGameMode();
-        let amount = Sport.GAMEMODE_AGAINST
-        if (gameMode === Sport.GAMEMODE_TOGETHER) {
+        let amount = GameMode.Against;
+        if (gameMode === GameMode.Together) {
             amount = competitionSport.getFields().length;
         }
         return new GameAmountConfig(competitionSport, roundNumber, amount);

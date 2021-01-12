@@ -1,0 +1,1 @@
+export enum RankingRuleSet { WC = 1, EC }

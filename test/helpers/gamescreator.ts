@@ -1,6 +1,4 @@
-import { Poule } from '../../public_api';
-import { RoundNumber } from '../../src/round/number';
-import { JsonGame } from '../../src/game/json';
+import { JsonGame, Poule, RoundNumber } from '../../public_api';
 import { jsonGames2Places } from '../data/games/2places';
 import { getGameMapper, getPlanningMapper } from './mappers';
 import { jsonGames3Places } from '../data/games/3places';

@@ -7,40 +7,48 @@ import { HorizontalPouleService, HorizontolPoulesCreator } from '../poule/horizo
 import { QualifyGroupService } from '../qualify/group/service';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { RoundNumber } from '../round/number';
-import { SportConfigService } from '../competition/sport/service';
-import { SportScoreConfigService } from '../score/config/service';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
-import { SportMapper } from '../sport/mapper';
-import { SportConfigMapper } from '../competition/sport/mapper';
-import { FieldMapper } from '../field/mapper';
 import { PlanningConfig } from '../planning/config';
+import { JsonPlanningConfig } from '../planning/config/json';
+import { CompetitionSportService } from '../competition/sport/service';
+import { ScoreConfigService } from '../score/config/service';
+import { GameAmountConfigService } from '../planning/gameAmountConfig/service';
+import { QualifyAgainstConfigService } from '../qualify/againstConfig/service';
 
 export class StructureService {
     static readonly DefaultNrOfPlaces = 5;
 
-    private sportConfigService: SportConfigService;
+    private competitionSportService: CompetitionSportService;
 
     constructor(
         private placeRanges: PlaceRange[]/*,
         private sportConfigService: SportConfigService,*/
         /*private planningConfigService: PlanningConfigService*/) {
-        this.sportConfigService = new SportConfigService(
-            new SportScoreConfigService(),
-            new SportConfigMapper(new SportMapper(), new FieldMapper()),
-            new SportMapper()
+        this.competitionSportService = new CompetitionSportService(
+            new ScoreConfigService(),
+            new GameAmountConfigService(),
+            new QualifyAgainstConfigService()
         );
     }
 
-    create(competition: Competition, nrOfPlaces: number, nrOfPoules?: number): Structure {
+    create(competition: Competition, jsonPlanningConfig: JsonPlanningConfig, nrOfPlaces: number, nrOfPoules?: number): Structure {
         const firstRoundNumber = new RoundNumber(competition);
-        new PlanningConfig(firstRoundNumber);
+        new PlanningConfig(firstRoundNumber,
+            jsonPlanningConfig.gameMode,
+            jsonPlanningConfig.extension,
+            jsonPlanningConfig.enableTime,
+            jsonPlanningConfig.minutesPerGame,
+            jsonPlanningConfig.minutesPerGameExt,
+            jsonPlanningConfig.minutesBetweenGames,
+            jsonPlanningConfig.minutesAfter,
+            jsonPlanningConfig.selfReferee);
         const rootRound = new Round(firstRoundNumber, undefined);
         const nrOfPoulesToAdd = nrOfPoules ? nrOfPoules : this.getDefaultNrOfPoules(nrOfPlaces);
         this.updateRound(rootRound, nrOfPlaces, nrOfPoulesToAdd);
         const structure = new Structure(firstRoundNumber, rootRound);
-        competition.getSportConfigs().forEach(sportConfig => {
-            this.sportConfigService.addToStructure(sportConfig, structure);
+        competition.getSports().forEach(competitionSport => {
+            this.competitionSportService.addToStructure(competitionSport, structure);
         });
         structure.setStructureNumbers();
         return structure;

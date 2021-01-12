@@ -6,8 +6,8 @@ import { Place } from '../place';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { State } from '../state';
-import { CompetitionSport } from 'src/competition/sport';
-import { ScoreConfig } from 'src/score/config';
+import { CompetitionSport } from '../competition/sport';
+import { ScoreConfig } from '../score/config';
 import { QualifyAgainstConfig } from './againstConfig';
 
 export class QualifyGroup {

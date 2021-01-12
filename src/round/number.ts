@@ -6,8 +6,8 @@ import { Poule } from '../poule';
 import { State } from '../state';
 import { PouleStructure } from '../poule/structure';
 import { Round } from '../qualify/group';
-import { GameAmountConfig } from 'src/planning/gameAmountConfig';
-import { CompetitionSport } from 'src/competition/sport';
+import { GameAmountConfig } from '../planning/gameAmountConfig';
+import { CompetitionSport } from '../competition/sport';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -95,6 +95,22 @@ export class RoundNumber {
         return pouleStructure;
     }
 
+    getValidPlanningConfig(): PlanningConfig {
+        const planningConfig = this.getPlanningConfig();
+        if (planningConfig !== undefined) {
+            return planningConfig;
+        }
+        const previous = this.getPrevious();
+        if (!previous) {
+            throw Error('het 1ste rondenummer moet gezet zijn');
+        }
+        const previousPlanningConfig = previous.getPlanningConfig();
+        if (!previousPlanningConfig) {
+            throw Error('het vorige rondenummer moet planning-config hebben');
+        }
+        return previousPlanningConfig;
+    }
+
     getGames(order?: number): Game[] {
         let games: Game[] = [];
         this.getPoules().forEach(poule => {
@@ -167,15 +183,6 @@ export class RoundNumber {
 
     getPlanningConfig(): PlanningConfig | undefined {
         return this.planningConfig;
-    }
-
-    getValidPlanningConfig(): PlanningConfig | undefined {
-        const planningConfig = this.planningConfig;
-        if (planningConfig !== undefined) {
-            return planningConfig;
-        }
-        const previous = this.getPrevious();
-        return previous?.getValidPlanningConfig();
     }
 
     getGameAmountConfigs(): GameAmountConfig[] {

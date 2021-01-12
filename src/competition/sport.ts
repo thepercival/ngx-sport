@@ -1,7 +1,7 @@
 import { Competition } from '../competition';
 import { Sport } from '../sport';
 import { Field } from '../field';
-import { Identifiable } from 'src/identifiable';
+import { Identifiable } from '../identifiable';
 
 export class CompetitionSport extends Identifiable {
     protected fields: Field[] = [];

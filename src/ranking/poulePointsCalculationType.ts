@@ -1,0 +1,1 @@
+export enum PointsCalculationType { AgainstGamePoints = 0, ScorePoints, Both }

@@ -1,8 +1,5 @@
-import { RoundNumber } from '../../src/round/number';
-import { Competition } from '../../src/competition';
-import { TeamCompetitor } from '../../src/competitor/team';
-import { Place } from '../../src/place';
-import { Team } from '../../src/team';
+import { Competition, Place, RoundNumber, Team, TeamCompetitor } from "../../public_api";
+
 
 export function createTeamCompetitors(competition: Competition, firstRoundNumber: RoundNumber): TeamCompetitor[] {
     const teamCompetitors: TeamCompetitor[] = [];

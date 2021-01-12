@@ -1,7 +1,7 @@
 import { Round } from '../qualify/group';
 import { Place } from '../place';
 
-import { ScoreConfigService } from 'src/score/config/service';
+import { ScoreConfigService } from '../score/config/service';
 
 export abstract class RankingItemsGetter {
     protected scoreConfigService: ScoreConfigService;

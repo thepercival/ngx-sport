@@ -1,8 +1,8 @@
-import { Game } from 'src/game';
-import { CompetitionSport } from 'src/competition/sport';
-import { Place } from 'src/place';
-import { Poule } from 'src/poule';
-import { State } from 'src/state';
+import { Game } from '../game';
+import { CompetitionSport } from '../competition/sport';
+import { Place } from '../place';
+import { Poule } from '../poule';
+import { State } from '../state';
 import { TogetherGamePlace } from './place/together';
 
 export class TogetherGame extends Game {

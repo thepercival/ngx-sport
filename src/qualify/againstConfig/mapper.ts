@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { JsonQualifyAgainstConfig } from './json';
 import { Round } from '../group';
-import { CompetitionSportMapper } from 'src/competition/sport/mapper';
+import { CompetitionSportMapper } from '../../competition/sport/mapper';
 import { QualifyAgainstConfig } from '../againstConfig';
 
 @Injectable({
@@ -14,8 +14,7 @@ export class QualifyAgainstConfigMapper {
     toObject(json: JsonQualifyAgainstConfig, round: Round, qualifyAgainstConfig?: QualifyAgainstConfig): QualifyAgainstConfig {
         if (qualifyAgainstConfig === undefined) {
             const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, round.getCompetition());
-            const newQualifyAgainstConfig = new QualifyAgainstConfig(competitionSport, round);
-            qualifyAgainstConfig = newQualifyAgainstConfig;
+            qualifyAgainstConfig = new QualifyAgainstConfig(competitionSport, round);
         }
         qualifyAgainstConfig.setId(json.id);
         qualifyAgainstConfig.setWinPoints(json.winPoints);

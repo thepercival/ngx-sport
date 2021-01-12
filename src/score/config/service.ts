@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSport } from 'src/competition/sport';
-import { AgainstGame } from 'src/game/against';
-import { TogetherGamePlace } from 'src/game/place/together';
-import { Round } from 'src/qualify/group';
+import { CompetitionSport } from '../../competition/sport';
+import { AgainstGame } from '../../game/against';
+import { TogetherGamePlace } from '../../game/place/together';
+import { Round } from '../../qualify/group';
 import { SportCustom } from '../../sport/custom';
 import { AgainstScoreHelper } from '../againstHelper';
 import { ScoreConfig } from '../config';

@@ -1,5 +1,5 @@
-import { TogetherGamePlace } from 'src/game/place/together';
-import { Score } from 'src/score';
+import { TogetherGamePlace } from '../game/place/together';
+import { Score } from '../score';
 
 export class TogetherScore extends Score {
     constructor(protected gamePlace: TogetherGamePlace, protected score: number, phase: number, number?: number) {

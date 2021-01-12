@@ -10,15 +10,15 @@ import { QualifyReservationService } from './reservationservice';
 import { QualifyRuleMultiple } from './rule/multiple';
 import { QualifyRuleSingle } from './rule/single';
 import { State } from '../state';
-
+import { GameMode } from '../planning/gameMode';
 
 export class QualifyService {
     private rankingService: RankingService;
     private poulesFinished: FinishedPoulesMap = {};
     private roundFinished: boolean | undefined;
 
-    constructor(private round: Round, ruleSet: number) {
-        this.rankingService = new RankingService(ruleSet);
+    constructor(private round: Round, gameMode: GameMode, ruleSet: number) {
+        this.rankingService = new RankingService(gameMode, ruleSet);
     }
 
     setQualifiers(filterPoule?: Poule): Place[] {

@@ -1,5 +1,5 @@
-import { Place } from 'src/place';
-import { TogetherScore } from 'src/score/together';
+import { Place } from '../../place';
+import { TogetherScore } from '../../score/together';
 import { GamePlace } from '../place';
 import { TogetherGame } from '../together';
 

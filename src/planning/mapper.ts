@@ -11,13 +11,12 @@ import { Field } from '../field';
 import { Competition } from '../competition';
 import { Poule } from '../poule';
 import { Round } from '../qualify/group';
-import { SportMapper } from '../sport/mapper';
-import { CompetitionSport } from 'src/competition/sport';
-import { Sport } from 'src/sport';
-import { PlaceMap } from 'src/place/mapper';
-import { RefereeMap } from 'src/referee/mapper';
-import { FieldMap } from 'src/field/mapper';
-import { CompetitionSportMap } from 'src/competition/sport/mapper';
+import { CompetitionSport } from '../competition/sport';
+import { PlaceMap } from '../place/mapper';
+import { RefereeMap } from '../referee/mapper';
+import { FieldMap } from '../field/mapper';
+import { CompetitionSportMap } from '../competition/sport/mapper';
+import { GameMode } from './gameMode';
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +24,7 @@ import { CompetitionSportMap } from 'src/competition/sport/mapper';
 export class PlanningMapper {
     private roundNumbersReferenceMap: RoundNumbersReferenceMap = {};
 
-    constructor(private gameMapper: GameMapper, private sportMapper: SportMapper) { }
+    constructor(private gameMapper: GameMapper) { }
 
     toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber | undefined {
         const firstRoundNumber = structure.getFirstRoundNumber();
@@ -46,18 +45,17 @@ export class PlanningMapper {
     }
     protected toRounds(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
         if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
-            const gameMode = roundNumber.getValidPlanningConfig()?.getGameMode();
-            const competition = roundNumber.getCompetition();
+            const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
             jsonRound.poules.forEach(jsonPoule => {
                 const poule = round.getPoule(jsonPoule.number);
                 if (!poule) {
                     return;
                 }
-                if (gameMode === Sport.GAMEMODE_AGAINST && jsonPoule.againstGames !== undefined) {
+                if (gameMode === GameMode.Against && jsonPoule.againstGames !== undefined) {
                     jsonPoule.againstGames.forEach(jsonGame => {
                         this.gameMapper.toNewAgainst(jsonGame, poule, this.getReferences(roundNumber));
                     });
-                } else if (gameMode === Sport.GAMEMODE_TOGETHER && jsonPoule.togetherGames !== undefined) {
+                } else if (gameMode === GameMode.Together && jsonPoule.togetherGames !== undefined) {
                     jsonPoule.togetherGames.forEach(jsonGame => {
                         this.gameMapper.toNewTogether(jsonGame, poule, this.getReferences(roundNumber));
                     });

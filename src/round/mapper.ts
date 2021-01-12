@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { CompetitionSportMapper } from '../competition/sport/mapper';
+import { QualifyAgainstConfigMapper } from '../qualify/againstConfig/mapper';
+import { ScoreConfigMapper } from '../score/config/mapper';
 
 import { HorizontalPouleService } from '../poule/horizontal/service';
 import { PouleMapper } from '../poule/mapper';
@@ -13,7 +16,12 @@ import { JsonRound } from './json';
 export class RoundMapper {
     // private qualifyGroupMapper: QualifyGroupMapper;
 
-    constructor(private pouleMapper: PouleMapper) {
+    constructor(
+        private pouleMapper: PouleMapper,
+        private competitionSportMapper: CompetitionSportMapper,
+        private scoreConfigMapper: ScoreConfigMapper,
+        private qualifyAgainstMapper: QualifyAgainstConfigMapper,
+    ) {
 
     }
 
@@ -32,6 +40,16 @@ export class RoundMapper {
             });
         }
 
+        if (json.scoreConfigs) {
+            json.scoreConfigs.forEach(jsonScoreConfig => {
+                this.scoreConfigMapper.toObject(jsonScoreConfig, round);
+            });
+        }
+        if (json.qualifyAgainstConfigs) {
+            json.qualifyAgainstConfigs.forEach(jsonQualifyAgainstConfigs => {
+                this.qualifyAgainstMapper.toObject(jsonQualifyAgainstConfigs, round);
+            });
+        }
         [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
             horizontalPouleService.updateQualifyGroups(
                 round.getHorizontalPoules(winnersOrLosers).slice(),

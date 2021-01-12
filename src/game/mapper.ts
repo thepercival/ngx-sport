@@ -8,8 +8,8 @@ import { JsonTogetherGame } from './together/json';
 import { JsonAgainstGame } from './against/json';
 import { AgainstGame } from './against';
 import { TogetherGame } from './together';
-import { CompetitionSportMapper } from 'src/competition/sport/mapper';
-import { ScoreMapper } from 'src/score/mapper';
+import { CompetitionSportMapper } from '../competition/sport/mapper';
+import { ScoreMapper } from '../score/mapper';
 
 @Injectable({
     providedIn: 'root'

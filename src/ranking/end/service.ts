@@ -1,4 +1,4 @@
-import { PlaceLocation } from '../../place/location';
+
 import { HorizontalPoule } from '../../poule/horizontal';
 import { QualifyGroup, Round } from '../../qualify/group';
 import { Structure } from '../../structure';
@@ -13,7 +13,7 @@ export class EndRankingService {
 
     private currentRank: number = 1;
 
-    constructor(private structure: Structure, private ruleSet: number) {
+    constructor(private structure: Structure) {
     }
 
     getItems(): EndRankingItem[] {
@@ -46,7 +46,9 @@ export class EndRankingService {
     }
 
     protected getDropouts(round: Round): EndRankingItem[] {
-        const rankingService = new RankingService(this.ruleSet);
+        const gameMode = round.getNumber().getValidPlanningConfig().getGameMode();
+        const ruleSet = round.getCompetition().getRankingRuleSet();
+        const rankingService = new RankingService(gameMode, ruleSet);
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {

@@ -1,4 +1,4 @@
-import { Identifiable } from 'src/identifiable';
+import { Identifiable } from '../identifiable';
 import { Place } from '../place';
 import { AgainstGame } from './against';
 import { AgainstGamePlace } from './place/against';

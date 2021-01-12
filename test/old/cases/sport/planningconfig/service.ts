@@ -3,15 +3,10 @@ import { describe, it } from 'mocha';
 
 import {
     Competition,
-    Field,
-    Sport,
-    SportConfigService,
-    SportPlanningConfigService,
-    SportScoreConfigService,
     StructureService,
 } from '../../../../../public_api';
-import { SportIdToNumberMap } from '../../../../src/planning/place';
-import { getMapper } from '../../../../helpers/mappers';
+
+
 import { jsonCompetition } from '../../../../data/competition';
 
 

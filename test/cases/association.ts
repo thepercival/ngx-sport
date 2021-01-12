@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { Association } from '../../src/association';
+import { Association } from '../../public_api';
 
 describe('Assocation', () => {
     it('Inheritance', () => {

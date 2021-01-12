@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSportMapper } from 'src/competition/sport/mapper';
+import { CompetitionSportMapper } from '../../competition/sport/mapper';
 
 import { RoundNumber } from '../../round/number';
 import { GameAmountConfig } from '../gameAmountConfig';
@@ -7,7 +7,7 @@ import { JsonGameAmountConfig } from './json';
 @Injectable({
     providedIn: 'root'
 })
-export class PlanningConfigMapper {
+export class GameAmountConfigMapper {
     constructor(private competitionSportMapper: CompetitionSportMapper) { }
 
     toObject(json: JsonGameAmountConfig, roundNumber: RoundNumber, config?: GameAmountConfig): GameAmountConfig {
