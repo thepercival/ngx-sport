@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 
 import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
-import { setScoreSingle } from '../../helpers/setscores';
+import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
 import { PlaceLocationMap, QualifyGroup, QualifyReservationService, QualifyService, RankingService, Round, StructureService } from '../../../public_api';
@@ -28,16 +28,16 @@ describe('QualifyReservationService', () => {
 
         createGames(structure.getFirstRoundNumber());
 
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 1, 4, 4, 1);
-        setScoreSingle(pouleOne, 1, 5, 5, 1);
-        setScoreSingle(pouleOne, 2, 3, 3, 2);
-        setScoreSingle(pouleOne, 2, 4, 4, 2);
-        setScoreSingle(pouleOne, 2, 5, 5, 2);
-        setScoreSingle(pouleOne, 3, 4, 4, 3);
-        setScoreSingle(pouleOne, 3, 5, 5, 3);
-        setScoreSingle(pouleOne, 4, 5, 5, 4);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 1, 4, 4, 1);
+        setAgainstScoreSingle(pouleOne, 1, 5, 5, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 2, 4, 4, 2);
+        setAgainstScoreSingle(pouleOne, 2, 5, 5, 2);
+        setAgainstScoreSingle(pouleOne, 3, 4, 4, 3);
+        setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
+        setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();
@@ -98,18 +98,18 @@ describe('QualifyReservationService', () => {
 
         createGames(structure.getFirstRoundNumber());
 
-        setScoreSingle(pouleOne, 1, 2, 1, 2);
-        setScoreSingle(pouleOne, 1, 3, 1, 3);
-        setScoreSingle(pouleOne, 2, 3, 2, 3);
-        setScoreSingle(pouleTwo, 1, 2, 1, 2);
-        setScoreSingle(pouleTwo, 1, 3, 1, 3);
-        setScoreSingle(pouleTwo, 2, 3, 2, 4);
-        setScoreSingle(pouleThree, 1, 2, 1, 5);
-        setScoreSingle(pouleThree, 1, 3, 1, 3);
-        setScoreSingle(pouleThree, 2, 3, 2, 5);
-        setScoreSingle(pouleFour, 1, 2, 1, 2);
-        setScoreSingle(pouleFour, 1, 3, 1, 3);
-        setScoreSingle(pouleFour, 2, 3, 2, 3);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 2, 4);
+        setAgainstScoreSingle(pouleThree, 1, 2, 1, 5);
+        setAgainstScoreSingle(pouleThree, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleThree, 2, 3, 2, 5);
+        setAgainstScoreSingle(pouleFour, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleFour, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleFour, 2, 3, 2, 3);
 
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();
@@ -185,15 +185,15 @@ describe('QualifyReservationService', () => {
 
         createGames(structure.getFirstRoundNumber());
 
-        setScoreSingle(pouleOne, 1, 2, 1, 2);
-        setScoreSingle(pouleOne, 1, 3, 1, 3);
-        setScoreSingle(pouleOne, 2, 3, 2, 3);
-        setScoreSingle(pouleTwo, 1, 2, 1, 2);
-        setScoreSingle(pouleTwo, 1, 3, 1, 3);
-        setScoreSingle(pouleTwo, 2, 3, 2, 4);
-        setScoreSingle(pouleThree, 1, 2, 1, 5);
-        setScoreSingle(pouleThree, 1, 3, 1, 3);
-        // setScoreSingle(pouleThree, 2, 3, 2, 5);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 2, 4);
+        setAgainstScoreSingle(pouleThree, 1, 2, 1, 5);
+        setAgainstScoreSingle(pouleThree, 1, 3, 1, 3);
+        // setAgainstScoreSingle(pouleThree, 2, 3, 2, 5);
 
         const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
         qualifyService.setQualifiers();

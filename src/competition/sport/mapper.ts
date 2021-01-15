@@ -10,16 +10,21 @@ import { CompetitionSport } from '../sport';
     providedIn: 'root'
 })
 export class CompetitionSportMapper {
-    constructor(private sportMapper: SportMapper, private fieldMapper: FieldMapper) { }
+    protected cache: CompetitionSportMap = {};
 
-    toObject(json: JsonCompetitionSport, competition: Competition, competitionSport?: CompetitionSport): CompetitionSport {
-        if (competitionSport === undefined) {
-            const sport = this.sportMapper.toObject(json.sport);
-            const newCompetitionSport = new CompetitionSport(sport, competition);
-            json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, newCompetitionSport));
-            competitionSport = newCompetitionSport;
+    constructor(private sportMapper: SportMapper, private fieldMapper: FieldMapper) {
+        console.log('CompetitionSportMapper::constructor');
+    }
+
+    toObject(json: JsonCompetitionSport, competition: Competition, disableCache?: boolean): CompetitionSport {
+        if (disableCache !== true && this.cache[json.id]) {
+            return this.cache[json.id];
         }
+        const sport = this.sportMapper.toObject(json.sport);
+        const competitionSport = new CompetitionSport(sport, competition);
+        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport));
         competitionSport.setId(json.id);
+        this.cache[competitionSport.getId()] = competitionSport;
         return competitionSport;
     }
 

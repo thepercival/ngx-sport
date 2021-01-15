@@ -14,13 +14,10 @@ import { JsonRound } from './json';
     providedIn: 'root'
 })
 export class RoundMapper {
-    // private qualifyGroupMapper: QualifyGroupMapper;
-
     constructor(
         private pouleMapper: PouleMapper,
-        private competitionSportMapper: CompetitionSportMapper,
         private scoreConfigMapper: ScoreConfigMapper,
-        private qualifyAgainstMapper: QualifyAgainstConfigMapper,
+        private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper,
     ) {
 
     }
@@ -47,7 +44,7 @@ export class RoundMapper {
         }
         if (json.qualifyAgainstConfigs) {
             json.qualifyAgainstConfigs.forEach(jsonQualifyAgainstConfigs => {
-                this.qualifyAgainstMapper.toObject(jsonQualifyAgainstConfigs, round);
+                this.qualifyAgainstConfigMapper.toObject(jsonQualifyAgainstConfigs, round);
             });
         }
         [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
@@ -72,7 +69,9 @@ export class RoundMapper {
             id: round.getId(),
             name: round.getName(),
             poules: round.getPoules().map(poule => this.pouleMapper.toJson(poule)),
-            qualifyGroups: round.getQualifyGroups().map(qualifyGroupIt => qualifyGroupMapper.toJson(qualifyGroupIt))
+            qualifyGroups: round.getQualifyGroups().map(qualifyGroupIt => qualifyGroupMapper.toJson(qualifyGroupIt)),
+            scoreConfigs: round.getScoreConfigs().map(scoreConfigIt => this.scoreConfigMapper.toJson(scoreConfigIt)),
+            qualifyAgainstConfigs: round.getQualifyAgainstConfigs().map(qualifyGroupIt => this.qualifyAgainstConfigMapper.toJson(qualifyGroupIt))
         };
     }
 }

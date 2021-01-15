@@ -1,6 +1,7 @@
 import { Round } from '../qualify/group';
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
+import { Sport } from '../sport';
 
 export class ScoreConfig extends Identifiable {
     static readonly UPWARDS = 1;
@@ -19,6 +20,18 @@ export class ScoreConfig extends Identifiable {
         } else {
             this.setPrevious(previous);
         }
+    }
+
+    getCompetitionSport(): CompetitionSport {
+        return this.competitionSport;
+    }
+
+    getSport(): Sport {
+        return this.competitionSport.getSport();
+    }
+
+    getRound(): Round {
+        return this.round;
     }
 
     // moet direction opgenomen worden in constructor
@@ -48,14 +61,6 @@ export class ScoreConfig extends Identifiable {
 
     setEnabled(enabled: boolean) {
         this.enabled = enabled;
-    }
-
-    getCompetitionSport(): CompetitionSport {
-        return this.competitionSport;
-    }
-
-    getRound(): Round {
-        return this.round;
     }
 
     hasPrevious(): boolean {
