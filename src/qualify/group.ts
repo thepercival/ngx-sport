@@ -9,6 +9,7 @@ import { State } from '../state';
 import { CompetitionSport } from '../competition/sport';
 import { ScoreConfig } from '../score/config';
 import { QualifyAgainstConfig } from './againstConfig';
+import { Identifiable } from '../identifiable';
 
 export class QualifyGroup {
     static readonly WINNERS = 1;
@@ -98,7 +99,7 @@ export class QualifyGroup {
     }
 }
 
-export class Round {
+export class Round extends Identifiable {
     static readonly ORDER_NUMBER_POULE = 1;
     static readonly ORDER_POULE_NUMBER = 2;
 
@@ -108,7 +109,6 @@ export class Round {
     static readonly QUALIFYORDER_CUSTOM1 = 4;
     static readonly QUALIFYORDER_CUSTOM2 = 5;
 
-    protected id: number = 0;
     protected number: RoundNumber;
     protected name: string | undefined;
     protected poules: Poule[] = [];
@@ -122,17 +122,10 @@ export class Round {
     protected qualifyAgainstConfigs: QualifyAgainstConfig[] = [];
 
     constructor(roundNumber: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
+        super();
         this.number = roundNumber;
         this.number.getRounds().push(this);
         // this.setValue();
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     getCompetition(): Competition {
@@ -313,20 +306,24 @@ export class Round {
         return this.scoreConfigs.find(scoreConfigIt => scoreConfigIt.getCompetitionSport() === competitionSport);
     }
 
-    setScoreConfig(scoreConfig: ScoreConfig) {
-        this.scoreConfigs.push(scoreConfig);
-    }
-
-    getValidScoreConfigs(): (ScoreConfig | undefined)[] {
+    getValidScoreConfigs(): ScoreConfig[] {
         return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidScoreConfig(competitionSport));
     }
 
-    getValidScoreConfig(competitionSport: CompetitionSport): ScoreConfig | undefined {
+    getValidScoreConfig(competitionSport: CompetitionSport): ScoreConfig {
         const scoreConfig = this.getScoreConfig(competitionSport);
         if (scoreConfig !== undefined) {
             return scoreConfig;
         }
-        return this.getParent()?.getValidScoreConfig(competitionSport);
+        const parent = this.getParent();
+        if (!parent) {
+            throw Error('de ronde heeft geen geldige score-regels');
+        }
+        const parentScoreConfig = parent.getScoreConfig(competitionSport);
+        if (!parentScoreConfig) {
+            throw Error('de ronde heeft geen geldige score-regels');
+        }
+        return parentScoreConfig;
     }
 
     getQualifyAgainstConfigs(): QualifyAgainstConfig[] {
@@ -341,16 +338,35 @@ export class Round {
         this.qualifyAgainstConfigs.push(qualifyagainstConfig);
     }
 
-    getValidQualifyAgainstConfigs(): (QualifyAgainstConfig | undefined)[] {
+    getValidQualifyAgainstConfigs(): (QualifyAgainstConfig)[] {
         return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidQualifyAgainstConfig(competitionSport));
     }
 
-    getValidQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig | undefined {
+    getValidQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig {
         const qualifyAgainstConfig = this.getQualifyAgainstConfig(competitionSport);
         if (qualifyAgainstConfig !== undefined) {
             return qualifyAgainstConfig;
         }
-        return this.getParent()?.getValidQualifyAgainstConfig(competitionSport);
+        const parent = this.getParent();
+        if (!parent) {
+            throw Error('de ronde heeft geen geldige punten-instellingen');
+        }
+        const parentQualifyAgainstConfig = parent.getQualifyAgainstConfig(competitionSport);
+        if (!parentQualifyAgainstConfig) {
+            throw Error('de ronde heeft geen geldige punten-instellingen');
+        }
+        return parentQualifyAgainstConfig;
+    }
+
+    hasAncestor(ancestor: Round): boolean {
+        const parent = this.getParent();
+        if (!parent) {
+            return false;
+        }
+        if (parent === ancestor) {
+            return true;
+        }
+        return parent.hasAncestor(ancestor);
     }
 
 }

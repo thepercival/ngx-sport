@@ -51,7 +51,7 @@ export class NameService {
         }
         if (round.getNrOfPlaces() === 2 && sameName === false) {
             const rank = round.getStructureNumber() + 1;
-            return this.getHtmlNumber(rank) + '/' + this.getHtmlNumber(rank + 1) + ' plaats';
+            return this.getHtmlNumber(rank) + ' / ' + this.getHtmlNumber(rank + 1) + ' pl';
         }
         return 'finale';
     }

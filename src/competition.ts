@@ -104,7 +104,7 @@ export class Competition extends Identifiable {
         return this.sports.find(sportIt => sportIt.getSport() === sport);
     }
 
-    hasMultipleSportConfigs(): boolean {
+    hasMultipleSports(): boolean {
         return this.sports.length > 1;
     }
 

@@ -24,6 +24,7 @@ export class ScoreConfigMapper {
         if (json.next !== undefined) {
             this.toObject(json.next, round, config.getNext(), config);
         }
+
         return config;
     }
 
