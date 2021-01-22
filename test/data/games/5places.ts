@@ -1,14 +1,20 @@
-import { JsonGame } from "../../../public_api";
+import { GameMode, JsonAgainstGame, State } from "../../../public_api";
 
 
-export const jsonGames5Places: JsonGame[] = [
+export const jsonGames5Places: JsonAgainstGame[] = [
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -32,11 +38,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -60,11 +72,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -88,11 +106,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -116,11 +140,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -144,11 +174,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -172,11 +208,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -200,11 +242,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -228,11 +276,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {
@@ -256,11 +310,17 @@ export const jsonGames5Places: JsonGame[] = [
     },
     {
         id: 0,
-        sport: {
+        competitionSport: {
             id: 0,
-            name: 'voetbal',
-            team: true,
-            customId: 11
+            sport: {
+                id: 0,
+                name: 'voetbal',
+                team: true,
+                customId: 11,
+                gameMode: GameMode.Against,
+                nrOfGamePlaces: 2
+            },
+            fields: []
         },
         places: [
             {

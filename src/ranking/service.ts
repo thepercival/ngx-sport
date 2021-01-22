@@ -20,8 +20,9 @@ export class RankingService {
     ) {
         if (gameMode === GameMode.Against) {
             this.helper = new AgainstRankingServiceHelper(rulesSet, gameStates);
+        } else {
+            this.helper = new TogetherRankingServiceHelper(gameStates);
         }
-        this.helper = new TogetherRankingServiceHelper(gameStates);
     }
 
     getRuleDescriptions() {
@@ -46,6 +47,10 @@ export class RankingService {
 
     getItemByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem | undefined {
         return this.helper.getItemByRank(rankingItems, rank);
+    }
+
+    getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
+        return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
     }
 }
 

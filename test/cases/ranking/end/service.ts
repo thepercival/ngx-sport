@@ -3,17 +3,18 @@ import { describe, it } from 'mocha';
 
 import { getCompetitionMapper } from '../../../helpers/mappers';
 import { jsonBaseCompetition } from '../../../data/competition';
-import { setScoreSingle } from '../../../helpers/setscores';
 import { createGames } from '../../../helpers/gamescreator';
 import { EndRankingService, PlaceLocationMap, QualifyGroup, QualifyService, RankingService, Round, StructureService } from '../../../../public_api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
+import { setAgainstScoreSingle } from '../../../helpers/setscores';
+import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
 describe('EndRankingService', () => {
 
     it('one poule of three places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -24,11 +25,11 @@ describe('EndRankingService', () => {
             return;
         }
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
+        const rankingService = new EndRankingService(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -47,7 +48,7 @@ describe('EndRankingService', () => {
     it('one poule of three places, with no competitor', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
         teamCompetitors.pop();
@@ -61,11 +62,11 @@ describe('EndRankingService', () => {
         }
 
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
+        const rankingService = new EndRankingService(structure);
         const items = rankingService.getItems();
 
         const endRankingItem = items[2];
@@ -82,7 +83,7 @@ describe('EndRankingService', () => {
     it('one poule of three places, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -94,11 +95,11 @@ describe('EndRankingService', () => {
         }
 
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        // setScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        // setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
+        const rankingService = new EndRankingService(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -110,7 +111,7 @@ describe('EndRankingService', () => {
     it('2 roundnumbers, five places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 5);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 5);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -124,16 +125,16 @@ describe('EndRankingService', () => {
             return;
         }
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 1, 4, 4, 1);
-        setScoreSingle(pouleOne, 1, 5, 5, 1);
-        setScoreSingle(pouleOne, 2, 3, 3, 2);
-        setScoreSingle(pouleOne, 2, 4, 4, 2);
-        setScoreSingle(pouleOne, 2, 5, 5, 2);
-        setScoreSingle(pouleOne, 3, 4, 4, 3);
-        setScoreSingle(pouleOne, 3, 5, 5, 3);
-        setScoreSingle(pouleOne, 4, 5, 5, 4);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 1, 4, 4, 1);
+        setAgainstScoreSingle(pouleOne, 1, 5, 5, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 2, 4, 4, 2);
+        setAgainstScoreSingle(pouleOne, 2, 5, 5, 2);
+        setAgainstScoreSingle(pouleOne, 3, 4, 4, 3);
+        setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
+        setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
         const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
         expect(winnersRound).to.not.equal(undefined);
@@ -161,13 +162,13 @@ describe('EndRankingService', () => {
             return;
         }
         createGames(secondRound);
-        setScoreSingle(winnersPoule, 1, 2, 2, 1);
-        setScoreSingle(losersPoule, 1, 2, 2, 1);
+        setAgainstScoreSingle(winnersPoule, 1, 2, 2, 1);
+        setAgainstScoreSingle(losersPoule, 1, 2, 2, 1);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        const rankingService = new EndRankingService(structure, RankingService.RULESSET_WC);
+        const rankingService = new EndRankingService(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {

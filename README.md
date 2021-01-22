@@ -1,2 +1,3 @@
 # ngx-sport
-angular module for sports
+angular module for multiplesports
+

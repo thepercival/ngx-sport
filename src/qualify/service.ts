@@ -17,8 +17,11 @@ export class QualifyService {
     private poulesFinished: FinishedPoulesMap = {};
     private roundFinished: boolean | undefined;
 
-    constructor(private round: Round, gameMode: GameMode, ruleSet: number) {
-        this.rankingService = new RankingService(gameMode, ruleSet);
+    constructor(private round: Round) {
+        this.rankingService = new RankingService(
+            round.getNumber().getValidPlanningConfig().getGameMode(),
+            round.getCompetition().getRankingRuleSet()
+        );
     }
 
     setQualifiers(filterPoule?: Poule): Place[] {

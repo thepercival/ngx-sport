@@ -5,21 +5,21 @@ import {
     PlaceLocationMap,
     QualifyGroup,
     QualifyService,
-    RankingService,
     StructureService,
 } from '../../../public_api';
 import { getCompetitionMapper } from '../../helpers/mappers';
 import { jsonBaseCompetition } from '../../data/competition';
-import { setScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
+import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
+import { setAgainstScoreSingle } from '../../helpers/setscores';
 
 describe('QualifyService', () => {
 
     it('2 roundnumbers, five places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 5);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 5);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -34,18 +34,18 @@ describe('QualifyService', () => {
         }
 
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 1, 4, 4, 1);
-        setScoreSingle(pouleOne, 1, 5, 5, 1);
-        setScoreSingle(pouleOne, 2, 3, 3, 2);
-        setScoreSingle(pouleOne, 2, 4, 4, 2);
-        setScoreSingle(pouleOne, 2, 5, 5, 2);
-        setScoreSingle(pouleOne, 3, 4, 4, 3);
-        setScoreSingle(pouleOne, 3, 5, 5, 3);
-        setScoreSingle(pouleOne, 4, 5, 5, 4);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 1, 4, 4, 1);
+        setAgainstScoreSingle(pouleOne, 1, 5, 5, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 2, 4, 4, 2);
+        setAgainstScoreSingle(pouleOne, 2, 5, 5, 2);
+        setAgainstScoreSingle(pouleOne, 3, 4, 4, 3);
+        setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
+        setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
         const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
@@ -100,7 +100,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, five places, filter poule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 6);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 6);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -121,16 +121,16 @@ describe('QualifyService', () => {
 
         createGames(structure.getFirstRoundNumber());
 
-        setScoreSingle(pouleOne, 1, 2, 2, 1);
-        setScoreSingle(pouleOne, 1, 3, 3, 1);
-        setScoreSingle(pouleOne, 2, 3, 4, 1);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 4, 1);
 
-        setScoreSingle(pouleTwo, 1, 2, 2, 1);
-        setScoreSingle(pouleTwo, 1, 3, 3, 1);
-        setScoreSingle(pouleTwo, 2, 3, 4, 1);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 2, 1);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 3, 1);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 4, 1);
 
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers(pouleOne);
 
         const winnersRoundOne = rootRound.getChild(QualifyGroup.WINNERS, 1);
@@ -184,7 +184,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, nine places, multiple rules', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 9);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 9);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -223,17 +223,17 @@ describe('QualifyService', () => {
 
         createGames(structure.getFirstRoundNumber());
 
-        setScoreSingle(pouleOne, 1, 2, 1, 2);
-        setScoreSingle(pouleOne, 1, 3, 1, 3);
-        setScoreSingle(pouleOne, 2, 3, 2, 3);
-        setScoreSingle(pouleTwo, 1, 2, 1, 2);
-        setScoreSingle(pouleTwo, 1, 3, 1, 3);
-        setScoreSingle(pouleTwo, 2, 3, 2, 4);
-        setScoreSingle(pouleThree, 1, 2, 1, 5);
-        setScoreSingle(pouleThree, 1, 3, 1, 3);
-        setScoreSingle(pouleThree, 2, 3, 2, 5);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 2, 4);
+        setAgainstScoreSingle(pouleThree, 1, 2, 1, 5);
+        setAgainstScoreSingle(pouleThree, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleThree, 2, 3, 2, 5);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         const changedPlaces = qualifyService.setQualifiers();
         expect(changedPlaces.length).to.equal(8);
 
@@ -357,7 +357,7 @@ describe('QualifyService', () => {
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 9);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 9);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -389,17 +389,17 @@ describe('QualifyService', () => {
         }
 
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 1, 2);
-        setScoreSingle(pouleOne, 1, 3, 1, 3);
-        setScoreSingle(pouleOne, 2, 3, 2, 3);
-        setScoreSingle(pouleTwo, 1, 2, 1, 2);
-        setScoreSingle(pouleTwo, 1, 3, 1, 3);
-        setScoreSingle(pouleTwo, 2, 3, 2, 4);
-        setScoreSingle(pouleThree, 1, 2, 1, 5);
-        setScoreSingle(pouleThree, 1, 3, 1, 3);
-        // setScoreSingle(pouleThree, 2, 3, 2, 5);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 2, 4);
+        setAgainstScoreSingle(pouleThree, 1, 2, 1, 5);
+        setAgainstScoreSingle(pouleThree, 1, 3, 1, 3);
+        // setAgainstScoreSingle(pouleThree, 2, 3, 2, 5);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
         const winnersRoundOne2 = rootRound.getChild(QualifyGroup.WINNERS, 1);
@@ -428,7 +428,7 @@ describe('QualifyService', () => {
     it('same winnerslosers for second place multiple rule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 6, 2);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 6, 2);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -448,14 +448,14 @@ describe('QualifyService', () => {
         }
 
         createGames(structure.getFirstRoundNumber());
-        setScoreSingle(pouleOne, 1, 2, 1, 0);
-        setScoreSingle(pouleOne, 3, 1, 0, 1);
-        setScoreSingle(pouleOne, 2, 3, 1, 0);
-        setScoreSingle(pouleTwo, 1, 2, 1, 0);
-        setScoreSingle(pouleTwo, 3, 1, 0, 1);
-        setScoreSingle(pouleTwo, 2, 3, 1, 0);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleOne, 3, 1, 0, 1);
+        setAgainstScoreSingle(pouleOne, 2, 3, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 3, 1, 0, 1);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 1, 0);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
 

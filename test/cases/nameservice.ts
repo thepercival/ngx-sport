@@ -7,6 +7,7 @@ import { jsonBaseCompetition } from '../data/competition';
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
 import { StructureService, NameService, PlaceLocationMap, QualifyGroup, Referee } from '../../public_api';
+import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
 
 describe('NameService', () => {
 
@@ -14,7 +15,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 8, 3);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 8, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -30,7 +32,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 8, 3);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 8, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -62,7 +65,8 @@ describe('NameService', () => {
         // root needs no ranking, unequal depth
         {
             const structureService = new StructureService([]);
-            const structure = structureService.create(competition, 4, 2);
+            const jsonPlanningConfig = createPlanningConfigNoTime();
+            const structure = structureService.create(competition, jsonPlanningConfig, 4, 2);
             const firstRoundNumber = structure.getFirstRoundNumber();
             const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
             const nameService = new NameService(placeLocationMap);
@@ -80,7 +84,8 @@ describe('NameService', () => {
         // root needs ranking
         {
             const structureService2 = new StructureService([]);
-            const structure2 = structureService2.create(competition, 16, 4);
+            const jsonPlanningConfig = createPlanningConfigNoTime();
+            const structure2 = structureService2.create(competition, jsonPlanningConfig, 16, 4);
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
             const placeLocationMap2 = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber2));
             const nameService2 = new NameService(placeLocationMap2);
@@ -105,7 +110,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 16, 8);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 16, 8);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -155,7 +161,7 @@ describe('NameService', () => {
             );
 
             const losersFinal = doubleLosersChildRound.getBorderQualifyGroup(QualifyGroup.LOSERS).getChildRound();
-            expect(nameService.getRoundName(losersFinal)).to.equal('15<sup>de</sup>' + '/' + '16<sup>de</sup>' + ' plaats');
+            expect(nameService.getRoundName(losersFinal)).to.equal('15<sup>de</sup>' + ' / ' + '16<sup>de</sup>' + ' pl');
         }
     });
 
@@ -163,7 +169,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 89, 30);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 89, 30);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -198,7 +205,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -236,7 +244,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 9, 3);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 9, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -334,7 +343,8 @@ describe('NameService', () => {
     it('places fromname', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3, 1);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 3, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -359,7 +369,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 12, 3);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 12, 3);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -412,7 +423,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 3, 1);
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureService.create(competition, jsonPlanningConfig, 3, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);

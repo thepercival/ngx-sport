@@ -13,7 +13,7 @@ export class CompetitionSportMapper {
     protected cache: CompetitionSportMap = {};
 
     constructor(private sportMapper: SportMapper, private fieldMapper: FieldMapper) {
-        console.log('CompetitionSportMapper::constructor');
+        // console.log('CompetitionSportMapper::constructor');
     }
 
     toObject(json: JsonCompetitionSport, competition: Competition, disableCache?: boolean): CompetitionSport {

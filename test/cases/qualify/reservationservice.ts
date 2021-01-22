@@ -6,7 +6,8 @@ import { jsonBaseCompetition } from '../../data/competition';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { PlaceLocationMap, QualifyGroup, QualifyReservationService, QualifyService, RankingService, Round, StructureService } from '../../../public_api';
+import { PlaceLocationMap, QualifyGroup, QualifyReservationService, QualifyService, RankingRuleSet, RankingService, Round, StructureService } from '../../../public_api';
+import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 
 describe('QualifyReservationService', () => {
 
@@ -14,7 +15,7 @@ describe('QualifyReservationService', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 5);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 5);
         const rootRound: Round = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -39,7 +40,7 @@ describe('QualifyReservationService', () => {
         setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
         setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
         const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
@@ -60,7 +61,7 @@ describe('QualifyReservationService', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 12, 4);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 12, 4);
         const rootRound: Round = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -111,7 +112,7 @@ describe('QualifyReservationService', () => {
         setAgainstScoreSingle(pouleFour, 1, 3, 1, 3);
         setAgainstScoreSingle(pouleFour, 2, 3, 2, 3);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
         winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
@@ -152,7 +153,7 @@ describe('QualifyReservationService', () => {
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = new StructureService([]);
-        const structure = structureService.create(competition, 9);
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), 9);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -195,7 +196,7 @@ describe('QualifyReservationService', () => {
         setAgainstScoreSingle(pouleThree, 1, 3, 1, 3);
         // setAgainstScoreSingle(pouleThree, 2, 3, 2, 5);
 
-        const qualifyService = new QualifyService(rootRound, RankingService.RULESSET_WC);
+        const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
         winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);

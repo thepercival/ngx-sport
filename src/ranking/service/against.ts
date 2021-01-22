@@ -93,10 +93,6 @@ export class AgainstRankingServiceHelper {
         return rankingItems.find(rankingItemIt => rankingItemIt.getUniqueRank() === rank);
     }
 
-    getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
-        return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
-    }
-
     private rankItems(unrankedItems: UnrankedRoundItem[], againstEachOther: boolean): RankedRoundItem[] {
         const rankedItems: RankedRoundItem[] = [];
         const rankFunctions = this.getRankFunctions(againstEachOther);
