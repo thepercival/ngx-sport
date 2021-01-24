@@ -1,23 +1,16 @@
 import { Association } from './association';
+import { Identifiable } from './identifiable';
 
-export class League {
+export class League extends Identifiable {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_SPORT = 30;
 
-    protected id: string | number = 0;
     protected abbreviation: string | undefined;
 
     constructor(protected association: Association, protected name: string) {
-    }
-
-    getId(): string | number {
-        return this.id;
-    }
-
-    setId(id: string | number): void {
-        this.id = id;
+        super();
     }
 
     getName(): string {
