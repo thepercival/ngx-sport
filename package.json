@@ -72,7 +72,7 @@
     "build-vob": "npm run build && npm run copy-to-vob",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once",
-    "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/",
+    "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/ && mkdir ../fctoernooi/node_modules/ngx-sport/__ivy_ngcc__ && cp -r dist/fesm2015 ../fctoernooi/node_modules/ngx-sport/__ivy_ngcc__",
     "copy-to-vob": "rm -rf ../vobetting/node_modules/ngx-sport && cp -r dist/ ../vobetting/node_modules/ && mv ../vobetting/node_modules/dist/ ../vobetting/node_modules/ngx-sport/",
     "copy-to-sup": "rm -rf ../superelf/node_modules/ngx-sport && cp -r dist/ ../superelf/node_modules/ && mv ../superelf/node_modules/dist/ ../superelf/node_modules/ngx-sport/",
     "test": "mocha -r test/hook.js --recursive 'test/cases/**/*.ts'",

@@ -13,7 +13,6 @@ export class CompetitionSportMapper {
     protected cache: CompetitionSportMap = {};
 
     constructor(private sportMapper: SportMapper, private fieldMapper: FieldMapper) {
-        // console.log('CompetitionSportMapper::constructor');
     }
 
     toObject(json: JsonCompetitionSport, competition: Competition, disableCache?: boolean): CompetitionSport {
@@ -22,7 +21,7 @@ export class CompetitionSportMapper {
         }
         const sport = this.sportMapper.toObject(json.sport);
         const competitionSport = new CompetitionSport(sport, competition);
-        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport));
+        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport, disableCache));
         competitionSport.setId(json.id);
         this.cache[competitionSport.getId()] = competitionSport;
         return competitionSport;

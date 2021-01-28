@@ -8,15 +8,18 @@ import { JsonField } from './json';
     providedIn: 'root'
 })
 export class FieldMapper {
+    protected cache: FieldMap = {};
 
     constructor() { }
 
-    toObject(json: JsonField, competitionSport: CompetitionSport, field?: Field): Field {
-        if (field === undefined) {
-            field = new Field(competitionSport, json.priority);
+    toObject(json: JsonField, competitionSport: CompetitionSport, disableCache?: boolean): Field {
+        if (disableCache !== true && this.cache[json.id]) {
+            return this.cache[json.id];
         }
+        const field = new Field(competitionSport, json.priority);
         field.setId(json.id);
         field.setName(json.name);
+        this.cache[field.getId()] = field;
         return field;
     }
 
@@ -30,6 +33,6 @@ export class FieldMapper {
 }
 
 export interface FieldMap {
-    [key: number]: Field;
+    [key: string]: Field;
 }
 

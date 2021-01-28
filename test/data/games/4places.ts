@@ -20,12 +20,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 1,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 2,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 1,
@@ -54,12 +54,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 3,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 4,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 1,
@@ -88,12 +88,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 4,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 1,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 2,
@@ -124,12 +124,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 3,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 2,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 2,
@@ -158,12 +158,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 1,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 3,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 3,
@@ -192,12 +192,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 2,
-                homeaway: true
+                homeAway: true
             },
             {
                 id: 0,
                 placeNr: 4,
-                homeaway: false
+                homeAway: false
             }
         ],
         batchNr: 3,

@@ -42,6 +42,7 @@ export class CompetitionMapper {
 
     updateObject(json: JsonCompetition, competition: Competition) {
         competition.setState(json.state);
+        competition.setRankingRuleSet(json.rankingRuleSet);
     }
 
     toJson(competition: Competition): JsonCompetition {

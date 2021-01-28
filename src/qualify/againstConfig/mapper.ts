@@ -14,7 +14,7 @@ export class QualifyAgainstConfigMapper {
     toObject(json: JsonQualifyAgainstConfig, round: Round, qualifyAgainstConfig?: QualifyAgainstConfig): QualifyAgainstConfig {
         if (qualifyAgainstConfig === undefined) {
             const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, round.getCompetition());
-            qualifyAgainstConfig = new QualifyAgainstConfig(competitionSport, round);
+            qualifyAgainstConfig = new QualifyAgainstConfig(competitionSport, round, json.pointsCalculation);
         }
         qualifyAgainstConfig.setId(json.id);
         qualifyAgainstConfig.setWinPoints(json.winPoints);
@@ -22,7 +22,6 @@ export class QualifyAgainstConfigMapper {
         qualifyAgainstConfig.setWinPointsExt(json.winPointsExt);
         qualifyAgainstConfig.setDrawPointsExt(json.drawPointsExt);
         qualifyAgainstConfig.setLosePointsExt(json.losePointsExt);
-        qualifyAgainstConfig.setPointsCalculation(json.pointsCalculation);
         return qualifyAgainstConfig;
     }
 

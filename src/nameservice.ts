@@ -9,6 +9,8 @@ import { QualifyRuleSingle } from './qualify/rule/single';
 import { RoundNumber } from './round/number';
 import { PlaceLocationMap } from './place/location/map';
 import { SportCustom } from './sport/custom';
+import { GameMode } from './planning/gameMode';
+import { PointsCalculation } from './ranking/pointsCalculation';
 
 export class NameService {
     constructor(private placeLocationMap?: PlaceLocationMap) {
@@ -177,6 +179,20 @@ export class NameService {
             return 'aanval';
         }
         return 'alle linies';
+    }
+
+    getGameModeName(gameMode: GameMode): string {
+        return gameMode === GameMode.Against ? 'tegen elkaar' : 'met elkaar';
+    }
+
+    getPointsCalculationName(pointsCalculation: PointsCalculation): string {
+        switch (pointsCalculation) {
+            case PointsCalculation.AgainstGamePoints:
+                return 'alleen punten';
+            case PointsCalculation.Scores:
+                return 'alleen score';
+        }
+        return 'punten + score';
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {

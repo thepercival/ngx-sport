@@ -10,6 +10,7 @@ import { AgainstGame } from './against';
 import { TogetherGame } from './together';
 import { CompetitionSportMapper } from '../competition/sport/mapper';
 import { ScoreMapper } from '../score/mapper';
+import { FieldMapper } from '../field/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ import { ScoreMapper } from '../score/mapper';
 export class GameMapper {
     constructor(
         private gamePlaceMapper: GamePlaceMapper,
+        private fieldMapper: FieldMapper,
         private scoreMapper: ScoreMapper,
         private competitionSportMapper: CompetitionSportMapper
     ) { }
@@ -39,8 +41,8 @@ export class GameMapper {
     protected toNew(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame, planningMapperCache: PlanningReferences): Game {
         game.setId(json.id);
         game.setState(json.state);
-        if (json.fieldPriority) {
-            game.setField(planningMapperCache.fields[json.fieldPriority]);
+        if (json.field) {
+            game.setField(this.fieldMapper.toObject(json.field, game.getCompetitionSport()));
         }
         if (json.refereePriority) {
             game.setReferee(planningMapperCache.referees[json.refereePriority]);
@@ -74,12 +76,13 @@ export class GameMapper {
     }
 
     toJsonAgainst(game: AgainstGame): JsonAgainstGame {
+        const field = game.getField();
         return {
             id: game.getId(),
             places: game.getAgainstPlaces().map(gamePlace => this.gamePlaceMapper.toJsonAgainst(gamePlace)),
             competitionSport: this.competitionSportMapper.toJson(game.getCompetitionSport()),
             batchNr: game.getBatchNr(),
-            fieldPriority: game.getField()?.getPriority(),
+            field: field ? this.fieldMapper.toJson(field) : undefined,
             state: game.getState(),
             refereePriority: game.getReferee()?.getPriority(),
             refereePlaceLocId: game.getRefereePlace()?.getLocationId(),
@@ -89,12 +92,13 @@ export class GameMapper {
     }
 
     toJsonTogether(game: TogetherGame): JsonTogetherGame {
+        const field = game.getField();
         return {
             id: game.getId(),
             places: game.getTogetherPlaces().map(gamePlace => this.gamePlaceMapper.toJsonTogether(gamePlace)),
             competitionSport: this.competitionSportMapper.toJson(game.getCompetitionSport()),
             batchNr: game.getBatchNr(),
-            fieldPriority: game.getField()?.getPriority(),
+            field: field ? this.fieldMapper.toJson(field) : undefined,
             state: game.getState(),
             refereePriority: game.getReferee()?.getPriority(),
             refereePlaceLocId: game.getRefereePlace()?.getLocationId(),

@@ -22,17 +22,17 @@ export class AgainstGame extends Game {
         this.state = State.Created;
     }
 
-    isParticipating(place: Place, homeaway?: boolean): boolean {
-        return this.getHomeAwayPlaces(homeaway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
+    isParticipating(place: Place, homeAway?: boolean): boolean {
+        return this.getHomeAwayPlaces(homeAway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
     }
 
     getAgainstPlaces(): AgainstGamePlace[] {
         return <AgainstGamePlace[]>this.places;
     }
 
-    getHomeAwayPlaces(homeaway?: boolean): AgainstGamePlace[] {
-        if (homeaway !== undefined) {
-            return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeaway() === homeaway);
+    getHomeAwayPlaces(homeAway?: boolean): AgainstGamePlace[] {
+        if (homeAway !== undefined) {
+            return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === homeAway);
         }
         return this.getAgainstPlaces();
     }

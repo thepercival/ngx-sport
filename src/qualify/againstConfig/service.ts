@@ -5,7 +5,7 @@ import { QualifyAgainstConfig } from '../againstConfig';
 import { Sport } from '../../sport';
 import { SportCustom } from '../../sport/custom';
 import { Round } from '../group';
-import { PointsCalculationType } from '../../ranking/poulePointsCalculationType';
+import { PointsCalculation } from '../../ranking/pointsCalculation';
 import { GameMode } from '../../planning/gameMode';
 
 @Injectable({
@@ -32,33 +32,31 @@ export class QualifyAgainstConfigService {
     // }
 
     createDefault(competitionSport: CompetitionSport, round: Round): QualifyAgainstConfig {
-        const config = new QualifyAgainstConfig(competitionSport, round);
+        const config = new QualifyAgainstConfig(competitionSport, round, this.getDefaultPointCalculation(round));
         const sport = competitionSport.getSport();
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
         config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
         config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
         config.setLosePointsExt(this.getDefaultLosePointsExt(sport));
-        config.setPointsCalculation(this.getDefaultPointCalculationType(round));
         return config;
     }
 
     copy(competitionSport: CompetitionSport, round: Round, sourceConfig: QualifyAgainstConfig): QualifyAgainstConfig {
-        const config = new QualifyAgainstConfig(competitionSport, round);
+        const config = new QualifyAgainstConfig(competitionSport, round, sourceConfig.getPointsCalculation());
         config.setWinPoints(sourceConfig.getWinPoints());
         config.setDrawPoints(sourceConfig.getDrawPoints());
         config.setWinPointsExt(sourceConfig.getWinPointsExt());
         config.setDrawPointsExt(sourceConfig.getDrawPointsExt());
         config.setLosePointsExt(sourceConfig.getLosePointsExt());
-        config.setPointsCalculation(sourceConfig.getPointsCalculation());
         return config;
     }
 
-    getDefaultPointCalculationType(round: Round): PointsCalculationType {
+    getDefaultPointCalculation(round: Round): PointsCalculation {
         if (round.getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
-            return PointsCalculationType.AgainstGamePoints;
+            return PointsCalculation.AgainstGamePoints;
         }
-        return PointsCalculationType.ScorePoints;
+        return PointsCalculation.Scores;
     }
 
     getDefaultWinPoints(sport: Sport): number {

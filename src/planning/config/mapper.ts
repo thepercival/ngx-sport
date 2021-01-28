@@ -10,20 +10,17 @@ import { JsonPlanningConfig } from './json';
 export class PlanningConfigMapper {
     constructor() { }
 
-    toObject(json: JsonPlanningConfig, roundNumber: RoundNumber, config?: PlanningConfig): PlanningConfig {
-        if (config === undefined) {
-            config = new PlanningConfig(
-                roundNumber,
-                json.gameMode,
-                json.extension,
-                json.enableTime,
-                json.minutesPerGame,
-                json.minutesPerGameExt,
-                json.minutesBetweenGames,
-                json.minutesAfter,
-                json.selfReferee);
-        }
-        return config;
+    toObject(json: JsonPlanningConfig, roundNumber: RoundNumber): PlanningConfig {
+        return new PlanningConfig(
+            roundNumber,
+            json.gameMode,
+            json.extension,
+            json.enableTime,
+            json.minutesPerGame,
+            json.minutesPerGameExt,
+            json.minutesBetweenGames,
+            json.minutesAfter,
+            json.selfReferee);
     }
 
     toJson(config: PlanningConfig): JsonPlanningConfig {

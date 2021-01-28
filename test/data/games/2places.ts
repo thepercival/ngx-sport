@@ -20,12 +20,12 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
         {
             id: 0,
             placeNr: 1,
-            homeaway: true
+            homeAway: true
         },
         {
             id: 0,
             placeNr: 2,
-            homeaway: false
+            homeAway: false
         }
     ],
     fieldPriority: 1,
