@@ -195,6 +195,16 @@ export class NameService {
         return 'punten + score';
     }
 
+    getNrOfGamePlacesName(nrOfGamePlaces: number): string {
+        switch (nrOfGamePlaces) {
+            case 0:
+                return 'alle deelnemers';
+            case 1:
+                return '1 deelnemer';
+        }
+        return nrOfGamePlaces + ' deelnemers';
+    }
+
     protected childRoundsHaveEqualDepth(round: Round): boolean {
         if (round.getQualifyGroups().length === 1) {
             return true;

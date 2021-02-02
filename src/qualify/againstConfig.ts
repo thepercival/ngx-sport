@@ -2,6 +2,7 @@ import { Round } from './group';
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
 import { PointsCalculation } from '../ranking/pointsCalculation';
+import { Sport } from '../sport';
 
 export class QualifyAgainstConfig extends Identifiable {
     static readonly Default_WinPoints = 3;
@@ -23,6 +24,10 @@ export class QualifyAgainstConfig extends Identifiable {
 
     getCompetitionSport(): CompetitionSport {
         return this.competitionSport;
+    }
+
+    getSport(): Sport {
+        return this.competitionSport.getSport();
     }
 
     getRound(): Round {
