@@ -25,7 +25,7 @@ export class GameMapper {
 
     toNewAgainst(json: JsonAgainstGame, poule: Poule, planningMapperCache: PlanningReferences): Game {
         const game = new AgainstGame(poule, json.batchNr, planningMapperCache.sports[json.competitionSport.id]);
-        this.toNew(json, game, planningMapperCache);
+        this.toNewHelper(json, game, planningMapperCache);
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toAgainstObject(jsonGamePlace, game, planningMapperCache));
         return game;
@@ -33,12 +33,12 @@ export class GameMapper {
 
     toNewTogether(json: JsonTogetherGame, poule: Poule, planningMapperCache: PlanningReferences): Game {
         const game = new TogetherGame(poule, json.batchNr, planningMapperCache.sports[json.competitionSport.id]);
-        this.toNew(json, game, planningMapperCache);
+        this.toNewHelper(json, game, planningMapperCache);
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toTogetherObject(jsonGamePlace, game, planningMapperCache));
         return game;
     }
 
-    protected toNew(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame, planningMapperCache: PlanningReferences): Game {
+    protected toNewHelper(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame, planningMapperCache: PlanningReferences): Game {
         game.setId(json.id);
         game.setState(json.state);
         if (json.field) {
@@ -56,7 +56,7 @@ export class GameMapper {
     }
 
     toExistingTogether(json: JsonTogetherGame, game: TogetherGame): TogetherGame {
-        this.toExisting(json, game);
+        this.toExistingHelper(json, game);
         return game;
     }
 
@@ -65,14 +65,18 @@ export class GameMapper {
             game.getScores().pop();
         }
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
-        this.toExisting(json, game);
+        this.toExistingHelper(json, game);
         return game;
     }
 
-    protected toExisting(json: JsonAgainstGame | JsonTogetherGame, game: Game | TogetherGame) {
+    protected toExistingHelper(json: JsonAgainstGame | JsonTogetherGame, game: Game | TogetherGame) {
         game.setState(json.state);
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         return game;
+    }
+
+    toJson(game: AgainstGame | TogetherGame): JsonAgainstGame | JsonTogetherGame {
+        return (game instanceof AgainstGame) ? this.toJsonAgainst(game) : this.toJsonTogether(game);
     }
 
     toJsonAgainst(game: AgainstGame): JsonAgainstGame {

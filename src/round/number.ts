@@ -8,6 +8,8 @@ import { PouleStructure } from '../poule/structure';
 import { Round } from '../qualify/group';
 import { GameAmountConfig } from '../planning/gameAmountConfig';
 import { CompetitionSport } from '../competition/sport';
+import { AgainstGame } from '../game/against';
+import { TogetherGame } from '../game/together';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -111,13 +113,13 @@ export class RoundNumber {
         return previousPlanningConfig;
     }
 
-    getGames(order?: number): Game[] {
-        let games: Game[] = [];
+    getGames(order?: number): (AgainstGame | TogetherGame)[] {
+        let games: (AgainstGame | TogetherGame)[] = [];
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
         if (order === Game.Order_By_Batch) {
-            games.sort((g1: Game, g2: Game) => {
+            games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
                 if (g1.getBatchNr() === g2.getBatchNr()) {
                     const field1 = g1.getField();
                     const field2 = g2.getField();

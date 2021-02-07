@@ -1,9 +1,11 @@
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
+import { TogetherGamePlace } from './game/place/together';
 import { TogetherGame } from './game/together';
 import { Identifiable } from './identifiable';
 import { Place } from './place';
+import { GameMode } from './planning/gameMode';
 import { Round } from './qualify/group';
 import { State } from './state';
 
@@ -12,7 +14,8 @@ export class Poule extends Identifiable {
     protected structureNumber: number = 0;
     protected name: string | undefined;
     protected places: Place[] = [];
-    protected games: (AgainstGame | TogetherGame)[] = [];
+    protected againstGames: AgainstGame[] = [];
+    protected togetherGames: TogetherGame[] = [];
 
     constructor(protected round: Round, number?: number) {
         super();
@@ -57,16 +60,39 @@ export class Poule extends Identifiable {
     }
 
     getGames(): (AgainstGame | TogetherGame)[] {
-        return this.games;
+        if (this.getRound().getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
+            return this.againstGames;
+        }
+        return this.togetherGames;
     }
 
-    getAgainstGames(): AgainstGame[] {
-        return <AgainstGame[]>this.games;
+    getAgainstGames(place?: Place): AgainstGame[] {
+        if (place === undefined) {
+            return this.againstGames;
+        }
+        return this.againstGames.filter((gameIt: AgainstGame) => {
+            return gameIt.isParticipating(place);
+        });
     }
 
     getTogetherGames(): TogetherGame[] {
-        return <TogetherGame[]>this.games;
+        return this.togetherGames;
     }
+
+    // getTogetherGamePlaces(place?: Place): TogetherGamePlace[] {
+    //     let gamePlaces: TogetherGamePlace[] = []
+    //     this.togetherGames.forEach((game: TogetherGame) => {
+    //         const gamePlacesTmp = game.getTogetherPlaces();
+    //         if (place === undefined) {
+    //             gamePlaces = gamePlaces.concat(game.getTogetherPlaces());
+    //         } else {
+    //             gamePlaces = gamePlaces.concat(
+    //                 game.getTogetherPlaces().filter((gamePlace: TogetherGamePlace) => gamePlace.getPlace() === place)
+    //             );
+    //         }
+    //     });
+    //     return gamePlaces;
+    // }
 
     getState(): number {
         if (this.getGames().length > 0 && this.getGames().every((game: AgainstGame | TogetherGame) => game.getState() === State.Finished)) {

@@ -18,7 +18,7 @@ export class AgainstGame extends Game {
 
     constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport) {
         super(poule, batchNr, competitionSport);
-        poule.getGames().push(this);
+        poule.getAgainstGames().push(this);
         this.state = State.Created;
     }
 

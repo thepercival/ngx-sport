@@ -10,6 +10,8 @@ import { CompetitionSport } from '../competition/sport';
 import { ScoreConfig } from '../score/config';
 import { QualifyAgainstConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
+import { AgainstGame } from '../game/against';
+import { TogetherGame } from '../game/together';
 
 export class QualifyGroup {
     static readonly WINNERS = 1;
@@ -249,8 +251,8 @@ export class Round extends Identifiable {
         return this.getPoule(placeLocation.getPouleNr())?.getPlace(placeLocation.getPlaceNr());
     }
 
-    getGames(): Game[] {
-        const games: Game[] = [];
+    getGames(): (AgainstGame | TogetherGame)[] {
+        const games: (AgainstGame | TogetherGame)[] = [];
         this.getPoules().forEach(poule => {
             poule.getGames().forEach(game => games.push(game));
         });

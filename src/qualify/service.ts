@@ -118,7 +118,7 @@ export class QualifyService {
     }
 }
 
-export interface INewQualifier {
+export interface NewQualifier {
     competitor: Competitor;
     place: Place;
 }

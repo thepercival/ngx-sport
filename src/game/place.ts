@@ -17,10 +17,4 @@ export abstract class GamePlace extends Identifiable {
     getGame(): AgainstGame | TogetherGame {
         return this.game;
     }
-
-    getGames(): (AgainstGame | TogetherGame)[] {
-        return this.getGame().getPoule().getGames().filter((gameIt: TogetherGame | AgainstGame) => {
-            return gameIt.getPlaces().find((gamePlace: (AgainstGamePlace | TogetherGamePlace)) => gamePlace.getPlace() === this.place) !== undefined;
-        });
-    }
 }

@@ -99,6 +99,7 @@ export * from './src/season/mapper';
 export * from './src/season/json';
 export * from './src/score';
 export * from './src/score/against';
+export * from './src/score/againstHelper';
 export * from './src/score/config';
 export * from './src/score/config/json';
 export * from './src/score/config/mapper';
