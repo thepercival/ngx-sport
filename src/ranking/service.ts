@@ -25,6 +25,10 @@ export class RankingService {
         }
     }
 
+    disableCache() {
+        this.helper.disableCache();
+    }
+
     getRuleDescriptions() {
         return this.helper.getRuleDescriptions();
     }

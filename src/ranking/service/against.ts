@@ -13,12 +13,17 @@ import { RankingRuleSet } from '../ruleSet';
 export class AgainstRankingServiceHelper {
     private gameStates: number;
     private rankedRoundItemMap: RankedRoundItemMap = {};
+    private cacheEnabled = true;
 
     constructor(
         private rulesSet: RankingRuleSet,
         gameStates?: number
     ) {
         this.gameStates = (gameStates !== undefined) ? gameStates : State.Finished;
+    }
+
+    disableCache() {
+        this.cacheEnabled = false;
     }
 
     getRuleDescriptions() {
@@ -41,7 +46,7 @@ export class AgainstRankingServiceHelper {
     }
 
     getItemsForPoule(poule: Poule): RankedRoundItem[] {
-        if (this.rankedRoundItemMap[poule.getNumber()] === undefined) {
+        if (!this.cacheEnabled || this.rankedRoundItemMap[poule.getNumber()] === undefined) {
             const round: Round = poule.getRound();
             const getter = new RankingItemsGetterAgainst(round, this.gameStates);
             const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poule.getPlaces(), poule.getAgainstGames());

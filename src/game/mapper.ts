@@ -11,6 +11,7 @@ import { TogetherGame } from './together';
 import { CompetitionSportMapper } from '../competition/sport/mapper';
 import { ScoreMapper } from '../score/mapper';
 import { FieldMapper } from '../field/mapper';
+import { GameMode } from '../planning/gameMode';
 
 @Injectable({
     providedIn: 'root'
@@ -53,6 +54,15 @@ export class GameMapper {
         game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
         // json.places.map(jsonGamePlace => this.gamePlaceMapper.toObject(jsonGamePlace, game, planningMapperCache));
         return game;
+    }
+
+    toExisting(json: JsonTogetherGame | JsonAgainstGame, game: TogetherGame | AgainstGame): TogetherGame | AgainstGame {
+        const roundNumber = game.getRound().getNumber();
+        const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
+        if (gameMode === GameMode.Against) {
+            return this.toExistingAgainst(<JsonAgainstGame>json, <AgainstGame>game);
+        }
+        return this.toExistingTogether(<JsonTogetherGame>json, <TogetherGame>game);
     }
 
     toExistingTogether(json: JsonTogetherGame, game: TogetherGame): TogetherGame {

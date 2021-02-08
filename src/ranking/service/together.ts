@@ -14,11 +14,16 @@ import { RankingItemsGetterTogether } from "../itemsgetter/together";
 export class TogetherRankingServiceHelper {
     private gameStates: number;
     private rankedRoundItemMap: RankedRoundItemMap = {};
+    private cacheEnabled = true;
 
     constructor(
         gameStates?: number
     ) {
         this.gameStates = (gameStates !== undefined) ? gameStates : State.Finished;
+    }
+
+    disableCache() {
+        this.cacheEnabled = false;
     }
 
     getRuleDescriptions() {
@@ -34,7 +39,7 @@ export class TogetherRankingServiceHelper {
     }
 
     getItemsForPoule(poule: Poule): RankedRoundItem[] {
-        if (this.rankedRoundItemMap[poule.getNumber()] === undefined) {
+        if (!this.cacheEnabled || this.rankedRoundItemMap[poule.getNumber()] === undefined) {
             const round: Round = poule.getRound();
             const getter = new RankingItemsGetterTogether(round, this.gameStates);
             const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poule.getPlaces(), poule.getTogetherGames());
