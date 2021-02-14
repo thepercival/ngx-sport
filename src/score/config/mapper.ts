@@ -36,7 +36,8 @@ export class ScoreConfigMapper {
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
             enabled: scoreConfig.getEnabled(),
-            next: nextScoreConfig ? this.toJson(nextScoreConfig) : undefined
+            next: nextScoreConfig ? this.toJson(nextScoreConfig) : undefined,
+            isFirst: scoreConfig.isFirst()
         };
     }
 }

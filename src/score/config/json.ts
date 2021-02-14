@@ -8,4 +8,5 @@ export interface JsonScoreConfig extends JsonIdentifiable {
     maximum: number;
     enabled: boolean;
     next?: JsonScoreConfig;
+    isFirst: boolean;
 }

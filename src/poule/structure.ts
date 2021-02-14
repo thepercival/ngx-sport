@@ -1,5 +1,12 @@
 export class PouleStructure extends Array<number> {
 
+    constructor(...nrOfPlaces: number[]) {
+        super();
+        for (let nrOfPlacesIt of nrOfPlaces) {
+            this.push(nrOfPlacesIt);
+        }
+    }
+
     public getNrOfPoules(): number {
         return this.length;
     }

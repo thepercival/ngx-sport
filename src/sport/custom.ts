@@ -1,3 +1,4 @@
+import { Sport } from "../sport";
 
 export abstract class SportCustom {
     static readonly Badminton = 1;
@@ -14,8 +15,8 @@ export abstract class SportCustom {
     static readonly Volleyball = 12;
     static readonly Baseball = 13;
     static readonly IceHockey = 14;
-    static readonly Sjoelen = 15;
-    // static readonly Shuffleboard = 16;
+    static readonly Sjoelen = 15; // Shuffleboard
+    static readonly Klaverjassen = 16; // Jass
 
     static readonly Football_Line_GoalKepeer = 1;
     static readonly Football_Line_Defense = 2;
@@ -39,7 +40,8 @@ export abstract class SportCustom {
             SportCustom.Football,
             SportCustom.Volleyball,
             SportCustom.IceHockey,
-            SportCustom.Sjoelen
+            SportCustom.Sjoelen,
+            SportCustom.Klaverjassen
         ];
     }
 }
