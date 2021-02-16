@@ -13,14 +13,10 @@ import { Round } from '../../qualify/group';
     providedIn: 'root'
 })
 export class CompetitionSportService {
-    private scoreConfigService: ScoreConfigService;
-    private gameAmountConfigService: GameAmountConfigService;
-    private qualifyAgainstConfigService: QualifyAgainstConfigService;
-
     constructor(
-        scoreConfigService: ScoreConfigService,
-        gameAmountConfigService: GameAmountConfigService,
-        qualifyAgainstConfigService: QualifyAgainstConfigService/*,
+        private scoreConfigService: ScoreConfigService,
+        private gameAmountConfigService: GameAmountConfigService,
+        private qualifyAgainstConfigService: QualifyAgainstConfigService/*,
         competitionSportMapper: CompetitionSportMapper,
         sportMapper: SportMapper,*/
     ) {
@@ -47,49 +43,16 @@ export class CompetitionSportService {
     // }
 
     addToStructure(competitionSport: CompetitionSport, structure: Structure) {
-        let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
-        while (roundNumber !== undefined) {
-            if (roundNumber.hasPrevious() === false || roundNumber.getGameAmountConfigs().length > 0) {
-                this.gameAmountConfigService.createDefault(competitionSport, roundNumber);
-            }
-            roundNumber = roundNumber.getNext();
-        }
-
-        const addToRounds = (rounds: Round[]) => {
-            rounds.forEach(round => {
-                if (round.isRoot() || round.getScoreConfigs().length > 0) {
-                    this.scoreConfigService.createDefault(competitionSport, round);
-                }
-                if (round.isRoot() || round.getQualifyAgainstConfigs().length > 0) {
-                    this.qualifyAgainstConfigService.createDefault(competitionSport, round);
-                }
-            });
-        };
-        addToRounds([structure.getRootRound()]);
+        this.gameAmountConfigService.createDefault(competitionSport, structure.getFirstRoundNumber());
+        this.scoreConfigService.createDefault(competitionSport, structure.getRootRound());
+        this.qualifyAgainstConfigService.createDefault(competitionSport, structure.getRootRound());
     }
 
-    // remove(config: SportConfig, structure: Structure) {
-    //     const competition = config.getCompetition();
-    //     const sportConfigs = competition.getSportConfigs();
-    //     const index = sportConfigs.indexOf(config);
-    //     if (index > -1) {
-    //         sportConfigs.splice(index, 1);
-    //     }
-    //     const sport = config.getSport();
-
-    //     let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
-    //     while (roundNumber) {
-    //         const scoreConfigs = roundNumber.getSportScoreConfigs();
-    //         const scoreConfig = scoreConfigs.find(scoreConfigIt => scoreConfigIt.getSport() === sport);
-    //         if (scoreConfig !== undefined) {
-    //             const idxScore = scoreConfigs.indexOf(scoreConfig);
-    //             if (idxScore >= 0) {
-    //                 scoreConfigs.splice(idxScore, 1);
-    //             }
-    //         }
-    //         roundNumber = roundNumber.getNext();
-    //     }
-    // }
+    removeFromStructure(competitionSport: CompetitionSport, structure: Structure) {
+        this.gameAmountConfigService.removeFromRoundNumber(competitionSport, structure.getFirstRoundNumber());
+        this.scoreConfigService.removeFromRound(competitionSport, structure.getRootRound());
+        this.qualifyAgainstConfigService.removeFromRound(competitionSport, structure.getRootRound());
+    }
 
     // isDefault(sportConfig: SportConfig): boolean {
     //     const sport = sportConfig.getSport();

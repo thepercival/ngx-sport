@@ -1,22 +1,23 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper } from '../helpers/mappers';
+import { getCompetitionMapper, getStructureService } from '../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../data/competition';
 
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { StructureService, NameService, PlaceLocationMap, QualifyGroup, Referee } from '../../public_api';
+import { StructureService, NameService, PlaceLocationMap, QualifyGroup, Referee, PouleStructure } from '../../public_api';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
+import { Poule } from '../../src/poule';
 
 describe('NameService', () => {
 
     it('winnerslosers description', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 8, 3);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -31,9 +32,9 @@ describe('NameService', () => {
     it('roundnumber name', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 8, 3);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -64,9 +65,9 @@ describe('NameService', () => {
 
         // root needs no ranking, unequal depth
         {
-            const structureService = new StructureService([]);
+            const structureService = getStructureService();
             const jsonPlanningConfig = createPlanningConfigNoTime();
-            const structure = structureService.create(competition, jsonPlanningConfig, 4, 2);
+            const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(2, 2));
             const firstRoundNumber = structure.getFirstRoundNumber();
             const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
             const nameService = new NameService(placeLocationMap);
@@ -83,9 +84,9 @@ describe('NameService', () => {
 
         // root needs ranking
         {
-            const structureService2 = new StructureService([]);
+            const structureService2 = getStructureService();
             const jsonPlanningConfig = createPlanningConfigNoTime();
-            const structure2 = structureService2.create(competition, jsonPlanningConfig, 16, 4);
+            const structure2 = structureService2.create(competition, jsonPlanningConfig, new PouleStructure(4, 4, 4, 4));
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
             const placeLocationMap2 = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber2));
             const nameService2 = new NameService(placeLocationMap2);
@@ -109,9 +110,9 @@ describe('NameService', () => {
     it('round name, htmlFractialNumber', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 16, 8);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(2, 2, 2, 2, 2, 2, 2, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -168,9 +169,10 @@ describe('NameService', () => {
     it('poule name', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 89, 30);
+        const pouleStructure = new PouleStructure(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2);
+        const structure = structureService.create(competition, jsonPlanningConfig, pouleStructure);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -204,9 +206,9 @@ describe('NameService', () => {
     it('place name', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 3);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -243,9 +245,9 @@ describe('NameService', () => {
     it('place fromname', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 9, 3);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -342,9 +344,9 @@ describe('NameService', () => {
 
     it('places fromname', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 3, 1);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -368,9 +370,9 @@ describe('NameService', () => {
     it('horizontalpoule name', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 12, 3);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(4, 4, 4));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);
@@ -422,9 +424,9 @@ describe('NameService', () => {
     it('referee name', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = new StructureService([]);
+        const structureService = getStructureService();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, 3, 1);
+        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(placeLocationMap);

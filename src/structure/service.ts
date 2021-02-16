@@ -12,23 +12,16 @@ import { VoetbalRange } from '../range';
 import { PlanningConfig } from '../planning/config';
 import { JsonPlanningConfig } from '../planning/config/json';
 import { CompetitionSportService } from '../competition/sport/service';
-import { ScoreConfigService } from '../score/config/service';
-import { GameAmountConfigService } from '../planning/gameAmountConfig/service';
-import { QualifyAgainstConfigService } from '../qualify/againstConfig/service';
 import { PouleStructure } from '../poule/structure';
+import { Inject, Injectable, Optional } from '@angular/core';
 
+@Injectable({
+    providedIn: 'root'
+})
 export class StructureService {
-    private competitionSportService: CompetitionSportService;
-
     constructor(
-        private placeRanges: PlaceRange[]/*,
-        private sportConfigService: SportConfigService,*/
-        /*private planningConfigService: PlanningConfigService*/) {
-        this.competitionSportService = new CompetitionSportService(
-            new ScoreConfigService(),
-            new GameAmountConfigService(),
-            new QualifyAgainstConfigService()
-        );
+        private competitionSportService: CompetitionSportService,
+        @Inject('placeRanges') private placeRanges: PlaceRange[]) {
     }
 
     create(competition: Competition, jsonPlanningConfig: JsonPlanningConfig, pouleStructure: PouleStructure): Structure {
@@ -448,7 +441,7 @@ export class StructureService {
     }
 
     protected checkRanges(nrOfPlaces: number, nrOfPoules?: number) {
-        if (this.placeRanges.length === 0) {
+        if (this.placeRanges === undefined || this.placeRanges.length === 0) {
             return;
         }
         const placeRange = this.placeRanges.find(placeRangeIt => {

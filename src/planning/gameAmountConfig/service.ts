@@ -22,6 +22,17 @@ export class GameAmountConfigService {
         return new GameAmountConfig(competitionSport, roundNumber, amount);
     }
 
+    removeFromRoundNumber(competitionSport: CompetitionSport, roundNumber: RoundNumber) {
+        const gameAmountConfig = roundNumber.getGameAmountConfig(competitionSport);
+        if (gameAmountConfig) {
+            roundNumber.getGameAmountConfigs().splice(roundNumber.getGameAmountConfigs().indexOf(gameAmountConfig), 1);
+        }
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber) {
+            this.removeFromRoundNumber(competitionSport, nextRoundNumber);
+        }
+    }
+
     copy(competitionSport: CompetitionSport, roundNumber: RoundNumber, amount: number): GameAmountConfig {
         return new GameAmountConfig(competitionSport, roundNumber, amount);
     }

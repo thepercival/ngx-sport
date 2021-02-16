@@ -29,7 +29,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -63,7 +67,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
-        fieldPriority: 2,
+        field: {
+            id: 2,
+            priority: 2,
+            name: '2'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -97,7 +105,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -131,7 +143,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
-        fieldPriority: 2,
+        field: {
+            id: 2,
+            priority: 2,
+            name: '2'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -165,7 +181,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -199,7 +219,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
-        fieldPriority: 2,
+        field: {
+            id: 2,
+            priority: 2,
+            name: '2'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -233,7 +257,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 4,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -267,7 +295,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 4,
-        fieldPriority: 2,
+        field: {
+            id: 2,
+            priority: 2,
+            name: '2'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -301,7 +333,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 5,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -335,7 +371,11 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 5,
-        fieldPriority: 2,
+        field: {
+            id: 2,
+            priority: 2,
+            name: '2'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,

@@ -28,7 +28,11 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -62,7 +66,11 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,
@@ -96,7 +104,11 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
-        fieldPriority: 1,
+        field: {
+            id: 1,
+            priority: 1,
+            name: '1'
+        },
         state: State.Created,
         startDateTime: undefined,
         refereePriority: undefined,

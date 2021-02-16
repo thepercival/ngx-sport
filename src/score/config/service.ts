@@ -26,6 +26,14 @@ export class ScoreConfigService {
         return scoreConfig;
     }
 
+    removeFromRound(competitionSport: CompetitionSport, round: Round) {
+        const scoreConfig = round.getScoreConfig(competitionSport);
+        if (scoreConfig) {
+            round.getScoreConfigs().splice(round.getScoreConfigs().indexOf(scoreConfig), 1);
+        }
+        round.getChildren().forEach((child: Round) => this.removeFromRound(competitionSport, child));
+    }
+
     protected hasNext(customId?: number): boolean {
         if (
             customId === SportCustom.Badminton

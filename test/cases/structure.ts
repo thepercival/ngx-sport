@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { QualifyGroup, StructureService } from '../../public_api';
-import { getCompetitionMapper } from '../helpers/mappers';
+import { PouleStructure, QualifyGroup, StructureService } from '../../public_api';
+import { getCompetitionMapper, getStructureService } from '../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../data/competition';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
 
@@ -11,8 +11,8 @@ describe('Structure', () => {
     it('basics', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService([]);
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), 16, 4);
+        const structureService = getStructureService();
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(4, 4, 4, 4));
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
@@ -36,8 +36,8 @@ describe('Structure', () => {
     it('setStructureNumbers', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService([]);
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), 16, 4);
+        const structureService = getStructureService();
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(4, 4, 4, 4));
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
@@ -96,8 +96,8 @@ describe('Structure', () => {
     it('planning', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = new StructureService([]);
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), 16, 4);
+        const structureService = getStructureService();
+        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(4, 4, 4, 4));
         expect(structure.hasPlanning()).to.equal(false);
         const rootRound = structure.getRootRound();
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);

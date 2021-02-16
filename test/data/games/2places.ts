@@ -28,7 +28,11 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
             homeAway: false
         }
     ],
-    fieldPriority: 1,
+    field: {
+        id: 1,
+        priority: 1,
+        name: '1'
+    },
     state: State.Created,
     startDateTime: undefined,
     refereePriority: undefined,

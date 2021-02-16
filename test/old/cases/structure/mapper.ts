@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 
 import { StructureMapper } from '../../../../public_api';
-import { getMapper } from '../../../helpers/mappers';
+import { getMapper } from '../../../helpers/singletonCreator';
 import { jsonCompetition } from '../../../data/competition';
 import { jsonStructure332a } from '../../data/structure/mapper/structure-332-a';
 import { check332astructure } from './332a';

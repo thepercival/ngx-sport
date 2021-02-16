@@ -1,6 +1,6 @@
 import { JsonAgainstGame, Poule, RoundNumber } from '../../public_api';
 import { jsonGames2Places } from '../data/games/2places';
-import { getGameMapper, getPlanningMapper } from './mappers';
+import { getGameMapper, getPlanningMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';
 import { jsonGames4Places } from '../data/games/4places';
 import { jsonGames5Places } from '../data/games/5places';

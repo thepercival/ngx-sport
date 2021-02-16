@@ -42,6 +42,14 @@ export class QualifyAgainstConfigService {
         return config;
     }
 
+    removeFromRound(competitionSport: CompetitionSport, round: Round) {
+        const qualifyagainstConfig = round.getQualifyAgainstConfig(competitionSport);
+        if (qualifyagainstConfig) {
+            round.getQualifyAgainstConfigs().splice(round.getQualifyAgainstConfigs().indexOf(qualifyagainstConfig), 1);
+        }
+        round.getChildren().forEach((child: Round) => this.removeFromRound(competitionSport, child));
+    }
+
     copy(competitionSport: CompetitionSport, round: Round, sourceConfig: QualifyAgainstConfig): QualifyAgainstConfig {
         const config = new QualifyAgainstConfig(competitionSport, round, sourceConfig.getPointsCalculation());
         config.setWinPoints(sourceConfig.getWinPoints());
