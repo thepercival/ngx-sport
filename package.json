@@ -120,5 +120,6 @@
         "pkgRoot": "dist"
       }
     ]
-  }
+  },
+  "dependencies": {}
 }

@@ -110,7 +110,7 @@ export class Place extends PlaceLocation {
         return this.qualifiedPlace;
     }
 
-    setQualifiedPlace(place?: Place): void {
+    setQualifiedPlace(place: Place | undefined): void {
         this.qualifiedPlace = place;
     }
 

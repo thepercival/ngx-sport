@@ -11,7 +11,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "target": "es2015",
-        "module": "es2015",
+        "module": "es2020",
         "moduleResolution": "node",
         "declaration": true,
         "inlineSourceMap": true,
