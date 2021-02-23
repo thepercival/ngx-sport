@@ -64,7 +64,7 @@ export class StructureService {
         structure.setStructureNumbers();
     }
 
-    addPlaceToRootRound(round: Round): Place | undefined {
+    addPlaceToRootRound(round: Round): Place {
         const newNrOfPlaces = round.getNrOfPlaces() + 1;
         const nrOfPoules = round.getPoules().length;
         this.checkRanges(newNrOfPlaces, nrOfPoules);

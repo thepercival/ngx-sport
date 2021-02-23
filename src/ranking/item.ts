@@ -23,8 +23,12 @@ export class RankedRoundItem {
         return this.unranked;
     }
 
-    getPlace(): Place | undefined {
-        return this.unranked.getRound().getPlace(this.getPlaceLocation());
+    getPlace(): Place {
+        const place = this.unranked.getRound().getPlace(this.getPlaceLocation());
+        if (!place) {
+            throw new Error("rankedrounditem should have a place");
+        }
+        return place;
     }
 }
 

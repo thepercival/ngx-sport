@@ -4,5 +4,5 @@ export interface JsonSport {
     team: boolean;
     gameMode: number;
     nrOfGamePlaces: number;
-    customId: number | undefined;
+    customId: number;
 }

@@ -7,14 +7,11 @@ import { JsonRound } from '../round/json';
 import { JsonRoundNumber } from '../round/number/json';
 import { Structure } from '../structure';
 import { Place } from '../place';
-import { Field } from '../field';
 import { Competition } from '../competition';
 import { Poule } from '../poule';
 import { Round } from '../qualify/group';
 import { CompetitionSport } from '../competition/sport';
 import { PlaceMap } from '../place/mapper';
-import { RefereeMap } from '../referee/mapper';
-import { FieldMap } from '../field/mapper';
 import { CompetitionSportMap } from '../competition/sport/mapper';
 import { GameMode } from './gameMode';
 
@@ -26,12 +23,13 @@ export class PlanningMapper {
 
     constructor(private gameMapper: GameMapper) { }
 
-    toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber | undefined {
+    toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber {
         const firstRoundNumber = structure.getFirstRoundNumber();
         this.initCache(firstRoundNumber.getCompetition());
         this.toRoundNumber(json.firstRoundNumber, firstRoundNumber, startRoundNumber);
         this.toRounds(json.rootRound, structure.getRootRound(), firstRoundNumber, startRoundNumber);
-        return structure.getRoundNumber(startRoundNumber);
+        const retVal = structure.getRoundNumber(startRoundNumber);
+        return retVal ?? firstRoundNumber;
     }
 
     protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
@@ -83,9 +81,7 @@ export class PlanningMapper {
 
         this.roundNumbersReferenceMap[roundNumber.getNumber()] = {
             places: places,
-            referees: this.roundNumbersReferenceMap[0].referees,
             sports: this.roundNumbersReferenceMap[0].sports,
-            fields: this.roundNumbersReferenceMap[0].fields
         };
         return this.roundNumbersReferenceMap[roundNumber.getNumber()];
     }
@@ -94,14 +90,10 @@ export class PlanningMapper {
         this.roundNumbersReferenceMap = {};
         this.roundNumbersReferenceMap[0] = {
             places: {},
-            referees: {},
-            sports: {},
-            fields: {}
+            sports: {}
         };
-        competition.getReferees().forEach(referee => this.roundNumbersReferenceMap[0].referees[referee.getPriority()] = referee);
         competition.getSports().forEach((competitionSport: CompetitionSport) => {
             this.roundNumbersReferenceMap[0].sports[competitionSport.getId()] = competitionSport;
-            competitionSport.getFields().forEach((field: Field) => this.roundNumbersReferenceMap[0].fields[field.getPriority()] = field);
         });
     }
 }
@@ -112,7 +104,5 @@ export interface RoundNumbersReferenceMap {
 
 export interface PlanningReferences {
     places: PlaceMap,
-    referees: RefereeMap,
     sports: CompetitionSportMap,
-    fields: FieldMap
 }

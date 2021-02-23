@@ -1,4 +1,4 @@
-import { AgainstGame } from "../game/against";
+import { AgainstGame, HomeOrAway } from "../game/against";
 
 
 export class AgainstScoreHelper {
@@ -14,7 +14,7 @@ export class AgainstScoreHelper {
         return this.away;
     }
 
-    getResult(homeAway: boolean): number {
+    getResult(homeAway: HomeOrAway): number {
         if (this.getHome() === this.getAway()) {
             return AgainstGame.Result_Draw;
         }

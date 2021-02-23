@@ -3,7 +3,7 @@ import { Identifiable } from "./identifiable";
 export class Sport extends Identifiable {
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 30;
-    protected customId: number | undefined;
+    protected customId: number = 0;
 
     constructor(
         protected name: string,
@@ -41,7 +41,7 @@ export class Sport extends Identifiable {
         return this.nrOfGamePlaces;
     }
 
-    getCustomId(): number | undefined {
+    getCustomId(): number {
         return this.customId;
     }
 

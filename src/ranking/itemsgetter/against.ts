@@ -2,7 +2,7 @@
 import { AgainstScoreHelper } from '../../score/againstHelper';
 import { AgainstScore } from '../../score/against';
 import { RankingItemsGetter } from '../itemsgetter';
-import { AgainstGame } from '../../game/against';
+import { AgainstGame, HomeOrAway } from '../../game/against';
 import { Round } from '../../qualify/group';
 import { Place } from '../../place';
 import { UnrankedRoundItem } from '../item';
@@ -61,7 +61,7 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
         return items;
     }
 
-    private getNrOfPoints(finalScore: AgainstScoreHelper, homeAway: boolean, game: AgainstGame): number {
+    private getNrOfPoints(finalScore: AgainstScoreHelper, homeAway: HomeOrAway, game: AgainstGame): number {
         if (finalScore === undefined) {
             return 0;
         }
@@ -87,14 +87,15 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
         return 0;
     }
 
-    private getNrOfUnits(finalScore: AgainstScoreHelper, homeAway: boolean, scoredReceived: number): number {
+    private getNrOfUnits(finalScore: AgainstScoreHelper, homeAway: HomeOrAway, scoredReceived: number): number {
         if (finalScore === undefined) {
             return 0;
         }
-        return this.getGameScorePart(finalScore, scoredReceived === AgainstScore.SCORED ? homeAway : !homeAway);
+        const opposite = homeAway === AgainstGame.Home ? AgainstGame.Away : AgainstGame.Home;
+        return this.getGameScorePart(finalScore, scoredReceived === AgainstScore.SCORED ? homeAway : opposite);
     }
 
-    private getGameScorePart(againstScore: AgainstScoreHelper, homeAway: boolean): number {
+    private getGameScorePart(againstScore: AgainstScoreHelper, homeAway: HomeOrAway): number {
         return homeAway === AgainstGame.Home ? againstScore.getHome() : againstScore.getAway();
     }
 }

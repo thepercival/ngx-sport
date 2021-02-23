@@ -7,15 +7,24 @@ import { JsonReferee } from './json';
     providedIn: 'root'
 })
 export class RefereeMapper {
+    protected cache: RefereeMap = {};
 
-    constructor() { }
-
-    toObject(json: JsonReferee, competition: Competition, referee?: Referee): Referee {
-        if (referee === undefined) {
-            referee = new Referee(competition, json.priority);
-        }
+    toNewObject(json: JsonReferee, competition: Competition): Referee {
+        const referee = new Referee(competition, json.initials, json.priority);
         referee.setId(json.id);
-        referee.setInitials(json.initials);
+        this.cache[referee.getId()] = referee;
+        return this.updateObject(json, referee);
+    }
+
+    toExistingObject(json: JsonReferee): Referee {
+        const referee = this.cache[json.id];
+        if (referee === undefined) {
+            throw Error('referee does not exists in mapper-cache');
+        }
+        return this.updateObject(json, referee);
+    }
+
+    protected updateObject(json: JsonReferee, referee: Referee): Referee {
         referee.setName(json.name);
         referee.setInfo(json.info);
         referee.setEmailaddress(json.emailaddress);

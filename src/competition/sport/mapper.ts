@@ -21,7 +21,7 @@ export class CompetitionSportMapper {
         }
         const sport = this.sportMapper.toObject(json.sport);
         const competitionSport = new CompetitionSport(sport, competition);
-        json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport, disableCache));
+        json.fields.map(jsonField => this.fieldMapper.toNewObject(jsonField, competitionSport));
         competitionSport.setId(json.id);
         this.cache[competitionSport.getId()] = competitionSport;
         return competitionSport;

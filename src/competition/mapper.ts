@@ -32,7 +32,7 @@ export class CompetitionMapper {
         competition.setId(json.id);
         this.updateObject(json, competition);
 
-        json.referees.map(jsonReferee => this.refereeMapper.toObject(jsonReferee, competition));
+        json.referees.map(jsonReferee => this.refereeMapper.toNewObject(jsonReferee, competition));
         json.sports.forEach(jsonSport => this.competitionSportMapper.toObject(jsonSport, competition, true));
         if (json.teamCompetitors) {
             json.teamCompetitors.forEach(jsonteamCompetitor => this.teamCompetitorMapper.toObject(jsonteamCompetitor, competition));

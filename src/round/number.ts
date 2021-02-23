@@ -179,7 +179,7 @@ export class RoundNumber {
         return this.getCompetition().getSports();
     }
 
-    setPlanningConfig(config: PlanningConfig) {
+    setPlanningConfig(config: PlanningConfig | undefined) {
         this.planningConfig = config;
     }
 
@@ -199,16 +199,20 @@ export class RoundNumber {
         this.gameAmountConfigs.push(gameAmountConfig);
     }
 
-    getValidGameAmountConfigs(): (GameAmountConfig | undefined)[] {
+    getValidGameAmountConfigs(): GameAmountConfig[] {
         return this.getCompetitionSports().map(competitionSport => this.getValidGameAmountConfig(competitionSport));
     }
 
-    getValidGameAmountConfig(competitionSport: CompetitionSport): GameAmountConfig | undefined {
+    getValidGameAmountConfig(competitionSport: CompetitionSport): GameAmountConfig {
         const gameAmountConfig = this.getGameAmountConfig(competitionSport);
         if (gameAmountConfig !== undefined) {
             return gameAmountConfig;
         }
-        return this.getPrevious()?.getValidGameAmountConfig(competitionSport);
+        const previous = this.getPrevious();
+        if (!previous) {
+            throw Error('het 1ste rondenummer moet gezet zijn');
+        }
+        return previous.getValidGameAmountConfig(competitionSport);
     }
 
     getFirstStartDateTime(): Date | undefined {

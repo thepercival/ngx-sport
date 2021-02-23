@@ -10,16 +10,23 @@ import { JsonField } from './json';
 export class FieldMapper {
     protected cache: FieldMap = {};
 
-    constructor() { }
-
-    toObject(json: JsonField, competitionSport: CompetitionSport, disableCache?: boolean): Field {
-        if (disableCache !== true && this.cache[json.id]) {
-            return this.cache[json.id];
-        }
+    toNewObject(json: JsonField, competitionSport: CompetitionSport): Field {
         const field = new Field(competitionSport, json.priority);
         field.setId(json.id);
-        field.setName(json.name);
         this.cache[field.getId()] = field;
+        return this.updateObject(json, field);;
+    }
+
+    toExistingObject(json: JsonField): Field {
+        const field = this.cache[json.id];
+        if (field === undefined) {
+            throw Error('field does not exists in mapper-cache');
+        }
+        return this.updateObject(json, field);
+    }
+
+    protected updateObject(json: JsonField, field: Field): Field {
+        field.setName(json.name);
         return field;
     }
 

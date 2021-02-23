@@ -1,4 +1,4 @@
-import { AgainstGame } from '../game/against';
+import { AgainstGame, HomeOrAway } from '../game/against';
 import { Score } from '../score';
 import { AgainstScoreHelper } from './againstHelper';
 
@@ -25,7 +25,7 @@ export class AgainstScore extends Score {
         return this.helper.getAway();
     }
 
-    getResult(homeAway: boolean): number {
+    getResult(homeAway: HomeOrAway): number {
         return this.helper.getResult(homeAway);
     }
 }

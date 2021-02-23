@@ -64,7 +64,7 @@ export class AgainstRankingServiceHelper {
 
     getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {
         return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
-            return rankingItem.getPlace() as Place;
+            return rankingItem.getPlace();
         });
     }
 

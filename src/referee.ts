@@ -9,12 +9,11 @@ export class Referee {
 
     protected id: number = 0;
     protected priority: number;
-    protected initials: string | undefined;
     protected name: string | undefined;
     protected emailaddress: string | undefined;
     protected info: string | undefined;
 
-    constructor(protected competition: Competition, priority?: number) {
+    constructor(protected competition: Competition, protected initials: string, priority?: number) {
         this.competition.getReferees().push(this);
         this.priority = priority ? priority : competition.getReferees().length;
     }
@@ -39,11 +38,11 @@ export class Referee {
         this.priority = priority;
     }
 
-    getInitials(): string | undefined {
+    getInitials(): string {
         return this.initials;
     }
 
-    setInitials(initials: string | undefined): void {
+    setInitials(initials: string): void {
         this.initials = initials;
     }
 

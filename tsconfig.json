@@ -4,7 +4,9 @@
         "skipTemplateCodegen": true,
         "strictMetadataEmit": true,
         "fullTemplateTypeCheck": true,
-        "enableResourceInlining": true
+        "enableResourceInlining": true,
+        "strictTemplates": true,
+        "strictInjectionParameters": true
     },
     "buildOnSave": false,
     "compileOnSave": false,
@@ -27,6 +29,7 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
         "typeRoots": [
             "node_modules/@types"
         ]

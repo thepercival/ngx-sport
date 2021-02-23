@@ -229,8 +229,12 @@ export class Round extends Identifiable {
         return this.getHorizontalPoules(winnersOrLosers).find(horPoule => horPoule.getNumber() === number);
     }
 
-    getFirstPlace(winnersOrLosers: number): Place | undefined {
-        return this.getHorizontalPoule(winnersOrLosers, 1)?.getFirstPlace();
+    getFirstPlace(winnersOrLosers: number): Place {
+        const firstHorizontalPoule = this.getHorizontalPoule(winnersOrLosers, 1);
+        if (firstHorizontalPoule === undefined) {
+            throw Error('de ronde heeft geen uhorizontale poules');
+        }
+        return firstHorizontalPoule.getFirstPlace();
     }
 
     getPlaces(order?: number): Place[] {
@@ -340,7 +344,7 @@ export class Round extends Identifiable {
         this.qualifyAgainstConfigs.push(qualifyagainstConfig);
     }
 
-    getValidQualifyAgainstConfigs(): (QualifyAgainstConfig)[] {
+    getValidQualifyAgainstConfigs(): QualifyAgainstConfig[] {
         return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidQualifyAgainstConfig(competitionSport));
     }
 

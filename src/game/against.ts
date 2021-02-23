@@ -11,8 +11,8 @@ export class AgainstGame extends Game {
     static readonly Result_Win = 1;
     static readonly Result_Draw = 2;
     static readonly Result_Lost = 3;
-    static readonly Home = true;
-    static readonly Away = false;
+    static readonly Home = 1;
+    static readonly Away = 0;
 
     protected scores: AgainstScore[] = [];
 
@@ -22,7 +22,7 @@ export class AgainstGame extends Game {
         this.state = State.Created;
     }
 
-    isParticipating(place: Place, homeAway?: boolean): boolean {
+    isParticipating(place: Place, homeAway?: HomeOrAway): boolean {
         return this.getHomeAwayPlaces(homeAway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
     }
 
@@ -30,18 +30,28 @@ export class AgainstGame extends Game {
         return <AgainstGamePlace[]>this.places;
     }
 
-    getHomeAwayPlaces(homeAway?: boolean): AgainstGamePlace[] {
-        if (homeAway !== undefined) {
-            return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === homeAway);
+    getHomeAwayPlaces(homeAway?: HomeOrAway): AgainstGamePlace[] {
+        if (homeAway === AgainstGame.Home) {
+            return this.getHomePlaces();
+        } else if (homeAway === AgainstGame.Away) {
+            return this.getAwayPlaces();
         }
         return this.getAgainstPlaces();
+    }
+
+    getHomePlaces(): AgainstGamePlace[] {
+        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === AgainstGame.Home);
+    }
+
+    getAwayPlaces(): AgainstGamePlace[] {
+        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === AgainstGame.Away);
     }
 
     getScores(): AgainstScore[] {
         return this.scores;
     }
 
-    getHomeAway(place: Place): boolean | undefined {
+    getHomeAway(place: Place): HomeOrAway | undefined {
         if (this.isParticipating(place, AgainstGame.Home)) {
             return AgainstGame.Home;
         } else if (this.isParticipating(place, AgainstGame.Away)) {
@@ -61,3 +71,5 @@ export class AgainstGame extends Game {
         return this.scores[this.scores.length - 1].getPhase();
     }
 }
+
+export enum HomeOrAway { Away = AgainstGame.Away, Home = AgainstGame.Home }

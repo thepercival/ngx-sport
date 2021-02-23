@@ -84,7 +84,7 @@ export abstract class Game extends Identifiable {
         return this.competitionSport;
     }
 
-    getScoreConfig(): ScoreConfig | undefined {
+    getScoreConfig(): ScoreConfig {
         return this.getRound().getValidScoreConfig(this.competitionSport);
     }
 
