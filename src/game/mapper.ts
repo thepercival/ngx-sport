@@ -45,10 +45,10 @@ export class GameMapper {
         game.setId(json.id);
         game.setState(json.state);
         if (json.field) {
-            game.setField(this.fieldMapper.toExistingObject(json.field));
+            game.setField(this.fieldMapper.getFromCompetitionSport(json.field.id, game.getCompetitionSport()));
         }
         if (json.referee) {
-            game.setReferee(this.refereeMapper.toExistingObject(json.referee));
+            game.setReferee(this.refereeMapper.getFromCompetition(json.referee.id, game.getCompetition()));
         }
         if (json.refereePlaceLocId) {
             game.setRefereePlace(planningMapperCache.places[json.refereePlaceLocId]);

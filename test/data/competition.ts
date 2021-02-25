@@ -1,5 +1,4 @@
-import { JsonCompetition, RankingRuleSet } from "../../public_api";
-import { GameMode } from "../../src/planning/gameMode";
+import { GameMode, JsonCompetition, RankingRuleSet } from "../../public_api";
 
 export const jsonBaseCompetition: JsonCompetition = {
     id: 0,

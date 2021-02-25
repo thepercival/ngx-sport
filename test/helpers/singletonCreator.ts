@@ -18,7 +18,7 @@ export function getCompetitionMapper(): CompetitionMapper {
     return new CompetitionMapper(
         getLeagueMapper(),
         new SeasonMapper(),
-        new RefereeMapper(),
+        getRefereeMapper(),
         getCompetitionSportMapper(),
         getTeamCompetitorMapper()
     );
@@ -40,12 +40,16 @@ export function getPlanningMapper(): PlanningMapper {
     return new PlanningMapper(getGameMapper());
 }
 
+export function getRefereeMapper(): RefereeMapper {
+    return new RefereeMapper();
+}
+
 export function getFieldMapper(): FieldMapper {
     return new FieldMapper();
 }
 
 export function getGameMapper(): GameMapper {
-    return new GameMapper(new GamePlaceMapper(getScoreMapper()), getFieldMapper(), getScoreMapper(), getCompetitionSportMapper());
+    return new GameMapper(new GamePlaceMapper(getScoreMapper()), getFieldMapper(), getRefereeMapper(), getScoreMapper(), getCompetitionSportMapper());
 }
 
 export function getScoreMapper(): ScoreMapper {

@@ -12,6 +12,8 @@
  * @description
  * Entry point for all public APIs of this package.
  */
+export * from './src/against/result';
+export * from './src/against/side';
 export * from './src/association';
 export * from './src/association/mapper';
 export * from './src/association/json';

@@ -82,20 +82,6 @@ export class Competition extends Identifiable {
         return this.referees.find(refereeIt => priority === refereeIt.getPriority());
     }
 
-    removeReferee(referee: Referee) {
-        const index = this.referees.indexOf(referee);
-        if (index > -1) {
-            const referees = this.referees.splice(index, 1);
-            referees.shift();
-            let priority = referee.getPriority();
-            let removedReferee: Referee | undefined;
-            while (removedReferee = referees.shift()) {
-                removedReferee.setPriority(priority++);
-                this.referees.push(removedReferee);
-            }
-        }
-    }
-
     getSports(): CompetitionSport[] {
         return this.sports;
     }

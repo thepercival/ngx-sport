@@ -2,11 +2,14 @@
 import { AgainstScoreHelper } from '../../score/againstHelper';
 import { AgainstScore } from '../../score/against';
 import { RankingItemsGetter } from '../itemsgetter';
-import { AgainstGame, HomeOrAway } from '../../game/against';
+import { AgainstGame } from '../../game/against';
 import { Round } from '../../qualify/group';
 import { Place } from '../../place';
 import { UnrankedRoundItem } from '../item';
 import { Game } from '../../game';
+import { AgainstSide } from '../../against/side';
+import { AgainstGamePlace } from '../../game/place/against';
+import { AgainstResult } from '../../against/result';
 
 /* eslint:disable:no-bitwise */
 
@@ -33,17 +36,17 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
             if (useSubScore) {
                 finalSubScore = this.scoreConfigService.getFinalAgainstSubScore(game);
             }
-            [AgainstGame.Home, AgainstGame.Away].forEach(homeAway => {
-                const points = this.getNrOfPoints(finalScore, homeAway, game);
-                const scored = this.getNrOfUnits(finalScore, homeAway, AgainstScore.SCORED);
-                const received = this.getNrOfUnits(finalScore, homeAway, AgainstScore.RECEIVED);
+            [AgainstSide.Home, AgainstSide.Away].forEach((side: AgainstSide) => {
+                const points = this.getNrOfPoints(finalScore, side, game);
+                const scored = this.getNrOfUnits(finalScore, side, AgainstScore.SCORED);
+                const received = this.getNrOfUnits(finalScore, side, AgainstScore.RECEIVED);
                 let subScored = 0;
                 let subReceived = 0;
                 if (finalSubScore) {
-                    subScored = this.getNrOfUnits(finalSubScore, homeAway, AgainstScore.SCORED);
-                    subReceived = this.getNrOfUnits(finalSubScore, homeAway, AgainstScore.RECEIVED);
+                    subScored = this.getNrOfUnits(finalSubScore, side, AgainstScore.SCORED);
+                    subReceived = this.getNrOfUnits(finalSubScore, side, AgainstScore.RECEIVED);
                 }
-                game.getHomeAwayPlaces(homeAway).forEach(gamePlace => {
+                game.getSidePlaces(side).forEach((gamePlace: AgainstGamePlace) => {
                     const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getPlaceNr()
                         && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getPouleNr());
                     if (item === undefined) {
@@ -61,7 +64,7 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
         return items;
     }
 
-    private getNrOfPoints(finalScore: AgainstScoreHelper, homeAway: HomeOrAway, game: AgainstGame): number {
+    private getNrOfPoints(finalScore: AgainstScoreHelper, side: AgainstSide, game: AgainstGame): number {
         if (finalScore === undefined) {
             return 0;
         }
@@ -69,13 +72,13 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
         if (qualifyAgainstConfig === undefined) {
             return 0;
         }
-        if (finalScore.getResult(homeAway) === AgainstGame.Result_Win) {
+        if (finalScore.getResult(side) === AgainstResult.Win) {
             if (game.getFinalPhase() === Game.Phase_RegularTime) {
                 return qualifyAgainstConfig.getWinPoints();
             } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
                 return qualifyAgainstConfig.getWinPointsExt();
             }
-        } else if (finalScore.getResult(homeAway) === AgainstGame.Result_Draw) {
+        } else if (finalScore.getResult(side) === AgainstResult.Draw) {
             if (game.getFinalPhase() === Game.Phase_RegularTime) {
                 return qualifyAgainstConfig.getDrawPoints();
             } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
@@ -87,15 +90,15 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
         return 0;
     }
 
-    private getNrOfUnits(finalScore: AgainstScoreHelper, homeAway: HomeOrAway, scoredReceived: number): number {
+    private getNrOfUnits(finalScore: AgainstScoreHelper, side: AgainstSide, scoredReceived: number): number {
         if (finalScore === undefined) {
             return 0;
         }
-        const opposite = homeAway === AgainstGame.Home ? AgainstGame.Away : AgainstGame.Home;
-        return this.getGameScorePart(finalScore, scoredReceived === AgainstScore.SCORED ? homeAway : opposite);
+        const opposite = side === AgainstSide.Home ? AgainstSide.Away : AgainstSide.Home;
+        return this.getGameScorePart(finalScore, scoredReceived === AgainstScore.SCORED ? side : opposite);
     }
 
-    private getGameScorePart(againstScore: AgainstScoreHelper, homeAway: HomeOrAway): number {
-        return homeAway === AgainstGame.Home ? againstScore.getHome() : againstScore.getAway();
+    private getGameScorePart(againstScore: AgainstScoreHelper, side: AgainstSide): number {
+        return side === AgainstSide.Home ? againstScore.getHome() : againstScore.getAway();
     }
 }

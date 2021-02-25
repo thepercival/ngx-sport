@@ -1,5 +1,6 @@
 
 import { Round, HorizontalPoule, PlaceLocation } from 'public_api';
+import { AgainstSide } from '../../against/side';
 import { AgainstGame } from '../../game/against';
 import { Place } from '../../place';
 import { Poule } from '../../poule';
@@ -274,8 +275,8 @@ export class AgainstRankingServiceHelper {
             if ((p_gameIt.getState() & this.gameStates) === 0) {
                 return;
             }
-            const inHome = places.some(place => p_gameIt.isParticipating(place, AgainstGame.Home));
-            const inAway = places.some(place => p_gameIt.isParticipating(place, AgainstGame.Away));
+            const inHome = places.some(place => p_gameIt.isParticipating(place, AgainstSide.Home));
+            const inAway = places.some(place => p_gameIt.isParticipating(place, AgainstSide.Away));
             if (inHome && inAway) {
                 gamesRet.push(p_gameIt);
             }

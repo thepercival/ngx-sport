@@ -6,9 +6,8 @@ import { jsonBaseCompetition } from '../data/competition';
 
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { StructureService, NameService, PlaceLocationMap, QualifyGroup, Referee, PouleStructure } from '../../public_api';
+import { NameService, PlaceLocationMap, QualifyGroup, Referee, PouleStructure } from '../../public_api';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
-import { Poule } from '../../src/poule';
 
 describe('NameService', () => {
 
@@ -444,8 +443,7 @@ describe('NameService', () => {
             const game = firstPlace.getPoule().getGames()[0];
             expect(nameService.getRefereeName(game)).to.equal('');
 
-            const referee = new Referee(competition);
-            referee.setInitials('CDK');
+            const referee = new Referee(competition, 'CDK');
             referee.setName('Co Du');
             game.setReferee(referee);
 

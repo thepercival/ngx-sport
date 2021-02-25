@@ -1,0 +1,1 @@
+export enum AgainstResult { Win = 1, Draw, Loss }

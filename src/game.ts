@@ -9,6 +9,7 @@ import { Round } from './qualify/group';
 import { Identifiable } from './identifiable';
 import { AgainstGamePlace } from './game/place/against';
 import { TogetherGamePlace } from './game/place/together';
+import { Competition } from './competition';
 
 export abstract class Game extends Identifiable {
     static readonly Order_By_Batch = 1;
@@ -40,7 +41,7 @@ export abstract class Game extends Identifiable {
         return this.field;
     }
 
-    setField(field: Field): void {
+    setField(field: Field | undefined): void {
         this.field = field;
     }
 
@@ -78,6 +79,10 @@ export abstract class Game extends Identifiable {
 
     getRound(): Round {
         return this.getPoule().getRound();
+    }
+
+    getCompetition(): Competition {
+        return this.getCompetitionSport().getCompetition();
     }
 
     getCompetitionSport(): CompetitionSport {

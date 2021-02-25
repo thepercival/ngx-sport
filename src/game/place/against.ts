@@ -1,15 +1,16 @@
+import { AgainstSide } from '../../against/side';
 import { Place } from '../../place';
-import { AgainstGame, HomeOrAway } from '../against';
+import { AgainstGame } from '../against';
 import { GamePlace } from '../place';
 
 export class AgainstGamePlace extends GamePlace {
 
-    constructor(game: AgainstGame, place: Place, protected homeAway: HomeOrAway) {
+    constructor(game: AgainstGame, place: Place, protected side: AgainstSide) {
         super(game, place);
         game.getPlaces().push(this);
     }
 
-    getHomeAway(): HomeOrAway {
-        return this.homeAway;
+    getSide(): AgainstSide {
+        return this.side;
     }
 }

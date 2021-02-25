@@ -123,7 +123,7 @@ export class EndRankingItem {
         return this.rank;
     }
 
-    getPlaceLocation(): PlaceLocation | undefined {
+    getStartPlaceLocation(): PlaceLocation | undefined {
         return this.placeLocation;
     }
 }

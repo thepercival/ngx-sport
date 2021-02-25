@@ -1,4 +1,6 @@
-import { AgainstGame, HomeOrAway } from '../game/against';
+import { AgainstResult } from '../against/result';
+import { AgainstSide } from '../against/side';
+import { AgainstGame } from '../game/against';
 import { Score } from '../score';
 import { AgainstScoreHelper } from './againstHelper';
 
@@ -25,8 +27,8 @@ export class AgainstScore extends Score {
         return this.helper.getAway();
     }
 
-    getResult(homeAway: HomeOrAway): number {
-        return this.helper.getResult(homeAway);
+    getResult(side: AgainstSide): AgainstResult {
+        return this.helper.getResult(side);
     }
 }
 

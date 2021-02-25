@@ -1,4 +1,4 @@
-import { GameMode, JsonAgainstGame, State } from "../../../public_api";
+import { AgainstSide, GameMode, JsonAgainstGame, State } from "../../../public_api";
 
 
 export const jsonGames4Places: JsonAgainstGame[] = [
@@ -20,12 +20,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 1,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 2,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 1,
@@ -36,7 +36,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     },
@@ -58,12 +58,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 3,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 4,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 1,
@@ -74,7 +74,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     },
@@ -96,12 +96,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 4,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 1,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 2,
@@ -112,7 +112,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     }
@@ -136,12 +136,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 3,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 2,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 2,
@@ -152,7 +152,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     },
@@ -174,12 +174,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 1,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 3,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 3,
@@ -190,7 +190,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     },
@@ -212,12 +212,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             {
                 id: 0,
                 placeNr: 2,
-                homeAway: true
+                side: AgainstSide.Home
             },
             {
                 id: 0,
                 placeNr: 4,
-                homeAway: false
+                side: AgainstSide.Away
             }
         ],
         batchNr: 3,
@@ -228,7 +228,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         },
         state: State.Created,
         startDateTime: undefined,
-        refereePriority: undefined,
+        referee: undefined,
         refereePlaceLocId: undefined,
         scores: []
     }

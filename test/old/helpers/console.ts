@@ -1,3 +1,5 @@
+import { AgainstGame, NameService } from "../../../public_api";
+import { AgainstSide } from "../../../src/against/side";
 
 const colors = require('colors');
 
@@ -34,9 +36,9 @@ export function consoleGame(game: Game, batch?: PlanningResourceBatch) {
     );
 }
 
-export function consolePlaces(game: Game, homeAway: boolean, batch?: PlanningResourceBatch): string {
+export function consolePlaces(game: AgainstGame, side: AgainstSide, batch?: PlanningResourceBatch): string {
     const nameService = new NameService();
-    return game.getPlaces(homeAway).map(gamePlace => {
+    return game.getSidePlaces(side).map(gamePlace => {
         const colorNumber = gamePlace.getPlace().getNumber();
         const gamesInARow = batch ? ('(' + batch.getGamesInARow(gamePlace.getPlace()) + ')') : '';
         return consoleColor(colorNumber, nameService.getPlaceFromName(gamePlace.getPlace(), false, false) + gamesInARow);

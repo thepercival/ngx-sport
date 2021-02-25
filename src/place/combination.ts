@@ -1,5 +1,8 @@
+import { AgainstSide } from '../against/side';
 import { Game } from '../game';
+import { AgainstGame } from '../game/against';
 import { GamePlace } from '../game/place';
+import { AgainstGamePlace } from '../game/place/against';
 import { Place } from '../place';
 
 /* eslint:disable:no-bitwise */
@@ -25,10 +28,10 @@ export class PlaceCombination {
     get(): Place[] {
         return this.home.concat(this.away);
     }
-    getGamePlaces(game: Game, reverseHomeAway: boolean/*, reverseCombination: boolean*/): GamePlace[] {
-        const home = this.getHome().map(homeIt => new GamePlace(game, homeIt, reverseHomeAway ? Game.AWAY : Game.HOME));
-        const away = this.getAway().map(awayIt => new GamePlace(game, awayIt, reverseHomeAway ? Game.HOME : Game.AWAY));
-        if (reverseHomeAway === true) {
+    getGamePlaces(game: AgainstGame, reverseSides: boolean/*, reverseCombination: boolean*/): GamePlace[] {
+        const home = this.getHome().map(homeIt => new AgainstGamePlace(game, homeIt, reverseSides ? AgainstSide.Away : AgainstSide.Home));
+        const away = this.getAway().map(awayIt => new AgainstGamePlace(game, awayIt, reverseSides ? AgainstSide.Home : AgainstSide.Away));
+        if (reverseSides) {
             home.reverse();
             away.reverse();
         }

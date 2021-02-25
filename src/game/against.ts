@@ -6,14 +6,9 @@ import { Poule } from '../poule';
 import { State } from '../state';
 import { AgainstGamePlace } from './place/against';
 import { AgainstScore } from '../score/against';
+import { AgainstSide } from '../against/side';
 
 export class AgainstGame extends Game {
-    static readonly Result_Win = 1;
-    static readonly Result_Draw = 2;
-    static readonly Result_Lost = 3;
-    static readonly Home = 1;
-    static readonly Away = 0;
-
     protected scores: AgainstScore[] = [];
 
     constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport) {
@@ -22,40 +17,40 @@ export class AgainstGame extends Game {
         this.state = State.Created;
     }
 
-    isParticipating(place: Place, homeAway?: HomeOrAway): boolean {
-        return this.getHomeAwayPlaces(homeAway).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
+    isParticipating(place: Place, side?: AgainstSide): boolean {
+        return this.getSidePlaces(side).find(gamePlace => gamePlace.getPlace() === place) !== undefined;
     }
 
     getAgainstPlaces(): AgainstGamePlace[] {
         return <AgainstGamePlace[]>this.places;
     }
 
-    getHomeAwayPlaces(homeAway?: HomeOrAway): AgainstGamePlace[] {
-        if (homeAway === AgainstGame.Home) {
+    getSidePlaces(side?: AgainstSide): AgainstGamePlace[] {
+        if (side === AgainstSide.Home) {
             return this.getHomePlaces();
-        } else if (homeAway === AgainstGame.Away) {
+        } else if (side === AgainstSide.Away) {
             return this.getAwayPlaces();
         }
         return this.getAgainstPlaces();
     }
 
     getHomePlaces(): AgainstGamePlace[] {
-        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === AgainstGame.Home);
+        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getSide() === AgainstSide.Home);
     }
 
     getAwayPlaces(): AgainstGamePlace[] {
-        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getHomeAway() === AgainstGame.Away);
+        return this.getAgainstPlaces().filter((place: AgainstGamePlace) => place.getSide() === AgainstSide.Away);
     }
 
     getScores(): AgainstScore[] {
         return this.scores;
     }
 
-    getHomeAway(place: Place): HomeOrAway | undefined {
-        if (this.isParticipating(place, AgainstGame.Home)) {
-            return AgainstGame.Home;
-        } else if (this.isParticipating(place, AgainstGame.Away)) {
-            return AgainstGame.Away;
+    getSide(place: Place): AgainstSide | undefined {
+        if (this.isParticipating(place, AgainstSide.Home)) {
+            return AgainstSide.Home;
+        } else if (this.isParticipating(place, AgainstSide.Away)) {
+            return AgainstSide.Away;
         }
         return undefined;
     }
@@ -71,5 +66,3 @@ export class AgainstGame extends Game {
         return this.scores[this.scores.length - 1].getPhase();
     }
 }
-
-export enum HomeOrAway { Away = AgainstGame.Away, Home = AgainstGame.Home }

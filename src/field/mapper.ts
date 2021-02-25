@@ -8,24 +8,18 @@ import { JsonField } from './json';
     providedIn: 'root'
 })
 export class FieldMapper {
-    protected cache: FieldMap = {};
-
-    toNewObject(json: JsonField, competitionSport: CompetitionSport): Field {
-        const field = new Field(competitionSport, json.priority);
+    toObject(json: JsonField, competitionSport: CompetitionSport): Field {
+        const existingField: Field | undefined = this.getFromCompetitionSport(json.id, competitionSport);
+        const field: Field = existingField ? existingField : new Field(competitionSport, json.priority);
         field.setId(json.id);
-        this.cache[field.getId()] = field;
-        return this.updateObject(json, field);;
-    }
-
-    toExistingObject(json: JsonField): Field {
-        const field = this.cache[json.id];
-        if (field === undefined) {
-            throw Error('field does not exists in mapper-cache');
-        }
         return this.updateObject(json, field);
     }
 
-    protected updateObject(json: JsonField, field: Field): Field {
+    getFromCompetitionSport(id: string | number, competitionSport: CompetitionSport): Field | undefined {
+        return competitionSport.getFields().find((fieldIt: Field) => fieldIt.getId() === id);
+    }
+
+    updateObject(json: JsonField, field: Field): Field {
         field.setName(json.name);
         return field;
     }

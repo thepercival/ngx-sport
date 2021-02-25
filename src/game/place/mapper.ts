@@ -19,7 +19,7 @@ export class GamePlaceMapper {
 
     toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame, planningMapperCache: PlanningReferences): GamePlace {
         const place = planningMapperCache.places[game.getPoule().getStructureNumber() + '.' + json.placeNr];
-        const gamePlace = new AgainstGamePlace(game, place, json.homeAway);
+        const gamePlace = new AgainstGamePlace(game, place, json.side);
         gamePlace.setId(json.id);
         return gamePlace;
     }
@@ -36,7 +36,7 @@ export class GamePlaceMapper {
         return {
             id: gamePlace.getId(),
             placeNr: gamePlace.getPlace().getNumber(),
-            homeAway: gamePlace.getHomeAway()
+            side: gamePlace.getSide()
         };
     }
 

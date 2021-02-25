@@ -7,24 +7,22 @@ import { JsonReferee } from './json';
     providedIn: 'root'
 })
 export class RefereeMapper {
-    protected cache: RefereeMap = {};
 
-    toNewObject(json: JsonReferee, competition: Competition): Referee {
-        const referee = new Referee(competition, json.initials, json.priority);
+    toObject(json: JsonReferee, competition: Competition): Referee {
+        const existingField: Referee | undefined = this.getFromCompetition(json.id, competition);
+        const referee: Referee = existingField ? existingField : new Referee(competition, json.initials, json.priority);
         referee.setId(json.id);
-        this.cache[referee.getId()] = referee;
-        return this.updateObject(json, referee);
+        referee.setName(json.name);
+        referee.setInfo(json.info);
+        referee.setEmailaddress(json.emailaddress);
+        return referee;
     }
 
-    toExistingObject(json: JsonReferee): Referee {
-        const referee = this.cache[json.id];
-        if (referee === undefined) {
-            throw Error('referee does not exists in mapper-cache');
-        }
-        return this.updateObject(json, referee);
+    getFromCompetition(id: string | number, competition: Competition): Referee | undefined {
+        return competition.getReferees().find((refereeIt: Referee) => refereeIt.getId() === id);
     }
 
-    protected updateObject(json: JsonReferee, referee: Referee): Referee {
+    updateObject(json: JsonReferee, referee: Referee): Referee {
         referee.setName(json.name);
         referee.setInfo(json.info);
         referee.setEmailaddress(json.emailaddress);

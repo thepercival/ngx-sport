@@ -1,6 +1,4 @@
-import { GameMode } from '../../public_api';
-import { JsonPlanningConfig } from '../../src/planning/config/json';
-import { SelfReferee } from '../../src/referee/self';
+import { GameMode, JsonPlanningConfig, SelfReferee } from '../../public_api';
 
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {

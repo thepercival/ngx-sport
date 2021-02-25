@@ -4,11 +4,10 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureService } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { EndRankingService, PlaceLocationMap, QualifyGroup, QualifyService, RankingService, Round, StructureService } from '../../../../public_api';
+import { EndRankingService, PlaceLocationMap, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
-import { PouleStructure } from '../../../../src/poule/structure';
 
 describe('EndRankingService', () => {
 
@@ -35,7 +34,7 @@ describe('EndRankingService', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            const placeLocation = endRankingItem.getPlaceLocation();
+            const placeLocation = endRankingItem.getStartPlaceLocation();
             expect(placeLocation).to.not.equal(undefined);
             if (!placeLocation) {
                 continue;
@@ -71,7 +70,7 @@ describe('EndRankingService', () => {
         const items = rankingService.getItems();
 
         const endRankingItem = items[2];
-        const placeLocation = endRankingItem.getPlaceLocation();
+        const placeLocation = endRankingItem.getStartPlaceLocation();
         expect(placeLocation).to.not.equal(undefined);
         if (!placeLocation) {
             return;
@@ -105,7 +104,7 @@ describe('EndRankingService', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            expect(endRankingItem.getPlaceLocation()).to.equal(undefined);
+            expect(endRankingItem.getStartPlaceLocation()).to.equal(undefined);
         }
     });
 
@@ -174,7 +173,7 @@ describe('EndRankingService', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            const placeLocation = endRankingItem.getPlaceLocation();
+            const placeLocation = endRankingItem.getStartPlaceLocation();
             expect(placeLocation).to.not.equal(undefined);
             if (!placeLocation) {
                 continue;
