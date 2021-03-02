@@ -1,4 +1,4 @@
-import { AgainstSide, GameMode, JsonAgainstGame, State } from "../../../public_api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../../../public_api";
 
 
 export const jsonGames2Places: JsonAgainstGame[] = [{
@@ -11,7 +11,7 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
             gameMode: GameMode.Against,
             name: 'voetbal',
             team: true,
-            customId: 11,
+            customId: CustomSport.Football,
             nrOfGamePlaces: 2
         },
         fields: []

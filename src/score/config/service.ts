@@ -3,7 +3,7 @@ import { CompetitionSport } from '../../competition/sport';
 import { AgainstGame } from '../../game/against';
 import { TogetherGamePlace } from '../../game/place/together';
 import { Round } from '../../qualify/group';
-import { SportCustom } from '../../sport/custom';
+import { CustomSport } from '../../sport/custom';
 import { AgainstScoreHelper } from '../againstHelper';
 import { ScoreConfig } from '../config';
 
@@ -34,14 +34,18 @@ export class ScoreConfigService {
         round.getChildren().forEach((child: Round) => this.removeFromRound(competitionSport, child));
     }
 
-    protected hasNext(customId?: number): boolean {
+    protected hasNext(customId?: CustomSport): boolean {
         if (
-            customId === SportCustom.Badminton
-            || customId === SportCustom.Darts
-            || customId === SportCustom.Squash
-            || customId === SportCustom.TableTennis
-            || customId === SportCustom.Tennis
-            || customId === SportCustom.Volleyball
+            customId === CustomSport.Badminton
+            || customId === CustomSport.Darts
+            || customId === CustomSport.Squash
+            || customId === CustomSport.TableTennis
+            || customId === CustomSport.Tennis
+            || customId === CustomSport.Volleyball
+            || customId === CustomSport.SquashDouble
+            || customId === CustomSport.TableTennisDouble
+            || customId === CustomSport.TennisDouble
+            || customId === CustomSport.BadmintonDouble
         ) {
             return true;
         }

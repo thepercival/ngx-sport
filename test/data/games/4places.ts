@@ -1,4 +1,4 @@
-import { AgainstSide, GameMode, JsonAgainstGame, State } from "../../../public_api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../../../public_api";
 
 
 export const jsonGames4Places: JsonAgainstGame[] = [
@@ -10,7 +10,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },
@@ -48,7 +48,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },
@@ -86,7 +86,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },
@@ -126,7 +126,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },
@@ -164,7 +164,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },
@@ -202,7 +202,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 id: 0,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 gameMode: GameMode.Against,
                 nrOfGamePlaces: 2
             },

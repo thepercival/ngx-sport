@@ -10,6 +10,7 @@ import { Identifiable } from './identifiable';
 import { AgainstGamePlace } from './game/place/against';
 import { TogetherGamePlace } from './game/place/together';
 import { Competition } from './competition';
+import { PlanningConfig } from './planning/config';
 
 export abstract class Game extends Identifiable {
     static readonly Order_By_Batch = 1;
@@ -91,6 +92,10 @@ export abstract class Game extends Identifiable {
 
     getScoreConfig(): ScoreConfig {
         return this.getRound().getValidScoreConfig(this.competitionSport);
+    }
+
+    getPlanningConfig(): PlanningConfig {
+        return this.getRound().getNumber().getValidPlanningConfig();
     }
 
     getPlaces(): (AgainstGamePlace | TogetherGamePlace)[] {

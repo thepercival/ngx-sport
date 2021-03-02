@@ -1,4 +1,5 @@
 import { GameMode, JsonCompetition, RankingRuleSet } from "../../public_api";
+import { CustomSport } from "../../src/sport/custom";
 
 export const jsonBaseCompetition: JsonCompetition = {
     id: 0,
@@ -24,7 +25,7 @@ export const jsonBaseCompetition: JsonCompetition = {
                 gameMode: GameMode.Against,
                 name: 'voetbal',
                 team: true,
-                customId: 11,
+                customId: CustomSport.Football,
                 nrOfGamePlaces: 2
             },
             fields: [

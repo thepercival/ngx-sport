@@ -14,7 +14,7 @@ export class PlaceLocationMap {
         return placeLocation.getPouleNr() + '.' + placeLocation.getPlaceNr();
     }
 
-    public getCompetitor(placeLocation: PlaceLocation): Competitor {
+    public getCompetitor(placeLocation: PlaceLocation): Competitor | undefined {
         return this.map[this.getPlaceLocationId(placeLocation)];
     }
 }

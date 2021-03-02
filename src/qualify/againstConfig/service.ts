@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { CompetitionSport } from '../../competition/sport';
 import { QualifyAgainstConfig } from '../againstConfig';
 import { Sport } from '../../sport';
-import { SportCustom } from '../../sport/custom';
 import { Round } from '../group';
 import { PointsCalculation } from '../../ranking/pointsCalculation';
 import { GameMode } from '../../planning/gameMode';
+import { CustomSport } from '../../sport/custom';
 
 @Injectable({
     providedIn: 'root'
@@ -68,22 +68,22 @@ export class QualifyAgainstConfigService {
     }
 
     getDefaultWinPoints(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_WinPoints : 1;
+        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_WinPoints : 1;
     }
 
     getDefaultDrawPoints(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_DrawPoints : 0.5;
+        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_DrawPoints : 0.5;
     }
 
     getDefaultWinPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_WinPointsExt : 1;
+        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_WinPointsExt : 1;
     }
 
     getDefaultDrawPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.Chess ? QualifyAgainstConfig.Default_DrawPointsExt : 0.5;
+        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_DrawPointsExt : 0.5;
     }
 
     getDefaultLosePointsExt(sport: Sport): number {
-        return sport.getCustomId() !== SportCustom.IceHockey ? QualifyAgainstConfig.Default_LosePointsExt : 1;
+        return sport.getCustomId() !== CustomSport.IceHockey ? QualifyAgainstConfig.Default_LosePointsExt : 1;
     }
 }
