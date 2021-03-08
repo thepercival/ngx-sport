@@ -2,14 +2,12 @@
 import { HorizontalPoule } from '../../poule/horizontal';
 import { QualifyGroup, Round } from '../../qualify/group';
 import { Structure } from '../../structure';
-import { EndRankingItem } from '../item';
-import { RankingService } from '../service';
+import { EndRankingItem } from '../item/end';
 import { State } from '../../state';
 import { Place } from '../../place';
+import { RoundRankingCalculator } from './round';
 
-/* eslint:disable:no-bitwise */
-
-export class EndRankingService {
+export class EndRankingCalculator {
 
     private currentRank: number = 1;
 
@@ -46,9 +44,7 @@ export class EndRankingService {
     }
 
     protected getDropouts(round: Round): EndRankingItem[] {
-        const gameMode = round.getNumber().getValidPlanningConfig().getGameMode();
-        const ruleSet = round.getCompetition().getRankingRuleSet();
-        const rankingService = new RankingService(gameMode, ruleSet);
+        const rankingService = new RoundRankingCalculator();
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {
@@ -71,8 +67,8 @@ export class EndRankingService {
         return dropouts;
     }
 
-    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingService: RankingService): EndRankingItem[] {
-        const rankedPlaces: Place[] = rankingService.getPlacesForHorizontalPoule(horizontalPoule);
+    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingCalculator: RoundRankingCalculator): EndRankingItem[] {
+        const rankedPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
         rankedPlaces.splice(0, horizontalPoule.getNrOfQualifiers());
         return rankedPlaces.map(place => {
             return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());

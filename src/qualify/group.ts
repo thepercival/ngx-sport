@@ -12,6 +12,7 @@ import { QualifyAgainstConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
+import { PointsCalculation } from '../ranking/pointsCalculation';
 
 export class QualifyGroup {
     static readonly WINNERS = 1;

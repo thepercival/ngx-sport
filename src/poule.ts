@@ -1,11 +1,9 @@
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
-import { TogetherGamePlace } from './game/place/together';
 import { TogetherGame } from './game/together';
 import { Identifiable } from './identifiable';
 import { Place } from './place';
-import { GameMode } from './planning/gameMode';
 import { Round } from './qualify/group';
 import { State } from './state';
 
@@ -60,10 +58,7 @@ export class Poule extends Identifiable {
     }
 
     getGames(): (AgainstGame | TogetherGame)[] {
-        if (this.getRound().getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
-            return this.againstGames;
-        }
-        return this.togetherGames;
+        return (<(AgainstGame | TogetherGame)[]>this.againstGames).concat(this.togetherGames);
     }
 
     getAgainstGames(place?: Place): AgainstGame[] {

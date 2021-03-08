@@ -92,6 +92,10 @@
     "include": [
       "src/**/*.ts"
     ],
+    "exclude": [
+      "src/**/mapper.ts",
+      "src/**/json.ts"
+    ],
     "reporter": [
       "html",
       "lcov",

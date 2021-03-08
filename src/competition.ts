@@ -9,11 +9,10 @@ import { TeamCompetitor } from './competitor/team';
 import { CompetitionSport } from './competition/sport';
 import { RankingRuleSet } from './ranking/ruleSet';
 import { Identifiable } from './identifiable';
-import { RankingItemsGetterTogether } from './ranking/itemsgetter/together';
 
 export class Competition extends Identifiable {
     protected startDateTime: Date;
-    protected rankingRuleSet: RankingRuleSet = RankingRuleSet.WC
+    protected rankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
     protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sports: CompetitionSport[] = [];

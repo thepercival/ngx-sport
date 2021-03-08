@@ -7,14 +7,17 @@ import { QualifyGroup, Round } from './qualify/group';
 import { QualifyRuleMultiple } from './qualify/rule/multiple';
 import { QualifyRuleSingle } from './qualify/rule/single';
 import { RoundNumber } from './round/number';
-import { PlaceLocationMap } from './place/location/map';
 import { GameMode } from './planning/gameMode';
 import { PointsCalculation } from './ranking/pointsCalculation';
 import { FootballLine } from './sport/football';
-import { CustomSport } from './sport/custom';
+import { RankingRule } from './ranking/rule';
+import { RankingRuleGetter } from './ranking/rule/getter';
+import { ScoreConfig } from './score/config';
+import { CompetitorMap } from './competitor/map';
+import { RankingRuleSet } from './ranking/ruleSet';
 
 export class NameService {
-    constructor(private placeLocationMap?: PlaceLocationMap) {
+    constructor(private competitorMap?: CompetitorMap) {
     }
 
     getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
@@ -79,9 +82,9 @@ export class NameService {
     }
 
     getPlaceName(place: Place, p_competitorName?: boolean, longName?: boolean): string {
-        let competitorName = p_competitorName && this.placeLocationMap;
-        if (competitorName && this.placeLocationMap) {
-            const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
+        let competitorName = p_competitorName && this.competitorMap;
+        if (competitorName && this.competitorMap) {
+            const particpant = this.competitorMap.getCompetitor(place.getStartLocation());
             if (particpant !== undefined) {
                 return particpant.getName();
             }
@@ -94,9 +97,9 @@ export class NameService {
     }
 
     getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
-        competitorName = competitorName ? (this.placeLocationMap !== undefined) : false;
-        if (competitorName && this.placeLocationMap) {
-            const particpant = this.placeLocationMap.getCompetitor(place.getStartLocation());
+        competitorName = competitorName ? (this.competitorMap !== undefined) : false;
+        if (competitorName && this.competitorMap) {
+            const particpant = this.competitorMap.getCompetitor(place.getStartLocation());
             if (particpant !== undefined) {
                 return particpant.getName();
             }
@@ -204,6 +207,32 @@ export class NameService {
                 return '1 deelnemer';
         }
         return nrOfGamePlaces + ' deelnemers';
+    }
+
+    getRuleSetName(scoreConfig: ScoreConfig): string {
+        return '?';
+    }
+
+    getRulesName(ruleSet: RankingRuleSet): string[] {
+        const rankingRuleGetter = new RankingRuleGetter();
+        return rankingRuleGetter.getRules(ruleSet, false).map((rule: RankingRule): string => {
+            switch (rule) {
+                case RankingRule.MostPoints:
+                    return 'meeste aantal punten';
+                case RankingRule.FewestGames:
+                    return 'minste aantal wedstrijden';
+                case RankingRule.BestUnitDifference:
+                    return 'beste saldo';
+                case RankingRule.MostUnitsScored:
+                    return 'meeste aantal eenheden voor';
+                case RankingRule.BestAmongEachOther:
+                    return 'beste onderling resultaat';
+                case RankingRule.BestSubUnitDifference:
+                    return 'beste subsaldo';
+                case RankingRule.MostSubUnitsScored:
+                    return 'meeste aantal subeenheden voor';
+            }
+        });
     }
 
     protected childRoundsHaveEqualDepth(round: Round): boolean {

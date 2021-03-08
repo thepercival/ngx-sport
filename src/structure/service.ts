@@ -27,7 +27,7 @@ export class StructureService {
     create(competition: Competition, jsonPlanningConfig: JsonPlanningConfig, pouleStructure: PouleStructure): Structure {
         const firstRoundNumber = new RoundNumber(competition);
         new PlanningConfig(firstRoundNumber,
-            jsonPlanningConfig.gameMode,
+            jsonPlanningConfig.creationStrategy,
             jsonPlanningConfig.extension,
             jsonPlanningConfig.enableTime,
             jsonPlanningConfig.minutesPerGame,

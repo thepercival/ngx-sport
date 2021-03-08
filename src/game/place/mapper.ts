@@ -9,6 +9,7 @@ import { JsonTogetherGamePlace } from './together/json';
 import { AgainstGamePlace } from './against';
 import { TogetherGamePlace } from './together';
 import { ScoreMapper } from '../../score/mapper';
+import { Place } from '../../place';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ export class GamePlaceMapper {
     constructor(private scoreMapper: ScoreMapper) { }
 
     toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame, planningMapperCache: PlanningReferences): GamePlace {
-        const place = planningMapperCache.places[game.getPoule().getStructureNumber() + '.' + json.placeNr];
+        const place: Place = planningMapperCache.places[game.getPoule().getStructureNumber() + '.' + json.placeNr];
         const gamePlace = new AgainstGamePlace(game, place, json.side);
         gamePlace.setId(json.id);
         return gamePlace;

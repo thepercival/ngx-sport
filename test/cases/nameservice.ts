@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../data/competition';
 
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { NameService, PlaceLocationMap, QualifyGroup, Referee, PouleStructure } from '../../public_api';
+import { NameService, CompetitorMap, QualifyGroup, Referee, PouleStructure } from '../../public_api';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
 
 describe('NameService', () => {
@@ -18,8 +18,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
 
         expect(nameService.getWinnersLosersDescription(QualifyGroup.WINNERS)).to.equal('winnaar');
         expect(nameService.getWinnersLosersDescription(QualifyGroup.LOSERS)).to.equal('verliezer');
@@ -35,8 +35,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
@@ -68,8 +68,8 @@ describe('NameService', () => {
             const jsonPlanningConfig = createPlanningConfigNoTime();
             const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(2, 2));
             const firstRoundNumber = structure.getFirstRoundNumber();
-            const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-            const nameService = new NameService(placeLocationMap);
+            const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+            const nameService = new NameService(competitorMap);
             const rootRound = structure.getRootRound();
 
             structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -87,8 +87,8 @@ describe('NameService', () => {
             const jsonPlanningConfig = createPlanningConfigNoTime();
             const structure2 = structureService2.create(competition, jsonPlanningConfig, new PouleStructure(4, 4, 4, 4));
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
-            const placeLocationMap2 = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber2));
-            const nameService2 = new NameService(placeLocationMap2);
+            const competitorMap2 = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber2));
+            const nameService2 = new NameService(competitorMap2);
             const rootRound2 = structure2.getRootRound();
 
             expect(nameService2.getRoundName(rootRound2)).to.equal('1<sup>ste</sup> ronde');
@@ -113,8 +113,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(2, 2, 2, 2, 2, 2, 2, 2));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // root needs ranking, depth 2
@@ -173,8 +173,8 @@ describe('NameService', () => {
         const pouleStructure = new PouleStructure(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2);
         const structure = structureService.create(competition, jsonPlanningConfig, pouleStructure);
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -214,8 +214,8 @@ describe('NameService', () => {
         if (!firstTeamCompetitor) {
             return
         }
-        const placeLocationMap = new PlaceLocationMap([firstTeamCompetitor]);
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap([firstTeamCompetitor]);
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -253,8 +253,8 @@ describe('NameService', () => {
         if (!firstTeamCompetitor) {
             return
         }
-        const placeLocationMap = new PlaceLocationMap([firstTeamCompetitor]);
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap([firstTeamCompetitor]);
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -347,8 +347,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -373,8 +373,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(4, 4, 4));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -427,8 +427,8 @@ describe('NameService', () => {
         const jsonPlanningConfig = createPlanningConfigNoTime();
         const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(placeLocationMap);
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const nameService = new NameService(competitorMap);
         const rootRound = structure.getRootRound();
 
         // basics
@@ -459,6 +459,26 @@ describe('NameService', () => {
             expect(nameService.getRefereeName(game, true)).to.equal('tc 1.1');
         }
     });
+
+    // it('rule descriptions', () => {
+    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+    //     const structureService = getStructureService();
+    //     const jsonPlanningConfig = createPlanningConfigNoTime();
+    //     const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
+    //     const rootRound: Round = structure.getRootRound();
+
+    //     const rankingService = new RoundRankingCalculator();
+    //     const ruleDescriptions = rankingService.getRuleDescriptions();
+    //     expect(ruleDescriptions.length).to.equal(5);
+
+    //     const rankingService2 = new RoundRankingCalculator(jsonPlanningConfig.gameMode, RankingRuleSet.EC);
+    //     const ruleDescriptions2 = rankingService2.getRuleDescriptions();
+    //     expect(ruleDescriptions2.length).to.equal(5);
+
+    //     const rankingService3 = new RoundRankingCalculator(jsonPlanningConfig.gameMode, 0);
+    //     expect(() => rankingService3.getRuleDescriptions()).to.throw(Error);
+    // });
 
 
 });

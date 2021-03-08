@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../../data/competition';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { PlaceLocationMap, PouleStructure, QualifyGroup, QualifyReservationService, QualifyService, Round } from '../../../public_api';
+import { CompetitorMap, PouleStructure, QualifyGroup, QualifyReservationService, QualifyService, Round } from '../../../public_api';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 
 describe('QualifyReservationService', () => {
@@ -155,7 +155,7 @@ describe('QualifyReservationService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -221,6 +221,6 @@ describe('QualifyReservationService', () => {
         if (!winnersPlace) {
             return;
         }
-        expect(placeLocationMap.getCompetitor(winnersPlace)).to.equal(undefined);
+        expect(competitorMap.getCompetitor(winnersPlace)).to.equal(undefined);
     });
 });

@@ -7,8 +7,7 @@ export abstract class RankingItemsGetter {
     protected scoreConfigService: ScoreConfigService;
 
     constructor(
-        protected round: Round,
-        protected gameStates: number
+        protected round: Round
     ) {
         this.scoreConfigService = new ScoreConfigService();
     }

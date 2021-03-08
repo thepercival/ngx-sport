@@ -5,7 +5,7 @@ export function createTeamCompetitors(competition: Competition, firstRoundNumber
     const teamCompetitors: TeamCompetitor[] = [];
     firstRoundNumber.getPlaces().forEach((place: Place) => {
         teamCompetitors.push(new TeamCompetitor(competition, place.getPoule().getNumber(),
-            place.getNumber(), new Team(competition.getAssociation(), 'tc ' + place.getLocationId())))
+            place.getNumber(), new Team(competition.getAssociation(), 'tc ' + place.getNewLocationId())))
     });
     return teamCompetitors
 }

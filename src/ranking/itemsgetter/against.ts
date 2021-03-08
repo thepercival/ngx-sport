@@ -5,18 +5,16 @@ import { RankingItemsGetter } from '../itemsgetter';
 import { AgainstGame } from '../../game/against';
 import { Round } from '../../qualify/group';
 import { Place } from '../../place';
-import { UnrankedRoundItem } from '../item';
 import { Game } from '../../game';
 import { AgainstSide } from '../../against/side';
 import { AgainstGamePlace } from '../../game/place/against';
 import { AgainstResult } from '../../against/result';
-
-/* eslint:disable:no-bitwise */
+import { UnrankedRoundItem } from '../item/round/unranked';
 
 export class RankingItemsGetterAgainst extends RankingItemsGetter {
 
-    constructor(round: Round, gameStates: number) {
-        super(round, gameStates);
+    constructor(round: Round) {
+        super(round);
     }
 
     getUnrankedItems(places: Place[], games: AgainstGame[]): UnrankedRoundItem[] {
@@ -24,10 +22,7 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
             return new UnrankedRoundItem(this.round, place, place.getPenaltyPoints());
         });
         games.forEach((game: AgainstGame) => {
-            if ((game.getState() & this.gameStates) === 0) {
-                return;
-            }
-            const useSubScore = game.getScoreConfig()?.useSubScore();
+            const useSubScore = game.getScoreConfig().useSubScore();
             const finalScore = this.scoreConfigService.getFinalAgainstScore(game, useSubScore);
             if (!finalScore) {
                 return;

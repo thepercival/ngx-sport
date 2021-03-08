@@ -1,0 +1,1 @@
+import { AgainstRankingFunctionMapCreator } from '../calculator/round/sport/against';

@@ -1,9 +1,10 @@
 import { GameMode, JsonPlanningConfig, SelfReferee } from '../../public_api';
+import { CreationStrategy } from '../../src/game/roundAssigner';
 
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {
         id: 0,
-        gameMode: GameMode.Against,
+        creationStrategy: CreationStrategy.staticPouleSize,
         extension: false,
         enableTime: false,
         minutesPerGame: 0,

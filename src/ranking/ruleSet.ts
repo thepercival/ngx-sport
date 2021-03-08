@@ -1,1 +1,1 @@
-export enum RankingRuleSet { WC = 1, EC }
+export enum RankingRuleSet { Against = 1, AgainstAmong, Together }

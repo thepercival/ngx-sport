@@ -44,7 +44,7 @@ export const jsonBaseCompetition: JsonCompetition = {
     referees: [],
     startDateTime: '2030-01-01T12:00:00.000Z',
     state: 1,
-    rankingRuleSet: RankingRuleSet.WC
+    rankingRuleSet: RankingRuleSet.Against
 };
 /*
 

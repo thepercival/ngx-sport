@@ -10,4 +10,8 @@ export class PlaceLocation {
     getPlaceNr(): number {
         return this.placeNr;
     }
+
+    getNewLocationId(): string {
+        return this.getPouleNr() + '.' + this.getPlaceNr();
+    }
 }

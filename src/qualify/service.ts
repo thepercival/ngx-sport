@@ -3,25 +3,21 @@ import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
 import { HorizontalPoule } from '../poule/horizontal';
 import { Place } from '../place';
-import { RankedRoundItem } from '../ranking/item';
-import { RankingService } from '../ranking/service';
 import { QualifyGroup, Round } from './group';
 import { QualifyReservationService } from './reservationservice';
 import { QualifyRuleMultiple } from './rule/multiple';
 import { QualifyRuleSingle } from './rule/single';
 import { State } from '../state';
-import { GameMode } from '../planning/gameMode';
+import { RoundRankingCalculator } from '../ranking/calculator/round';
+import { RankedRoundItem } from '../ranking/item/round/ranked';
 
 export class QualifyService {
-    private rankingService: RankingService;
+    private roundRankingCalculator: RoundRankingCalculator;
     private poulesFinished: FinishedPoulesMap = {};
     private roundFinished: boolean | undefined;
 
     constructor(private round: Round) {
-        this.rankingService = new RankingService(
-            round.getNumber().getValidPlanningConfig().getGameMode(),
-            round.getCompetition().getRankingRuleSet()
-        );
+        this.roundRankingCalculator = new RoundRankingCalculator();
     }
 
     setQualifiers(filterPoule?: Poule): Place[] {
@@ -79,7 +75,7 @@ export class QualifyService {
         }
         const round = ruleMultiple.getFromRound();
         const rankedPlaceLocations: PlaceLocation[] =
-            this.rankingService.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
+            this.roundRankingCalculator.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
 
         while (rankedPlaceLocations.length > toPlaces.length) {
             ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.shift();
@@ -98,8 +94,8 @@ export class QualifyService {
         if (!this.isPouleFinished(poule)) {
             return undefined;
         }
-        const pouleRankingItems: RankedRoundItem[] = this.rankingService.getItemsForPoule(poule);
-        const rankingItem = this.rankingService.getItemByRank(pouleRankingItems, rank);
+        const pouleRankingItems: RankedRoundItem[] = this.roundRankingCalculator.getItemsForPoule(poule);
+        const rankingItem = this.roundRankingCalculator.getItemByRank(pouleRankingItems, rank);
         return rankingItem ? poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr()) : undefined;
     }
 

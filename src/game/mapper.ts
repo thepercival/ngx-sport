@@ -59,12 +59,10 @@ export class GameMapper {
     }
 
     toExisting(json: JsonTogetherGame | JsonAgainstGame, game: TogetherGame | AgainstGame): TogetherGame | AgainstGame {
-        const roundNumber = game.getRound().getNumber();
-        const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
-        if (gameMode === GameMode.Against) {
-            return this.toExistingAgainst(<JsonAgainstGame>json, <AgainstGame>game);
+        if (game instanceof AgainstGame) {
+            return this.toExistingAgainst(<JsonAgainstGame>json, game);
         }
-        return this.toExistingTogether(<JsonTogetherGame>json, <TogetherGame>game);
+        return this.toExistingTogether(<JsonTogetherGame>json, game);
     }
 
     toExistingTogether(json: JsonTogetherGame, game: TogetherGame): TogetherGame {
@@ -102,7 +100,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocId: game.getRefereePlace()?.getLocationId(),
+            refereePlaceLocId: game.getRefereePlace()?.getNewLocationId(),
             startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score))
         };
@@ -119,7 +117,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocId: game.getRefereePlace()?.getLocationId(),
+            refereePlaceLocId: game.getRefereePlace()?.getNewLocationId(),
             startDateTime: game.getStartDateTime()?.toISOString()
         };
     }

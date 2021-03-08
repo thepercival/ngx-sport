@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import {
-    PlaceLocationMap,
+    CompetitorMap,
     PouleStructure,
     QualifyGroup,
     QualifyService,
@@ -22,7 +22,7 @@ describe('QualifyService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -62,14 +62,14 @@ describe('QualifyService', () => {
         const winnersPlace1 = winnersPoule.getPlace(1);
         expect(winnersPlace1).to.not.equal(undefined);
         if (winnersPlace1) {
-            expect(placeLocationMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(winnersPlace1.getStartLocation()).getName()).to.equal('tc 1.1');
+            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())?.getName()).to.equal('tc 1.1');
         }
         const winnersPlace2 = winnersPoule.getPlace(2);
         expect(winnersPlace2).to.not.equal(undefined);
         if (winnersPlace2) {
-            expect(placeLocationMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(winnersPlace2.getStartLocation()).getName()).to.equal('tc 1.2');
+            expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())?.getName()).to.equal('tc 1.2');
         }
 
         const losersRound = rootRound.getChild(QualifyGroup.LOSERS, 1);
@@ -86,14 +86,14 @@ describe('QualifyService', () => {
         const losersPlace1 = loserssPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation()).getName()).to.equal('tc 1.4');
+            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())?.getName()).to.equal('tc 1.4');
         }
         const losersPlace2 = loserssPoule.getPlace(2);
         expect(losersPlace2).to.not.equal(undefined);
         if (losersPlace2) {
-            expect(placeLocationMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(losersPlace2.getStartLocation()).getName()).to.equal('tc 1.5');
+            expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())?.getName()).to.equal('tc 1.5');
         }
 
     });
@@ -103,7 +103,7 @@ describe('QualifyService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
@@ -148,8 +148,8 @@ describe('QualifyService', () => {
         const winnersPlace1 = winnersPoule.getPlace(1);
         expect(winnersPlace1).to.not.equal(undefined);
         if (winnersPlace1) {
-            expect(placeLocationMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(winnersPlace1.getStartLocation()).getName()).to.equal('tc 1.1');
+            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())?.getName()).to.equal('tc 1.1');
         }
 
         const winnersPlace2 = winnersPoule.getPlace(2);
@@ -172,7 +172,7 @@ describe('QualifyService', () => {
         const losersPlace1 = losersPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
         }
 
         const losersPlace2 = losersPoule.getPlace(2);
@@ -187,7 +187,7 @@ describe('QualifyService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
@@ -258,7 +258,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -270,7 +270,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -281,7 +281,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -292,7 +292,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isMultiple()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(winnersPlace4.getStartLocation()).getName()).to.equal('tc 3.2');
+                expect(competitorMap.getCompetitor(winnersPlace4.getStartLocation())?.getName()).to.equal('tc 3.2');
             }
         }
 
@@ -316,7 +316,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isMultiple()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -327,7 +327,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -338,7 +338,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(losersPlace3.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersPlace3.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -349,7 +349,7 @@ describe('QualifyService', () => {
             expect(qualifyRule).to.not.equal(undefined);
             if (qualifyRule) {
                 expect(qualifyRule.isSingle()).to.equal(true);
-                expect(placeLocationMap.getCompetitor(losersPlace4.getStartLocation())).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersPlace4.getStartLocation())).to.not.equal(undefined);
             }
         }
 
@@ -360,7 +360,7 @@ describe('QualifyService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -420,7 +420,7 @@ describe('QualifyService', () => {
         if (!winnersPlace4) {
             return;
         }
-        expect(placeLocationMap.getCompetitor(winnersPlace4.getStartLocation())).to.equal(undefined);
+        expect(competitorMap.getCompetitor(winnersPlace4.getStartLocation())).to.equal(undefined);
     });
 
     /**
@@ -431,7 +431,7 @@ describe('QualifyService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
@@ -473,8 +473,8 @@ describe('QualifyService', () => {
         const winnersPlace3 = winnersPoule.getPlace(3);
         expect(winnersPlace3).to.not.equal(undefined);
         if (winnersPlace3) {
-            expect(placeLocationMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(winnersPlace3.getStartLocation()).getName()).to.equal('tc 1.2');
+            expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())?.getName()).to.equal('tc 1.2');
         }
 
         const losersRoundOne = rootRound.getChild(QualifyGroup.LOSERS, 1);
@@ -490,8 +490,8 @@ describe('QualifyService', () => {
         const losersPlace1 = losersPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(placeLocationMap.getCompetitor(losersPlace1.getStartLocation()).getName()).to.equal('tc 2.2');
+            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())?.getName()).to.equal('tc 2.2');
         }
     });
 });

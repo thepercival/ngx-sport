@@ -4,19 +4,20 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureService } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { EndRankingService, PlaceLocationMap, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
+import { CompetitorMap, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
+import { EndRankingCalculator } from '../../../../src/ranking/calculator/end';
 
-describe('EndRankingService', () => {
+describe('EndRankingCalculator', () => {
 
     it('one poule of three places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
@@ -29,7 +30,7 @@ describe('EndRankingService', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure);
+        const rankingService = new EndRankingCalculator(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -39,8 +40,9 @@ describe('EndRankingService', () => {
             if (!placeLocation) {
                 continue;
             }
-            const competitor = placeLocationMap.getCompetitor(placeLocation);
-            expect(competitor.getName()).to.equal('tc 1.' + rank);
+            const competitor = competitorMap.getCompetitor(placeLocation);
+            expect(competitor).to.not.equal(undefined);
+            expect(competitor?.getName()).to.equal('tc 1.' + rank);
             expect(endRankingItem.getUniqueRank()).to.equal(rank);
         }
     });
@@ -52,7 +54,7 @@ describe('EndRankingService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
         teamCompetitors.pop();
-        const placeLocationMap = new PlaceLocationMap(teamCompetitors);
+        const competitorMap = new CompetitorMap(teamCompetitors);
         const rootRound = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
@@ -66,7 +68,7 @@ describe('EndRankingService', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure);
+        const rankingService = new EndRankingCalculator(structure);
         const items = rankingService.getItems();
 
         const endRankingItem = items[2];
@@ -75,7 +77,7 @@ describe('EndRankingService', () => {
         if (!placeLocation) {
             return;
         }
-        const competitor = placeLocationMap.getCompetitor(placeLocation);
+        const competitor = competitorMap.getCompetitor(placeLocation);
 
         expect(competitor).to.equal(undefined);
     });
@@ -85,7 +87,7 @@ describe('EndRankingService', () => {
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
@@ -99,7 +101,7 @@ describe('EndRankingService', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         // setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingService(structure);
+        const rankingService = new EndRankingCalculator(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -108,12 +110,12 @@ describe('EndRankingService', () => {
         }
     });
 
-    it('2 roundnumbers, five places', () => {
+    it('2 roundnumbers, [5] => (W[2],L[2])', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureService = getStructureService();
         const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const placeLocationMap = new PlaceLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
         structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
@@ -125,11 +127,11 @@ describe('EndRankingService', () => {
             return;
         }
         createGames(structure.getFirstRoundNumber());
-        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
-        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
-        setAgainstScoreSingle(pouleOne, 1, 4, 4, 1);
-        setAgainstScoreSingle(pouleOne, 1, 5, 5, 1);
-        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1); // 1 12p
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1); // 2 9p
+        setAgainstScoreSingle(pouleOne, 1, 4, 4, 1); // 3 6p
+        setAgainstScoreSingle(pouleOne, 1, 5, 5, 1); // 4 3p
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2); // 5 0p
         setAgainstScoreSingle(pouleOne, 2, 4, 4, 2);
         setAgainstScoreSingle(pouleOne, 2, 5, 5, 2);
         setAgainstScoreSingle(pouleOne, 3, 4, 4, 3);
@@ -156,19 +158,19 @@ describe('EndRankingService', () => {
         if (!losersPoule) {
             return;
         }
-        const secondRound = structure.getFirstRoundNumber().getNext();
-        expect(secondRound).to.not.equal(undefined);
-        if (!secondRound) {
+        const secondRoundNumber = structure.getFirstRoundNumber().getNext();
+        expect(secondRoundNumber).to.not.equal(undefined);
+        if (!secondRoundNumber) {
             return;
         }
-        createGames(secondRound);
+        createGames(secondRoundNumber);
         setAgainstScoreSingle(winnersPoule, 1, 2, 2, 1);
         setAgainstScoreSingle(losersPoule, 1, 2, 2, 1);
 
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        const rankingService = new EndRankingService(structure);
+        const rankingService = new EndRankingCalculator(structure);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -178,8 +180,9 @@ describe('EndRankingService', () => {
             if (!placeLocation) {
                 continue;
             }
-            const competitor = placeLocationMap.getCompetitor(placeLocation);
-            expect(competitor.getName()).to.equal('tc 1.' + rank);
+            const competitor = competitorMap.getCompetitor(placeLocation);
+            expect(competitor).to.not.equal(undefined);
+            expect(competitor?.getName()).to.equal('tc 1.' + rank);
         }
     });
 });

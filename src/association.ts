@@ -47,7 +47,7 @@ export class Association {
     }
 
     setParent(parent: Association): void {
-        if (this.parent === parent) {
+        if (this.parent === parent || this === parent) {
             return;
         }
         if (this.parent !== undefined) {
@@ -57,9 +57,7 @@ export class Association {
             }
         }
         this.parent = parent;
-        if (this.parent !== undefined) {
-            this.parent.getChildren().push(this);
-        }
+        this.parent.getChildren().push(this);
     }
 
     getAncestors(ancestors: Association[] = []): Association[] {

@@ -1,8 +1,3 @@
-import { Game } from './game';
-import { AgainstGame } from './game/against';
-import { AgainstGamePlace } from './game/place/against';
-import { TogetherGamePlace } from './game/place/together';
-import { TogetherGame } from './game/together';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
@@ -70,10 +65,7 @@ export class Place extends PlaceLocation {
         });
     }
 
-    /**
-     * within roundnumber
-     */
-    getLocationId(): string {
+    getStructureNumber(): string {
         return this.poule.getStructureNumber() + '.' + this.placeNr;
     }
 

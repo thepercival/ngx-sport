@@ -14,9 +14,8 @@ export class GameAmountConfigService {
     }
 
     createDefault(competitionSport: CompetitionSport, roundNumber: RoundNumber): GameAmountConfig {
-        const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
         let amount = 1;
-        if (gameMode === GameMode.Together) {
+        if (competitionSport.getSport().getGameMode() === GameMode.Together) {
             amount = competitionSport.getFields().length;
         }
         return new GameAmountConfig(competitionSport, roundNumber, amount);

@@ -32,7 +32,7 @@ export class QualifyAgainstConfigService {
     // }
 
     createDefault(competitionSport: CompetitionSport, round: Round): QualifyAgainstConfig {
-        const config = new QualifyAgainstConfig(competitionSport, round, this.getDefaultPointCalculation(round));
+        const config = new QualifyAgainstConfig(competitionSport, round, this.getDefaultPointCalculation(competitionSport));
         const sport = competitionSport.getSport();
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
@@ -60,8 +60,8 @@ export class QualifyAgainstConfigService {
         return config;
     }
 
-    getDefaultPointCalculation(round: Round): PointsCalculation {
-        if (round.getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
+    getDefaultPointCalculation(competitionSport: CompetitionSport): PointsCalculation {
+        if (competitionSport.getSport().getGameMode() === GameMode.Against) {
             return PointsCalculation.AgainstGamePoints;
         }
         return PointsCalculation.Scores;

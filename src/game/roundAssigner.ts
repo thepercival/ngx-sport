@@ -1,3 +1,3 @@
-export enum GameRoundAssigner {
-    static = 0, incrementalRandom, incrementalRanking
+export enum CreationStrategy {
+    staticPouleSize = 1, staticManual, incrementalRandom, incrementalRanking
 }

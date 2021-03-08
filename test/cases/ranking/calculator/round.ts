@@ -1,35 +1,15 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getStructureService } from '../../helpers/singletonCreator';
-import { jsonBaseCompetition } from '../../data/competition';
+import { getCompetitionMapper, getStructureService } from '../../../helpers/singletonCreator';
+import { jsonBaseCompetition } from '../../../data/competition';
 
-import { createGames } from '../../helpers/gamescreator';
-import { Poule, PouleStructure, QualifyGroup, RankingRuleSet, RankingService, Round, State, StructureService } from '../../../public_api';
-import { setAgainstScoreSingle } from '../../helpers/setscores';
-import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
+import { createGames } from '../../../helpers/gamescreator';
+import { PouleStructure, QualifyGroup, RankedRoundItem, RankingRuleSet, Round, RoundRankingCalculator, State } from '../../../../public_api';
+import { setAgainstScoreSingle } from '../../../helpers/setscores';
+import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
-describe('Ranking/Service', () => {
-
-    it('rule descriptions', () => {
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-
-        const structureService = getStructureService();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3));
-        const rootRound: Round = structure.getRootRound();
-
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
-        const ruleDescriptions = rankingService.getRuleDescriptions();
-        expect(ruleDescriptions.length).to.equal(5);
-
-        const rankingService2 = new RankingService(jsonPlanningConfig.gameMode, RankingRuleSet.EC);
-        const ruleDescriptions2 = rankingService2.getRuleDescriptions();
-        expect(ruleDescriptions2.length).to.equal(5);
-
-        const rankingService3 = new RankingService(jsonPlanningConfig.gameMode, 0);
-        expect(() => rankingService3.getRuleDescriptions()).to.throw(Error);
-    });
+describe('RoundRankingCalculator', () => {
 
     it('multiple equal ranked', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
@@ -52,11 +32,15 @@ describe('Ranking/Service', () => {
 
         const equalRank = 1;
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
         items.forEach(item => expect(item.getRank()).to.equal(equalRank));
 
-        const equalItems = rankingService.getItemsByRank(items, equalRank);
+        const getItemsByRank = (rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] => {
+            return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
+        }
+        const equalItems = getItemsByRank(items, equalRank);
+
         expect(equalItems.length).to.equal(pouleOne.getPlaces().length)
 
         // cached items
@@ -83,7 +67,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -126,8 +110,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2, State.InProgress);
 
-        const rankingService = new RankingService(
-            jsonPlanningConfig.gameMode, competition.getRankingRuleSet(), State.InProgress + State.Finished);
+        const rankingService = new RoundRankingCalculator([State.InProgress, State.Finished]);
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -151,7 +134,7 @@ describe('Ranking/Service', () => {
         }
         expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
 
-        const rankingService2 = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService2 = new RoundRankingCalculator();
         const items2 = rankingService2.getItemsForPoule(pouleOne);
         items2.forEach(item => expect(item.getRank()).to.equal(1));
     });
@@ -186,59 +169,60 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleTwo, 2, 3, 6, 4);
 
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0];
         const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
         expect(placeLocations[0].getPouleNr()).to.equal(2);
         expect(placeLocations[1].getPouleNr()).to.equal(1);
 
-        const rankingService2 = new RankingService(jsonPlanningConfig.gameMode, RankingRuleSet.EC);
+        competition.setRankingRuleSet(RankingRuleSet.AgainstAmong);
+        const rankingService2 = new RoundRankingCalculator();
         const placeLocations2 = rankingService2.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
         expect(placeLocations2[0].getPouleNr()).to.equal(2);
         expect(placeLocations2[1].getPouleNr()).to.equal(1);
     });
 
-    it('horizontal ranked no single rule', () => {
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+    // it('horizontal ranked no single rule', () => {
+    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = getStructureService();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3));
-        const rootRound: Round = structure.getRootRound();
+    //     const structureService = getStructureService();
+    //     const jsonPlanningConfig = createPlanningConfigNoTime();
+    //     const structure = structureService.create(competition, jsonPlanningConfig, new PouleStructure(3, 3));
+    //     const rootRound: Round = structure.getRootRound();
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+    //     structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
 
-        const pouleOne = rootRound.getPoule(1);
-        expect(pouleOne).to.not.equal(undefined);
-        if (!pouleOne) {
-            return;
-        }
-        const pouleTwo = rootRound.getPoule(2);
-        expect(pouleTwo).to.not.equal(undefined);
-        if (!pouleTwo) {
-            return;
-        }
+    //     const pouleOne = rootRound.getPoule(1);
+    //     expect(pouleOne).to.not.equal(undefined);
+    //     if (!pouleOne) {
+    //         return;
+    //     }
+    //     const pouleTwo = rootRound.getPoule(2);
+    //     expect(pouleTwo).to.not.equal(undefined);
+    //     if (!pouleTwo) {
+    //         return;
+    //     }
 
-        createGames(structure.getFirstRoundNumber());
+    //     createGames(structure.getFirstRoundNumber());
 
-        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
-        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
-        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+    //     setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
+    //     setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
+    //     setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        setAgainstScoreSingle(pouleTwo, 1, 2, 4, 2);
-        setAgainstScoreSingle(pouleTwo, 1, 3, 6, 2);
-        setAgainstScoreSingle(pouleTwo, 2, 3, 6, 4);
+    //     setAgainstScoreSingle(pouleTwo, 1, 2, 4, 2);
+    //     setAgainstScoreSingle(pouleTwo, 1, 3, 6, 2);
+    //     setAgainstScoreSingle(pouleTwo, 2, 3, 6, 4);
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
-        const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0];
-        const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
+    //     const rankingService = new RoundRankingCalculator();
+    //     const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0];
+    //     const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
 
-        expect(placeLocations.length).to.equal(0);
-    });
+    //     expect(placeLocations.length).to.equal(0); why should this be zero?
+    // });
 
-    it('single ranked, EC/WC', () => {
+    it('single ranked, AgainstAmount vs Against', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureService = getStructureService();
@@ -259,41 +243,46 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 3, 2, 0, 2);
         setAgainstScoreSingle(pouleOne, 1, 3, 1, 0);
         setAgainstScoreSingle(pouleOne, 2, 4, 1, 0);
+        // 1 6p 2-1
+        // 2 6p 3-1
+        // 3 3p 1-3
+        // 4 3p 1-2     
+        // 1 wint van 2
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
-        const rankingItemOne = rankingService.getItemByRank(items, 1);
-        expect(rankingItemOne).to.not.equal(undefined);
-        if (!rankingItemOne) {
+        const rankingItemFirstPlace = rankingService.getItemByRank(items, 1);
+        expect(rankingItemFirstPlace).to.not.equal(undefined);
+        if (!rankingItemFirstPlace) {
             return;
         }
-        expect(rankingItemOne.getPlace()).to.equal(pouleOne.getPlace(2));
+        expect(rankingItemFirstPlace.getPlace()).to.equal(pouleOne.getPlace(2));
 
-        const rankingItemTwo = rankingService.getItemByRank(items, 2);
-        expect(rankingItemTwo).to.not.equal(undefined);
-        if (!rankingItemTwo) {
+        const rankingItemSecondPlace = rankingService.getItemByRank(items, 2);
+        expect(rankingItemSecondPlace).to.not.equal(undefined);
+        if (!rankingItemSecondPlace) {
             return;
         }
-        expect(rankingItemTwo.getPlace()).to.equal(pouleOne.getPlace(1));
+        expect(rankingItemSecondPlace.getPlace()).to.equal(pouleOne.getPlace(1));
 
+        competition.setRankingRuleSet(RankingRuleSet.AgainstAmong);
+        const amongRankingCalculator = new RoundRankingCalculator();
+        const amongItems = amongRankingCalculator.getItemsForPoule(pouleOne);
 
-        const rankingService2 = new RankingService(jsonPlanningConfig.gameMode, RankingRuleSet.EC);
-        const items2 = rankingService2.getItemsForPoule(pouleOne);
-
-        const rankingItemOne2 = rankingService2.getItemByRank(items2, 1);
-        expect(rankingItemOne2).to.not.equal(undefined);
-        if (!rankingItemOne2) {
+        const amongRankingItemFirstPlace = amongRankingCalculator.getItemByRank(amongItems, 1);
+        expect(amongRankingItemFirstPlace).to.not.equal(undefined);
+        if (!amongRankingItemFirstPlace) {
             return;
         }
-        expect(rankingItemOne2.getPlace()).to.equal(pouleOne.getPlace(1));
+        expect(amongRankingItemFirstPlace.getPlace()).to.equal(pouleOne.getPlace(1));
 
-        const rankingItemTwo2 = rankingService2.getItemByRank(items2, 2);
-        expect(rankingItemTwo2).to.not.equal(undefined);
-        if (!rankingItemTwo2) {
+        const amongRankingItemSecondPlace = amongRankingCalculator.getItemByRank(amongItems, 2);
+        expect(amongRankingItemSecondPlace).to.not.equal(undefined);
+        if (!amongRankingItemSecondPlace) {
             return;
         }
-        expect(rankingItemTwo2.getPlace()).to.equal(pouleOne.getPlace(2));
+        expect(amongRankingItemSecondPlace.getPlace()).to.equal(pouleOne.getPlace(2));
     });
 
     it('variation 1, mostPoints', () => {
@@ -314,7 +303,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
         setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -360,7 +349,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 0, 1);
         // setAgainstScoreSingle(pouleOne, 2, 4, 0, 1);        
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -407,7 +396,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 1, 0);
         setAgainstScoreSingle(pouleOne, 2, 4, 0, 5);
 
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -449,7 +438,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 1, 2, 1, 1);
         setAgainstScoreSingle(pouleOne, 1, 3, 2, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 1, 0);
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);
@@ -495,7 +484,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 2, 3, 0, 1);
         setAgainstScoreSingle(pouleOne, 2, 4, 0, 1);
         // setAgainstScoreSingle(pouleOne, 3, 4, 3, 0);
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemFour = rankingService.getItemByRank(items, 4);
@@ -527,7 +516,7 @@ describe('Ranking/Service', () => {
         setAgainstScoreSingle(pouleOne, 2, 3, 0, 1);
         setAgainstScoreSingle(pouleOne, 2, 4, 0, 1);
         setAgainstScoreSingle(pouleOne, 3, 4, 1, 0);
-        const rankingService = new RankingService(jsonPlanningConfig.gameMode, competition.getRankingRuleSet());
+        const rankingService = new RoundRankingCalculator();
         const items = rankingService.getItemsForPoule(pouleOne);
 
         expect(items[0].getRank()).to.equal(1);

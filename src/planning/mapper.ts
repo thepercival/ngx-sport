@@ -14,6 +14,8 @@ import { CompetitionSport } from '../competition/sport';
 import { PlaceMap } from '../place/mapper';
 import { CompetitionSportMap } from '../competition/sport/mapper';
 import { GameMode } from './gameMode';
+import { JsonAgainstGame } from '../game/against/json';
+import { JsonTogetherGame } from '../game/together/json';
 
 @Injectable({
     providedIn: 'root'
@@ -43,18 +45,18 @@ export class PlanningMapper {
     }
     protected toRounds(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
         if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
-            const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
             jsonRound.poules.forEach(jsonPoule => {
                 const poule = round.getPoule(jsonPoule.number);
                 if (!poule) {
                     return;
                 }
-                if (gameMode === GameMode.Against && jsonPoule.againstGames !== undefined) {
-                    jsonPoule.againstGames.forEach(jsonGame => {
+                if (jsonPoule.againstGames !== undefined) {
+                    jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
                         this.gameMapper.toNewAgainst(jsonGame, poule, this.getReferences(roundNumber));
                     });
-                } else if (gameMode === GameMode.Together && jsonPoule.togetherGames !== undefined) {
-                    jsonPoule.togetherGames.forEach(jsonGame => {
+                }
+                if (jsonPoule.togetherGames !== undefined) {
+                    jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
                         this.gameMapper.toNewTogether(jsonGame, poule, this.getReferences(roundNumber));
                     });
                 }
@@ -76,7 +78,7 @@ export class PlanningMapper {
         }
         const places: PlaceMap = {};
         roundNumber.getPoules().forEach((poule: Poule) => {
-            poule.getPlaces().forEach((place: Place) => places[place.getLocationId()] = place);
+            poule.getPlaces().forEach((place: Place) => places[place.getStructureNumber()] = place);
         });
 
         this.roundNumbersReferenceMap[roundNumber.getNumber()] = {
