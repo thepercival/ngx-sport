@@ -1,5 +1,4 @@
-import { GameMode, JsonPlanningConfig, SelfReferee } from '../../public_api';
-import { CreationStrategy } from '../../src/game/roundAssigner';
+import { CreationStrategy, GameMode, JsonPlanningConfig, SelfReferee } from '../../public_api';
 
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {

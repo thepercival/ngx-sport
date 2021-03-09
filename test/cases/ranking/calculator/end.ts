@@ -4,11 +4,10 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureService } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { CompetitorMap, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
+import { CompetitorMap, EndRankingCalculator, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
-import { EndRankingCalculator } from '../../../../src/ranking/calculator/end';
 
 describe('EndRankingCalculator', () => {
 
