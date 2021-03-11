@@ -5,40 +5,40 @@ import { TogetherGame } from '../../game/together';
 import { Round } from '../../qualify/group';
 import { Place } from '../../place';
 import { TogetherGamePlace } from '../../game/place/together';
-import { UnrankedRoundItem } from '../item/round/unranked';
+import { CompetitionSport } from '../../competition/sport';
+import { UnrankedSportRoundItem } from '../item/round/sportunranked';
 
 export class RankingItemsGetterTogether extends RankingItemsGetter {
 
-    constructor(round: Round) {
-        super(round);
+    constructor(round: Round, competitionSport: CompetitionSport) {
+        super(round, competitionSport);
     }
 
-    getUnrankedItems(places: Place[], games: TogetherGame[]): UnrankedRoundItem[] {
-        const items = places.map(place => {
-            return new UnrankedRoundItem(this.round, place, place.getPenaltyPoints());
+    getUnrankedItems(places: Place[], games: TogetherGame[]): UnrankedSportRoundItem[] {
+        const unrankedItems = places.map((place: Place): UnrankedSportRoundItem => {
+            return new UnrankedSportRoundItem(this.competitionSport, place, place.getPenaltyPoints());
         });
-        games.forEach((game: TogetherGame) => {
-            const useSubScore = game.getScoreConfig().useSubScore();
+        const unrankedMap = this.getUnrankedMap(unrankedItems);
+        const useSubScore = this.round.getValidScoreConfig(this.competitionSport).useSubScore();
+        (<TogetherGame[]>this.getFilteredGames(games)).forEach((game: TogetherGame) => {
             game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
                 const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace, useSubScore);
                 if (!finalScore) {
                     return;
                 }
-                const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getPlaceNr()
-                    && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getPouleNr());
-                if (item === undefined) {
+                const unrankedItem = unrankedMap[gamePlace.getPlace().getNewLocationId()];
+                if (unrankedItem === undefined) {
                     return;
                 }
-                item.addGame();
-                item.addPoints(finalScore);
-                item.addScored(finalScore);
+                unrankedItem.addGame();
+                unrankedItem.addPoints(finalScore);
+                unrankedItem.addScored(finalScore);
                 if (useSubScore) {
-                    item.addSubScored(this.scoreConfigService.getFinalTogetherSubScore(gamePlace));
+                    unrankedItem.addSubScored(this.scoreConfigService.getFinalTogetherSubScore(gamePlace));
                 }
-
             });
 
         });
-        return items;
+        return unrankedItems;
     }
 }

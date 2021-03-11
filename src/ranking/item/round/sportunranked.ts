@@ -1,7 +1,8 @@
+import { CompetitionSport } from "../../../competition/sport";
+import { Place } from "../../../place";
 import { PlaceLocation } from "../../../place/location";
-import { Round } from "../../../qualify/group";
 
-export class UnrankedRoundItem {
+export class UnrankedSportRoundItem {
     private games = 0;
     private points = 0;
     private scored = 0;
@@ -9,18 +10,22 @@ export class UnrankedRoundItem {
     private subScored = 0;
     private subReceived = 0;
 
-    constructor(private round: Round, private placeLocation: PlaceLocation, penaltyPoints?: number) {
+    constructor(private competitionSport: CompetitionSport, private place: Place, penaltyPoints?: number) {
         if (penaltyPoints !== undefined) {
             this.addPoints(-penaltyPoints);
         }
     }
 
-    getRound(): Round {
-        return this.round;
+    getPlace(): Place {
+        return this.place;
+    }
+
+    getCompetitionSport(): CompetitionSport {
+        return this.competitionSport;
     }
 
     getPlaceLocation(): PlaceLocation {
-        return this.placeLocation;
+        return this.place;
     }
 
     getGames(): number {

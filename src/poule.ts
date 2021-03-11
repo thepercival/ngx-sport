@@ -53,8 +53,12 @@ export class Poule extends Identifiable {
         return this.places;
     }
 
-    getPlace(number: number): Place | undefined {
-        return this.getPlaces().find(place => place.getNumber() === number);
+    getPlace(number: number): Place {
+        const place = this.getPlaces().find(place => place.getNumber() === number);
+        if (place === undefined) {
+            throw Error('de pouleplek kan niet gevonden worden');
+        }
+        return place;
     }
 
     getGames(): (AgainstGame | TogetherGame)[] {

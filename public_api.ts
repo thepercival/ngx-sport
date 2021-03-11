@@ -92,7 +92,7 @@ export * from './src/ranking/calculator/round/sport/against';
 export * from './src/ranking/calculator/round/sport/together';
 export * from './src/ranking/item/end';
 export * from './src/ranking/item/round/ranked';
-export * from './src/ranking/item/round/unranked';
+export * from './src/ranking/item/round/sportunranked';
 export * from './src/ranking/item/round/sportranked';
 export * from './src/ranking/pointsCalculation';
 export * from './src/ranking/ruleSet';

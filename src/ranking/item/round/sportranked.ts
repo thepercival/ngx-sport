@@ -1,9 +1,11 @@
 import { PlaceLocation } from '../../../place/location';
 import { Place } from '../../../place';
-import { UnrankedRoundItem } from './unranked';
+import { UnrankedSportRoundItem } from './sportunranked';
+import { CompetitionSport } from '../../../competition/sport';
+import { Round } from '../../../qualify/group';
 
 export class RankedSportRoundItem {
-    constructor(private unranked: UnrankedRoundItem, private uniqueRank: number, private rank: number
+    constructor(private unranked: UnrankedSportRoundItem, private uniqueRank: number, private rank: number
     ) {
     }
 
@@ -15,20 +17,18 @@ export class RankedSportRoundItem {
         return this.rank;
     }
 
+    getCompetitionSport(): CompetitionSport {
+        return this.unranked.getCompetitionSport();
+    }
+
     getPlaceLocation(): PlaceLocation {
         return this.unranked.getPlaceLocation();
     }
 
-    getUnranked(): UnrankedRoundItem {
+    getUnranked(): UnrankedSportRoundItem {
         return this.unranked;
     }
 
-    getPlace(): Place {
-        const place = this.unranked.getRound().getPlace(this.getPlaceLocation());
-        if (!place) {
-            throw new Error("rankedrounditem should have a place");
-        }
-        return place;
-    }
+
 }
 

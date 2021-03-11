@@ -9,20 +9,22 @@ import { Game } from '../../game';
 import { AgainstSide } from '../../against/side';
 import { AgainstGamePlace } from '../../game/place/against';
 import { AgainstResult } from '../../against/result';
-import { UnrankedRoundItem } from '../item/round/unranked';
+import { UnrankedSportRoundItem } from '../item/round/sportunranked';
+import { CompetitionSport } from '../../competition/sport';
 
 export class RankingItemsGetterAgainst extends RankingItemsGetter {
 
-    constructor(round: Round) {
-        super(round);
+    constructor(round: Round, competitionSport: CompetitionSport) {
+        super(round, competitionSport);
     }
 
-    getUnrankedItems(places: Place[], games: AgainstGame[]): UnrankedRoundItem[] {
-        const items = places.map(place => {
-            return new UnrankedRoundItem(this.round, place, place.getPenaltyPoints());
+    getUnrankedItems(places: Place[], games: AgainstGame[]): UnrankedSportRoundItem[] {
+        const unrankedItems = places.map((place: Place): UnrankedSportRoundItem => {
+            return new UnrankedSportRoundItem(this.competitionSport, place, place.getPenaltyPoints());
         });
-        games.forEach((game: AgainstGame) => {
-            const useSubScore = game.getScoreConfig().useSubScore();
+        const unrankedMap = this.getUnrankedMap(unrankedItems);
+        const useSubScore = this.round.getValidScoreConfig(this.competitionSport).useSubScore();
+        (<AgainstGame[]>this.getFilteredGames(games)).forEach((game: AgainstGame) => {
             const finalScore = this.scoreConfigService.getFinalAgainstScore(game, useSubScore);
             if (!finalScore) {
                 return;
@@ -42,21 +44,20 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
                     subReceived = this.getNrOfUnits(finalSubScore, side, AgainstScore.RECEIVED);
                 }
                 game.getSidePlaces(side).forEach((gamePlace: AgainstGamePlace) => {
-                    const item = items.find(itIt => itIt.getPlaceLocation().getPlaceNr() === gamePlace.getPlace().getPlaceNr()
-                        && itIt.getPlaceLocation().getPouleNr() === gamePlace.getPlace().getPouleNr());
-                    if (item === undefined) {
+                    const unrankedItem = unrankedMap[gamePlace.getPlace().getNewLocationId()];
+                    if (unrankedItem === undefined) {
                         return;
                     }
-                    item.addGame();
-                    item.addPoints(points);
-                    item.addScored(scored);
-                    item.addReceived(received);
-                    item.addSubScored(subScored);
-                    item.addSubReceived(subReceived);
+                    unrankedItem.addGame();
+                    unrankedItem.addPoints(points);
+                    unrankedItem.addScored(scored);
+                    unrankedItem.addReceived(received);
+                    unrankedItem.addSubScored(subScored);
+                    unrankedItem.addSubReceived(subReceived);
                 });
             });
         });
-        return items;
+        return unrankedItems;
     }
 
     private getNrOfPoints(finalScore: AgainstScoreHelper, side: AgainstSide, game: AgainstGame): number {

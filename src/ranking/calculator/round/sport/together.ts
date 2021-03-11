@@ -4,7 +4,7 @@ import { Poule } from "../../../../poule";
 import { Round } from "../../../../qualify/group";
 import { State } from "../../../../state";
 import { RankedSportRoundItem } from "../../../item/round/sportranked";
-import { UnrankedRoundItem } from "../../../item/round/unranked";
+import { UnrankedSportRoundItem } from "../../../item/round/sportunranked";
 import { RankingItemsGetterTogether } from "../../../itemsgetter/together";
 import { RankingRule } from "../../../rule";
 import { SportRoundRankingCalculator } from "../sport";
@@ -17,9 +17,9 @@ export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalcul
 
     getItemsForPoule(poule: Poule): RankedSportRoundItem[] {
         const round: Round = poule.getRound();
-        const getter = new RankingItemsGetterTogether(round);
+        const getter = new RankingItemsGetterTogether(round, this.competitionSport);
         const games = this.getFilteredGames(poule.getTogetherGames());
-        const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(poule.getPlaces(), games);
+        const unrankedItems: UnrankedSportRoundItem[] = getter.getUnrankedItems(poule.getPlaces(), games);
         const scoreConfig = round.getValidScoreConfig(this.competitionSport);
         const ruleSet = this.competitionSport.getCompetition().getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
@@ -27,17 +27,14 @@ export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalcul
     }
 
     protected getFilteredGames(games: TogetherGame[]): TogetherGame[] {
-        return games.filter((game: TogetherGame) => {
-            return this.gameStateMap[game.getState()] !== undefined
-                && this.competitionSport === game.getCompetitionSport();
-        });
+        return games.filter((game: TogetherGame) => this.gameStateMap[game.getState()] !== undefined);
     }
 
-    protected rankItems(unrankedItems: UnrankedRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[] {
+    protected rankItems(unrankedItems: UnrankedSportRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[] {
         const rankedItems: RankedSportRoundItem[] = [];
         let nrOfIterations = 0;
         while (unrankedItems.length > 0) {
-            const bestItems: UnrankedRoundItem[] = this.findBestItems(unrankedItems, rankingRules);
+            const bestItems: UnrankedSportRoundItem[] = this.findBestItems(unrankedItems, rankingRules);
             const rank = nrOfIterations + 1;
             bestItems.sort((unrankedA, unrankedB) => {
                 if (unrankedA.getPlaceLocation().getPouleNr() === unrankedB.getPlaceLocation().getPouleNr()) {
@@ -57,8 +54,8 @@ export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalcul
         return rankedItems;
     }
 
-    private findBestItems(orgItems: UnrankedRoundItem[], rankingRules: RankingRule[]): UnrankedRoundItem[] {
-        let bestItems: UnrankedRoundItem[] = orgItems.slice();
+    private findBestItems(orgItems: UnrankedSportRoundItem[], rankingRules: RankingRule[]): UnrankedSportRoundItem[] {
+        let bestItems: UnrankedSportRoundItem[] = orgItems.slice();
         rankingRules.some((rankingRule: RankingRule) => {
             const rankingFunction = this.rankFunctionMap[rankingRule];
             bestItems = rankingFunction(bestItems);

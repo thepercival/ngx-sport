@@ -1,5 +1,3 @@
-import { GameMode } from "../../planning/gameMode";
-import { ScoreConfig } from "../../score/config";
 import { RankingRule } from "../rule";
 import { RankingRuleSet } from "../ruleSet";
 
@@ -38,4 +36,3 @@ export class RankingRuleGetter {
         return rules;
     }
 }
-

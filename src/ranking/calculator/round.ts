@@ -70,7 +70,7 @@ export class RoundRankingCalculator {
         places.forEach((place: Place) => map[place.getNewLocationId()] = new RankedRoundItem(place));
         sportRoundRankings.forEach((sportRoundRanking: RankedSportRoundItem[]) => {
             sportRoundRanking.forEach((sportRoundItem: RankedSportRoundItem) => {
-                map[sportRoundItem.getPlace().getNewLocationId()].addSportRoundItem(sportRoundItem);
+                map[sportRoundItem.getPlaceLocation().getNewLocationId()].addSportRoundItem(sportRoundItem);
             });
         });
         return map;
@@ -95,8 +95,7 @@ export class RoundRankingCalculator {
             if (previousCumulativeRank < cumulativeRankedItem.getCumulativeRank()) {
                 rank++;
             }
-            cumulativeRankedItem.setRank(rank);
-            cumulativeRankedItem.setUniqueRank(++nrOfIterations);
+            cumulativeRankedItem.setRank(rank, ++nrOfIterations);
             previousCumulativeRank = cumulativeRankedItem.getCumulativeRank();
             rankedItems.push(cumulativeRankedItem);
         }

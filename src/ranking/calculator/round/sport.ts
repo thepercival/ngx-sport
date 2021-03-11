@@ -5,7 +5,7 @@ import { Poule } from "../../../poule";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { State } from "../../../state";
 import { RankedSportRoundItem } from "../../item/round/sportranked";
-import { UnrankedRoundItem } from "../../item/round/unranked";
+import { UnrankedSportRoundItem } from "../../item/round/sportunranked";
 import { RankingRule } from "../../rule";
 import { RankingRuleGetter } from "../../rule/getter";
 
@@ -23,7 +23,7 @@ export abstract class SportRoundRankingCalculator {
     }
 
     abstract getItemsForPoule(poule: Poule): RankedSportRoundItem[];
-    protected abstract rankItems(unrankedItems: UnrankedRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[]
+    protected abstract rankItems(unrankedItems: UnrankedSportRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[]
 
     getPlaceLocationsForHorizontalPoule(horizontalPoule: HorizontalPoule): PlaceLocation[] {
         return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
@@ -32,13 +32,13 @@ export abstract class SportRoundRankingCalculator {
     }
 
     getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {
-        return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
-            return rankingItem.getPlace();
+        return this.getItemsForHorizontalPoule(horizontalPoule, true).map((rankingSportItem: RankedSportRoundItem): Place => {
+            return horizontalPoule.getRound().getPlace(rankingSportItem.getPlaceLocation());
         });
     }
 
     getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): RankedSportRoundItem[] {
-        const unrankedRoundItems: UnrankedRoundItem[] = [];
+        const unrankedRoundItems: UnrankedSportRoundItem[] = [];
         horizontalPoule.getPlaces().forEach(place => {
             if (checkOnSingleQualifyRule && this.hasPlaceSingleQualifyRule(place)) {
                 return;

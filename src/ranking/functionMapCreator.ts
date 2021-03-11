@@ -1,4 +1,4 @@
-import { UnrankedRoundItem } from "./item/round/unranked";
+import { UnrankedSportRoundItem } from "./item/round/sportunranked";
 import { RankingRule } from "./rule";
 
 export class RankingFunctionMapCreator {
@@ -14,9 +14,9 @@ export class RankingFunctionMapCreator {
     }
 
     private initMap() {
-        this.map[RankingRule.MostPoints] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.MostPoints] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             let mostPoints: number | undefined;
-            let bestItems: UnrankedRoundItem[] = [];
+            let bestItems: UnrankedSportRoundItem[] = [];
             items.forEach(item => {
                 const points = item.getPoints();
                 if (mostPoints === undefined || points === mostPoints) {
@@ -30,9 +30,9 @@ export class RankingFunctionMapCreator {
             });
             return bestItems;
         };
-        this.map[RankingRule.FewestGames] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.FewestGames] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             let fewestGames: number | undefined;
-            let bestItems: UnrankedRoundItem[] = [];
+            let bestItems: UnrankedSportRoundItem[] = [];
             items.forEach(item => {
                 const nrOfGames = item.getGames();
                 if (fewestGames === undefined || nrOfGames === fewestGames) {
@@ -45,17 +45,17 @@ export class RankingFunctionMapCreator {
             });
             return bestItems;
         };
-        this.map[RankingRule.MostUnitsScored] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.MostUnitsScored] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             return this.getMostScored(items, false);
         }
-        this.map[RankingRule.MostSubUnitsScored] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.MostSubUnitsScored] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             return this.getMostScored(items, true);
         }
     }
 
-    protected getMostScored = (items: UnrankedRoundItem[], sub: boolean): UnrankedRoundItem[] => {
+    protected getMostScored = (items: UnrankedSportRoundItem[], sub: boolean): UnrankedSportRoundItem[] => {
         let mostScored: number | undefined;
-        let bestItems: UnrankedRoundItem[] = [];
+        let bestItems: UnrankedSportRoundItem[] = [];
         items.forEach(item => {
             const scored = sub ? item.getSubScored() : item.getScored();
             if (mostScored === undefined || scored === mostScored) {

@@ -85,7 +85,7 @@ export class Competition extends Identifiable {
         return this.sports;
     }
 
-    getSport(sport?: Sport): CompetitionSport | undefined {
+    getSport(sport: Sport): CompetitionSport | undefined {
         return this.sports.find(sportIt => sportIt.getSport() === sport);
     }
 
@@ -93,9 +93,9 @@ export class Competition extends Identifiable {
         return this.sports.length > 1;
     }
 
-    // getFirstSportConfig(): SportConfig {
-    //     return this.sportConfigs[0];
-    // }
+    getSingleSport(): CompetitionSport {
+        return this.sports[0];
+    }
 
     getTeamCompetitors(): TeamCompetitor[] {
         return this.teamCompetitors;

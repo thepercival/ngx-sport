@@ -8,7 +8,7 @@ import { Round } from '../../../../qualify/group';
 import { State } from '../../../../state';
 import { RankingFunctionMapCreator } from '../../../functionMapCreator';
 import { RankedSportRoundItem } from '../../../item/round/sportranked';
-import { UnrankedRoundItem } from '../../../item/round/unranked';
+import { UnrankedSportRoundItem } from '../../../item/round/sportunranked';
 import { RankingItemsGetterAgainst } from '../../../itemsgetter/against';
 import { RankingRule } from '../../../rule';
 import { SportRoundRankingCalculator } from '../sport';
@@ -31,8 +31,8 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
     }
 
     protected getItems(round: Round, places: Place[], games: AgainstGame[]): RankedSportRoundItem[] {
-        const getter = new RankingItemsGetterAgainst(round);
-        const unrankedItems: UnrankedRoundItem[] = getter.getUnrankedItems(places, this.getFilteredGames(games));
+        const getter = new RankingItemsGetterAgainst(round, this.competitionSport);
+        const unrankedItems: UnrankedSportRoundItem[] = getter.getUnrankedItems(places, this.getFilteredGames(games));
         const scoreConfig = round.getValidScoreConfig(this.competitionSport);
         const ruleSet = this.competitionSport.getCompetition().getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
@@ -40,17 +40,14 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
     }
 
     protected getFilteredGames(games: AgainstGame[]): AgainstGame[] {
-        return games.filter((game: AgainstGame) => {
-            return this.gameStateMap[game.getState()] !== undefined
-                && this.competitionSport === game.getCompetitionSport();
-        });
+        return games.filter((game: AgainstGame) => this.gameStateMap[game.getState()] !== undefined);
     }
 
-    protected rankItems(unrankedItems: UnrankedRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[] {
+    protected rankItems(unrankedItems: UnrankedSportRoundItem[], rankingRules: RankingRule[]): RankedSportRoundItem[] {
         const rankedItems: RankedSportRoundItem[] = [];
         let nrOfIterations = 0;
         while (unrankedItems.length > 0) {
-            const bestItems: UnrankedRoundItem[] = this.findBestItems(unrankedItems, rankingRules);
+            const bestItems: UnrankedSportRoundItem[] = this.findBestItems(unrankedItems, rankingRules);
             const rank = nrOfIterations + 1;
             bestItems.sort((unrankedA, unrankedB) => {
                 if (unrankedA.getPlaceLocation().getPouleNr() === unrankedB.getPlaceLocation().getPouleNr()) {
@@ -66,8 +63,8 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
         return rankedItems;
     }
 
-    private findBestItems(orgItems: UnrankedRoundItem[], rankingRules: RankingRule[]): UnrankedRoundItem[] {
-        let bestItems: UnrankedRoundItem[] = orgItems.slice();
+    private findBestItems(orgItems: UnrankedSportRoundItem[], rankingRules: RankingRule[]): UnrankedSportRoundItem[] {
+        let bestItems: UnrankedSportRoundItem[] = orgItems.slice();
         rankingRules.some((rankingRule: RankingRule) => {
             const rankingFunction = this.rankFunctionMap[rankingRule];
             if (rankingRule === RankingRule.BestAmongEachOther && orgItems.length === bestItems.length) {
@@ -100,15 +97,15 @@ export class AgainstRankingFunctionMapCreator extends RankingFunctionMapCreator 
     }
 
     private myInitMap() {
-        this.map[RankingRule.BestUnitDifference] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.BestUnitDifference] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             return this.getBestDifference(items, false);
         };
-        this.map[RankingRule.BestSubUnitDifference] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.BestSubUnitDifference] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             return this.getBestDifference(items, true);
         }
-        this.map[RankingRule.FewestGames] = (items: UnrankedRoundItem[]): UnrankedRoundItem[] => {
+        this.map[RankingRule.FewestGames] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
             let fewestGames: number | undefined;
-            let bestItems: UnrankedRoundItem[] = [];
+            let bestItems: UnrankedSportRoundItem[] = [];
             items.forEach(item => {
                 const nrOfGames = item.getGames();
                 if (fewestGames === undefined || nrOfGames === fewestGames) {
@@ -121,9 +118,9 @@ export class AgainstRankingFunctionMapCreator extends RankingFunctionMapCreator 
             });
             return bestItems;
         };
-        this.map[RankingRule.BestAmongEachOther] = (unrankedItems: UnrankedRoundItem[]): (UnrankedRoundItem | undefined)[] => {
-            const places = this.filterUndef(unrankedItems.map((unrankedItem: UnrankedRoundItem) => {
-                return unrankedItem.getRound().getPlace(unrankedItem.getPlaceLocation());
+        this.map[RankingRule.BestAmongEachOther] = (unrankedItems: UnrankedSportRoundItem[]): (UnrankedSportRoundItem | undefined)[] => {
+            const places = this.filterUndef(unrankedItems.map((unrankedItem: UnrankedSportRoundItem) => {
+                return unrankedItem.getPlace();
             }));
             const poule = places[0].getPoule();
             if (!poule) {
@@ -143,42 +140,15 @@ export class AgainstRankingFunctionMapCreator extends RankingFunctionMapCreator 
                 });
             });
         }
-        // this.rankFunctionMap[RankingRule.BestAmongEachOther] = (unrankedItems: UnrankedRoundItem[]): (UnrankedRoundItem | undefined)[] => {
-        //     const places = this.filterUndef(unrankedItems.map(unrankedItem => {
-        //         return unrankedItem.getRound().getPlace(unrankedItem.getPlaceLocation());
-        //     }));
-        //     const poule = places[0].getPoule();
-        //     if (!poule) {
-        //         return unrankedItems;
-        //     }
-        //     const round: Round = poule.getRound();
-        //     const games = this.getGamesAmongEachOther(places, poule.getAgainstGames());
-        //     if (games.length === 0) {
-        //         return unrankedItems;
-        //     }
-        //     const getter = new RankingItemsGetterAgainst(round);
-        //     const unrankedItemsTmp: UnrankedRoundItem[] = getter.getUnrankedItems(places, games);
-        //     const scoreConfig: ScoreConfig = round.getValidScoreConfig(this.competitionSport);
-        //     const rankedItems = this.rankItems(unrankedItemsTmp, scoreConfig, true).filter(rankItem => rankItem.getRank() === 1);
-        //     if (rankedItems.length === unrankedItems.length) {
-        //         return unrankedItems;
-        //     }
-        //     return rankedItems.map(rankedItem => {
-        //         return unrankedItems.find(unrankedItem => {
-        //             return unrankedItem.getPlaceLocation().getPouleNr() === rankedItem.getPlaceLocation().getPouleNr()
-        //                 && unrankedItem.getPlaceLocation().getPlaceNr() === rankedItem.getPlaceLocation().getPlaceNr();
-        //         });
-        //     });
-        // }
     }
 
     private filterUndef<T>(ts: (T | undefined)[]): T[] {
         return ts.filter((t: T | undefined): t is T => !!t)
     }
 
-    private getBestDifference = (items: UnrankedRoundItem[], sub: boolean): UnrankedRoundItem[] => {
+    private getBestDifference = (items: UnrankedSportRoundItem[], sub: boolean): UnrankedSportRoundItem[] => {
         let bestDiff: number | undefined;
-        let bestItems: UnrankedRoundItem[] = [];
+        let bestItems: UnrankedSportRoundItem[] = [];
         items.forEach(item => {
             const diff = sub ? item.getSubDiff() : item.getDiff();
             if (bestDiff === undefined || diff === bestDiff) {

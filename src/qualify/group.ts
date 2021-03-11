@@ -215,8 +215,12 @@ export class Round extends Identifiable {
         return this.poules;
     }
 
-    getPoule(number: number): Poule | undefined {
-        return this.getPoules().find(poule => poule.getNumber() === number);
+    getPoule(number: number): Poule {
+        const poule = this.getPoules().find(poule => poule.getNumber() === number);
+        if (poule === undefined) {
+            throw Error('de poule kan niet gevonden worden');
+        }
+        return poule;
     }
 
     getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
@@ -252,8 +256,12 @@ export class Round extends Identifiable {
         return places;
     }
 
-    getPlace(placeLocation: PlaceLocation): Place | undefined {
-        return this.getPoule(placeLocation.getPouleNr())?.getPlace(placeLocation.getPlaceNr());
+    getPlace(placeLocation: PlaceLocation): Place {
+        const place = this.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
+        if (place === undefined) {
+            throw Error('de poule kan niet gevonden worden');
+        }
+        return place;
     }
 
     getGames(): (AgainstGame | TogetherGame)[] {
