@@ -1,8 +1,6 @@
 import { Identifiable } from '../identifiable';
 import { Place } from '../place';
 import { AgainstGame } from './against';
-import { AgainstGamePlace } from './place/against';
-import { TogetherGamePlace } from './place/together';
 import { TogetherGame } from './together';
 
 export abstract class GamePlace extends Identifiable {

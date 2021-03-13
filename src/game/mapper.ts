@@ -100,7 +100,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocId: game.getRefereePlace()?.getNewLocationId(),
+            refereePlaceLocId: game.getRefereePlace()?.getRoundLocationId(),
             startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score))
         };
@@ -117,7 +117,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocId: game.getRefereePlace()?.getNewLocationId(),
+            refereePlaceLocId: game.getRefereePlace()?.getRoundLocationId(),
             startDateTime: game.getStartDateTime()?.toISOString()
         };
     }

@@ -1,8 +1,8 @@
-import { CompetitionSport } from "../../../competition/sport";
-import { Place } from "../../../place";
-import { PlaceLocation } from "../../../place/location";
+import { CompetitionSport } from "../competition/sport";
+import { Place } from "../place";
+import { PlaceLocation } from "./location";
 
-export class UnrankedSportRoundItem {
+export class PlaceSportPerformance {
     private games = 0;
     private points = 0;
     private scored = 0;
@@ -10,7 +10,7 @@ export class UnrankedSportRoundItem {
     private subScored = 0;
     private subReceived = 0;
 
-    constructor(private competitionSport: CompetitionSport, private place: Place, penaltyPoints?: number) {
+    constructor(private place: Place, private competitionSport: CompetitionSport, penaltyPoints?: number) {
         if (penaltyPoints !== undefined) {
             this.addPoints(-penaltyPoints);
         }

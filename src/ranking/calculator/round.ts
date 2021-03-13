@@ -4,8 +4,8 @@ import { GameMode } from "../../planning/gameMode";
 import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { State } from "../../state";
-import { RankedRoundItem } from "../item/round/ranked";
-import { RankedSportRoundItem } from "../item/round/sportranked";
+import { RoundRankingItem } from "../item/round";
+import { SportRoundRankingItem } from "../item/round/sport";
 import { SportRoundRankingCalculator } from "./round/sport";
 import { AgainstSportRoundRankingCalculator } from "./round/sport/against";
 import { TogetherSportRoundRankingCalculator } from "./round/sport/together";
@@ -26,10 +26,10 @@ export class RoundRankingCalculator {
         return new TogetherSportRoundRankingCalculator(competitionSport, this.gameStates);
     }
 
-    getItemsForPoule(poule: Poule): RankedRoundItem[] {
+    getItemsForPoule(poule: Poule): RoundRankingItem[] {
         return this.convertSportRoundRankingsToRoundItems(
             poule.getPlaces(),
-            poule.getCompetition().getSports().map((competitionSport: CompetitionSport): RankedSportRoundItem[] => {
+            poule.getCompetition().getSports().map((competitionSport: CompetitionSport): SportRoundRankingItem[] => {
                 return this.getSportRoundRankingCalculator(competitionSport).getItemsForPoule(poule);
             })
         );
@@ -45,39 +45,39 @@ export class RoundRankingCalculator {
         return this.getPlacesForHorizontalPoule(horizontalPoule)
     }
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): RankedRoundItem[] {
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): RoundRankingItem[] {
         return this.convertSportRoundRankingsToRoundItems(
             horizontalPoule.getPlaces(),
-            horizontalPoule.getRound().getNumber().getCompetitionSports().map((competitionSport: CompetitionSport): RankedSportRoundItem[] => {
+            horizontalPoule.getRound().getNumber().getCompetitionSports().map((competitionSport: CompetitionSport): SportRoundRankingItem[] => {
                 return this.getSportRoundRankingCalculator(competitionSport).getItemsForHorizontalPoule(horizontalPoule, checkOnSingleQualifyRule);
             })
         );
     }
 
-    getItemByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem | undefined {
+    getItemByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem | undefined {
         return rankingItems.find(rankingItemIt => rankingItemIt.getUniqueRank() === rank);
     }
 
 
-    protected convertSportRoundRankingsToRoundItems(places: Place[], sportRoundRankings: (RankedSportRoundItem[])[]): RankedRoundItem[] {
-        const map: RankedRoundItemMap = this.getRankedRoundItemMap(places, sportRoundRankings);
-        const rankedRoundItems = places.map((place: Place): RankedRoundItem => map[place.getNewLocationId()]);
-        return this.rankItems(rankedRoundItems);
+    protected convertSportRoundRankingsToRoundItems(places: Place[], sportRoundRankings: (SportRoundRankingItem[])[]): RoundRankingItem[] {
+        const map: RoundRankingItemMap = this.getRoundRankingItemMap(places, sportRoundRankings);
+        const roundRankingItems = places.map((place: Place): RoundRankingItem => map[place.getRoundLocationId()]);
+        return this.rankItems(roundRankingItems);
     }
 
-    protected getRankedRoundItemMap(places: Place[], sportRoundRankings: (RankedSportRoundItem[])[]): RankedRoundItemMap {
-        const map: RankedRoundItemMap = {};
-        places.forEach((place: Place) => map[place.getNewLocationId()] = new RankedRoundItem(place));
-        sportRoundRankings.forEach((sportRoundRanking: RankedSportRoundItem[]) => {
-            sportRoundRanking.forEach((sportRoundItem: RankedSportRoundItem) => {
-                map[sportRoundItem.getPlaceLocation().getNewLocationId()].addSportRoundItem(sportRoundItem);
+    protected getRoundRankingItemMap(places: Place[], sportRoundRankings: (SportRoundRankingItem[])[]): RoundRankingItemMap {
+        const map: RoundRankingItemMap = {};
+        places.forEach((place: Place) => map[place.getRoundLocationId()] = new RoundRankingItem(place));
+        sportRoundRankings.forEach((sportRoundRanking: SportRoundRankingItem[]) => {
+            sportRoundRanking.forEach((sportRoundItem: SportRoundRankingItem) => {
+                map[sportRoundItem.getPlaceLocation().getRoundLocationId()].addSportRoundItem(sportRoundItem);
             });
         });
         return map;
     }
 
-    protected rankItems(cumulativeRankedItems: RankedRoundItem[]): RankedRoundItem[] {
-        cumulativeRankedItems.sort((a: RankedRoundItem, b: RankedRoundItem) => {
+    protected rankItems(cumulativeRoundRankingItems: RoundRankingItem[]): RoundRankingItem[] {
+        cumulativeRoundRankingItems.sort((a: RoundRankingItem, b: RoundRankingItem) => {
             if (a.getCumulativeRank() === b.getCumulativeRank()) {
                 if (a.getPlace().getPouleNr() === b.getPlace().getPouleNr()) {
                     return a.getPlaceLocation().getPlaceNr() - b.getPlaceLocation().getPlaceNr();
@@ -86,23 +86,23 @@ export class RoundRankingCalculator {
             }
             return a.getCumulativeRank() < b.getCumulativeRank() ? -1 : 1;
         });
-        const rankedItems: RankedRoundItem[] = [];
+        const roundRankingItems: RoundRankingItem[] = [];
         let nrOfIterations = 0;
         let rank = 0;
         let previousCumulativeRank = 0;
-        let cumulativeRankedItem: RankedRoundItem | undefined;
-        while (cumulativeRankedItem = cumulativeRankedItems.shift()) {
-            if (previousCumulativeRank < cumulativeRankedItem.getCumulativeRank()) {
+        let cumulativeRoundRankingItem: RoundRankingItem | undefined;
+        while (cumulativeRoundRankingItem = cumulativeRoundRankingItems.shift()) {
+            if (previousCumulativeRank < cumulativeRoundRankingItem.getCumulativeRank()) {
                 rank++;
             }
-            cumulativeRankedItem.setRank(rank, ++nrOfIterations);
-            previousCumulativeRank = cumulativeRankedItem.getCumulativeRank();
-            rankedItems.push(cumulativeRankedItem);
+            cumulativeRoundRankingItem.setRank(rank, ++nrOfIterations);
+            previousCumulativeRank = cumulativeRoundRankingItem.getCumulativeRank();
+            roundRankingItems.push(cumulativeRoundRankingItem);
         }
-        return rankedItems;
+        return roundRankingItems;
     }
 }
 
-export interface RankedRoundItemMap {
-    [key: string]: RankedRoundItem;
+export interface RoundRankingItemMap {
+    [key: string]: RoundRankingItem;
 }

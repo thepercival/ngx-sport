@@ -3,7 +3,7 @@ import { CreationStrategy, GameMode, JsonPlanningConfig, SelfReferee } from '../
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {
         id: 0,
-        creationStrategy: CreationStrategy.staticPouleSize,
+        creationStrategy: CreationStrategy.StaticPouleSize,
         extension: false,
         enableTime: false,
         minutesPerGame: 0,

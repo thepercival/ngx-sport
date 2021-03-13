@@ -1,28 +1,26 @@
 
-import { AgainstScoreHelper } from '../../score/againstHelper';
-import { AgainstScore } from '../../score/against';
-import { RankingItemsGetter } from '../itemsgetter';
-import { AgainstGame } from '../../game/against';
-import { Round } from '../../qualify/group';
-import { Place } from '../../place';
-import { Game } from '../../game';
-import { AgainstSide } from '../../against/side';
-import { AgainstGamePlace } from '../../game/place/against';
-import { AgainstResult } from '../../against/result';
-import { UnrankedSportRoundItem } from '../item/round/sportunranked';
-import { CompetitionSport } from '../../competition/sport';
+import { AgainstScoreHelper } from '../../../score/againstHelper';
+import { AgainstScore } from '../../../score/against';
+import { PlaceSportPerformanceCalculator } from '../calculator';
+import { AgainstGame } from '../../../game/against';
+import { Round } from '../../../qualify/group';
+import { Place } from '../../../place';
+import { Game } from '../../../game';
+import { AgainstSide } from '../../../against/side';
+import { AgainstGamePlace } from '../../../game/place/against';
+import { AgainstResult } from '../../../against/result';
+import { CompetitionSport } from '../../../competition/sport';
+import { PlaceSportPerformance } from '../../sportPerformance';
 
-export class RankingItemsGetterAgainst extends RankingItemsGetter {
+export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanceCalculator {
 
     constructor(round: Round, competitionSport: CompetitionSport) {
         super(round, competitionSport);
     }
 
-    getUnrankedItems(places: Place[], games: AgainstGame[]): UnrankedSportRoundItem[] {
-        const unrankedItems = places.map((place: Place): UnrankedSportRoundItem => {
-            return new UnrankedSportRoundItem(this.competitionSport, place, place.getPenaltyPoints());
-        });
-        const unrankedMap = this.getUnrankedMap(unrankedItems);
+    getPerformances(places: Place[], games: AgainstGame[]): PlaceSportPerformance[] {
+        const performances = this.createPerformances(places);
+        const performanceMap = this.getPerformanceMap(performances);
         const useSubScore = this.round.getValidScoreConfig(this.competitionSport).useSubScore();
         (<AgainstGame[]>this.getFilteredGames(games)).forEach((game: AgainstGame) => {
             const finalScore = this.scoreConfigService.getFinalAgainstScore(game, useSubScore);
@@ -44,20 +42,20 @@ export class RankingItemsGetterAgainst extends RankingItemsGetter {
                     subReceived = this.getNrOfUnits(finalSubScore, side, AgainstScore.RECEIVED);
                 }
                 game.getSidePlaces(side).forEach((gamePlace: AgainstGamePlace) => {
-                    const unrankedItem = unrankedMap[gamePlace.getPlace().getNewLocationId()];
-                    if (unrankedItem === undefined) {
+                    const performance = performanceMap[gamePlace.getPlace().getRoundLocationId()];
+                    if (performance === undefined) {
                         return;
                     }
-                    unrankedItem.addGame();
-                    unrankedItem.addPoints(points);
-                    unrankedItem.addScored(scored);
-                    unrankedItem.addReceived(received);
-                    unrankedItem.addSubScored(subScored);
-                    unrankedItem.addSubReceived(subReceived);
+                    performance.addGame();
+                    performance.addPoints(points);
+                    performance.addScored(scored);
+                    performance.addReceived(received);
+                    performance.addSubScored(subScored);
+                    performance.addSubReceived(subReceived);
                 });
             });
         });
-        return unrankedItems;
+        return performances;
     }
 
     private getNrOfPoints(finalScore: AgainstScoreHelper, side: AgainstSide, game: AgainstGame): number {

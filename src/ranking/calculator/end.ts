@@ -44,7 +44,6 @@ export class EndRankingCalculator {
     }
 
     protected getDropouts(round: Round): EndRankingItem[] {
-        const rankingService = new RoundRankingCalculator();
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
         while (nrOfDropouts > 0) {
@@ -53,7 +52,7 @@ export class EndRankingCalculator {
                     if (horizontalPoule.getQualifyGroup()?.getNrOfToPlacesTooMuch() === 0) {
                         return nrOfDropouts > 0;
                     }
-                    const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule, rankingService);
+                    const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule);
                     while (nrOfDropouts - dropoutsHorizontalPoule.length < 0) {
                         dropoutsHorizontalPoule.pop();
                     }
@@ -67,10 +66,11 @@ export class EndRankingCalculator {
         return dropouts;
     }
 
-    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule, rankingCalculator: RoundRankingCalculator): EndRankingItem[] {
-        const rankedPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
-        rankedPlaces.splice(0, horizontalPoule.getNrOfQualifiers());
-        return rankedPlaces.map(place => {
+    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule): EndRankingItem[] {
+        const rankingCalculator = new RoundRankingCalculator();
+        const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
+        rankingPlaces.splice(0, horizontalPoule.getNrOfQualifiers());
+        return rankingPlaces.map((place: Place) => {
             return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
         });
     }

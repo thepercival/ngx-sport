@@ -1,4 +1,4 @@
-import { UnrankedSportRoundItem } from "./item/round/sportunranked";
+import { PlaceSportPerformance } from "../place/sportPerformance";
 import { RankingRule } from "./rule";
 
 export class RankingFunctionMapCreator {
@@ -14,59 +14,58 @@ export class RankingFunctionMapCreator {
     }
 
     private initMap() {
-        this.map[RankingRule.MostPoints] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
+        this.map[RankingRule.MostPoints] = (performances: PlaceSportPerformance[]): PlaceSportPerformance[] => {
             let mostPoints: number | undefined;
-            let bestItems: UnrankedSportRoundItem[] = [];
-            items.forEach(item => {
-                const points = item.getPoints();
+            let bestPerformances: PlaceSportPerformance[] = [];
+            performances.forEach((performance: PlaceSportPerformance) => {
+                const points = performance.getPoints();
                 if (mostPoints === undefined || points === mostPoints) {
                     mostPoints = points;
-                    bestItems.push(item);
+                    bestPerformances.push(performance);
                 } else if (points > mostPoints) {
                     mostPoints = points;
-                    bestItems = [];
-                    bestItems.push(item);
+                    bestPerformances = [performance];
                 }
             });
-            return bestItems;
+            return bestPerformances;
         };
-        this.map[RankingRule.FewestGames] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
+        this.map[RankingRule.FewestGames] = (performances: PlaceSportPerformance[]): PlaceSportPerformance[] => {
             let fewestGames: number | undefined;
-            let bestItems: UnrankedSportRoundItem[] = [];
-            items.forEach(item => {
-                const nrOfGames = item.getGames();
+            let bestPerformances: PlaceSportPerformance[] = [];
+            performances.forEach((performance: PlaceSportPerformance) => {
+                const nrOfGames = performance.getGames();
                 if (fewestGames === undefined || nrOfGames === fewestGames) {
                     fewestGames = nrOfGames;
-                    bestItems.push(item);
+                    bestPerformances.push(performance);
                 } else if (nrOfGames < fewestGames) {
                     fewestGames = nrOfGames;
-                    bestItems = [item];
+                    bestPerformances = [performance];
                 }
             });
-            return bestItems;
+            return bestPerformances;
         };
-        this.map[RankingRule.MostUnitsScored] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
-            return this.getMostScored(items, false);
+        this.map[RankingRule.MostUnitsScored] = (performances: PlaceSportPerformance[]): PlaceSportPerformance[] => {
+            return this.getMostScored(performances, false);
         }
-        this.map[RankingRule.MostSubUnitsScored] = (items: UnrankedSportRoundItem[]): UnrankedSportRoundItem[] => {
-            return this.getMostScored(items, true);
+        this.map[RankingRule.MostSubUnitsScored] = (performances: PlaceSportPerformance[]): PlaceSportPerformance[] => {
+            return this.getMostScored(performances, true);
         }
     }
 
-    protected getMostScored = (items: UnrankedSportRoundItem[], sub: boolean): UnrankedSportRoundItem[] => {
+    protected getMostScored = (performances: PlaceSportPerformance[], sub: boolean): PlaceSportPerformance[] => {
         let mostScored: number | undefined;
-        let bestItems: UnrankedSportRoundItem[] = [];
-        items.forEach(item => {
-            const scored = sub ? item.getSubScored() : item.getScored();
+        let bestPerformances: PlaceSportPerformance[] = [];
+        performances.forEach((performance: PlaceSportPerformance) => {
+            const scored = sub ? performance.getSubScored() : performance.getScored();
             if (mostScored === undefined || scored === mostScored) {
                 mostScored = scored;
-                bestItems.push(item);
+                bestPerformances.push(performance);
             } else if (scored > mostScored) {
                 mostScored = scored;
-                bestItems = [item];
+                bestPerformances = [performance];
             }
         });
-        return bestItems;
+        return bestPerformances;
     }
 }
 

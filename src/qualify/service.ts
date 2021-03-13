@@ -9,7 +9,7 @@ import { QualifyRuleMultiple } from './rule/multiple';
 import { QualifyRuleSingle } from './rule/single';
 import { State } from '../state';
 import { RoundRankingCalculator } from '../ranking/calculator/round';
-import { RankedRoundItem } from '../ranking/item/round/ranked';
+import { RoundRankingItem } from '../../public_api';
 
 export class QualifyService {
     private roundRankingCalculator: RoundRankingCalculator;
@@ -74,18 +74,18 @@ export class QualifyService {
             return changedPlaces;
         }
         const round = ruleMultiple.getFromRound();
-        const rankedPlaceLocations: PlaceLocation[] =
+        const rankingPlaceLocations: PlaceLocation[] =
             this.roundRankingCalculator.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
 
-        while (rankedPlaceLocations.length > toPlaces.length) {
-            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankedPlaceLocations.pop() : rankedPlaceLocations.shift();
+        while (rankingPlaceLocations.length > toPlaces.length) {
+            ruleMultiple.getWinnersOrLosers() === QualifyGroup.WINNERS ? rankingPlaceLocations.pop() : rankingPlaceLocations.shift();
         }
         toPlaces.forEach(toPlace => {
             const toPouleNumber = toPlace.getPoule().getNumber();
-            const rankedPlaceLocation = reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankedPlaceLocations);
-            toPlace.setQualifiedPlace(round.getPlace(rankedPlaceLocation));
+            const rankingPlaceLocation = reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankingPlaceLocations);
+            toPlace.setQualifiedPlace(round.getPlace(rankingPlaceLocation));
             changedPlaces.push(toPlace);
-            rankedPlaceLocations.splice(rankedPlaceLocations.indexOf(rankedPlaceLocation), 1);
+            rankingPlaceLocations.splice(rankingPlaceLocations.indexOf(rankingPlaceLocation), 1);
         });
         return changedPlaces;
     }
@@ -94,7 +94,7 @@ export class QualifyService {
         if (!this.isPouleFinished(poule)) {
             return undefined;
         }
-        const pouleRankingItems: RankedRoundItem[] = this.roundRankingCalculator.getItemsForPoule(poule);
+        const pouleRankingItems: RoundRankingItem[] = this.roundRankingCalculator.getItemsForPoule(poule);
         const rankingItem = this.roundRankingCalculator.getItemByRank(pouleRankingItems, rank);
         return rankingItem ? poule.getPlace(rankingItem.getPlaceLocation().getPlaceNr()) : undefined;
     }

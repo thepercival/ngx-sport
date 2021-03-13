@@ -5,7 +5,7 @@ import { getCompetitionMapper, getStructureService } from '../../../helpers/sing
 import { jsonBaseCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
-import { PouleStructure, QualifyGroup, RankedRoundItem, RankingRuleSet, Round, RoundRankingCalculator, State } from '../../../../public_api';
+import { PouleStructure, QualifyGroup, RankingRuleSet, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public_api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
@@ -36,7 +36,7 @@ describe('RoundRankingCalculator', () => {
         const items = rankingService.getItemsForPoule(pouleOne);
         items.forEach(item => expect(item.getRank()).to.equal(equalRank));
 
-        const getItemsByRank = (rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] => {
+        const getItemsByRank = (rankingItems: RoundRankingItem[], rank: number): RoundRankingItem[] => {
             return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
         }
         const equalItems = getItemsByRank(items, equalRank);

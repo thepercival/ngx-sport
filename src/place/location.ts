@@ -11,7 +11,7 @@ export class PlaceLocation {
         return this.placeNr;
     }
 
-    getNewLocationId(): string {
+    getRoundLocationId(): string {
         return this.getPouleNr() + '.' + this.getPlaceNr();
     }
 }

@@ -1,13 +1,13 @@
-import { CompetitionSport } from '../../../competition/sport';
-import { Place } from '../../../place';
-import { PlaceLocation } from '../../../place/location';
-import { RankedSportRoundItem } from './sportranked';
+import { CompetitionSport } from '../../competition/sport';
+import { Place } from '../../place';
+import { PlaceLocation } from '../../place/location';
+import { SportRoundRankingItem } from './round/sport';
 
-export class RankedRoundItem {
+export class RoundRankingItem {
     private rank: number = 1;
     private uniqueRank: number = 1;
     private cumulativeRank: number = 0;
-    private sportItems: RankedSportRoundItem[] = [];
+    private sportItems: SportRoundRankingItem[] = [];
 
     constructor(protected place: Place) {
     }
@@ -37,13 +37,13 @@ export class RankedRoundItem {
         this.uniqueRank = uniqueRank;
     }
 
-    addSportRoundItem(item: RankedSportRoundItem) {
+    addSportRoundItem(item: SportRoundRankingItem) {
         this.sportItems.push(item);
         this.cumulativeRank += item.getRank();
     }
 
-    getSportItem(competitionSport: CompetitionSport): RankedSportRoundItem {
-        const sportItem = this.sportItems.find((sportItemIt: RankedSportRoundItem) => sportItemIt.getCompetitionSport() === competitionSport);
+    getSportItem(competitionSport: CompetitionSport): SportRoundRankingItem {
+        const sportItem = this.sportItems.find((sportItemIt: SportRoundRankingItem) => sportItemIt.getCompetitionSport() === competitionSport);
         if (!sportItem) {
             throw new Error("sportItem could not be found");
         }
