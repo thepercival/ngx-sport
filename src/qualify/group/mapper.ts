@@ -8,7 +8,7 @@ export class QualifyGroupMapper {
     constructor(private roundMapper: RoundMapper) { }
 
     toObject(json: JsonQualifyGroup, round: Round, nextRoundNumber: RoundNumber): QualifyGroup {
-        const qualifyGroup = new QualifyGroup(round, json.winnersOrLosers, nextRoundNumber, json.number);
+        const qualifyGroup = new QualifyGroup(round, json.target, nextRoundNumber, json.number);
         qualifyGroup.setId(json.id);
         this.roundMapper.toObject(json.childRound, qualifyGroup.getChildRound());
         return qualifyGroup;
@@ -17,7 +17,7 @@ export class QualifyGroupMapper {
     toJson(qualifyGroup: QualifyGroup): JsonQualifyGroup {
         return {
             id: qualifyGroup.getId(),
-            winnersOrLosers: qualifyGroup.getWinnersOrLosers(),
+            target: qualifyGroup.getTarget(),
             number: qualifyGroup.getNumber(),
             childRound: this.roundMapper.toJson(qualifyGroup.getChildRound())
         };

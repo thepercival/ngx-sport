@@ -1,4 +1,6 @@
+import { Poule } from './poule';
 import { QualifyGroup, Round } from './qualify/group';
+import { QualifyTarget } from './qualify/target';
 import { RoundNumber } from './round/number';
 
 
@@ -66,33 +68,94 @@ export class Structure {
         return this.hasRoundNumberPlanning(nextRoundNumber);
     }
 
-    setStructureNumbers() {
-        let nrOfDropoutPlaces = 0;
-        const setRoundStructureNumbers = (round: Round) => {
-            round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
-                setRoundStructureNumbers(qualifyGroup.getChildRound());
-            });
-            round.setStructureNumber(nrOfDropoutPlaces);
-            nrOfDropoutPlaces += round.getNrOfDropoutPlaces();
-            round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
-                setRoundStructureNumbers(qualifyGroup.getChildRound());
-            });
-        };
-        let pouleNr = 1;
-        const setPouleStructureNumbers = (roundNumber: RoundNumber) => {
-            const rounds: Round[] = roundNumber.getRounds();
-            rounds.sort((roundA, roundB) => {
-                return (roundA.getStructureNumber() > roundB.getStructureNumber()) ? 1 : -1;
-            });
-            rounds.forEach(round => {
-                round.getPoules().forEach(poule => poule.setStructureNumber(pouleNr++));
-            });
-            const nextRoundNumber = roundNumber.getNext();
-            if (nextRoundNumber) {
-                setPouleStructureNumbers(nextRoundNumber);
+    /* '1W1W2L2L1'
+     getStructurePathNode(structurePath: string): StructurePathNode {
+ 
+         const getStructurePathNode = (round: Round, structurePath: string, pathNode: StructurePathNode): StructurePathNode => {
+ 
+             if ( )
+                 return pathNode.getNext();
+         });
+         return getStructurePathNode(this.rootRound, structurePath)
+     }
+ 
+     convertStringToStructurePathNode(pathNodeAsString: string): StructurePathNode {
+ 
+ 
+         const getStructurePathNode = (round: Round, structurePath: string, pathNode: StructurePathNode): StructurePathNode => {
+             const winnersIdx = structurePath.indexOf(QualifyTarget.Winners);
+             const losersIdx = structurePath.indexOf(QualifyTarget.Losers);
+             const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+             if (idx < 0) {
+                 return pathNode;
+             }
+             if ( )
+                 return pathNode.getNext();
+         });
+         return getStructurePathNode(this.rootRound, structurePath)
+     }*/
+
+    /*convertRootNode(rootNode: string) {
+        const winnersIdx = pathNodeAsString.indexOf(QualifyTarget.Winners);
+        const losersIdx = pathNodeAsString.indexOf(QualifyTarget.Losers);
+        const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+        if (idx < 0) {
+            if (pathNodeAsString.length === 0) {
+                throw Error('invalid structure-path');
             }
-        };
-        setRoundStructureNumbers(this.rootRound);
-        setPouleStructureNumbers(this.firstRoundNumber);
+
+
+            return new StructurePathNode(undefined, roundNumber)
+        } else {
+            pathNodeAsString.substr(idx);
+        }
     }
+
+    convertStringToStructurePathNode(pathNodeAsString: string, previous?: StructurePathNode): StructurePathNode {
+
+        const winnersIdx = pathNodeAsString.indexOf(QualifyTarget.Winners);
+        const losersIdx = pathNodeAsString.indexOf(QualifyTarget.Losers);
+        const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+        if (idx < 0) {
+            if (pathNodeAsString.length === 0) {
+                throw Error('invalid structure-path');
+            }
+            return new StructurePathNode(undefined, +pathNodeAsString)
+        }
+
+        const qualifyTarget = losersIdx
+
+        const getStructurePathNode = (round: Round, structurePath: string, pathNode: StructurePathNode): StructurePathNode => {
+            const winnersIdx = structurePath.indexOf(QualifyTarget.Winners);
+            const losersIdx = structurePath.indexOf(QualifyTarget.Losers);
+            const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+            if (idx < 0) {
+                return pathNode;
+            }
+            if ( )
+                return pathNode.getNext();
+        });
+        return getStructurePathNode(this.rootRound, structurePath)
+    }
+
+
+
+    getRoundPathNode(structurePath: string, pathNode): StructurePathNode {
+        const winnersIdx = structurePath.indexOf(QualifyTarget.Winners);
+        const losersIdx = structurePath.indexOf(QualifyTarget.Losers);
+        const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+        if (idx < 0) {
+            return '';
+        }
+        this.rootRound
+        // find wlornumber
+        'XWL2'
+    }
+
+    getRound(StructurePathNode: string): {
+        this.getFirstRound()
+find w or l
+'XWL2'
+    }
+*/
 }

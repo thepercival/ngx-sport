@@ -1,33 +1,39 @@
 import { Place } from '../place';
 import { QualifyGroup, Round } from '../qualify/group';
 import { QualifyRuleMultiple } from '../qualify/rule/multiple';
+import { QualifyRuleSingle } from '../qualify/rule/single';
+import { QualifyTarget } from '../qualify/target';
 
 /**
- * QualifyGroup.WINNERS
+ * QualifyTarget.Winners
  *  [ A1 B1 C1 ]
  *  [ A2 B2 C2 ]
  *  [ A3 B3 C3 ]
- * QualifyGroup.LOSERS
+ * QualifyTarget.Losers
  *  [ C3 B3 A3 ]
  *  [ C2 B2 A2 ]
  *  [ C1 B1 A1 ]
  *
  **/
 export class HorizontalPoule {
-    protected qualifyGroup: QualifyGroup | undefined;
-    protected places: Place[] = [];
-    protected multipleRule: QualifyRuleMultiple | undefined;
+    protected number: number
+    protected qualifyRule: QualifyRuleMultiple | QualifyRuleSingle | undefined;
 
-    constructor(protected round: Round, protected number: number) {
+    constructor(
+        protected round: Round,
+        protected qualifyTarget: QualifyTarget,
+        protected previous: HorizontalPoule | undefined,
+        protected places: Place[]) {
+        round.getHorizontalPoules(this.qualifyTarget).push(this);
+        this.number = previous ? previous.getNumber() + 1 : 1;
     }
 
     getRound(): Round {
         return this.round;
     }
 
-    getWinnersOrLosers(): number {
-        const qualifyGroup = this.getQualifyGroup();
-        return qualifyGroup ? qualifyGroup.getWinnersOrLosers() : QualifyGroup.DROPOUTS;
+    getQualifyTarget(): QualifyTarget {
+        return this.qualifyTarget;
     }
 
     getNumber(): number {
@@ -35,38 +41,36 @@ export class HorizontalPoule {
     }
 
     getPlaceNumber(): number {
-        if (this.getWinnersOrLosers() !== QualifyGroup.LOSERS) {
+        if (this.getQualifyTarget() !== QualifyTarget.Losers) {
             return this.number;
         }
-        const nrOfPlaceNubers = this.round.getHorizontalPoules(QualifyGroup.WINNERS).length;
+        const nrOfPlaceNubers = this.round.getHorizontalPoules(QualifyTarget.Winners).length;
         return nrOfPlaceNubers - (this.number - 1);
     }
 
-    getQualifyGroup(): QualifyGroup | undefined {
-        return this.qualifyGroup;
+    /*getQualifyGroup(): QualifyGroup | undefined {
+        return this.qualifyRule?.getGroup();
+    }*/
+
+    setQualifyRule(qualifyRule: QualifyRuleMultiple | QualifyRuleSingle | undefined) {
+        this.qualifyRule = qualifyRule;
     }
 
-    setQualifyGroup(qualifyGroup?: QualifyGroup) {
-
-        // this is done in horizontalpouleservice
-        // if( this.qualifyGroup != undefined ){ // remove from old round
-        //     var index = this.qualifyGroup.getHorizontalPoules().indexOf(this);
-        //     if (index > -1) {
-        //         this.round.getHorizontalPoules().splice(index, 1);
-        //     }
-        // }
-        this.qualifyGroup = qualifyGroup;
-        this.qualifyGroup?.getHorizontalPoules().push(this);
-    }
-
-    getQualifyRuleMultiple(): QualifyRuleMultiple | undefined {
+    /*protected getQualifyRuleMultiple(): QualifyRuleMultiple | undefined {
         return this.multipleRule;
     }
 
-    setQualifyRuleMultiple(multipleRule: QualifyRuleMultiple | undefined) {
-        this.getPlaces().forEach(place => place.setToQualifyRule(this.getWinnersOrLosers(), multipleRule));
-        this.multipleRule = multipleRule;
+    setQualifyRule(multipleRule: QualifyRuleMultiple | QualifyRuleSingle) {
+        this.qualifyRule = multipleRule;
+    }*/
+
+    getQualifyRule(): QualifyRuleSingle | QualifyRuleMultiple | undefined {
+        return this.qualifyRule;
     }
+
+    /*setQualifyRulesSingle(singleRules: QualifyRuleSingle[]) {
+        this.singleRules = singleRules;
+    }*/
 
     getPlaces(): Place[] {
         return this.places;
@@ -85,23 +89,23 @@ export class HorizontalPoule {
     //     return poules[this.getNumber()];
     // }
 
-    isBorderPoule(): boolean {
+    /*isBorderPoule(): boolean {
         const qualifyGroup = this.getQualifyGroup();
         if (qualifyGroup === undefined || !qualifyGroup.isBorderGroup()) {
             return false;
         }
         const horPoules = qualifyGroup.getHorizontalPoules();
         return horPoules[horPoules.length - 1] === this;
-    }
+    }*/
 
-    getNrOfQualifiers(): number {
-        const qualifyGroup = this.getQualifyGroup();
-        if (qualifyGroup === undefined) {
+    /*getNrOfQualifiers(): number {
+        const qualifyRule = this.getQualifyRule();
+        if (qualifyRule === undefined) {
             return 0;
         }
-        if (!this.isBorderPoule()) {
-            return this.getPlaces().length;
+        if (qualifyRule instanceof QualifyRuleSingle) {
+            return qualifyRule.getMappings().length;
         }
-        return this.getPlaces().length - qualifyGroup.getNrOfToPlacesTooMuch();
-    }
+        return qualifyRule.getToPlaces().length;
+    }*/
 }

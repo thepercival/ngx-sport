@@ -33,14 +33,6 @@ export class Poule extends Identifiable {
         return this.number;
     }
 
-    getStructureNumber(): number {
-        return this.structureNumber;
-    }
-
-    setStructureNumber(structureNumber: number): void {
-        this.structureNumber = structureNumber;
-    }
-
     getName(): string | undefined {
         return this.name;
     }
@@ -76,6 +68,10 @@ export class Poule extends Identifiable {
 
     getTogetherGames(): TogetherGame[] {
         return this.togetherGames;
+    }
+
+    getStructureLocation(): string {
+        return this.getRound().getStructurePathNode().pathToString() + this.getNumber();
     }
 
     // getTogetherGamePlaces(place?: Place): TogetherGamePlace[] {

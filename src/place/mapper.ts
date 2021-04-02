@@ -21,7 +21,7 @@ export class PlaceMapper {
         place.setPenaltyPoints(json.penaltyPoints);
         if (json.qualifiedPlaceLocation) {
             place.setQualifiedPlace(
-                poule.getRound().getParentQualifyGroup()?.getRound().getPlace(this.toLocation(json.qualifiedPlaceLocation))
+                poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(this.toLocation(json.qualifiedPlaceLocation))
             );
         }
         return place;

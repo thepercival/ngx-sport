@@ -49,7 +49,7 @@ export class RoundNumber {
         return this.next;
     }
 
-    removeNext() {
+    detachFromNext() {
         this.next = undefined;
     }
 
@@ -59,6 +59,10 @@ export class RoundNumber {
 
     getPrevious(): RoundNumber | undefined {
         return this.previous;
+    }
+
+    detachFromPrevious(): void {
+        this.previous = undefined;
     }
 
     getCompetition(): Competition {
@@ -231,5 +235,14 @@ export class RoundNumber {
 
     setHasPlanning(hasPlanning: boolean) {
         this.hasPlanning = hasPlanning;
+    }
+
+    detach() {
+        const next = this.getNext();
+        if (next !== undefined) {
+            next.detach();
+            this.detachFromNext();
+        }
+        this.detachFromPrevious();
     }
 }

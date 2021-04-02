@@ -15,13 +15,19 @@ import { RankingRuleGetter } from './ranking/rule/getter';
 import { ScoreConfig } from './score/config';
 import { CompetitorMap } from './competitor/map';
 import { RankingRuleSet } from './ranking/ruleSet';
+import { QualifyTarget } from './qualify/target';
+import { PreviousNrOfDropoutsMap } from './ranking/map/previousNrOfDropouts';
+import { PouleStructureNumberMap } from './ranking/map/pouleStructureNumber';
 
 export class NameService {
+    private previousNrOfDropoutsMap: PreviousNrOfDropoutsMap | undefined;
+    private pouleStructureNumberMap: PouleStructureNumberMap | undefined;
+
     constructor(private competitorMap?: CompetitorMap) {
     }
 
-    getWinnersLosersDescription(winnersOrLosers: number, multiple: boolean = false): string {
-        const descr = winnersOrLosers === QualifyGroup.WINNERS ? 'winnaar' : (winnersOrLosers === QualifyGroup.LOSERS ? 'verliezer' : '');
+    getQualifyTargetDescription(qualifyTarget: QualifyTarget, multiple: boolean = false): string {
+        const descr = qualifyTarget === QualifyTarget.Winners ? 'winnaar' : (qualifyTarget === QualifyTarget.Losers ? 'verliezer' : '');
         return ((multiple && (descr !== '')) ? descr + 's' : descr);
     }
 
@@ -56,7 +62,7 @@ export class NameService {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         }
         if (round.getNrOfPlaces() === 2 && sameName === false) {
-            const rank = round.getStructureNumber() + 1;
+            const rank = this.getPreviousNrOfDropoutsMap(round).get(round) + 1;
             return this.getHtmlNumber(rank) + ' / ' + this.getHtmlNumber(rank + 1) + ' pl';
         }
         return 'finale';
@@ -67,7 +73,7 @@ export class NameService {
         if (withPrefix === true) {
             pouleName = poule.needsRanking() ? 'poule ' : 'wed. ';
         }
-        const pouleStructureNumber = poule.getStructureNumber() - 1;
+        const pouleStructureNumber = this.getPouleStructureNumberMap(poule.getRound()).get(poule) - 1;
         const secondLetter = pouleStructureNumber % 26;
         if (pouleStructureNumber >= 26) {
             const firstLetter = (pouleStructureNumber - secondLetter) / 26;
@@ -105,24 +111,25 @@ export class NameService {
             }
         }
 
-        const parentQualifyGroup = place.getRound().getParentQualifyGroup();
-        if (parentQualifyGroup === undefined) {
+        let fromQualifyRule: QualifyRuleSingle | QualifyRuleMultiple | undefined;
+        try {
+            fromQualifyRule = place.getRound().getParentQualifyGroup()?.getRule(place);
+        } catch (e) { }
+        if (fromQualifyRule === undefined) {
             return this.getPlaceName(place, false, longName);
         }
-
-        const fromQualifyRule = place.getFromQualifyRule();
-        if (fromQualifyRule?.isMultiple()) {
+        if (fromQualifyRule instanceof QualifyRuleMultiple) {
             if (longName) {
-                return this.getHorizontalPouleName((<QualifyRuleMultiple>fromQualifyRule).getFromHorizontalPoule());
+                return this.getHorizontalPouleName(fromQualifyRule.getFromHorizontalPoule());
             }
             return '?' + fromQualifyRule.getFromPlaceNumber();
         }
 
-        const fromPlace = (<QualifyRuleSingle>fromQualifyRule).getFromPlace();
+        const fromPlace = fromQualifyRule.getFromPlace(place);
         if (longName !== true || fromPlace.getPoule().needsRanking()) {
             return this.getPlaceName(fromPlace, false, longName);
         }
-        const name = this.getWinnersLosersDescription(fromPlace.getNumber() === 1 ? QualifyGroup.WINNERS : QualifyGroup.LOSERS);
+        const name = this.getQualifyTargetDescription(fromPlace.getNumber() === 1 ? QualifyTarget.Winners : QualifyTarget.Losers);
         return name + ' ' + this.getPouleName(fromPlace.getPoule(), false);
     }
 
@@ -140,22 +147,23 @@ export class NameService {
      * @param horizontalPoule
      */
     getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
-        if (horizontalPoule.getQualifyGroup() === undefined) {
+        const qualifyRule = horizontalPoule.getQualifyRule();
+        if (qualifyRule === undefined) {
             return 'nummers ' + horizontalPoule.getNumber();
         }
-        const nrOfQualifiers = horizontalPoule.getNrOfQualifiers();
+        const nrOfToPlaces = qualifyRule.getNrOfToPlaces();
 
-        if (horizontalPoule.getWinnersOrLosers() === QualifyGroup.WINNERS) {
-            const nameWinners = 'nummer' + (nrOfQualifiers > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
-            if (horizontalPoule.isBorderPoule() && horizontalPoule.getQualifyRuleMultiple() !== undefined) {
-                return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'beste ' + nameWinners;
+        if (qualifyRule.getQualifyTarget() === QualifyTarget.Winners) {
+            const nameWinners = 'nummer' + (nrOfToPlaces > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
+            if (qualifyRule instanceof QualifyRuleMultiple) {
+                return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'beste ' + nameWinners;
             }
             return nameWinners;
         }
-        let name = (nrOfQualifiers > 1 ? 'nummers ' : '');
+        let name = (nrOfToPlaces > 1 ? 'nummers ' : '');
         name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
-        if (horizontalPoule.isBorderPoule() && horizontalPoule.getQualifyRuleMultiple() !== undefined) {
-            return (nrOfQualifiers > 1 ? (nrOfQualifiers + ' ') : '') + 'slechtste ' + name;
+        if (qualifyRule instanceof QualifyRuleMultiple) {
+            return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'slechtste ' + name;
         }
         return name;
     }
@@ -297,4 +305,19 @@ export class NameService {
         });
         return biggestMaxDepth;
     }
+
+    private getPreviousNrOfDropoutsMap(round: Round): PreviousNrOfDropoutsMap {
+        if (this.previousNrOfDropoutsMap === undefined) {
+            this.previousNrOfDropoutsMap = new PreviousNrOfDropoutsMap(round.getRoot());
+        }
+        return this.previousNrOfDropoutsMap;
+    }
+
+    private getPouleStructureNumberMap(round: Round): PouleStructureNumberMap {
+        if (this.pouleStructureNumberMap === undefined) {
+            this.pouleStructureNumberMap = new PouleStructureNumberMap(round.getNumber().getFirst(), this.getPreviousNrOfDropoutsMap(round));
+        }
+        return this.pouleStructureNumberMap;
+    }
+
 }

@@ -1,56 +1,39 @@
 import { HorizontalPoule } from '../../poule/horizontal';
 import { Place } from '../../place';
 import { QualifyRule } from '../rule';
-import { QualifyGroup, Round } from '../group';
+import { QualifyGroup } from '../group';
 
 export class QualifyRuleMultiple extends QualifyRule {
-    private toPlaces: Place[] = [];
-    private fromHorizontalPoule: HorizontalPoule;
-    private nrOfToPlaces: number;
-
-    constructor(fromHorizontalPoule: HorizontalPoule, nrOfToPlaces: number) {
-        super();
-        this.fromHorizontalPoule = fromHorizontalPoule;
-        this.fromHorizontalPoule.setQualifyRuleMultiple(this);
-        this.nrOfToPlaces = nrOfToPlaces;
+    constructor(fromHorizontalPoule: HorizontalPoule, group: QualifyGroup, private toPlaces: Place[]) {
+        super(fromHorizontalPoule/*, group*/);
+        this.fromHorizontalPoule.setQualifyRule(this);
+        group.setMultipleRule(this);
     }
 
-    getFromHorizontalPoule(): HorizontalPoule {
-        return this.fromHorizontalPoule;
-    }
 
-    getFromRound(): Round {
-        return this.fromHorizontalPoule.getRound();
-    }
-
-    isMultiple(): boolean {
-        return true;
-    }
-
-    isSingle(): boolean {
-        return false;
-    }
-
-    getWinnersOrLosers(): number {
-        const qualifyGroup = this.fromHorizontalPoule.getQualifyGroup();
-        return qualifyGroup ? qualifyGroup.getWinnersOrLosers() : QualifyGroup.DROPOUTS;
-    }
-
-    addToPlace(toPlace: Place) {
+    /*addToPlace(toPlace: Place) {
         this.toPlaces.push(toPlace);
         toPlace.setFromQualifyRule(this);
     }
 
     toPlacesComplete(): boolean {
         return this.nrOfToPlaces === this.toPlaces.length;
+    }*/
+
+    hasToPlace(place: Place): boolean {
+        return this.toPlaces.indexOf(place) >= 0;
     }
 
     getToPlaces(): Place[] {
         return this.toPlaces;
     }
 
-    getFromPlaceNumber(): number {
-        return this.getFromHorizontalPoule().getPlaceNumber();
+    getNrOfToPlaces(): number {
+        return this.toPlaces.length;
+    }
+
+    detach() {
+        this.getFromHorizontalPoule().setQualifyRule(undefined);
     }
 }
 

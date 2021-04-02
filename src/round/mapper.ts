@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSportMapper } from '../competition/sport/mapper';
 import { QualifyAgainstConfigMapper } from '../qualify/againstConfig/mapper';
 import { ScoreConfigMapper } from '../score/config/mapper';
 
 import { HorizontalPouleService } from '../poule/horizontal/service';
 import { PouleMapper } from '../poule/mapper';
-import { QualifyGroup, Round } from '../qualify/group';
 import { QualifyGroupMapper } from '../qualify/group/mapper';
 import { QualifyRuleService } from '../qualify/rule/service';
 import { JsonRound } from './json';
+import { Round } from '../qualify/group';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoundMapper {
+    private qualifyRuleService: QualifyRuleService;
+    private horizontalPouleService: HorizontalPouleService;
+
     constructor(
         private pouleMapper: PouleMapper,
         private scoreConfigMapper: ScoreConfigMapper,
         private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper,
     ) {
-
+        this.qualifyRuleService = new QualifyRuleService();
+        this.horizontalPouleService = new HorizontalPouleService();
     }
 
     toObject(json: JsonRound, round: Round): Round {
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round, undefined));
-
-        const horizontalPouleService = new HorizontalPouleService(round);
-        horizontalPouleService.recreate();
 
         const nextRoundNumber = round.getNumber().getNext();
         if (nextRoundNumber) {
@@ -47,18 +47,12 @@ export class RoundMapper {
                 this.qualifyAgainstConfigMapper.toObject(jsonQualifyAgainstConfigs, round);
             });
         }
-        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-            horizontalPouleService.updateQualifyGroups(
-                round.getHorizontalPoules(winnersOrLosers).slice(),
-                round.getQualifyGroups(winnersOrLosers).map(qualifyGroup => {
-                    const childRound = qualifyGroup.getChildRound();
-                    return { qualifyGroup: qualifyGroup, nrOfQualifiers: childRound ? childRound.getNrOfPlaces() : 0 };
-                })
-            );
-        });
 
-        const qualifyRuleService = new QualifyRuleService(round);
-        qualifyRuleService.recreateTo();
+
+        this.qualifyRuleService.removeTo(round);
+        this.horizontalPouleService.remove(round);
+        this.horizontalPouleService.create(round);
+        this.qualifyRuleService.createTo(round);
 
         return round;
     }

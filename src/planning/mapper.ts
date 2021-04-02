@@ -16,20 +16,19 @@ import { CompetitionSportMap } from '../competition/sport/mapper';
 import { GameMode } from './gameMode';
 import { JsonAgainstGame } from '../game/against/json';
 import { JsonTogetherGame } from '../game/together/json';
+import { JsonQualifyGroup } from '../qualify/group/json';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlanningMapper {
-    private roundNumbersReferenceMap: RoundNumbersReferenceMap = {};
-
     constructor(private gameMapper: GameMapper) { }
 
     toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber {
         const firstRoundNumber = structure.getFirstRoundNumber();
-        this.initCache(firstRoundNumber.getCompetition());
+        const map: CompetitionSportMap = this.getCompetitionSportMap(firstRoundNumber.getCompetition());
         this.toRoundNumber(json.firstRoundNumber, firstRoundNumber, startRoundNumber);
-        this.toRounds(json.rootRound, structure.getRootRound(), firstRoundNumber, startRoundNumber);
+        this.toRounds(json.rootRound, structure.getRootRound(), firstRoundNumber, startRoundNumber, map);
         const retVal = structure.getRoundNumber(startRoundNumber);
         return retVal ?? firstRoundNumber;
     }
@@ -43,7 +42,12 @@ export class PlanningMapper {
             this.toRoundNumber(jsonRoundNumber.next, nextRoundNumber, startRoundNumber);
         }
     }
-    protected toRounds(jsonRound: JsonRound, round: Round, roundNumber: RoundNumber, startRoundNumber: number) {
+    protected toRounds(
+        jsonRound: JsonRound,
+        round: Round,
+        roundNumber: RoundNumber,
+        startRoundNumber: number,
+        map: CompetitionSportMap) {
         if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
             jsonRound.poules.forEach(jsonPoule => {
                 const poule = round.getPoule(jsonPoule.number);
@@ -52,51 +56,31 @@ export class PlanningMapper {
                 }
                 if (jsonPoule.againstGames !== undefined) {
                     jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
-                        this.gameMapper.toNewAgainst(jsonGame, poule, this.getReferences(roundNumber));
+                        this.gameMapper.toNewAgainst(jsonGame, poule, map);
                     });
                 }
                 if (jsonPoule.togetherGames !== undefined) {
                     jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
-                        this.gameMapper.toNewTogether(jsonGame, poule, this.getReferences(roundNumber));
+                        this.gameMapper.toNewTogether(jsonGame, poule, map);
                     });
                 }
             });
         }
-        jsonRound.qualifyGroups.forEach((jsonQualifyGroup) => {
-            const qualifyGroup = round.getQualifyGroup(jsonQualifyGroup.winnersOrLosers, jsonQualifyGroup.number);
+        jsonRound.qualifyGroups.forEach((jsonQualifyGroup: JsonQualifyGroup) => {
+            const qualifyGroup = round.getQualifyGroup(jsonQualifyGroup.target, jsonQualifyGroup.number);
             const nextRoundNumber = roundNumber.getNext();
             if (nextRoundNumber && qualifyGroup) {
-                this.toRounds(jsonQualifyGroup.childRound, qualifyGroup.getChildRound(), nextRoundNumber, startRoundNumber);
+                this.toRounds(jsonQualifyGroup.childRound, qualifyGroup.getChildRound(), nextRoundNumber, startRoundNumber, map);
             }
         });
     }
 
-    getReferences(roundNumber: RoundNumber): PlanningReferences {
-        let roundNumberReferences = this.roundNumbersReferenceMap[roundNumber.getNumber()];
-        if (roundNumberReferences) {
-            return roundNumberReferences;
-        }
-        const places: PlaceMap = {};
-        roundNumber.getPoules().forEach((poule: Poule) => {
-            poule.getPlaces().forEach((place: Place) => places[place.getStructureNumber()] = place);
-        });
-
-        this.roundNumbersReferenceMap[roundNumber.getNumber()] = {
-            places: places,
-            sports: this.roundNumbersReferenceMap[0].sports,
-        };
-        return this.roundNumbersReferenceMap[roundNumber.getNumber()];
-    }
-
-    initCache(competition: Competition) {
-        this.roundNumbersReferenceMap = {};
-        this.roundNumbersReferenceMap[0] = {
-            places: {},
-            sports: {}
-        };
+    getCompetitionSportMap(competition: Competition): CompetitionSportMap {
+        const map: CompetitionSportMap = {};
         competition.getSports().forEach((competitionSport: CompetitionSport) => {
-            this.roundNumbersReferenceMap[0].sports[competitionSport.getId()] = competitionSport;
+            map[competitionSport.getId()] = competitionSport;
         });
+        return map;
     }
 }
 

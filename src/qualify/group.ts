@@ -1,7 +1,6 @@
 import { RoundNumber } from '../round/number';
 import { HorizontalPoule } from '../poule/horizontal';
 import { Competition } from '../competition';
-import { Game } from '../game';
 import { Place } from '../place';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
@@ -12,48 +11,35 @@ import { QualifyAgainstConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
-import { PointsCalculation } from '../ranking/pointsCalculation';
+import { QualifyRuleSingle } from './rule/single';
+import { QualifyRuleMultiple } from './rule/multiple';
+import { QualifyTarget } from './target';
+import { StructurePathNode } from '../structure/path';
+import { BalancedPouleStructure } from '../poule/structure/balanced';
+export class QualifyGroup extends Identifiable {
+    static readonly QUALIFYORDER_CROSS = 1;
+    static readonly QUALIFYORDER_RANK = 2;
+    static readonly QUALIFYORDER_CUSTOM1 = 4;
+    static readonly QUALIFYORDER_CUSTOM2 = 5;
 
-export class QualifyGroup {
-    static readonly WINNERS = 1;
-    static readonly DROPOUTS = 2;
-    static readonly LOSERS = 3;
-
-    protected id: number = 0;
-    protected winnersOrLosers: number = QualifyGroup.DROPOUTS;
     protected number: number
     protected childRound: Round;
-    protected horizontalPoules: HorizontalPoule[] = [];
+    protected firstSingleRule: QualifyRuleSingle | undefined;
+    protected multipleRule: QualifyRuleMultiple | undefined;
 
-    constructor(protected round: Round, winnersOrLosers: number, nextRoundNumber: RoundNumber, number?: number) {
-        this.number = number ? number : this.round.getQualifyGroups(winnersOrLosers).length;
-        this.setWinnersOrLosers(winnersOrLosers);
-        this.round.getQualifyGroups(this.getWinnersOrLosers()).splice(this.number, 0, this);
+    constructor(protected parentRound: Round, protected target: QualifyTarget, nextRoundNumber: RoundNumber, number?: number) {
+        super();
+        this.number = number ? number : this.parentRound.getQualifyGroups(this.getTarget()).length + 1;
+        this.parentRound.getQualifyGroups(this.getTarget()).splice(this.number - 1, 0, this);
         this.childRound = new Round(nextRoundNumber, this);
     }
 
-    protected addToRoundQualifyGroups() {
-        this.round.getQualifyGroups(this.getWinnersOrLosers()).push(this);
+    getParentRound(): Round {
+        return this.parentRound;
     }
 
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    getRound(): Round {
-        return this.round;
-    }
-
-    getWinnersOrLosers(): number {
-        return this.winnersOrLosers;
-    }
-
-    setWinnersOrLosers(winnersOrLosers: number): void {
-        this.winnersOrLosers = winnersOrLosers;
+    getTarget(): QualifyTarget {
+        return this.target;
     }
 
     getNumber(): number {
@@ -68,49 +54,84 @@ export class QualifyGroup {
         return this.childRound;
     }
 
-    getHorizontalPoules(): HorizontalPoule[] {
-        return this.horizontalPoules;
+    getFirstSingleRule(): QualifyRuleSingle | undefined {
+        return this.firstSingleRule;
+    }
+
+    setFirstSingleRule(singleRule: QualifyRuleSingle | undefined): void {
+        this.firstSingleRule = singleRule;
+    }
+
+    getMultipleRule(): QualifyRuleMultiple | undefined {
+        return this.multipleRule;
+    }
+
+    setMultipleRule(multipleRule: QualifyRuleMultiple | undefined): void {
+        this.multipleRule = multipleRule;
+    }
+
+    getNrOfSingleRules(): number {
+        return this.getFirstSingleRule()?.getLast().getNumber() ?? 0;
+    }
+
+    getNrOfToPlaces(): number {
+        let nrOfToPlaces = 0;
+        const firstSingleRule = this.getFirstSingleRule();
+        if (firstSingleRule !== undefined) {
+            nrOfToPlaces = firstSingleRule.getNrOfToPlaces() + firstSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        }
+        const multipleRule = this.getMultipleRule();
+        if (multipleRule !== undefined) {
+            nrOfToPlaces += multipleRule.getNrOfToPlaces();
+        }
+        return nrOfToPlaces;
+    }
+
+    getRule(toPlace: Place): QualifyRuleSingle | QualifyRuleMultiple {
+        let singleRule = this.firstSingleRule;
+        while (singleRule !== undefined) {
+            try {
+                if (singleRule.getFromPlace(toPlace) !== undefined) {
+                    return singleRule;
+                }
+            } catch (e) { }
+            singleRule = singleRule.getNext();
+        }
+        const multipleRule = this.getMultipleRule();
+        if (multipleRule === undefined || !multipleRule.hasToPlace(toPlace)) {
+            throw Error('de kwalificatieregel kan niet gevonden worden');
+        }
+        return multipleRule;
     }
 
     isBorderGroup(): boolean {
-        const qualifyGroups = this.getRound().getQualifyGroups(this.getWinnersOrLosers());
+        const qualifyGroups = this.getParentRound().getQualifyGroups(this.getTarget());
         return this === qualifyGroups[qualifyGroups.length - 1];
     }
 
-    // isInBorderHoritontalPoule(place: Place): boolean {
-    //     const horizontalPoules = this.getHorizontalPoules();
-    //     const borderHorizontalPoule = horizontalPoules[horizontalPoules.length - 1];
-    //     return borderHorizontalPoule.hasPlace(place);
-    // }
-
-    getBorderPoule(): HorizontalPoule {
-        return this.horizontalPoules[this.horizontalPoules.length - 1];
+    detach() {
+        this.detachRules();
+        const qualifyGroups = this.getParentRound().getQualifyGroups(this.getTarget());
+        const idx = qualifyGroups.indexOf(this);
+        qualifyGroups.splice(idx, 1);
+        this.getChildRound().detach();
     }
 
-    getNrOfPlaces() {
-        return this.getHorizontalPoules().length * this.getRound().getPoules().length;
-    }
-
-    getNrOfToPlacesTooMuch(): number {
-        return this.getNrOfPlaces() - (this.childRound ? this.childRound.getNrOfPlaces() : 0);
-    }
-
-    getNrOfQualifiers(): number {
-        let nrOfQualifiers = 0;
-        this.getHorizontalPoules().forEach(horizontalPoule => nrOfQualifiers += horizontalPoule.getNrOfQualifiers());
-        return nrOfQualifiers;
+    detachRules() {
+        if (this.multipleRule !== undefined) {
+            this.multipleRule.detach();
+            this.multipleRule = undefined;
+        }
+        if (this.firstSingleRule !== undefined) {
+            this.firstSingleRule.detach();
+            this.firstSingleRule = undefined;
+        }
     }
 }
 
 export class Round extends Identifiable {
     static readonly ORDER_NUMBER_POULE = 1;
     static readonly ORDER_POULE_NUMBER = 2;
-
-    // there are some patterns here, cross, inside-outside and custom
-    static readonly QUALIFYORDER_CROSS = 1;
-    static readonly QUALIFYORDER_RANK = 2;
-    static readonly QUALIFYORDER_CUSTOM1 = 4;
-    static readonly QUALIFYORDER_CUSTOM2 = 5;
 
     protected number: RoundNumber;
     protected name: string | undefined;
@@ -119,8 +140,7 @@ export class Round extends Identifiable {
     protected winnersQualifyGroups: QualifyGroup[] = [];
     protected losersHorizontalPoules: HorizontalPoule[] = [];
     protected winnersHorizontalPoules: HorizontalPoule[] = [];
-    // protected nrOfDropoutPlaces: number;
-    protected structureNumber: number = 0;
+    protected structurePathNode: StructurePathNode;
     protected scoreConfigs: ScoreConfig[] = [];
     protected qualifyAgainstConfigs: QualifyAgainstConfig[] = [];
 
@@ -128,6 +148,7 @@ export class Round extends Identifiable {
         super();
         this.number = roundNumber;
         this.number.getRounds().push(this);
+        this.structurePathNode = this.constructStructurePathNode();
         // this.setValue();
     }
 
@@ -136,7 +157,7 @@ export class Round extends Identifiable {
     }
 
     getParent(): Round | undefined {
-        return this.getParentQualifyGroup()?.getRound();
+        return this.getParentQualifyGroup()?.getParentRound();
     }
 
     getParentQualifyGroup(): QualifyGroup | undefined {
@@ -151,52 +172,44 @@ export class Round extends Identifiable {
         return this.number.getNumber();
     }
 
-    getStructureNumber(): number {
-        return this.structureNumber;
+    getNrOfDropoutPlaces(): number {
+        return this.getNrOfPlaces() - this.getNrOfPlacesChildren();
     }
 
-    setStructureNumber(structureNumber: number): void {
-        this.structureNumber = structureNumber;
-    }
-
-    getQualifyGroups(winnersOrLosers?: number): QualifyGroup[] {
-        if (winnersOrLosers === undefined) {
+    getQualifyGroups(qualifyTarget?: QualifyTarget): QualifyGroup[] {
+        if (qualifyTarget === undefined) {
             return this.winnersQualifyGroups.concat(this.losersQualifyGroups);
         }
-        return (winnersOrLosers === QualifyGroup.WINNERS) ? this.winnersQualifyGroups : this.losersQualifyGroups;
+        return (qualifyTarget === QualifyTarget.Winners) ? this.winnersQualifyGroups : this.losersQualifyGroups;
     }
 
     getQualifyGroupsLosersReversed() {
         return this.winnersQualifyGroups.concat(this.losersQualifyGroups.slice().reverse());
     }
 
-    getQualifyGroup(winnersOrLosers: number, qualifyGroupNumber: number): QualifyGroup | undefined {
-        return this.getQualifyGroups(winnersOrLosers).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
+    getQualifyGroup(qualifyTarget: QualifyTarget, qualifyGroupNumber: number): QualifyGroup | undefined {
+        return this.getQualifyGroups(qualifyTarget).find(qualifyGroup => qualifyGroup.getNumber() === qualifyGroupNumber);
     }
 
-    getBorderQualifyGroup(winnersOrLosers: number): QualifyGroup {
-        const qualifyGroups = this.getQualifyGroups(winnersOrLosers);
+    getBorderQualifyGroup(qualifyTarget: QualifyTarget): QualifyGroup {
+        const qualifyGroups = this.getQualifyGroups(qualifyTarget);
         return qualifyGroups[qualifyGroups.length - 1];
     }
-
-    getNrOfDropoutPlaces(): number {
-        // if (this.nrOfDropoutPlaces === undefined) {
-        // @TODO performance check
-        return this.getNrOfPlaces() - this.getNrOfPlacesChildren();
-        // }
-        // return this.nrOfDropoutPlaces;
-    }
-
-    // setNrOfDropoutPlaces(nrOfDropoutPlaces: number): void {
-    //     this.nrOfDropoutPlaces = nrOfDropoutPlaces;
-    // }
 
     getChildren(): Round[] {
         return this.getQualifyGroups().map(qualifyGroup => qualifyGroup.getChildRound());
     }
 
-    getChild(winnersOrLosers: number, qualifyGroupNumber: number): Round | undefined {
-        return this.getQualifyGroup(winnersOrLosers, qualifyGroupNumber)?.getChildRound();
+    getChild(qualifyTarget: QualifyTarget, qualifyGroupNumber: number): Round | undefined {
+        return this.getQualifyGroup(qualifyTarget, qualifyGroupNumber)?.getChildRound();
+    }
+
+    getRoot(): Round {
+        const parent = this.getParent();
+        if (parent === undefined) {
+            return this;
+        }
+        return parent.getRoot();
     }
 
     isRoot(): boolean {
@@ -223,19 +236,19 @@ export class Round extends Identifiable {
         return poule;
     }
 
-    getHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
-        if (winnersOrLosers === QualifyGroup.WINNERS) {
+    getHorizontalPoules(qualifyTarget: QualifyTarget): HorizontalPoule[] {
+        if (qualifyTarget === QualifyTarget.Winners) {
             return this.winnersHorizontalPoules;
         }
         return this.losersHorizontalPoules;
     }
 
-    getHorizontalPoule(winnersOrLosers: number, number: number): HorizontalPoule | undefined {
-        return this.getHorizontalPoules(winnersOrLosers).find(horPoule => horPoule.getNumber() === number);
+    getHorizontalPoule(qualifyTarget: QualifyTarget, number: number): HorizontalPoule | undefined {
+        return this.getHorizontalPoules(qualifyTarget).find(horPoule => horPoule.getNumber() === number);
     }
 
-    getFirstPlace(winnersOrLosers: number): Place {
-        const firstHorizontalPoule = this.getHorizontalPoule(winnersOrLosers, 1);
+    getFirstPlace(qualifyTarget: QualifyTarget): Place {
+        const firstHorizontalPoule = this.getHorizontalPoule(qualifyTarget, 1);
         if (firstHorizontalPoule === undefined) {
             throw Error('de ronde heeft geen uhorizontale poules');
         }
@@ -245,7 +258,7 @@ export class Round extends Identifiable {
     getPlaces(order?: number): Place[] {
         let places: Place[] = [];
         if (order === Round.ORDER_NUMBER_POULE) {
-            this.getHorizontalPoules(QualifyGroup.WINNERS).forEach((poule) => {
+            this.getHorizontalPoules(QualifyTarget.Winners).forEach((poule) => {
                 places = places.concat(poule.getPlaces());
             });
         } else {
@@ -305,9 +318,9 @@ export class Round extends Identifiable {
         return nrOfPlaces;
     }
 
-    getNrOfPlacesChildren(winnersOrLosers?: number): number {
+    getNrOfPlacesChildren(qualifyTarget?: QualifyTarget): number {
         let nrOfPlacesChildRounds = 0;
-        this.getQualifyGroups(winnersOrLosers).forEach(qualifyGroup => {
+        this.getQualifyGroups(qualifyTarget).forEach(qualifyGroup => {
             nrOfPlacesChildRounds += qualifyGroup.getChildRound().getNrOfPlaces();
         });
         return nrOfPlacesChildRounds;
@@ -384,5 +397,53 @@ export class Round extends Identifiable {
         return parent.hasAncestor(ancestor);
     }
 
+    addPlace() {
+
+    }
+
+    // getChild(getStructurePathNode(structurePath: string): StructurePathNode {
+    //     this.getRound()
+
+    //     const getStructurePathNode = (pathNode: StructurePathNode): StructurePathNode => {
+    //         const winnersIdx = structurePath.indexOf(QualifyTarget.Winners);
+    //         const losersIdx = structurePath.indexOf(QualifyTarget.Losers);
+    //         const idx = winnersIdx > losersIdx ? winnersIdx : losersIdx;
+    //         if (idx < 0) {
+    //             return pathNode;
+    //         }
+
+    //         return pathNode.getNext();
+    //     });
+    //     return getStructurePathNode(this.rootRound)
+    // }
+
+    getStructurePathNode(): StructurePathNode {
+        return this.structurePathNode;
+    }
+
+    protected constructStructurePathNode(): StructurePathNode {
+        if (this.parentQualifyGroup === undefined) {
+            return new StructurePathNode(undefined, 1);
+        }
+        return new StructurePathNode(
+            this.parentQualifyGroup.getTarget(),
+            this.parentQualifyGroup.getNumber(),
+            this.parentQualifyGroup.getParentRound().getStructurePathNode());
+    }
+
+    createPouleStructure(): BalancedPouleStructure {
+        return new BalancedPouleStructure(this.getNrOfPlaces(), this.getPoules().length);
+    }
+
+    detach() {
+        const rounds = this.getNumber().getRounds();
+        const idx = rounds.indexOf(this);
+        if (idx > -1) {
+            rounds.splice(idx, 1);
+        }
+        if (rounds.length === 0) {
+            this.getNumber().detach();
+        }
+    }
 }
 

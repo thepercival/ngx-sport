@@ -1,13 +1,33 @@
-import { Round } from './group';
+import { HorizontalPoule } from '../poule/horizontal';
+import { QualifyGroup, Round } from './group';
+import { QualifyTarget } from './target';
 
 export abstract class QualifyRule {
-    constructor() { }
+    constructor(protected fromHorizontalPoule: HorizontalPoule/*, protected group: QualifyGroup*/) {
+    }
 
-    abstract getFromRound(): Round;
-    abstract isMultiple(): boolean;
-    abstract isSingle(): boolean;
-    abstract getWinnersOrLosers(): number;
+    getQualifyTarget(): QualifyTarget {
+        return this.fromHorizontalPoule.getQualifyTarget();
+    }
 
-    abstract getFromPlaceNumber(): number;
+    getFromHorizontalPoule(): HorizontalPoule {
+        return this.fromHorizontalPoule;
+    }
+
+    getNumber(): number {
+        return this.getFromHorizontalPoule().getNumber();
+    }
+
+    getFromRound(): Round {
+        return this.fromHorizontalPoule.getRound();
+    }
+
+    getFromPlaceNumber(): number {
+        return this.getFromHorizontalPoule().getPlaceNumber();
+    }
+
+    /*getGroup(): QualifyGroup {
+        return this.group;
+    }*/
 }
 

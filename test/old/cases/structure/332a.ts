@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { QualifyGroup, Structure } from '../../../../public_api';
+import { QualifyGroup, QualifyTarget, Structure } from '../../../../public_api';
 
 export const check332astructure = (structure: Structure) => {
     // roundnumbers
@@ -22,15 +22,15 @@ export const check332astructure = (structure: Structure) => {
     expect(structure.getRootRound()).to.not.equal(undefined);
     const rootRound = structure.getRootRound();
 
-    expect(rootRound.getQualifyGroups(QualifyGroup.WINNERS).length).to.equal(1);
+    expect(rootRound.getQualifyGroups(QualifyTarget.Winners).length).to.equal(1);
 
-    expect(rootRound.getHorizontalPoules(QualifyGroup.WINNERS).length).to.equal(3);
-    expect(rootRound.getHorizontalPoules(QualifyGroup.LOSERS).length).to.equal(3);
+    expect(rootRound.getHorizontalPoules(QualifyTarget.Winners).length).to.equal(3);
+    expect(rootRound.getHorizontalPoules(QualifyTarget.Losers).length).to.equal(3);
 
     // second rounds
-    [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-        expect(rootRound.getBorderQualifyGroup(winnersOrLosers)).to.not.equal(undefined);
-        const qualifyGroup = rootRound.getBorderQualifyGroup(winnersOrLosers);
+    [QualifyTarget.Winners, QualifyTarget.Losers].forEach(qualifyTarget => {
+        expect(rootRound.getBorderQualifyGroup(qualifyTarget)).to.not.equal(undefined);
+        const qualifyGroup = rootRound.getBorderQualifyGroup(qualifyTarget);
 
         expect(qualifyGroup.getBorderPoule()).to.not.equal(undefined);
         const borderPoule = qualifyGroup.getBorderPoule();
@@ -40,14 +40,14 @@ export const check332astructure = (structure: Structure) => {
         const secondRound = qualifyGroup.getChildRound();
 
         expect(secondRound.getPoules().length).to.equal(2);
-        expect(secondRound.getHorizontalPoules(QualifyGroup.WINNERS).length).to.equal(2);
-        expect(secondRound.getHorizontalPoules(QualifyGroup.LOSERS).length).to.equal(2);
+        expect(secondRound.getHorizontalPoules(QualifyTarget.Winners).length).to.equal(2);
+        expect(secondRound.getHorizontalPoules(QualifyTarget.Losers).length).to.equal(2);
         expect(secondRound.getNrOfPlaces()).to.equal(4);
 
         // third rounds
-        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-            expect(secondRound.getBorderQualifyGroup(winnersOrLosers)).to.not.equal(undefined);
-            const qualifyGroup = secondRound.getBorderQualifyGroup(winnersOrLosers);
+        [QualifyTarget.Winners, QualifyTarget.Losers].forEach(qualifyTarget => {
+            expect(secondRound.getBorderQualifyGroup(qualifyTarget)).to.not.equal(undefined);
+            const qualifyGroup = secondRound.getBorderQualifyGroup(qualifyTarget);
 
             expect(qualifyGroup.getBorderPoule()).to.not.equal(undefined);
             const borderPoule = qualifyGroup.getBorderPoule();
@@ -57,8 +57,8 @@ export const check332astructure = (structure: Structure) => {
             const thirdRound = qualifyGroup.getChildRound();
 
             expect(thirdRound.getPoules().length).to.equal(1);
-            expect(thirdRound.getHorizontalPoules(QualifyGroup.WINNERS).length).to.equal(2);
-            expect(thirdRound.getHorizontalPoules(QualifyGroup.LOSERS).length).to.equal(2);
+            expect(thirdRound.getHorizontalPoules(QualifyTarget.Winners).length).to.equal(2);
+            expect(thirdRound.getHorizontalPoules(QualifyTarget.Losers).length).to.equal(2);
             expect(thirdRound.getNrOfPlaces()).to.equal(2);
         });
     });

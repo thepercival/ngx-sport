@@ -20,6 +20,7 @@
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "chai": "^4.2.0",
+    "chalk": "^2.4.2",
     "colors": "^1.4.0",
     "cross-env": "^7.0.3",
     "karma": "^6.0.1",
@@ -61,7 +62,6 @@
     }
   ],
   "name": "ngx-sport",
-  "optionalDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/thepercival/ngx-sport.git"
@@ -125,6 +125,5 @@
         "pkgRoot": "dist"
       }
     ]
-  },
-  "dependencies": {}
+  }
 }

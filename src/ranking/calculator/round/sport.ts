@@ -5,7 +5,8 @@ import { PlaceSportPerformance } from "../../../place/sportPerformance";
 import { Poule } from "../../../poule";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { Round } from "../../../qualify/group";
-import { QualifyRule } from "../../../qualify/rule";
+import { QualifyRuleSingle } from "../../../qualify/rule/single";
+import { QualifyTarget } from "../../../qualify/target";
 import { State } from "../../../state";
 import { SportRoundRankingItem } from "../../item/round/sport";
 import { RankingRule } from "../../rule";
@@ -105,7 +106,10 @@ export abstract class SportRoundRankingCalculator {
      * Place can have a multiple and a single rule, if so than do not process place for horizontalpoule(multiple)
      */
     protected hasPlaceSingleQualifyRule(place: Place): boolean {
-        return place.getToQualifyRules().filter((qualifyRuleIt: QualifyRule) => qualifyRuleIt.isSingle()).length > 0;
+        return [QualifyTarget.Winners, QualifyTarget.Losers].some((qualifyTarget: QualifyTarget) => {
+            const qualifyRule = place.getHorizontalPoule(qualifyTarget).getQualifyRule();
+            return qualifyRule instanceof QualifyRuleSingle;
+        });
     }
 }
 

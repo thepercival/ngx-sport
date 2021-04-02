@@ -18,15 +18,15 @@ export class GamePlaceMapper {
 
     constructor(private scoreMapper: ScoreMapper) { }
 
-    toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame, planningMapperCache: PlanningReferences): GamePlace {
-        const place: Place = planningMapperCache.places[game.getPoule().getStructureNumber() + '.' + json.placeNr];
+    toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame): GamePlace {
+        const place = game.getPoule().getPlace(json.placeNr);
         const gamePlace = new AgainstGamePlace(game, place, json.side);
         gamePlace.setId(json.id);
         return gamePlace;
     }
 
-    toTogetherObject(json: JsonTogetherGamePlace, game: TogetherGame, planningMapperCache: PlanningReferences): GamePlace {
-        const place = planningMapperCache.places[game.getPoule().getStructureNumber() + '.' + json.placeNr];
+    toTogetherObject(json: JsonTogetherGamePlace, game: TogetherGame): GamePlace {
+        const place = game.getPoule().getPlace(json.placeNr);
         const gamePlace = new TogetherGamePlace(game, place, json.gameRoundNumber);
         gamePlace.setId(json.id);
         json.scores.map(jsonScore => this.scoreMapper.toTogetherObject(jsonScore, gamePlace));

@@ -2,14 +2,12 @@ import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { QualifyGroup, Round } from './qualify/group';
-import { QualifyRule } from './qualify/rule';
+import { QualifyTarget } from './qualify/target';
 
 export class Place extends PlaceLocation {
     protected id: number = 0;
     protected structureNumber: number = 0;
     protected penaltyPoints = 0;
-    protected fromQualifyRule: QualifyRule | undefined;
-    protected toQualifyRules: QualifyRule[] = [];
     protected horizontalPouleWinners: HorizontalPoule | undefined;
     protected horizontalPouleLosers: HorizontalPoule | undefined;
     protected qualifiedPlace: Place | undefined;
@@ -47,48 +45,16 @@ export class Place extends PlaceLocation {
         this.penaltyPoints = penaltyPoints;
     }
 
-    getFromQualifyRule(): QualifyRule | undefined {
-        return this.fromQualifyRule;
-    }
-
-    setFromQualifyRule(qualifyRule?: QualifyRule): void {
-        this.fromQualifyRule = qualifyRule;
-    }
-
-    getToQualifyRules(): QualifyRule[] {
-        return this.toQualifyRules;
-    }
-
-    getToQualifyRule(winnersOrLosers: number): QualifyRule | undefined {
-        return this.toQualifyRules.find((qualifyRuleIt: QualifyRule) => {
-            return (qualifyRuleIt.getWinnersOrLosers() === winnersOrLosers);
-        });
-    }
-
-    getStructureNumber(): string {
-        return this.poule.getStructureNumber() + '.' + this.placeNr;
-    }
-
-    setToQualifyRule(winnersOrLosers: number, qualifyRule: QualifyRule | undefined): void {
-        const toQualifyRuleOld = this.getToQualifyRule(winnersOrLosers);
-        if (toQualifyRuleOld !== undefined) {
-            // toQualifyRuleOld.removeFromPlace( this );
-            const index = this.toQualifyRules.indexOf(toQualifyRuleOld);
-            if (index > -1) {
-                this.toQualifyRules.splice(index, 1);
-            }
+    getHorizontalPoule(qualifyTarget: QualifyTarget): HorizontalPoule {
+        const horPoule = (qualifyTarget === QualifyTarget.Winners) ? this.horizontalPouleWinners : this.horizontalPouleLosers;
+        if (horPoule === undefined) {
+            throw Error('horizontal poule is not set');
         }
-        if (qualifyRule) {
-            this.toQualifyRules.push(qualifyRule);
-        }
+        return horPoule;
     }
 
-    getHorizontalPoule(winnersOrLosers: number): HorizontalPoule | undefined {
-        return (winnersOrLosers === QualifyGroup.WINNERS) ? this.horizontalPouleWinners : this.horizontalPouleLosers;
-    }
-
-    setHorizontalPoule(winnersOrLosers: number, horizontalPoule: HorizontalPoule | undefined) {
-        if (winnersOrLosers === QualifyGroup.WINNERS) {
+    setHorizontalPoule(qualifyTarget: QualifyTarget, horizontalPoule: HorizontalPoule | undefined) {
+        if (qualifyTarget === QualifyTarget.Winners) {
             this.horizontalPouleWinners = horizontalPoule;
         } else {
             this.horizontalPouleLosers = horizontalPoule;

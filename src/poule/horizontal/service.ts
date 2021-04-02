@@ -1,90 +1,100 @@
 import { Place } from '../../place';
 import { QualifyGroup, Round } from '../../qualify/group';
+import { QualifyTarget } from '../../qualify/target';
 import { HorizontalPoule } from '../horizontal';
 
 export class HorizontalPouleService {
-    private winnersAndLosers: number[];
+    ;
 
-    constructor(
-        private round: Round,
-        winnersOrLosers?: number
-    ) {
-        if (winnersOrLosers === undefined) {
-            this.winnersAndLosers = [QualifyGroup.WINNERS, QualifyGroup.LOSERS];
-        } else {
-            this.winnersAndLosers = [winnersOrLosers];
+    protected getQualifyTargets(qualifyTarget?: QualifyTarget): QualifyTarget[] {
+        if (qualifyTarget === undefined) {
+            return [QualifyTarget.Winners, QualifyTarget.Losers];
         }
+        return [qualifyTarget];
     }
 
-    recreate() {
-        this.remove();
-        this.create();
+    recreate(round: Round, qualifyTarget?: QualifyTarget) {
+        this.remove(round, qualifyTarget);
+        this.create(round, qualifyTarget);
     }
 
-    protected remove() {
-        this.winnersAndLosers.forEach(winnersOrLosers => {
-            const horizontalPoules = this.round.getHorizontalPoules(winnersOrLosers);
+    remove(round: Round, qualifyTarget?: QualifyTarget) {
+        const targets = this.getQualifyTargets(qualifyTarget);
+
+        targets.forEach((target: QualifyTarget) => {
+            const horizontalPoules = round.getHorizontalPoules(target);
             let horizontalPoule: HorizontalPoule | undefined;
             while (horizontalPoule = horizontalPoules.pop()) {
                 const places = horizontalPoule.getPlaces();
                 let place: Place | undefined;
                 while (place = places.pop()) {
-                    place.setHorizontalPoule(winnersOrLosers, undefined);
+                    place.setHorizontalPoule(target, undefined);
                 }
             }
         });
     }
 
-    protected create() {
-        this.winnersAndLosers.forEach(winnersOrLosers => {
-            this.createRoundHorizontalPoules(winnersOrLosers);
+    create(round: Round, qualifyTarget?: QualifyTarget) {
+        const targets = this.getQualifyTargets(qualifyTarget);
+        targets.forEach((target: QualifyTarget) => {
 
-            // s.round.getQualifyGroups(winnersOrLosers).forEach(qualifyGroup => {
+            this.createRoundHorizontalPoules(round, target);
+
+            // s.round.getQualifyGroups(qualifyTarget).forEach(qualifyGroup => {
             //     qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
             //         horizontalPoule.setQualifyGroup(qualifyGroup);
             //     });
 
-            // const qualifyGroupService = new QualifyGroupService(this.round, winnersOrLosers);
+            // const qualifyGroupService = new QualifyGroupService(this.round, qualifyTarget);
             // qualifyGroupService.recreate();
             // });
         });
     }
 
-    protected createRoundHorizontalPoules(winnersOrLosers: number): HorizontalPoule[] {
-        const horizontalPoules = this.round.getHorizontalPoules(winnersOrLosers);
+    protected createRoundHorizontalPoules(round: Round, qualifyTarget: QualifyTarget): HorizontalPoule[] {
+        const horizontalPoules = round.getHorizontalPoules(qualifyTarget);
 
-        const placesOrderedByPlaceNumber = this.getPlacesHorizontal();
-        if (winnersOrLosers === QualifyGroup.LOSERS) {
-            placesOrderedByPlaceNumber.reverse();
+        const placesHorizontalOrdered = this.getPlacesHorizontal(round);
+        if (qualifyTarget === QualifyTarget.Losers) {
+            placesHorizontalOrdered.reverse();
         }
 
-        placesOrderedByPlaceNumber.forEach(placeIt => {
-            let horizontalPoule = horizontalPoules.find(horizontalPouleIt => {
-                return horizontalPouleIt.getPlaces().some(poulePlaceIt => {
-                    let poulePlaceNrIt = poulePlaceIt.getNumber();
-                    if (winnersOrLosers === QualifyGroup.LOSERS) {
-                        poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;
-                    }
-                    let placeNrIt = placeIt.getNumber();
-                    if (winnersOrLosers === QualifyGroup.LOSERS) {
-                        placeNrIt = (placeIt.getPoule().getPlaces().length + 1) - placeNrIt;
-                    }
-                    return poulePlaceNrIt === placeNrIt;
-                });
-            });
+        const nrOfPoules = round.getPoules().length;
+        let horPlaces = placesHorizontalOrdered.splice(0, nrOfPoules);
+        let previous: HorizontalPoule | undefined;
+        while (horPlaces.length > 0) {
+            previous = new HorizontalPoule(round, qualifyTarget, previous, horPlaces);
+            horPlaces = placesHorizontalOrdered.splice(0, nrOfPoules);
+        }
 
-            if (horizontalPoule === undefined) {
-                horizontalPoule = new HorizontalPoule(this.round, horizontalPoules.length + 1);
-                horizontalPoules.push(horizontalPoule);
-            }
-            placeIt.setHorizontalPoule(winnersOrLosers, horizontalPoule);
-        });
+
+        // placesOrderedByPlaceNumber.forEach(placeIt => {
+        //     let horizontalPoule = horizontalPoules.find(horizontalPouleIt => {
+        //         return horizontalPouleIt.getPlaces().some(poulePlaceIt => {
+        //             let poulePlaceNrIt = poulePlaceIt.getNumber();
+        //             if (qualifyTarget === QualifyTarget.Losers) {
+        //                 poulePlaceNrIt = (poulePlaceIt.getPoule().getPlaces().length + 1) - poulePlaceNrIt;
+        //             }
+        //             let placeNrIt = placeIt.getNumber();
+        //             if (qualifyTarget === QualifyTarget.Losers) {
+        //                 placeNrIt = (placeIt.getPoule().getPlaces().length + 1) - placeNrIt;
+        //             }
+        //             return poulePlaceNrIt === placeNrIt;
+        //         });
+        //     });
+
+        //     if (horizontalPoule === undefined) {
+        //         horizontalPoule = new HorizontalPoule(this.round, horizontalPoules.length + 1);
+        //         horizontalPoules.push(horizontalPoule);
+        //     }
+        //     placeIt.setHorizontalPoule(qualifyTarget, horizontalPoule);
+        // });
         return horizontalPoules;
     }
 
-    protected getPlacesHorizontal(): Place[] {
+    protected getPlacesHorizontal(round: Round): Place[] {
         let places: Place[] = [];
-        this.round.getPoules().forEach((poule) => {
+        round.getPoules().forEach((poule) => {
             places = places.concat(poule.getPlaces());
         });
         places.sort((placeA, placeB) => {
@@ -105,7 +115,8 @@ export class HorizontalPouleService {
         return places;
     }
 
-    updateQualifyGroups(roundHorizontalPoules: HorizontalPoule[], horizontolPoulesCreators: HorizontolPoulesCreator[]) {
+    // hier vanavond verder mee!!!
+    /*updateQualifyGroups(roundHorizontalPoules: HorizontalPoule[], horizontolPoulesCreators: HorizontolPoulesCreator[]) {
         horizontolPoulesCreators.forEach(creator => {
             creator.qualifyGroup.getHorizontalPoules().splice(0);
             let qualifiersAdded = 0;
@@ -119,7 +130,7 @@ export class HorizontalPouleService {
             }
         });
         roundHorizontalPoules.forEach(roundHorizontalPoule => roundHorizontalPoule.setQualifyGroup(undefined));
-    }
+    }*/
 }
 
 export interface HorizontolPoulesCreator {

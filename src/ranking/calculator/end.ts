@@ -6,6 +6,8 @@ import { EndRankingItem } from '../item/end';
 import { State } from '../../state';
 import { Place } from '../../place';
 import { RoundRankingCalculator } from './round';
+import { QualifyTarget } from '../../qualify/target';
+import { QualifyRuleSingle } from '../../qualify/rule/single';
 
 export class EndRankingCalculator {
 
@@ -18,7 +20,7 @@ export class EndRankingCalculator {
         this.currentRank = 1;
         const getItems = (round: Round): EndRankingItem[] => {
             let items: EndRankingItem[] = [];
-            round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
+            round.getQualifyGroups(QualifyTarget.Winners).forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
             if (round.getState() === State.Finished) {
@@ -26,7 +28,7 @@ export class EndRankingCalculator {
             } else {
                 items = items.concat(this.getDropoutsNotPlayed(round));
             }
-            round.getQualifyGroups(QualifyGroup.LOSERS).slice().reverse().forEach(qualifyGroup => {
+            round.getQualifyGroups(QualifyTarget.Losers).slice().reverse().forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
             return items;
@@ -46,32 +48,40 @@ export class EndRankingCalculator {
     protected getDropouts(round: Round): EndRankingItem[] {
         let dropouts: EndRankingItem[] = [];
         let nrOfDropouts = round.getNrOfDropoutPlaces();
-        while (nrOfDropouts > 0) {
-            [QualifyGroup.WINNERS, QualifyGroup.LOSERS].every(winnersOrLosers => {
-                round.getHorizontalPoules(winnersOrLosers).every(horizontalPoule => {
-                    if (horizontalPoule.getQualifyGroup()?.getNrOfToPlacesTooMuch() === 0) {
-                        return nrOfDropouts > 0;
+        while (dropouts.length < nrOfDropouts) {
+            [QualifyTarget.Winners, QualifyTarget.Losers].every((qualifyTarget: QualifyTarget) => {
+                round.getHorizontalPoules(qualifyTarget).every((horPoule: HorizontalPoule) => {
+                    const horPouleDropouts = this.getHorizontalPouleDropouts(horPoule);
+                    let horPouleDropout = horPouleDropouts.pop();
+                    while (dropouts.length < nrOfDropouts && horPouleDropout !== undefined) {
+                        dropouts.push(horPouleDropout);
+                        horPouleDropout = horPouleDropouts.pop();
                     }
-                    const dropoutsHorizontalPoule = this.getDropoutsHorizontalPoule(horizontalPoule);
-                    while (nrOfDropouts - dropoutsHorizontalPoule.length < 0) {
-                        dropoutsHorizontalPoule.pop();
-                    }
-                    dropouts = dropouts.concat(dropoutsHorizontalPoule);
-                    nrOfDropouts -= dropoutsHorizontalPoule.length;
-                    return nrOfDropouts > 0;
+                    return dropouts.length < nrOfDropouts;
                 });
-                return nrOfDropouts > 0;
+                return dropouts.length < nrOfDropouts;
             });
         }
         return dropouts;
     }
 
-    protected getDropoutsHorizontalPoule(horizontalPoule: HorizontalPoule): EndRankingItem[] {
+    protected getHorizontalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
         const rankingCalculator = new RoundRankingCalculator();
         const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
-        rankingPlaces.splice(0, horizontalPoule.getNrOfQualifiers());
+        rankingPlaces.splice(0, this.getNrOfDropouts(horizontalPoule));
         return rankingPlaces.map((place: Place) => {
             return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
         });
+    }
+
+    getNrOfDropouts(horizontalPoule: HorizontalPoule): number {
+        const qualifyRule = horizontalPoule.getQualifyRule();
+        if (qualifyRule === undefined) {
+            return 0;
+        }
+        if (qualifyRule instanceof QualifyRuleSingle) {
+            return qualifyRule.getMappings().length;
+        }
+        return qualifyRule.getFromHorizontalPoule().getPlaces().length;
     }
 }

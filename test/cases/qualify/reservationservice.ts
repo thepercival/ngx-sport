@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getStructureService } from '../../helpers/singletonCreator';
+import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { CompetitorMap, PouleStructure, QualifyGroup, QualifyReservationService, QualifyService, Round } from '../../../public_api';
+import { CompetitorMap, PouleStructure, QualifyReservationService, QualifyService, QualifyTarget, Round } from '../../../public_api';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 
 describe('QualifyReservationService', () => {
@@ -14,12 +14,12 @@ describe('QualifyReservationService', () => {
     it('free and reserve', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = getStructureService();
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
         const rootRound: Round = structure.getRootRound();
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -43,7 +43,7 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        const winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        const winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;
@@ -60,21 +60,21 @@ describe('QualifyReservationService', () => {
     it('getFreeAndLeastAvailabe', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureService = getStructureService();
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3, 3));
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3, 3));
         const rootRound: Round = structure.getRootRound();
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        let winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        let winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;
         }
-        structureService.addPoule(winnersRound);
+        structureEditor.addPoule(winnersRound);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -115,7 +115,7 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;
@@ -136,7 +136,7 @@ describe('QualifyReservationService', () => {
         resService.reserve(3, pouleFour);
 
 
-        const fromPlaceLocations = rootRound.getHorizontalPoules(QualifyGroup.WINNERS)[0].getPlaces().map(place => {
+        const fromPlaceLocations = rootRound.getHorizontalPoules(QualifyTarget.Winners)[0].getPlaces().map(place => {
             return place;
         });
 
@@ -152,21 +152,21 @@ describe('QualifyReservationService', () => {
 
     it('2 roundnumbers, nine places, multiple rule, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureService = getStructureService();
-        const structure = structureService.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3));
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(3, 3, 3));
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        let winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        let winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;
         }
-        structureService.removePoule(winnersRound);
+        structureEditor.removePoule(winnersRound);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -199,13 +199,13 @@ describe('QualifyReservationService', () => {
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;
         }
 
-        winnersRound = rootRound.getChild(QualifyGroup.WINNERS, 1);
+        winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersRound).to.not.equal(undefined);
         if (!winnersRound) {
             return;

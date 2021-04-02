@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 
 import {
     Competition,
-    StructureService,
+    StructureEditor,
 } from '../../../../../public_api';
 
 
@@ -16,11 +16,11 @@ describe('Sport/PlanningConfig/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition: Competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 1);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 4, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
 
-        // structureService.create calls createDefault
+        // structureEditor.create calls createDefault
         expect(firstRoundNumber.getSportPlanningConfigs().length).to.equal(1);
     });
 
@@ -28,8 +28,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 4, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
 
     //     const service = new SportPlanningConfigService();
@@ -46,8 +46,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 4, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
 
     //     const service = new SportPlanningConfigService();
@@ -69,8 +69,8 @@ describe('Sport/PlanningConfig/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6, 1);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 6, 1);
         const firstRoundNumber = structure.getFirstRoundNumber();
         firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
@@ -93,8 +93,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 9, 2);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 9, 2);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
 
 
@@ -119,8 +119,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 6, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 6, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
 
 
@@ -141,8 +141,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 3, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 3, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
     //     firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
@@ -157,8 +157,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 4, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 4, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
     //     firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
@@ -192,8 +192,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 5, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 5, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
     //     firstRoundNumber.getValidPlanningConfig().setTeamup(true);
 
@@ -216,8 +216,8 @@ describe('Sport/PlanningConfig/Service', () => {
     //     const competitionMapper = getMapper('competition');
     //     const competition = competitionMapper.toObject(jsonCompetition);
 
-    //     const structureService = new StructureService();
-    //     const structure = structureService.create(competition, 6, 1);
+    //     const structureEditor = new StructureEditor();
+    //     const structure = structureEditor.create(competition, 6, 1);
     //     const firstRoundNumber = structure.getFirstRoundNumber();
 
     //     const firstPoule = structure.getRootRound().getPoule(1);

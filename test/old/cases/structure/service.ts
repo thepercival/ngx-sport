@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { StructureService } from '../../../../public_api';
+import { QualifyTarget, StructureEditor } from '../../../../public_api';
 import { QualifyGroup, HorizontalPoule } from '../../../../public_api';
 import { getMapper } from '../../../helpers/singletonCreator';
 import { jsonCompetition } from '../../../data/competition';
@@ -13,161 +13,161 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 8, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 8, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 4);
 
-        [QualifyGroup.WINNERS, QualifyGroup.LOSERS].forEach(winnersOrLosers => {
-            const childRound = rootRound.getBorderQualifyGroup(winnersOrLosers).getChildRound();
-            structureService.addQualifier(childRound, QualifyGroup.WINNERS);
-            structureService.addQualifier(childRound, QualifyGroup.LOSERS);
+        [QualifyTarget.Winners, QualifyTarget.Losers].forEach((qualifyTarget: QualifyTarget) => {
+            const childRound = rootRound.getBorderQualifyGroup(qualifyTarget).getChildRound();
+            structureEditor.addQualifier(childRound, QualifyTarget.Winners);
+            structureEditor.addQualifier(childRound, QualifyTarget.Losers);
         });
 
         check332astructure(structure);
     });
 
     it('default poules', () => {
-        const structureService = new StructureService({ min: 3, max: 40 });
+        const structureEditor = new StructureEditor({ min: 3, max: 40 });
 
-        expect(() => structureService.getDefaultNrOfPoules(2)).to.throw(Error);
-        expect(structureService.getDefaultNrOfPoules(3)).to.equal(1);
-        expect(structureService.getDefaultNrOfPoules(40)).to.equal(8);
-        expect(() => structureService.getDefaultNrOfPoules(41)).to.throw(Error);
+        expect(() => structureEditor.getDefaultNrOfPoules(2)).to.throw(Error);
+        expect(structureEditor.getDefaultNrOfPoules(3)).to.equal(1);
+        expect(structureEditor.getDefaultNrOfPoules(40)).to.equal(8);
+        expect(() => structureEditor.getDefaultNrOfPoules(41)).to.throw(Error);
 
-        const structureService2 = new StructureService();
-        expect(structureService2.getDefaultNrOfPoules(2)).to.equal(1);
-        expect(() => structureService2.getDefaultNrOfPoules(1)).to.throw(Error);
-        expect(structureService2.getDefaultNrOfPoules(41)).to.equal(8);
+        const structureEditor2 = new StructureEditor();
+        expect(structureEditor2.getDefaultNrOfPoules(2)).to.equal(1);
+        expect(() => structureEditor2.getDefaultNrOfPoules(1)).to.throw(Error);
+        expect(structureEditor2.getDefaultNrOfPoules(41)).to.equal(8);
     });
 
     it('minimal number of places per poule', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 6, 3);
         const rootRound = structure.getRootRound();
 
-        expect(() => structureService.removePlaceFromRootRound(rootRound)).to.throw(Error);
+        expect(() => structureEditor.removePlaceFromRootRound(rootRound)).to.throw(Error);
     });
 
     it('minimal number of places/poules', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 2);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 4, 2);
         const rootRound = structure.getRootRound();
 
-        expect(() => structureService.removePoule(rootRound, false)).to.not.throw(Error);
+        expect(() => structureEditor.removePoule(rootRound, false)).to.not.throw(Error);
 
-        expect(() => structureService.removePoule(rootRound, false)).to.throw(Error);
+        expect(() => structureEditor.removePoule(rootRound, false)).to.throw(Error);
     });
 
     it('maximal number of places', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService({ min: 3, max: 40 });
-        const structure = structureService.create(competition, 36, 6);
+        const structureEditor = new StructureEditor({ min: 3, max: 40 });
+        const structure = structureEditor.create(competition, 36, 6);
         const rootRound = structure.getRootRound();
 
-        expect(() => structureService.addPoule(rootRound, true)).to.throw(Error);
+        expect(() => structureEditor.addPoule(rootRound, true)).to.throw(Error);
     });
 
     it('minumum number of qualifiers', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 2);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 4, 2);
         const rootRound = structure.getRootRound();
 
-        structureService.addPlaceToRootRound(rootRound);
-        structureService.addPlaceToRootRound(rootRound);
+        structureEditor.addPlaceToRootRound(rootRound);
+        structureEditor.addPlaceToRootRound(rootRound);
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
 
-        structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
 
-        expect(() => structureService.removePlaceFromRootRound(rootRound)).to.not.throw(Error);
-        expect(() => structureService.removePlaceFromRootRound(rootRound)).to.throw(Error);
+        expect(() => structureEditor.removePlaceFromRootRound(rootRound)).to.not.throw(Error);
+        expect(() => structureEditor.removePlaceFromRootRound(rootRound)).to.throw(Error);
 
-        structureService.addPlaceToRootRound(rootRound);
+        structureEditor.addPlaceToRootRound(rootRound);
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.removeQualifier(rootRound, QualifyGroup.LOSERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.removeQualifier(rootRound, QualifyTarget.Losers);
 
-        expect(() => structureService.removePoule(rootRound, true)).to.throw(Error);
+        expect(() => structureEditor.removePoule(rootRound, true)).to.throw(Error);
     });
 
     it('maximal number of qualifiers', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 4, 2);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 4, 2);
         const rootRound = structure.getRootRound();
 
-        expect(() => structureService.addQualifier(rootRound, QualifyGroup.WINNERS)).to.not.throw(Error);
-        expect(() => structureService.addQualifier(rootRound, QualifyGroup.WINNERS)).to.not.throw(Error);
-        expect(() => structureService.addQualifier(rootRound, QualifyGroup.WINNERS)).to.not.throw(Error);
+        expect(() => structureEditor.addQualifier(rootRound, QualifyTarget.Winners)).to.not.throw(Error);
+        expect(() => structureEditor.addQualifier(rootRound, QualifyTarget.Winners)).to.not.throw(Error);
+        expect(() => structureEditor.addQualifier(rootRound, QualifyTarget.Winners)).to.not.throw(Error);
 
-        structureService.removeQualifier(rootRound, QualifyGroup.WINNERS);
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+        structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
 
-        expect(() => structureService.addQualifier(rootRound, QualifyGroup.WINNERS)).to.throw(Error);
+        expect(() => structureEditor.addQualifier(rootRound, QualifyTarget.Winners)).to.throw(Error);
     });
 
     it('qualifiers available', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 8, 2);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 8, 2);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 4);
 
-        expect(() => structureService.removePoule(rootRound, true)).to.not.throw(Error);
-        expect(() => structureService.removePoule(rootRound, true)).to.throw(Error);
+        expect(() => structureEditor.removePoule(rootRound, true)).to.not.throw(Error);
+        expect(() => structureEditor.removePoule(rootRound, true)).to.throw(Error);
     });
 
     it('competitor range', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService({ min: 3, max: 40 });
-        const structure = structureService.create(competition, 3, 1);
+        const structureEditor = new StructureEditor({ min: 3, max: 40 });
+        const structure = structureEditor.create(competition, 3, 1);
         const rootRound = structure.getRootRound();
 
-        expect(() => structureService.removePlaceFromRootRound(rootRound)).to.throw(Error);
+        expect(() => structureEditor.removePlaceFromRootRound(rootRound)).to.throw(Error);
 
-        const structure2 = structureService.create(competition, 40, 4);
+        const structure2 = structureEditor.create(competition, 40, 4);
         const rootRound2 = structure2.getRootRound();
 
-        expect(() => structureService.addPlaceToRootRound(rootRound2)).to.throw(Error);
+        expect(() => structureEditor.addPlaceToRootRound(rootRound2)).to.throw(Error);
     });
 
     it('remove poule next round', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 6);
         const rootRound = structure.getRootRound();
-        structureService.addPoule(rootRound, true);
+        structureEditor.addPoule(rootRound, true);
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 4);
 
-        const childRound = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS).getChildRound();
+        const childRound = rootRound.getBorderQualifyGroup(QualifyTarget.Winners).getChildRound();
 
-        expect(() => structureService.removePoule(childRound)).to.not.throw(Error);
-        expect(() => structureService.addPoule(childRound)).to.not.throw(Error);
-        expect(() => structureService.removePoule(childRound)).to.not.throw(Error);
+        expect(() => structureEditor.removePoule(childRound)).to.not.throw(Error);
+        expect(() => structureEditor.addPoule(childRound)).to.not.throw(Error);
+        expect(() => structureEditor.removePoule(childRound)).to.not.throw(Error);
 
         expect(childRound.getPoules().length).to.equal(1);
         expect(childRound.getNrOfPlaces()).to.equal(4);
@@ -178,43 +178,43 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 8, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 8, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 4);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
         }
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
         }
     });
 
@@ -223,44 +223,44 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 8, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 8, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 4);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
         }
 
-        structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
         }
     });
 
@@ -269,44 +269,44 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 7, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 7, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 4);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
         }
 
-        structureService.addQualifier(rootRound, QualifyGroup.WINNERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(true);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.not.throw(Error);
         }
     });
 
@@ -315,44 +315,44 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 7, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 7, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 4);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 4);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule1, horPoule2)).to.equal(false);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule1, horPoule2)).to.throw(Error);
         }
 
-        structureService.addQualifier(rootRound, QualifyGroup.LOSERS);
+        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
 
         {
-            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
             expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(2);
 
-            const horPoule1 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 1);
-            const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.LOSERS, 2);
+            const horPoule1 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 1);
+            const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Losers, 2);
 
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
-            expect(structureService.isQualifyGroupSplittable(horPoule2, horPoule1)).to.equal(true);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
-            expect(() => structureService.splitQualifyGroup(borderQualifyGroup, horPoule2, horPoule1)).to.not.throw(Error);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule1)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(undefined, horPoule2)).to.equal(false);
+            expect(structureEditor.isQualifyGroupSplittable(horPoule2, horPoule1)).to.equal(true);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule1)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, undefined, horPoule2)).to.throw(Error);
+            expect(() => structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule2, horPoule1)).to.not.throw(Error);
         }
     });
 
@@ -360,39 +360,39 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 12, 2);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 12, 2);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 12);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 12);
 
-        const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+        const borderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
 
         expect(borderQualifyGroup.getHorizontalPoules().length).to.equal(6);
 
-        const horPoule4 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 4);
-        const horPoule5 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 5);
+        const horPoule4 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 4);
+        const horPoule5 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 5);
 
         // nrs 1 t/ 4(8) opgesplits van nrs 5 t/m 6(4)
-        structureService.splitQualifyGroup(borderQualifyGroup, horPoule4, horPoule5);
+        structureEditor.splitQualifyGroup(borderQualifyGroup, horPoule4, horPoule5);
 
-        const horPoule2 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
-        const horPoule3 = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 3);
+        const horPoule2 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
+        const horPoule3 = rootRound.getHorizontalPoule(QualifyTarget.Winners, 3);
 
-        const firstQualifyGroup = rootRound.getQualifyGroup(QualifyGroup.WINNERS, 1);
+        const firstQualifyGroup = rootRound.getQualifyGroup(QualifyTarget.Winners, 1);
 
         // nrs 1 t/ 2(4), nrs 3 t/ 4(4) en nrs 5 t/m 6(4)
-        structureService.splitQualifyGroup(firstQualifyGroup, horPoule2, horPoule3);
+        structureEditor.splitQualifyGroup(firstQualifyGroup, horPoule2, horPoule3);
 
-        const qualifyGroup12 = rootRound.getQualifyGroup(QualifyGroup.WINNERS, 1);
-        const qualifyGroup56 = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+        const qualifyGroup12 = rootRound.getQualifyGroup(QualifyTarget.Winners, 1);
+        const qualifyGroup56 = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
 
-        const horPoule1c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 1);
-        const horPoule2c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 2);
-        const horPoule3c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 3);
-        const horPoule4c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 4);
-        const horPoule5c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 5);
-        const horPoule6c = rootRound.getHorizontalPoule(QualifyGroup.WINNERS, 6);
+        const horPoule1c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 1);
+        const horPoule2c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
+        const horPoule3c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 3);
+        const horPoule4c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 4);
+        const horPoule5c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 5);
+        const horPoule6c = rootRound.getHorizontalPoule(QualifyTarget.Winners, 6);
 
         const hasHorPoule = (qualifyGroup: QualifyGroup, horPoule: HorizontalPoule): boolean => {
             return qualifyGroup.getHorizontalPoules().find(horPouleIt => horPouleIt === horPoule) !== undefined;
@@ -412,24 +412,24 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 6, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 6, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 3);
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 3);
 
         {
-            const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
-            const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
+            const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
-            expect(structureService.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
-            expect(structureService.areQualifyGroupsMergable(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
-            expect(structureService.areQualifyGroupsMergable(winnersBorderQualifyGroup, undefined)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(winnersBorderQualifyGroup, undefined)).to.equal(false);
 
-            expect(() => structureService.mergeQualifyGroups(undefined, winnersBorderQualifyGroup)).to.throw(Error);
-            expect(() => structureService.mergeQualifyGroups(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.throw(Error);
-            expect(() => structureService.mergeQualifyGroups(winnersBorderQualifyGroup, undefined)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(undefined, winnersBorderQualifyGroup)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(winnersBorderQualifyGroup, undefined)).to.throw(Error);
         }
     });
 
@@ -438,25 +438,25 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 13, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 13, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 5);
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 5);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 5);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 5);
 
         {
-            const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
-            const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+            const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
+            const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
 
-            expect(structureService.areQualifyGroupsMergable(winnersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
-            expect(structureService.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
-            expect(structureService.areQualifyGroupsMergable(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
-            expect(structureService.areQualifyGroupsMergable(winnersBorderQualifyGroup, undefined)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(winnersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(undefined, winnersBorderQualifyGroup)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.equal(false);
+            expect(structureEditor.areQualifyGroupsMergable(winnersBorderQualifyGroup, undefined)).to.equal(false);
 
-            expect(() => structureService.mergeQualifyGroups(undefined, winnersBorderQualifyGroup)).to.throw(Error);
-            expect(() => structureService.mergeQualifyGroups(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.throw(Error);
-            expect(() => structureService.mergeQualifyGroups(winnersBorderQualifyGroup, undefined)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(undefined, winnersBorderQualifyGroup)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(losersBorderQualifyGroup, winnersBorderQualifyGroup)).to.throw(Error);
+            expect(() => structureEditor.mergeQualifyGroups(winnersBorderQualifyGroup, undefined)).to.throw(Error);
         }
     });
 
@@ -465,25 +465,25 @@ describe('Structure/Service', () => {
         const competitionMapper = getMapper('competition');
         const competition = competitionMapper.toObject(jsonCompetition);
 
-        const structureService = new StructureService();
-        const structure = structureService.create(competition, 13, 3);
+        const structureEditor = new StructureEditor();
+        const structure = structureEditor.create(competition, 13, 3);
         const rootRound = structure.getRootRound();
 
-        structureService.addQualifiers(rootRound, QualifyGroup.WINNERS, 5);
-        structureService.addQualifiers(rootRound, QualifyGroup.LOSERS, 5);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 5);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 5);
 
-        const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.WINNERS);
+        const winnersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Winners);
         const winHorPoules = winnersBorderQualifyGroup.getHorizontalPoules();
 
-        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, winHorPoules[0], winHorPoules[1])).to.not.throw(Error);
-        const winnersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyGroup.WINNERS);
-        expect(() => structureService.mergeQualifyGroups(winnersBorderQualifyGroups[1], winnersBorderQualifyGroups[0])).to.not.throw(Error);
+        expect(() => structureEditor.splitQualifyGroup(winnersBorderQualifyGroup, winHorPoules[0], winHorPoules[1])).to.not.throw(Error);
+        const winnersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyTarget.Winners);
+        expect(() => structureEditor.mergeQualifyGroups(winnersBorderQualifyGroups[1], winnersBorderQualifyGroups[0])).to.not.throw(Error);
 
-        const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyGroup.LOSERS);
+        const losersBorderQualifyGroup = rootRound.getBorderQualifyGroup(QualifyTarget.Losers);
         const losHorPoules = losersBorderQualifyGroup.getHorizontalPoules();
 
-        expect(() => structureService.splitQualifyGroup(winnersBorderQualifyGroup, losHorPoules[0], losHorPoules[1])).to.not.throw(Error);
-        const losersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyGroup.LOSERS);
-        expect(() => structureService.mergeQualifyGroups(losersBorderQualifyGroups[0], losersBorderQualifyGroups[1])).to.not.throw(Error);
+        expect(() => structureEditor.splitQualifyGroup(winnersBorderQualifyGroup, losHorPoules[0], losHorPoules[1])).to.not.throw(Error);
+        const losersBorderQualifyGroups = rootRound.getQualifyGroups(QualifyTarget.Losers);
+        expect(() => structureEditor.mergeQualifyGroups(losersBorderQualifyGroups[0], losersBorderQualifyGroups[1])).to.not.throw(Error);
     });
 });
