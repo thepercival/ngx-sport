@@ -11,16 +11,16 @@ export class QualifyRuleSingle extends QualifyRule {
 
     constructor(
         fromHorizontalPoule: HorizontalPoule,
-        /*group: QualifyGroup,*/
+        group: QualifyGroup,
         private placeMappings: QualifyPlaceMapping[],
         private previous: QualifyRuleSingle | undefined) {
         super(fromHorizontalPoule/*, group*/);
         this.fromHorizontalPoule.setQualifyRule(this);
         if (this.previous !== undefined) {
             this.previous.setNext(this);
-        } /*else {
+        } else {
             group.setFirstSingleRule(this);
-        }*/
+        }
     }
 
     getMappings(): QualifyPlaceMapping[] {

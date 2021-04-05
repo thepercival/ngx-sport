@@ -104,6 +104,14 @@ export class QualifyGroup extends Identifiable {
         return multipleRule;
     }
 
+    getFromPlace(toPlace: Place): Place | undefined {
+        let singleRule = this.getRule(toPlace);
+        if (singleRule instanceof QualifyRuleSingle) {
+            return singleRule.getFromPlace(toPlace);
+        }
+        return undefined;
+    }
+
     isBorderGroup(): boolean {
         const qualifyGroups = this.getParentRound().getQualifyGroups(this.getTarget());
         return this === qualifyGroups[qualifyGroups.length - 1];
@@ -398,7 +406,50 @@ export class Round extends Identifiable {
     }
 
     addPlace() {
+        const pouleStructure = this.createPouleStructure();
+        const pouleNr = pouleStructure.getFirstLesserNrOfPlacesPouleNr();
+        new Place(this.getPoule(pouleNr));
+    }
 
+    removePlace(): number {
+        const pouleStructure = this.createPouleStructure();
+        const pouleNr = pouleStructure.getLastGreaterNrOfPlacesPouleNr();
+        const poule = this.getPoule(pouleNr);
+
+        const poulePlaces = poule.getPlaces();
+        const removedPoulePlaces = poulePlaces.splice(poulePlaces.length - 1, 1);
+
+        if (poulePlaces.length === 1) {
+            this.removePoule();
+            return 2;
+        }
+        return removedPoulePlaces.length;
+    }
+
+    getFirstPoule(): Poule {
+        return this.getPoules()[0];
+    }
+
+    getLastPoule(): Poule {
+        const poules = this.getPoules();
+        return poules[poules.length - 1];
+    }
+
+
+    addPoule(): Poule {
+        const lastPoule = this.getLastPoule();
+        const poule = new Poule(this);
+        lastPoule.getPlaces().forEach((place: Place) => new Place(poule));
+        return this.getLastPoule();
+    }
+
+    removePoule(): Poule {
+        const lastPoule = this.getLastPoule();
+        this.poules.splice(this.poules.length - 1, 1);
+        if (this.poules.length === 0) {
+            this.detach();
+        }
+        return lastPoule;
     }
 
     // getChild(getStructurePathNode(structurePath: string): StructurePathNode {
@@ -432,7 +483,8 @@ export class Round extends Identifiable {
     }
 
     createPouleStructure(): BalancedPouleStructure {
-        return new BalancedPouleStructure(this.getNrOfPlaces(), this.getPoules().length);
+        const nrOfPlaces = this.getPoules().map((poule: Poule): number => poule.getPlaces().length);
+        return new BalancedPouleStructure(...nrOfPlaces);
     }
 
     detach() {
@@ -444,6 +496,7 @@ export class Round extends Identifiable {
         if (rounds.length === 0) {
             this.getNumber().detach();
         }
+        this.parentQualifyGroup = undefined;
     }
 }
 

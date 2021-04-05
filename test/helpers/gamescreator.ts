@@ -19,9 +19,8 @@ export function createGames(roundNumber: RoundNumber) {
         }
     };
     const planningMapper = getPlanningMapper();
-    planningMapper.initCache(roundNumber.getCompetition());
-    const references = planningMapper.getReferences(roundNumber);
+    const map = planningMapper.getCompetitionSportMap(roundNumber.getCompetition());
     roundNumber.getPoules().forEach((poule: Poule) => {
-        getJson(poule).forEach(jsonGame => getGameMapper().toNewAgainst(jsonGame, poule, references));
+        getJson(poule).forEach(jsonGame => getGameMapper().toNewAgainst(jsonGame, poule, map));
     });
 }

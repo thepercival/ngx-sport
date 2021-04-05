@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { PouleStructure, QualifyGroup, QualifyReservationService, QualifyService, Round } from '../../../../public_api';
+import { PouleStructure, QualifyGroup, QualifyReservationService, QualifyService, QualifyTarget, Round } from '../../../../public_api';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
@@ -14,11 +14,11 @@ describe('QualifyRuleQueue', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [5]);
         const rootRound: Round = structure.getRootRound();
 
-        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
-        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -42,11 +42,6 @@ describe('QualifyRuleQueue', () => {
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        const winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
-        expect(winnersRound).to.not.equal(undefined);
-        if (!winnersRound) {
-            return;
-        }
         const resService = new QualifyReservationService(winnersRound);
 
         expect(resService.isFree(1, pouleOne)).to.equal(true);

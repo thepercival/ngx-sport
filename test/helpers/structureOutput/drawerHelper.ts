@@ -45,7 +45,9 @@ export class DrawHelper {
             pouleCoordinate = this.drawPoule(poule, pouleCoordinate);
         });
         const qualifyRulesOrigin = this.drawHorPoules(round, pouleCoordinate.incrementX());
-        this.drawQualifyRules(round, qualifyRulesOrigin);
+        if (qualifyRulesOrigin !== undefined) {
+            this.drawQualifyRules(round, qualifyRulesOrigin);
+        }
 
         const nextRoundNumber = round.getNumber().getNext();
         if (nextRoundNumber !== undefined) {
@@ -65,7 +67,7 @@ export class DrawHelper {
         const newCoordinate = origin.add(RangeCalculator.BORDER, RangeCalculator.BORDER);
 
         const innerRoundWidth = this.rangeCalculator.getRoundWidth(round) - (2 * RangeCalculator.BORDER);
-        const poulesWidth = this.rangeCalculator.getAllPoulesWidth(round.getPoules());
+        const poulesWidth = this.rangeCalculator.getAllPoulesWidth(round);
         const delta = Math.floor((innerRoundWidth - poulesWidth) / 2);
         return newCoordinate.addX(delta);
     }
@@ -93,7 +95,12 @@ export class DrawHelper {
         return nextPouleCoordrinate.addX(RangeCalculator.PADDING + 1);
     }
 
-    protected drawHorPoules(round: Round, borderOrigin: Coordinate): Coordinate {
+    protected drawHorPoules(round: Round, borderOrigin: Coordinate): Coordinate | undefined {
+        if (round.getHorizontalPoules(QualifyTarget.Winners).length === 0
+            && round.getHorizontalPoules(QualifyTarget.Losers).length === 0) {
+            return undefined;
+        }
+
         this.drawer.drawLineVertAwayFromOrigin(borderOrigin, 2 + round.getHorizontalPoules(QualifyTarget.Winners).length);
         const origin = borderOrigin.addX(2);
         this.drawer.drawToRight(origin, QualifyTarget.Winners + ' ' + QualifyTarget.Losers);
@@ -171,7 +178,7 @@ export class DrawHelper {
         if (qualifyRule instanceof QualifyRuleMultiple
             && qualifyTarget === QualifyTarget.Losers
             && winnersHaveMultipleRule) {
-            return GridColor.Purple;
+            return GridColor.Yellow;
 
         }
         return this.getQualifyTargetColor(qualifyTarget);

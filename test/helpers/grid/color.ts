@@ -1,3 +1,3 @@
 export enum GridColor {
-    White = 0, Red, Green, Purple
+    White = 0, Red, Green, Yellow
 }

@@ -71,7 +71,7 @@ export class QualifyService {
         }
         const round = ruleMultiple.getFromRound();
         const rankingPlaceLocations: PlaceLocation[] =
-            this.roundRankingCalculator.getPlaceLocationsForHorizontalPoule(ruleMultiple.getFromHorizontalPoule());
+            this.roundRankingCalculator.getPlaceLocationsForMultipleRule(ruleMultiple);
 
         while (rankingPlaceLocations.length > toPlaces.length) {
             ruleMultiple.getQualifyTarget() === QualifyTarget.Winners ? rankingPlaceLocations.pop() : rankingPlaceLocations.shift();

@@ -15,7 +15,7 @@
                 "${workspaceFolder}/test/hook.js",
                 "--colors",
                 "--recursive",
-                "${workspaceFolder}/test/cases/structure.ts"
+                "${workspaceFolder}/test/cases/qualify/reservationService.ts"
             ],
             "env": {
                 "NODE_ENV": "development",

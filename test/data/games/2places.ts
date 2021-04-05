@@ -36,6 +36,6 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
     state: State.Created,
     startDateTime: undefined,
     referee: undefined,
-    refereePlaceLocId: undefined,
+    refereePlaceLocation: undefined,
     scores: []
 }];

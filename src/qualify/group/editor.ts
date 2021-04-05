@@ -16,68 +16,70 @@ export class QualifyGroupEditor {
 
     // horizontalPoule is split-points, from which qualifyGroup
     splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: QualifyRuleSingle) {
-        const childRound = qualifyGroup.getChildRound();
+        throw new Error('implement splitQualifyGroupFrom');
+        // const childRound = qualifyGroup.getChildRound();
 
 
-        // split rules at singleRule
-        const parentRound = qualifyGroup.getParentRound();
-        const nrOfPlacesChildRound = childRound.getNrOfPlaces();
+        // // split rules at singleRule
+        // const parentRound = qualifyGroup.getParentRound();
+        // const nrOfPlacesChildRound = childRound.getNrOfPlaces();
 
-        // TODOSTRUCTURE CDK
-        // ipv newNrOfToPlaces kun je ook een goedepoulestructuur ophalen, deze kun je dan meteen meegeven aan updateRound(r36)
-        const newNrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
-        singleRule.detach();
+        // // TODOSTRUCTURE CDK
+        // // ipv newNrOfToPlaces kun je ook een goedepoulestructuur ophalen, deze kun je dan meteen meegeven aan updateRound(r36)
+        // const newNrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        // singleRule.detach();
 
-        // updateRound childround
-        {
-            let newNrOfPoules = this.structureEditor.calculateNewNrOfPoules(qualifyGroup, newNrOfToPlaces);
-            while ((newNrOfToPlaces / newNrOfPoules) < 2) {
-                newNrOfPoules--;
-            }
-            this.structureEditor.updateRound(childRound, newNrOfToPlaces, newNrOfPoules);
-        }
+        // // updateRound childround
+        // {
+        //     let newNrOfPoules = this.structureEditor.calculateNewNrOfPoules(qualifyGroup, newNrOfToPlaces);
+        //     while ((newNrOfToPlaces / newNrOfPoules) < 2) {
+        //         newNrOfPoules--;
+        //     }
+        //     this.structureEditor.updateRound(childRound, newNrOfToPlaces, newNrOfPoules);
+        // }
 
-        // get next (new) RoundNumber
-        let nextRoundNumber: RoundNumber | undefined = parentRound.getNumber().getNext();
-        if (!nextRoundNumber) {
-            nextRoundNumber = parentRound.getNumber().createNext();
-        }
-        // create new QualifyGroup
-        const newQualifyGroup = new QualifyGroup(parentRound, qualifyGroup.getTarget(), nextRoundNumber /*+ 1* is index*/);
-        // renumber qualifyGroups
-        this.renumber(parentRound, qualifyGroup.getTarget());
-        // fill childRound
-        const newChildPouleStructure = childRound.createPouleStructure().addPlace();
+        // // get next (new) RoundNumber
+        // let nextRoundNumber: RoundNumber | undefined = parentRound.getNumber().getNext();
+        // if (!nextRoundNumber) {
+        //     nextRoundNumber = parentRound.getNumber().createNext();
+        // }
+        // // create new QualifyGroup
+        // const newQualifyGroup = new QualifyGroup(parentRound, qualifyGroup.getTarget(), nextRoundNumber /*+ 1* is index*/);
+        // // renumber qualifyGroups
+        // this.renumber(parentRound, qualifyGroup.getTarget());
+        // // fill childRound
+        // const newChildPouleStructure = childRound.createPouleStructure().addPlace();
 
 
-        const splittedNrOfQualifiers = nrOfPlacesChildRound - newNrOfToPlaces;
-        let splittedNrOfPoules = this.structureEditor.calculateNewNrOfPoules(qualifyGroup, newNrOfToPlaces);
-        while ((splittedNrOfQualifiers / splittedNrOfPoules) < 2) {
-            splittedNrOfPoules--;
-        }
-        this.structureEditor.updateRound(childRound, splittedNrOfQualifiers, splittedNrOfPoules);
+        // const splittedNrOfQualifiers = nrOfPlacesChildRound - newNrOfToPlaces;
+        // let splittedNrOfPoules = this.structureEditor.calculateNewNrOfPoules(qualifyGroup, newNrOfToPlaces);
+        // while ((splittedNrOfQualifiers / splittedNrOfPoules) < 2) {
+        //     splittedNrOfPoules--;
+        // }
+        // this.structureEditor.updateRound(childRound, splittedNrOfQualifiers, splittedNrOfPoules);
 
-        // rest hor poules to qualifyGroup
-        // splittedHorPoules.forEach((splittedHorPoule: HorizontalPoule) => {
-        //     splittedHorPoule.setQualifyGroup(newQualifyGroup);
-        // });
+        // // rest hor poules to qualifyGroup
+        // // splittedHorPoules.forEach((splittedHorPoule: HorizontalPoule) => {
+        // //     splittedHorPoule.setQualifyGroup(newQualifyGroup);
+        // // });
     }
 
     mergeQualifyGroups(firstQualifyGroup: QualifyGroup, secondQualifyGroup: QualifyGroup) {
-        const parentRound = firstQualifyGroup.getParentRound();
-        // qualifyGroups should be list with nextprevious
+        throw new Error('mergeQualifyGroups');
+        // const parentRound = firstQualifyGroup.getParentRound();
+        // // qualifyGroups should be list with nextprevious
 
-        // secondQualifyGroup
+        // // secondQualifyGroup
 
-        secondQualifyGroup.detach();
-        this.renumber(parentRound, firstQualifyGroup.getTarget());
+        // secondQualifyGroup.detach();
+        // this.renumber(parentRound, firstQualifyGroup.getTarget());
 
-        // secondQualifyGroup.getHorizontalPoules().splice(idx, 1);
+        // // secondQualifyGroup.getHorizontalPoules().splice(idx, 1);
 
-        // const removedHorPoules = secondQualifyGroup.getHorizontalPoules();
-        // removedHorPoules.forEach((removedHorPoule: HorizontalPoule) => {
-        //     removedHorPoule.setQualifyGroup(firstQualifyGroup);
-        // });
+        // // const removedHorPoules = secondQualifyGroup.getHorizontalPoules();
+        // // removedHorPoules.forEach((removedHorPoule: HorizontalPoule) => {
+        // //     removedHorPoule.setQualifyGroup(firstQualifyGroup);
+        // // });
     }
 
     protected renumber(round: Round, qualifyTarget: QualifyTarget) {

@@ -1,6 +1,7 @@
 import { GridColor } from "./color";
 
-const chalk = require('chalk');
+import chalk from 'chalk';
+// const chalk = require('chalk');
 
 export class GridCell {
     protected color: GridColor = GridColor.White;
@@ -30,6 +31,8 @@ export class GridCell {
                 return chalk.red(this.value);
             case GridColor.Green:
                 return chalk.green(this.value);
+            case GridColor.Yellow:
+                return chalk.yellow(this.value);
             default:
                 return chalk.white(this.value);
         }

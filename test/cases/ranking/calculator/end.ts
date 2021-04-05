@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { CompetitorMap, EndRankingCalculator, PouleStructure, QualifyGroup, QualifyService } from '../../../../public_api';
+import { CompetitorMap, EndRankingCalculator, PouleStructure, QualifyGroup, QualifyService, QualifyTarget } from '../../../../public_api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
@@ -14,7 +14,7 @@ describe('EndRankingCalculator', () => {
     it('one poule of three places', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(3));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3]);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -49,7 +49,7 @@ describe('EndRankingCalculator', () => {
     it('one poule of three places, with no competitor', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(3));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3]);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
         teamCompetitors.pop();
@@ -84,7 +84,7 @@ describe('EndRankingCalculator', () => {
     it('one poule of three places, not played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(3));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3]);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
@@ -112,13 +112,13 @@ describe('EndRankingCalculator', () => {
     it('2 roundnumbers, [5] => (W[2],L[2])', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(5));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [5]);
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getRootRound();
 
-        structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
-        structureEditor.addQualifier(rootRound, QualifyTarget.Losers);
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -137,19 +137,9 @@ describe('EndRankingCalculator', () => {
         setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
         setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
-        const winnersRound = rootRound.getChild(QualifyTarget.Winners, 1);
-        expect(winnersRound).to.not.equal(undefined);
-        if (!winnersRound) {
-            return;
-        }
         const winnersPoule = winnersRound.getPoule(1);
         expect(winnersPoule).to.not.equal(undefined);
         if (!winnersPoule) {
-            return;
-        }
-        const losersRound = rootRound.getChild(QualifyTarget.Losers, 1);
-        expect(losersRound).to.not.equal(undefined);
-        if (!losersRound) {
             return;
         }
         const losersPoule = losersRound.getPoule(1);

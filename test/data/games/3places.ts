@@ -36,7 +36,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         state: State.Created,
         startDateTime: undefined,
         referee: undefined,
-        refereePlaceLocId: undefined,
+        refereePlaceLocation: undefined,
         scores: []
     },
     {
@@ -74,7 +74,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         state: State.Created,
         startDateTime: undefined,
         referee: undefined,
-        refereePlaceLocId: undefined,
+        refereePlaceLocation: undefined,
         scores: []
     },
     {
@@ -112,7 +112,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         state: State.Created,
         startDateTime: undefined,
         referee: undefined,
-        refereePlaceLocId: undefined,
+        refereePlaceLocation: undefined,
         scores: []
     }
 

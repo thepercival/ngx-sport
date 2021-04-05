@@ -27,7 +27,9 @@ export class QualifyOriginCalculator {
         let origins: Poule[] = [];
         previousOrigins.forEach((previousOrigin: Poule) => {
             this.addPossibleOrigin(previousOrigin, origins);
-            origins = origins.concat(this.getPossibleOrigins(previousOrigin));
+            this.getPossibleOrigins(previousOrigin).forEach((previousPreviousOrigin: Poule) => {
+                this.addPossibleOrigin(previousPreviousOrigin, origins);
+            });
         });
         return origins;
     }

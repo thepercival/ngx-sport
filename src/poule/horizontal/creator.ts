@@ -1,53 +1,44 @@
 import { Place } from '../../place';
-import { QualifyGroup, Round } from '../../qualify/group';
+import { Round } from '../../qualify/group';
 import { QualifyTarget } from '../../qualify/target';
 import { HorizontalPoule } from '../horizontal';
 
-export class HorizontalPouleService {
-    ;
+export class HorizontalPouleCreator {
 
-    protected getQualifyTargets(qualifyTarget?: QualifyTarget): QualifyTarget[] {
-        if (qualifyTarget === undefined) {
-            return [QualifyTarget.Winners, QualifyTarget.Losers];
-        }
-        return [qualifyTarget];
-    }
-
-    recreate(round: Round, qualifyTarget?: QualifyTarget) {
-        this.remove(round, qualifyTarget);
-        this.create(round, qualifyTarget);
-    }
-
-    remove(round: Round, qualifyTarget?: QualifyTarget) {
-        const targets = this.getQualifyTargets(qualifyTarget);
-
-        targets.forEach((target: QualifyTarget) => {
-            const horizontalPoules = round.getHorizontalPoules(target);
-            let horizontalPoule: HorizontalPoule | undefined;
-            while (horizontalPoule = horizontalPoules.pop()) {
-                const places = horizontalPoule.getPlaces();
-                let place: Place | undefined;
-                while (place = places.pop()) {
-                    place.setHorizontalPoule(target, undefined);
-                }
+    remove(...rounds: (Round | undefined)[]) {
+        rounds.forEach((round: Round | undefined) => {
+            if (round === undefined) {
+                return;
             }
+            [QualifyTarget.Winners, QualifyTarget.Losers].forEach((target: QualifyTarget) => {
+                this.removeRound(round, target);
+            });
         });
     }
 
-    create(round: Round, qualifyTarget?: QualifyTarget) {
-        const targets = this.getQualifyTargets(qualifyTarget);
-        targets.forEach((target: QualifyTarget) => {
+    protected removeRound(round: Round, target: QualifyTarget) {
+        const horizontalPoules = round.getHorizontalPoules(target);
+        while (horizontalPoules.length > 0) {
+            horizontalPoules.pop()
+        }
+        // let horizontalPoule: HorizontalPoule | undefined;
+        // while (horizontalPoule = horizontalPoules.pop()) {
+        //     const places = horizontalPoule.getPlaces();
+        //     let place: Place | undefined;
+        //     while (place = places.pop()) {
+        //         place.setHorizontalPoule(target, undefined);
+        //     }
+        // }
+    }
 
-            this.createRoundHorizontalPoules(round, target);
-
-            // s.round.getQualifyGroups(qualifyTarget).forEach(qualifyGroup => {
-            //     qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-            //         horizontalPoule.setQualifyGroup(qualifyGroup);
-            //     });
-
-            // const qualifyGroupService = new QualifyGroupService(this.round, qualifyTarget);
-            // qualifyGroupService.recreate();
-            // });
+    create(...rounds: (Round | undefined)[]) {
+        rounds.forEach((round: Round | undefined) => {
+            if (round === undefined) {
+                return;
+            }
+            [QualifyTarget.Winners, QualifyTarget.Losers].forEach((target: QualifyTarget) => {
+                this.createRoundHorizontalPoules(round, target);
+            });
         });
     }
 
@@ -133,7 +124,7 @@ export class HorizontalPouleService {
     }*/
 }
 
-export interface HorizontolPoulesCreator {
+/*export interface HorizontolPoulesCreator {
     qualifyGroup: QualifyGroup;
     nrOfQualifiers: number;
-}
+}*/

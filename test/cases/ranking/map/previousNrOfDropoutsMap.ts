@@ -18,16 +18,16 @@ describe('PreviousNrOfDropoutsMap', () => {
 
         const structureEditor = getStructureEditor();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, new PouleStructure(7, 7));
+        const structure = structureEditor.create(competition, jsonPlanningConfig, [7, 7]);
         const rootRound: Round = structure.getRootRound();
 
-        const winnersChildRound = structureEditor.createChildRound(rootRound, QualifyTarget.Winners, new PouleStructure(5));
-        const losersChildRound = structureEditor.createChildRound(rootRound, QualifyTarget.Losers, new PouleStructure(5));
+        const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [5]);
+        const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [5]);
 
-        const round1and2 = structureEditor.createChildRound(winnersChildRound, QualifyTarget.Winners, new PouleStructure(2));
-        const round4and5 = structureEditor.createChildRound(winnersChildRound, QualifyTarget.Losers, new PouleStructure(2));
-        const round10and11 = structureEditor.createChildRound(losersChildRound, QualifyTarget.Winners, new PouleStructure(2));
-        const round13and14 = structureEditor.createChildRound(losersChildRound, QualifyTarget.Losers, new PouleStructure(2));
+        const round1and2 = structureEditor.addChildRound(winnersChildRound, QualifyTarget.Winners, [2]);
+        const round4and5 = structureEditor.addChildRound(winnersChildRound, QualifyTarget.Losers, [2]);
+        const round10and11 = structureEditor.addChildRound(losersChildRound, QualifyTarget.Winners, [2]);
+        const round13and14 = structureEditor.addChildRound(losersChildRound, QualifyTarget.Losers, [2]);
 
         const previousDropoutsMap = new PreviousNrOfDropoutsMap(rootRound);
         expect(previousDropoutsMap.get(round1and2)).to.equal(0);
@@ -40,14 +40,14 @@ describe('PreviousNrOfDropoutsMap', () => {
 
         expect(previousDropoutsMap.get(rootRound)).to.equal(5);
 
-        (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).output(structure, console);
     });
 
     /*it('setStructureNumbers', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), new PouleStructure(4, 4, 4, 4));
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4, 4, 4]);
         const rootRound = structure.getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 

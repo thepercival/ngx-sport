@@ -61,7 +61,15 @@ export class RoundNumber {
         return this.previous;
     }
 
+    removeNext() {
+        this.next = undefined;
+    }
+
     detachFromPrevious(): void {
+        if (this.previous === undefined) {
+            return;
+        }
+        this.previous.removeNext();
         this.previous = undefined;
     }
 

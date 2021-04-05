@@ -75,6 +75,7 @@ export * from './src/poule';
 export * from './src/poule/mapper';
 export * from './src/poule/horizontal';
 export * from './src/poule/structure';
+export * from './src/poule/structure/balanced';
 export * from './src/qualify/againstConfig';
 export * from './src/qualify/againstConfig/json';
 export * from './src/qualify/againstConfig/mapper';

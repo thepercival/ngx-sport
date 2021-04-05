@@ -1,4 +1,5 @@
 import { NameService, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public_api";
+import { QualifyTarget } from "../../../src/qualify/target";
 
 export class RangeCalculator {
     // protected const MARGIN = 1;
@@ -61,7 +62,7 @@ export class RangeCalculator {
 
     public getRoundWidth(round: Round): number {
         const widthAllPoules = RangeCalculator.BORDER + RangeCalculator.PADDING
-            + this.getAllPoulesWidth(round.getPoules())
+            + this.getAllPoulesWidth(round)
             + RangeCalculator.PADDING + RangeCalculator.BORDER;
 
         const widthQualifyGroups = this.getQualifyGroupsWidth(round);
@@ -77,19 +78,27 @@ export class RangeCalculator {
         return widthQualifyGroups - RangeCalculator.PADDING;
     }
 
-    public getAllPoulesWidth(poules: Poule[]): number {
+    public getAllPoulesWidth(round: Round): number {
         let width = 0;
-        poules.forEach((poule: Poule) => {
+        round.getPoules().forEach((poule: Poule) => {
             width += this.getPouleWidth(poule) + RangeCalculator.PADDING;
         });
-        return width + RangeCalculator.PADDING + this.getHorPoulesWidth();
+        const horPouleWidth = this.getHorPoulesWidth(round);
+        if (horPouleWidth === 0) {
+            return width;
+        }
+        return width + RangeCalculator.PADDING + horPouleWidth;
     }
 
     public getPouleWidth(poule: Poule): number {
         return RangeCalculator.PLACEWIDTH;
     }
 
-    public getHorPoulesWidth(): number {
+    public getHorPoulesWidth(round: Round): number {
+        if (round.getHorizontalPoules(QualifyTarget.Winners).length === 0
+            && round.getHorizontalPoules(QualifyTarget.Losers).length === 0) {
+            return 0;
+        }
         return RangeCalculator.BORDER + RangeCalculator.PADDING + RangeCalculator.HORPLACEWIDTH;
     }
 }

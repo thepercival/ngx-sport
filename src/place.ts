@@ -8,8 +8,8 @@ export class Place extends PlaceLocation {
     protected id: number = 0;
     protected structureNumber: number = 0;
     protected penaltyPoints = 0;
-    protected horizontalPouleWinners: HorizontalPoule | undefined;
-    protected horizontalPouleLosers: HorizontalPoule | undefined;
+    // protected horizontalPouleWinners: HorizontalPoule | undefined;
+    // protected horizontalPouleLosers: HorizontalPoule | undefined;
     protected qualifiedPlace: Place | undefined;
 
     constructor(protected poule: Poule, number?: number) {
@@ -45,7 +45,7 @@ export class Place extends PlaceLocation {
         this.penaltyPoints = penaltyPoints;
     }
 
-    getHorizontalPoule(qualifyTarget: QualifyTarget): HorizontalPoule {
+    /*getHorizontalPoule(qualifyTarget: QualifyTarget): HorizontalPoule {
         const horPoule = (qualifyTarget === QualifyTarget.Winners) ? this.horizontalPouleWinners : this.horizontalPouleLosers;
         if (horPoule === undefined) {
             throw Error('horizontal poule is not set');
@@ -62,7 +62,7 @@ export class Place extends PlaceLocation {
         if (horizontalPoule !== undefined) {
             horizontalPoule.getPlaces().push(this);
         }
-    }
+    }*/
 
     getQualifiedPlace(): Place | undefined {
         return this.qualifiedPlace;

@@ -34,17 +34,8 @@ export class DefaultQualifyRuleCreator {
     }
 
     protected getChildRoundPlaces(qualifyGroup: QualifyGroup): Place[] {
-        const childRound = qualifyGroup.getChildRound();
-        if (qualifyGroup.getTarget() === QualifyTarget.Winners) {
-            return childRound.getPlaces(Round.ORDER_NUMBER_POULE);
-        }
-        let places: Place[] = [];
-        childRound.getHorizontalPoules(QualifyTarget.Losers).forEach((horPoule: HorizontalPoule) => {
-            places = places.concat(
-                horPoule.getPlaces().slice().sort((placeA: Place, placeB: Place) => placeA.getPouleNr() - placeB.getPouleNr())
-            );
-        });
-        return places;
+        const childRoundPlaces = qualifyGroup.getChildRound().getPlaces(Round.ORDER_NUMBER_POULE);
+        return qualifyGroup.getTarget() === QualifyTarget.Winners ? childRoundPlaces : childRoundPlaces.reverse();
     }
 
     createPlaceMappings(fromHorPoule: HorizontalPoule, childRoundPlaces: Place[]): QualifyPlaceMapping[] {

@@ -5,6 +5,7 @@ import { PlaceSportPerformance } from "../../../place/sportPerformance";
 import { Poule } from "../../../poule";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { Round } from "../../../qualify/group";
+import { QualifyRuleMultiple } from "../../../qualify/rule/multiple";
 import { QualifyRuleSingle } from "../../../qualify/rule/single";
 import { QualifyTarget } from "../../../qualify/target";
 import { State } from "../../../state";
@@ -27,24 +28,26 @@ export abstract class SportRoundRankingCalculator {
 
     abstract getItemsForPoule(poule: Poule): SportRoundRankingItem[];
 
-    getPlaceLocationsForHorizontalPoule(horizontalPoule: HorizontalPoule): PlaceLocation[] {
-        return this.getItemsForHorizontalPoule(horizontalPoule, true).map(rankingItem => {
+    getPlaceLocationsForMultipleRule(multipleRule: QualifyRuleMultiple): PlaceLocation[] {
+        return this.getItemsForMultipleRule(multipleRule/*, true*/).map(rankingItem => {
             return rankingItem.getPlaceLocation();
         });
     }
 
-    getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {
-        return this.getItemsForHorizontalPoule(horizontalPoule, true).map((rankingSportItem: SportRoundRankingItem): Place => {
-            return horizontalPoule.getRound().getPlace(rankingSportItem.getPlaceLocation());
+    getPlacesForMultipleRule(multipleRule: QualifyRuleMultiple): Place[] {
+        const fromRound = multipleRule.getFromHorizontalPoule().getRound();
+        return this.getItemsForMultipleRule(multipleRule/*, true*/).map((rankingSportItem: SportRoundRankingItem): Place => {
+            return fromRound.getPlace(rankingSportItem.getPlaceLocation());
         });
     }
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule, checkOnSingleQualifyRule?: boolean): SportRoundRankingItem[] {
+    getItemsForMultipleRule(multipleRule: QualifyRuleMultiple/*, checkOnSingleQualifyRule?: boolean*/): SportRoundRankingItem[] {
+        return this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
+    }
+
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): SportRoundRankingItem[] {
         const performances: PlaceSportPerformance[] = [];
-        horizontalPoule.getPlaces().forEach(place => {
-            if (checkOnSingleQualifyRule && this.hasPlaceSingleQualifyRule(place)) {
-                return;
-            }
+        horizontalPoule.getPlaces().forEach((place: Place) => {
             const pouleRankingItems: SportRoundRankingItem[] = this.getItemsForPoule(place.getPoule());
             const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getNumber());
             if (pouleRankingItem === undefined) {
@@ -52,6 +55,7 @@ export abstract class SportRoundRankingCalculator {
             }
             performances.push(pouleRankingItem.getPerformance());
         });
+
         const scoreConfig = horizontalPoule.getRound().getValidScoreConfig(this.competitionSport);
         const ruleSet = this.competitionSport.getCompetition().getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
@@ -100,16 +104,6 @@ export abstract class SportRoundRankingCalculator {
             return (bestPerformances.length < 2);
         });
         return bestPerformances;
-    }
-
-    /**
-     * Place can have a multiple and a single rule, if so than do not process place for horizontalpoule(multiple)
-     */
-    protected hasPlaceSingleQualifyRule(place: Place): boolean {
-        return [QualifyTarget.Winners, QualifyTarget.Losers].some((qualifyTarget: QualifyTarget) => {
-            const qualifyRule = place.getHorizontalPoule(qualifyTarget).getQualifyRule();
-            return qualifyRule instanceof QualifyRuleSingle;
-        });
     }
 }
 

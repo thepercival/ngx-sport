@@ -106,4 +106,13 @@ export class Poule extends Identifiable {
         const poules = this.getRound().getPoules();
         return poules[this.getNumber()];
     }
+
+    detach() {
+        const round = this.getRound();
+        const poules = round.getPoules();
+        poules.splice(poules.length - 1, 1);
+        if (poules.length === 0) {
+            round.getParentQualifyGroup()?.detach();
+        }
+    }
 }

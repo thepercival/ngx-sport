@@ -1,28 +1,27 @@
 import { Injectable } from '@angular/core';
 import { QualifyAgainstConfigMapper } from '../qualify/againstConfig/mapper';
 import { ScoreConfigMapper } from '../score/config/mapper';
-
-import { HorizontalPouleService } from '../poule/horizontal/service';
 import { PouleMapper } from '../poule/mapper';
 import { QualifyGroupMapper } from '../qualify/group/mapper';
-import { QualifyRuleService } from '../qualify/rule/service';
 import { JsonRound } from './json';
 import { Round } from '../qualify/group';
+import { QualifyRuleCreator } from '../qualify/rule/creator';
+import { HorizontalPouleCreator } from '../poule/horizontal/creator';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoundMapper {
-    private qualifyRuleService: QualifyRuleService;
-    private horizontalPouleService: HorizontalPouleService;
+    private qualifyRuleCreator: QualifyRuleCreator;
+    private horizontalPouleCreator: HorizontalPouleCreator;
 
     constructor(
         private pouleMapper: PouleMapper,
         private scoreConfigMapper: ScoreConfigMapper,
         private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper,
     ) {
-        this.qualifyRuleService = new QualifyRuleService();
-        this.horizontalPouleService = new HorizontalPouleService();
+        this.qualifyRuleCreator = new QualifyRuleCreator();
+        this.horizontalPouleCreator = new HorizontalPouleCreator();
     }
 
     toObject(json: JsonRound, round: Round): Round {
@@ -49,10 +48,10 @@ export class RoundMapper {
         }
 
 
-        this.qualifyRuleService.removeTo(round);
-        this.horizontalPouleService.remove(round);
-        this.horizontalPouleService.create(round);
-        this.qualifyRuleService.createTo(round);
+        this.qualifyRuleCreator.remove(round);
+        this.horizontalPouleCreator.remove(round);
+        this.horizontalPouleCreator.create(round);
+        this.qualifyRuleCreator.create(round);
 
         return round;
     }
