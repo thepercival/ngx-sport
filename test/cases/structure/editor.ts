@@ -425,11 +425,39 @@ describe('Structure', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-
         let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
         while (singleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(false);
             singleRule = singleRule.getNext();
+        }
+    });
+
+    it('isQualifyGroupSplittableAt no multiple', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 3]);
+        const rootRound = structure.getRootRound();
+
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
+        // (new StructureOutput()).output(structure, console);
+
+        const winnersQualifyGroup = winnersRound.getParentQualifyGroup();
+        const losersQualifyGroup = losersRound.getParentQualifyGroup();
+        expect(winnersQualifyGroup).to.not.equal(undefined);
+        expect(losersQualifyGroup).to.not.equal(undefined);
+        if (winnersQualifyGroup === undefined || losersQualifyGroup === undefined) {
+            return;
+        }
+
+        let firstWinnersSingleRule: QualifyRuleSingle | undefined = winnersQualifyGroup.getFirstSingleRule();
+        if (firstWinnersSingleRule !== undefined) {
+            expect(structureEditor.isQualifyGroupSplittableAt(firstWinnersSingleRule)).to.equal(false);
+        }
+        let firstLosersSingleRule: QualifyRuleSingle | undefined = losersQualifyGroup.getFirstSingleRule();
+        if (firstLosersSingleRule !== undefined) {
+            expect(structureEditor.isQualifyGroupSplittableAt(firstLosersSingleRule)).to.equal(false);
         }
     });
 
@@ -456,6 +484,112 @@ describe('Structure', () => {
         }
         expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(true);
     });
+
+    it('areQualifyGroupsMergable', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4]);
+        const rootRound = structure.getRootRound();
+
+        const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const fifthSixth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+
+        const firstSecondQualifyGroup = firstSecond.getParentQualifyGroup();
+        const thirdFourthQualifyGroup = thirdFourth.getParentQualifyGroup();
+        const fifthSixthQualifyGroup = fifthSixth.getParentQualifyGroup();
+        const losersQualifyGroup = losersRound.getParentQualifyGroup();
+        expect(firstSecondQualifyGroup).to.not.equal(undefined);
+        expect(thirdFourthQualifyGroup).to.not.equal(undefined);
+        expect(fifthSixthQualifyGroup).to.not.equal(undefined);
+        expect(losersQualifyGroup).to.not.equal(undefined);
+        if (firstSecondQualifyGroup === undefined
+            || thirdFourthQualifyGroup === undefined
+            || fifthSixthQualifyGroup === undefined
+            || losersQualifyGroup === undefined) {
+            return;
+        }
+        expect(structureEditor.areQualifyGroupsMergable(firstSecondQualifyGroup, thirdFourthQualifyGroup)).to.equal(true);
+        expect(structureEditor.areQualifyGroupsMergable(thirdFourthQualifyGroup, fifthSixthQualifyGroup)).to.equal(true);
+        expect(structureEditor.areQualifyGroupsMergable(firstSecondQualifyGroup, fifthSixthQualifyGroup)).to.equal(false);
+        expect(structureEditor.areQualifyGroupsMergable(losersQualifyGroup, thirdFourthQualifyGroup)).to.equal(false);
+    });
+
+    it('mergeQualifyGroups W1/2 W3/4', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [5, 5]);
+        const rootRound = structure.getRootRound();
+
+        const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const fifthSixth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const worstLlosersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+
+        const firstSecondQualifyGroup = firstSecond.getParentQualifyGroup();
+        const thirdFourthQualifyGroup = thirdFourth.getParentQualifyGroup();
+        expect(firstSecondQualifyGroup).to.not.equal(undefined);
+        expect(thirdFourthQualifyGroup).to.not.equal(undefined);
+        if (firstSecondQualifyGroup === undefined || thirdFourthQualifyGroup === undefined) {
+            return;
+        }
+        structureEditor.mergeQualifyGroups(firstSecondQualifyGroup, thirdFourthQualifyGroup);
+        expect(firstSecond.getNrOfPlaces()).to.equal(4);
+    });
+
+    it('mergeQualifyGroups W3/4 W5/6', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [5, 5]);
+        const rootRound = structure.getRootRound();
+
+        const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const fifthSixth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const worstLlosersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+
+        const thirdFourthQualifyGroup = thirdFourth.getParentQualifyGroup();
+        const fifthSixthQualifyGroup = fifthSixth.getParentQualifyGroup();
+        expect(thirdFourthQualifyGroup).to.not.equal(undefined);
+        expect(fifthSixthQualifyGroup).to.not.equal(undefined);
+        if (thirdFourthQualifyGroup === undefined || fifthSixthQualifyGroup === undefined) {
+            return;
+        }
+        structureEditor.mergeQualifyGroups(thirdFourthQualifyGroup, fifthSixthQualifyGroup);
+        expect(thirdFourth.getNrOfPlaces()).to.equal(4);
+    });
+
+    it('mergeQualifyGroups L1/2 L3/4', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [5, 5]);
+        const rootRound = structure.getRootRound();
+
+        const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const fifthSixth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+        const worstLosersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+
+        const worstLosersQualifyGroup = worstLosersRound.getParentQualifyGroup();
+        const losersQualifyGroup = losersRound.getParentQualifyGroup();
+
+        expect(worstLosersQualifyGroup).to.not.equal(undefined);
+        expect(losersQualifyGroup).to.not.equal(undefined);
+        if (worstLosersQualifyGroup === undefined || losersQualifyGroup === undefined) {
+            return;
+        }
+        structureEditor.mergeQualifyGroups(worstLosersQualifyGroup, losersQualifyGroup);
+        expect(worstLosersRound.getNrOfPlaces()).to.equal(4);
+    });
+
 
     it('hasPlanning', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);

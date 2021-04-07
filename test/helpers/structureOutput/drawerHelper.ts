@@ -157,7 +157,7 @@ export class DrawHelper {
                 )
             }
         });
-        currentCoordinate = seperator.addY(-round.getFirstPoule().getPlaces().length);
+        currentCoordinate = seperator.addY(round.getFirstPoule().getPlaces().length);
 
         // losers
         round.getQualifyGroups(QualifyTarget.Losers).forEach((qualifyGroup: QualifyGroup) => {
@@ -166,7 +166,7 @@ export class DrawHelper {
             while (singleRule !== undefined) {
                 currentCoordinate = this.drawer.drawVertToOrigin(
                     currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
-                ).incrementY();
+                ).decrementY();
                 singleRule = singleRule.getNext();
             }
             const multipleRule = qualifyGroup.getMultipleRule();

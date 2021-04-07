@@ -283,14 +283,6 @@ export class StructureEditor {
         });
     }
 
-    isQualifyGroupSplittableAt(singleRule: QualifyRuleSingle): boolean {
-        const next = singleRule.getNext();
-        if (next === undefined) {
-            return false;
-        }
-        return this.getNrOfQualifiersPrevious(singleRule) >= 2 && this.getNrOfQualifiersNext(next) >= 2;
-    }
-
     protected getNrOfQualifiersPrevious(singleRule: QualifyRuleSingle): number {
         return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
     }
@@ -298,63 +290,6 @@ export class StructureEditor {
     protected getNrOfQualifiersNext(singleRule: QualifyRuleSingle): number {
         return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
     }
-
-    // splitQualifyGroup(qualifyGroup: QualifyGroup, singleRuleOne: QualifyRuleSingle, singleRuleTwo: QualifyRuleSingle) {
-    //     if (!this.isQualifyGroupSplittable(singleRuleOne, singleRuleTwo)) {
-    //         throw new Error('de kwalificatiegroepen zijn niet splitsbaar');
-    //     }
-    //     const parentRound = qualifyGroup.getParentRound();
-
-    //     const firstSingleRule = singleRuleOne.getNumber() <= singleRuleTwo.getNumber() ? singleRuleOne : singleRuleTwo;
-    //     const secondSingleRule = (firstSingleRule === singleRuleOne) ? singleRuleTwo : singleRuleOne;
-
-    //     const nrOfPlacesChildrenBeforeSplit = parentRound.getNrOfPlacesChildren(qualifyGroup.getTarget());
-    //     this.qualifyGroupEditor.splitQualifyGroupFrom(qualifyGroup, secondSingleRule);
-
-    //     this.updateQualifyGroups(parentRound, qualifyGroup.getTarget(), nrOfPlacesChildrenBeforeSplit);
-
-    //     const qualifyRuleService = new QualifyRuleService();
-    //     qualifyRuleService.recreateTo(parentRound);
-    // }
-
-    areQualifyGroupsMergable(previous: QualifyGroup, current: QualifyGroup): boolean {
-        return (previous !== undefined && current !== undefined && previous.getTarget() !== QualifyTarget.Dropouts
-            && previous.getTarget() === current.getTarget() && previous !== current);
-    }
-
-    // mergeQualifyGroups(qualifyGroupOne: QualifyGroup, qualifyGroupTwo: QualifyGroup) {
-    //     if (!this.areQualifyGroupsMergable(qualifyGroupOne, qualifyGroupTwo)) {
-    //         throw new Error('de kwalificatiegroepen zijn niet te koppelen');
-    //     }
-    //     const parentRound = qualifyGroupOne.getParentRound();
-    //     const qualifyTarget = qualifyGroupOne.getTarget();
-
-    //     const firstQualifyGroup = qualifyGroupOne.getNumber() <= qualifyGroupTwo.getNumber() ? qualifyGroupOne : qualifyGroupTwo;
-    //     const secondQualifyGroup = (firstQualifyGroup === qualifyGroupOne) ? qualifyGroupTwo : qualifyGroupOne;
-    //     const nrOfPlacesQualifyGroups = firstQualifyGroup.getChildRound().getNrOfPlaces()
-    //         + secondQualifyGroup.getChildRound().getNrOfPlaces();
-    //     const nrOfPoulesFirstQualifyGroup = firstQualifyGroup.getChildRound().getPoules().length;
-    //     const nrOfPlacesChildrenBeforeMerge = parentRound.getNrOfPlacesChildren(qualifyTarget);
-    //     this.qualifyGroupEditor.mergeQualifyGroups(firstQualifyGroup, secondQualifyGroup);
-    //     // first update places, before updateQualifyGroups
-    //     const pouleStructure = new BalancedPouleStructure(nrOfPlacesQualifyGroups, nrOfPoulesFirstQualifyGroup);
-    //     this.refillRound(firstQualifyGroup.getChildRound(), pouleStructure);
-
-    //     const horizontalPouleService = new HorizontalPouleService();
-    //     horizontalPouleService.recreate(firstQualifyGroup.getChildRound());
-    //     secondQualifyGroup.detach(); // is already done in groupeditor
-
-
-    //     this.updateQualifyGroups(parentRound, qualifyTarget, nrOfPlacesChildrenBeforeMerge);
-
-    //     const qualifyRuleService = new QualifyRuleService();
-    //     qualifyRuleService.recreateTo(parentRound);
-    // }
-
-
-
-
-
 
     protected getRoot(round: Round): Round {
         const parent = round.getParent();
@@ -402,6 +337,14 @@ export class StructureEditor {
             nrOfPlaces -= nrOfPlacesPerPoule;
         }
         return new BalancedPouleStructure(...innerData)
+    }
+
+    isQualifyGroupSplittableAt(singleRule: QualifyRuleSingle): boolean {
+        const next = singleRule.getNext();
+        if (next === undefined) {
+            return false;
+        }
+        return this.getNrOfQualifiersPrevious(singleRule) >= 2 && this.getNrOfQualifiersNext(next) >= 2;
     }
 
     // horizontalPoule is split-points, from which qualifyGroup
@@ -486,22 +429,25 @@ export class StructureEditor {
         }
     }
 
+    areQualifyGroupsMergable(previous: QualifyGroup, current: QualifyGroup): boolean {
+        return previous.getTarget() === current.getTarget() && previous.getNumber() + 1 === current.getNumber();
+    }
+
     mergeQualifyGroups(firstQualifyGroup: QualifyGroup, secondQualifyGroup: QualifyGroup) {
-        throw new Error('mergeQualifyGroups');
-        // const parentRound = firstQualifyGroup.getParentRound();
-        // // qualifyGroups should be list with nextprevious
-
-        // // secondQualifyGroup
-
-        // secondQualifyGroup.detach();
-        // this.renumber(parentRound, firstQualifyGroup.getTarget());
-
-        // // secondQualifyGroup.getHorizontalPoules().splice(idx, 1);
-
-        // // const removedHorPoules = secondQualifyGroup.getHorizontalPoules();
-        // // removedHorPoules.forEach((removedHorPoule: HorizontalPoule) => {
-        // //     removedHorPoule.setQualifyGroup(firstQualifyGroup);
-        // // });
+        const parentRound = firstQualifyGroup.getParentRound();
+        const childRound = firstQualifyGroup.getChildRound();
+        this.horPouleCreator.remove(childRound);
+        this.rulesCreator.remove(parentRound);
+        // begin editing        
+        const nrOfPlacesToAdd = secondQualifyGroup.getChildRound().getNrOfPlaces();
+        secondQualifyGroup.detach();
+        this.renumber(parentRound, secondQualifyGroup.getTarget());
+        for (let counter = 0; counter < nrOfPlacesToAdd; counter++) {
+            firstQualifyGroup.getChildRound().addPlace();
+        }
+        // end editing
+        this.horPouleCreator.create(childRound);
+        this.rulesCreator.create(parentRound);
     }
 
     protected renumber(round: Round, qualifyTarget: QualifyTarget) {
