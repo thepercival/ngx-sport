@@ -27,5 +27,4 @@ export class StructurePathNode {
     protected qualifyTargettoString(): string {
         return this.qualifyTarget ?? '';
     }
-
 }

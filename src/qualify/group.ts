@@ -141,7 +141,6 @@ export class Round extends Identifiable {
     static readonly ORDER_NUMBER_POULE = 1;
     static readonly ORDER_POULE_NUMBER = 2;
 
-    protected number: RoundNumber;
     protected name: string | undefined;
     protected poules: Poule[] = [];
     protected losersQualifyGroups: QualifyGroup[] = [];
@@ -152,12 +151,10 @@ export class Round extends Identifiable {
     protected scoreConfigs: ScoreConfig[] = [];
     protected qualifyAgainstConfigs: QualifyAgainstConfig[] = [];
 
-    constructor(roundNumber: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
+    constructor(protected number: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
         super();
-        this.number = roundNumber;
         this.number.getRounds().push(this);
         this.structurePathNode = this.constructStructurePathNode();
-        // this.setValue();
     }
 
     getCompetition(): Competition {

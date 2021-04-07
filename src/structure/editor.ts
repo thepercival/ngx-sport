@@ -91,15 +91,11 @@ export class StructureEditor {
     addPlaceToRootRound(rootRound: Round): Place {
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
-        // begin editing        
+
         const newNrOfPlaces = rootRound.getNrOfPlaces() + 1;
         const nrOfPoules = rootRound.getPoules().length;
         this.checkRanges(newNrOfPlaces, nrOfPoules);
-
-        // const pouleStructure = new BalancedPouleStructure(newNrOfPlaces, nrOfPoules);
-        // const pouleNr = pouleStructure.getFirstLesserPlacesPouleNr();
-        // new Place(round.getPoule(pouleNr));
-
+        // begin editing        
         rootRound.addPlace();
         // end editing
         this.horPouleCreator.create(rootRound);
@@ -124,8 +120,6 @@ export class StructureEditor {
         // end editing
         this.horPouleCreator.create(rootRound);
         this.rulesCreator.create(rootRound);
-
-        return rootRound.getFirstPlace(QualifyTarget.Losers);
     }
 
     public addPouleToRootRound(rootRound: Round): Poule {
@@ -160,13 +154,7 @@ export class StructureEditor {
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
         // begin editing
-
-
         rootRound.removePoule();
-        // this.updateRound(round, new BalancedPouleStructure(newNrOfPlaces, poules.length - 1));
-
-        // recreate horizontalpoules for this round
-        // recalculate rules recursive from parentround(or this round if parentround is null)
         // end editing
         this.horPouleCreator.create(rootRound);
         this.rulesCreator.create(rootRound);
@@ -233,32 +221,6 @@ export class StructureEditor {
         this.horPouleCreator.create(childRound.getParent(), childRound);
         this.rulesCreator.create(childRound.getParent(), childRound);
     }
-
-    // removeQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfRemovals: number) {
-    //     const qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);
-    //     if (qualifyGroup === undefined) {
-    //         return;
-    //     }
-    //     const nrOfPlaces = parentRound.getNrOfPlaces();
-    //     const nrOfToPlaces = parentRound.getNrOfPlacesChildren();
-    //     if ((nrOfToPlaces - nrOfRemovals) > 1) {
-    //         throw new Error('er kunnen maximaal ' + (nrOfToPlaces - 1) + ' deelnemers weggehaald worden');
-    //     }
-    //     const childRound = qualifyGroup.getChildRound();
-    //     this.horPouleCreator.remove(parentRound, childRound);
-    //     this.rulesCreator.remove(parentRound, childRound);
-    //     // begin editing
-
-    //     getNrOfDropoutPlaces()
-
-    //     while (this.removeQualifier(parentRound, qualifyTarget)) {
-    //         const r = 1;
-    //     }
-
-    //     // end editing
-    //     this.horPouleCreator.create(parentRound);
-    //     this.rulesCreator.create(parentRound);
-    // }
 
     removeQualifier(parentRound: Round, qualifyTarget: QualifyTarget): boolean {
         const qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);

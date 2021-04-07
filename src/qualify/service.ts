@@ -24,7 +24,7 @@ export class QualifyService {
     setQualifiers(filterPoule?: Poule): Place[] {
         let changedPlaces: Place[] = [];
 
-        const setQualifiersForHorizontalPoule = (singleRule: QualifyRuleSingle, reservationService: QualifyReservationService) => {
+        const setQualifiersForSingleRule = (singleRule: QualifyRuleSingle, reservationService: QualifyReservationService) => {
             singleRule.getMappings().forEach((qualifyPlaceMapping: QualifyPlaceMapping) => {
                 const fromPlace = qualifyPlaceMapping.getFromPlace();
                 if (filterPoule !== undefined && fromPlace.getPoule() !== filterPoule) {
@@ -38,7 +38,7 @@ export class QualifyService {
             const reservationService = new QualifyReservationService(qualifyGroup.getChildRound());
             let singleRule = qualifyGroup.getFirstSingleRule();
             while (singleRule !== undefined) {
-                setQualifiersForHorizontalPoule(singleRule, reservationService);
+                setQualifiersForSingleRule(singleRule, reservationService);
                 singleRule = singleRule.getNext();
             }
             const multipleRule = qualifyGroup.getMultipleRule();

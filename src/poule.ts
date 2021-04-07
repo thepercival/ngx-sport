@@ -9,7 +9,6 @@ import { State } from './state';
 
 export class Poule extends Identifiable {
     protected number: number;
-    protected structureNumber: number = 0;
     protected name: string | undefined;
     protected places: Place[] = [];
     protected againstGames: AgainstGame[] = [];
