@@ -251,8 +251,12 @@ export class Round extends Identifiable {
         return this.losersHorizontalPoules;
     }
 
-    getHorizontalPoule(qualifyTarget: QualifyTarget, number: number): HorizontalPoule | undefined {
-        return this.getHorizontalPoules(qualifyTarget).find(horPoule => horPoule.getNumber() === number);
+    getHorizontalPoule(qualifyTarget: QualifyTarget, number: number): HorizontalPoule {
+        const horPoule = this.getHorizontalPoules(qualifyTarget).find(horPoule => horPoule.getNumber() === number);
+        if (horPoule === undefined) {
+            throw new Error('horizontalPoule can not be undefined');
+        }
+        return horPoule;
     }
 
     getFirstPlace(qualifyTarget: QualifyTarget): Place {

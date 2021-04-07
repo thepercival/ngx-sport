@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, QualifyTarget } from '../../../public_api';
+import { BalancedPouleStructure, QualifyRuleSingle, QualifyTarget } from '../../../public_api';
 import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
@@ -313,7 +313,7 @@ describe('Structure', () => {
         const semiFinals = structureEditor.addChildRound(quarterFinals, QualifyTarget.Winners, [2, 2]);
         const final = structureEditor.addChildRound(semiFinals, QualifyTarget.Winners, [2]);
 
-        //  (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).output(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
         // (new StructureOutput()).output(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
@@ -363,6 +363,100 @@ describe('Structure', () => {
         expect(structure.getFirstRoundNumber().getNext()).to.equal(undefined);
     });
 
+    it('splitQualifyGroupFrom too few places per poule', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [6]);
+        const rootRound = structure.getRootRound();
+
+        const firstSix = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
+
+        const qualifyGroup = firstSix.getParentQualifyGroup();
+        expect(qualifyGroup).to.not.equal(undefined);
+        if (qualifyGroup === undefined) {
+            return;
+        }
+        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
+        expect(firstSingleQualifyRule).to.not.equal(undefined);
+        if (firstSingleQualifyRule === undefined) {
+            return;
+        }
+        // (new StructureOutput()).output(structure, console);
+        expect(function () {
+            structureEditor.splitQualifyGroupFrom(qualifyGroup, firstSingleQualifyRule);
+        }).to.throw();
+    });
+
+    it('splitQualifyGroupFrom keep nrOfPoulePlaces', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 3, 3, 3, 3, 3]);
+        const rootRound = structure.getRootRound();
+
+        const firstSix = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [6, 6]);
+
+        const qualifyGroup = firstSix.getParentQualifyGroup();
+        expect(qualifyGroup).to.not.equal(undefined);
+        if (qualifyGroup === undefined) {
+            return;
+        }
+        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
+        expect(firstSingleQualifyRule).to.not.equal(undefined);
+        if (firstSingleQualifyRule === undefined) {
+            return;
+        }
+        // (new StructureOutput()).output(structure, console);
+        structureEditor.splitQualifyGroupFrom(qualifyGroup, firstSingleQualifyRule);
+        // (new StructureOutput()).output(structure, console);
+    });
+
+    it('isQualifyGroupSplittableAt no', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [8]);
+        const rootRound = structure.getRootRound();
+
+        const nextRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
+        const qualifyGroup = nextRound.getParentQualifyGroup();
+        expect(qualifyGroup).to.not.equal(undefined);
+        if (qualifyGroup === undefined) {
+            return;
+        }
+
+        let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
+        while (singleRule !== undefined) {
+            expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(false);
+            singleRule = singleRule.getNext();
+        }
+    });
+
+    it('isQualifyGroupSplittableAt yes', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4]);
+        const rootRound = structure.getRootRound();
+
+        const nextRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
+        // (new StructureOutput()).output(structure, console);
+
+        const qualifyGroup = nextRound.getParentQualifyGroup();
+        expect(qualifyGroup).to.not.equal(undefined);
+        if (qualifyGroup === undefined) {
+            return;
+        }
+
+        let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
+        expect(singleRule).to.not.equal(undefined);
+        if (singleRule === undefined) {
+            return;
+        }
+        expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(true);
+    });
+
     it('hasPlanning', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
@@ -376,4 +470,6 @@ describe('Structure', () => {
         structure.getFirstRoundNumber().setHasPlanning(true);
         expect(structure.hasPlanning()).to.equal(false);
     });
+
+
 });

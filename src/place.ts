@@ -37,6 +37,17 @@ export class Place extends PlaceLocation {
         return this.placeNr;
     }
 
+    private getHorizontalNumber(qualifyTarget: QualifyTarget): number {
+        if (qualifyTarget === QualifyTarget.Winners) {
+            return this.getNumber();
+        }
+        return this.getPoule().getPlaces().length + 1 - this.getNumber();
+    }
+
+    getHorizontalPoule(qualifyTarget: QualifyTarget): HorizontalPoule {
+        return this.getRound().getHorizontalPoule(qualifyTarget, this.getHorizontalNumber(qualifyTarget));
+    }
+
     getPenaltyPoints(): number {
         return this.penaltyPoints;
     }

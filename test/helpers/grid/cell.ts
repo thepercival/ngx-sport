@@ -1,10 +1,9 @@
 import { GridColor } from "./color";
 
 import chalk from 'chalk';
-// const chalk = require('chalk');
 
 export class GridCell {
-    protected color: GridColor = GridColor.White;
+    protected color: GridColor | string = GridColor.White;
 
     public constructor(protected value: string) {
     }
@@ -17,15 +16,18 @@ export class GridCell {
         this.value = value;
     }
 
-    public getColor(): number {
+    public getColor(): GridColor | string {
         return this.color;
     }
 
-    public setColor(color: number): void {
+    public setColor(color: GridColor | string): void {
         this.color = color;
     }
 
     public toString() {
+        if (typeof this.color === 'string') {
+            return chalk.hex(this.color)(this.value);
+        }
         switch (this.color) {
             case GridColor.Red:
                 return chalk.red(this.value);
@@ -33,8 +35,7 @@ export class GridCell {
                 return chalk.green(this.value);
             case GridColor.Yellow:
                 return chalk.yellow(this.value);
-            default:
-                return chalk.white(this.value);
         }
+        return chalk(this.value);
     }
 }

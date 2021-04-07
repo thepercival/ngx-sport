@@ -14,7 +14,7 @@ export class Grid {
         }
     }
 
-    public setColor(coordinate: Coordinate, color: number): void {
+    public setColor(coordinate: Coordinate, color: number | string): void {
         this.grid[coordinate.getY()][coordinate.getX()].setColor(color);
     }
 

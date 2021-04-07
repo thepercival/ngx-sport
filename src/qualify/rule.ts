@@ -1,9 +1,9 @@
 import { HorizontalPoule } from '../poule/horizontal';
-import { QualifyGroup, Round } from './group';
+import { Round } from './group';
 import { QualifyTarget } from './target';
 
 export abstract class QualifyRule {
-    constructor(protected fromHorizontalPoule: HorizontalPoule/*, protected group: QualifyGroup*/) {
+    constructor(protected fromHorizontalPoule: HorizontalPoule) {
     }
 
     getQualifyTarget(): QualifyTarget {
@@ -25,9 +25,5 @@ export abstract class QualifyRule {
     getFromPlaceNumber(): number {
         return this.getFromHorizontalPoule().getPlaceNumber();
     }
-
-    /*getGroup(): QualifyGroup {
-        return this.group;
-    }*/
 }
 

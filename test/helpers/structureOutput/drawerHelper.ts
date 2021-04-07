@@ -138,50 +138,53 @@ export class DrawHelper {
     protected drawQualifyRules(round: Round, origin: Coordinate): void {
         const seperator = origin.incrementY();
         let currentCoordinate = this.drawer.drawVertAwayFromOrigin(seperator, '-').incrementY();
-        let winnersHaveMultipleRule = false;
+        let winnersMultipleRuleCoordinate: Coordinate | undefined;
         // winners
-        round.getHorizontalPoules(QualifyTarget.Winners).forEach((horWinnersPoule: HorizontalPoule) => {
-            const qualifyRule = horWinnersPoule.getQualifyRule();
-            if (qualifyRule === undefined) {
-                currentCoordinate = currentCoordinate.incrementY();
-                return;
+        round.getQualifyGroups(QualifyTarget.Winners).forEach((qualifyGroup: QualifyGroup) => {
+            const winnersColor = this.getQualifyGroupColor(qualifyGroup);
+            let singleRule = qualifyGroup.getFirstSingleRule();
+            while (singleRule !== undefined) {
+                currentCoordinate = this.drawer.drawVertAwayFromOrigin(
+                    currentCoordinate, this.getQualifyRuleString(singleRule), winnersColor
+                ).incrementY();
+                singleRule = singleRule.getNext();
             }
-            winnersHaveMultipleRule = qualifyRule instanceof QualifyRuleMultiple;
-            currentCoordinate = this.drawer.drawVertAwayFromOrigin(
-                currentCoordinate,
-                this.getQualifyRuleString(qualifyRule),
-                this.getQualifyRuleColor(qualifyRule, false)).incrementY();
+            const multipleRule = qualifyGroup.getMultipleRule();
+            if (multipleRule !== undefined) {
+                winnersMultipleRuleCoordinate = currentCoordinate;
+                this.drawer.drawVertAwayFromOrigin(
+                    currentCoordinate, this.getQualifyRuleString(multipleRule), winnersColor
+                )
+            }
         });
-
-        currentCoordinate = currentCoordinate.decrementY();
+        currentCoordinate = seperator.addY(-round.getFirstPoule().getPlaces().length);
 
         // losers
-        round.getHorizontalPoules(QualifyTarget.Losers).every((horWinnersPoule: HorizontalPoule): boolean => {
-            const qualifyRule = horWinnersPoule.getQualifyRule();
-            if (qualifyRule === undefined) {
-                return false;
+        round.getQualifyGroups(QualifyTarget.Losers).forEach((qualifyGroup: QualifyGroup) => {
+            const losersColor = this.getQualifyGroupColor(qualifyGroup);
+            let singleRule = qualifyGroup.getFirstSingleRule();
+            while (singleRule !== undefined) {
+                currentCoordinate = this.drawer.drawVertToOrigin(
+                    currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
+                ).incrementY();
+                singleRule = singleRule.getNext();
             }
-            currentCoordinate = this.drawer.drawVertToOrigin(
-                currentCoordinate,
-                this.getQualifyRuleString(qualifyRule),
-                this.getQualifyRuleColor(qualifyRule, winnersHaveMultipleRule)).decrementY();
-            return true;
+            const multipleRule = qualifyGroup.getMultipleRule();
+            if (multipleRule !== undefined) {
+                let color = losersColor;
+                if (winnersMultipleRuleCoordinate !== undefined
+                    && winnersMultipleRuleCoordinate.getX() === currentCoordinate.getX()) {
+                    color = 'Magenta';
+                }
+                this.drawer.drawVertAwayFromOrigin(
+                    currentCoordinate, this.getQualifyRuleString(multipleRule), color
+                );
+            }
         });
     }
 
     protected getQualifyRuleString(qualifyRule: QualifyRuleMultiple | QualifyRuleSingle): string {
         return (qualifyRule instanceof QualifyRuleMultiple) ? 'M' : 'S';
-    }
-
-    protected getQualifyRuleColor(qualifyRule: QualifyRuleMultiple | QualifyRuleSingle, winnersHaveMultipleRule: boolean): GridColor {
-        const qualifyTarget = qualifyRule.getQualifyTarget();
-        if (qualifyRule instanceof QualifyRuleMultiple
-            && qualifyTarget === QualifyTarget.Losers
-            && winnersHaveMultipleRule) {
-            return GridColor.Yellow;
-
-        }
-        return this.getQualifyTargetColor(qualifyTarget);
     }
 
     protected drawQualifyGroups(round: Round, origin: Coordinate, nextRoundNumberHeight: number): void {
@@ -205,7 +208,7 @@ export class DrawHelper {
         this.drawer.drawCellToRight(selfCoordinate, '|', roundWidth, GridAlign.Center);
         selfCoordinate = selfCoordinate.incrementY();
         const qualifyGroupName = qualifyGroup.getTarget() + qualifyGroup.getNumber();
-        const color = this.getQualifyTargetColor(qualifyGroup.getTarget());
+        const color = this.getQualifyGroupColor(qualifyGroup);
         this.drawer.drawCellToRight(selfCoordinate, qualifyGroupName, roundWidth, GridAlign.Center, color);
         this.drawer.drawCellToRight(selfCoordinate.incrementY(), '|', roundWidth, GridAlign.Center);
 
@@ -215,14 +218,30 @@ export class DrawHelper {
         return origin.addX(roundWidth + RangeCalculator.PADDING);
     }
 
-    protected getQualifyTargetColor(qualifyTarget: QualifyTarget): GridColor {
-        switch (qualifyTarget) {
-            case QualifyTarget.Winners:
-                return GridColor.Green;
-            case QualifyTarget.Losers:
-                return GridColor.Red;
-            default:
-                return GridColor.White;
+    getQualifyGroupColor(qualifyGroup: QualifyGroup): string {
+        if (qualifyGroup.getTarget() === QualifyTarget.Winners) {
+            switch (qualifyGroup.getNumber()) {
+                case 1:
+                    return '#298F00';
+                case 2:
+                    return '#84CF96';
+                case 3:
+                    return '#0588BC';
+                case 4:
+                    return '#00578A';
+            }
+            return '#FFFFFF';
         }
+        switch (qualifyGroup.getNumber()) {
+            case 1:
+                return '#FFFF66';
+            case 2:
+                return '#FFCC00';
+            case 3:
+                return '#FF9900';
+            case 4:
+                return '#FF0000';
+        }
+        return '#FFFFFF';
     }
 }
