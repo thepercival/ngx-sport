@@ -1,7 +1,7 @@
 import { Place } from '../place';
 import { QualifyGroup, Round } from '../qualify/group';
-import { QualifyRuleMultiple } from '../qualify/rule/multiple';
-import { QualifyRuleSingle } from '../qualify/rule/single';
+import { MultipleQualifyRule } from '../qualify/rule/multiple';
+import { SingleQualifyRule } from '../qualify/rule/single';
 import { QualifyTarget } from '../qualify/target';
 
 /**
@@ -17,7 +17,7 @@ import { QualifyTarget } from '../qualify/target';
  **/
 export class HorizontalPoule {
     protected number: number
-    protected qualifyRule: QualifyRuleMultiple | QualifyRuleSingle | undefined;
+    protected qualifyRule: MultipleQualifyRule | SingleQualifyRule | undefined;
 
     constructor(
         protected round: Round,
@@ -52,23 +52,23 @@ export class HorizontalPoule {
         return this.qualifyRule?.getGroup();
     }*/
 
-    setQualifyRule(qualifyRule: QualifyRuleMultiple | QualifyRuleSingle | undefined) {
+    setQualifyRule(qualifyRule: MultipleQualifyRule | SingleQualifyRule | undefined) {
         this.qualifyRule = qualifyRule;
     }
 
-    /*protected getQualifyRuleMultiple(): QualifyRuleMultiple | undefined {
+    /*protected getMultipleQualifyRule(): MultipleQualifyRule | undefined {
         return this.multipleRule;
     }
 
-    setQualifyRule(multipleRule: QualifyRuleMultiple | QualifyRuleSingle) {
+    setQualifyRule(multipleRule: MultipleQualifyRule | SingleQualifyRule) {
         this.qualifyRule = multipleRule;
     }*/
 
-    getQualifyRule(): QualifyRuleSingle | QualifyRuleMultiple | undefined {
+    getQualifyRule(): SingleQualifyRule | MultipleQualifyRule | undefined {
         return this.qualifyRule;
     }
 
-    /*setQualifyRulesSingle(singleRules: QualifyRuleSingle[]) {
+    /*setQualifyRulesSingle(singleRules: SingleQualifyRule[]) {
         this.singleRules = singleRules;
     }*/
 
@@ -103,7 +103,7 @@ export class HorizontalPoule {
         if (qualifyRule === undefined) {
             return 0;
         }
-        if (qualifyRule instanceof QualifyRuleSingle) {
+        if (qualifyRule instanceof SingleQualifyRule) {
             return qualifyRule.getMappings().length;
         }
         return qualifyRule.getToPlaces().length;

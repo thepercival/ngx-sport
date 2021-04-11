@@ -11,8 +11,8 @@ import { QualifyAgainstConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
-import { QualifyRuleSingle } from './rule/single';
-import { QualifyRuleMultiple } from './rule/multiple';
+import { SingleQualifyRule } from './rule/single';
+import { MultipleQualifyRule } from './rule/multiple';
 import { QualifyTarget } from './target';
 import { StructurePathNode } from '../structure/path';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
@@ -24,8 +24,8 @@ export class QualifyGroup extends Identifiable {
 
     protected number: number
     protected childRound: Round;
-    protected firstSingleRule: QualifyRuleSingle | undefined;
-    protected multipleRule: QualifyRuleMultiple | undefined;
+    protected firstSingleRule: SingleQualifyRule | undefined;
+    protected multipleRule: MultipleQualifyRule | undefined;
 
     constructor(protected parentRound: Round, protected target: QualifyTarget, nextRoundNumber: RoundNumber, number?: number) {
         super();
@@ -54,19 +54,19 @@ export class QualifyGroup extends Identifiable {
         return this.childRound;
     }
 
-    getFirstSingleRule(): QualifyRuleSingle | undefined {
+    getFirstSingleRule(): SingleQualifyRule | undefined {
         return this.firstSingleRule;
     }
 
-    setFirstSingleRule(singleRule: QualifyRuleSingle | undefined): void {
+    setFirstSingleRule(singleRule: SingleQualifyRule | undefined): void {
         this.firstSingleRule = singleRule;
     }
 
-    getMultipleRule(): QualifyRuleMultiple | undefined {
+    getMultipleRule(): MultipleQualifyRule | undefined {
         return this.multipleRule;
     }
 
-    setMultipleRule(multipleRule: QualifyRuleMultiple | undefined): void {
+    setMultipleRule(multipleRule: MultipleQualifyRule | undefined): void {
         this.multipleRule = multipleRule;
     }
 
@@ -87,7 +87,7 @@ export class QualifyGroup extends Identifiable {
         return nrOfToPlaces;
     }
 
-    getRule(toPlace: Place): QualifyRuleSingle | QualifyRuleMultiple {
+    getRule(toPlace: Place): SingleQualifyRule | MultipleQualifyRule {
         let singleRule = this.firstSingleRule;
         while (singleRule !== undefined) {
             try {
@@ -106,7 +106,7 @@ export class QualifyGroup extends Identifiable {
 
     getFromPlace(toPlace: Place): Place | undefined {
         let singleRule = this.getRule(toPlace);
-        if (singleRule instanceof QualifyRuleSingle) {
+        if (singleRule instanceof SingleQualifyRule) {
             return singleRule.getFromPlace(toPlace);
         }
         return undefined;

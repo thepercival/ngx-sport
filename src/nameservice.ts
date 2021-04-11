@@ -4,8 +4,8 @@ import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { Place } from './place';
 import { QualifyGroup, Round } from './qualify/group';
-import { QualifyRuleMultiple } from './qualify/rule/multiple';
-import { QualifyRuleSingle } from './qualify/rule/single';
+import { MultipleQualifyRule } from './qualify/rule/multiple';
+import { SingleQualifyRule } from './qualify/rule/single';
 import { RoundNumber } from './round/number';
 import { GameMode } from './planning/gameMode';
 import { PointsCalculation } from './ranking/pointsCalculation';
@@ -111,14 +111,14 @@ export class NameService {
             }
         }
 
-        let fromQualifyRule: QualifyRuleSingle | QualifyRuleMultiple | undefined;
+        let fromQualifyRule: SingleQualifyRule | MultipleQualifyRule | undefined;
         try {
             fromQualifyRule = place.getRound().getParentQualifyGroup()?.getRule(place);
         } catch (e) { }
         if (fromQualifyRule === undefined) {
             return this.getPlaceName(place, false, longName);
         }
-        if (fromQualifyRule instanceof QualifyRuleMultiple) {
+        if (fromQualifyRule instanceof MultipleQualifyRule) {
             if (longName) {
                 return this.getHorizontalPouleName(fromQualifyRule.getFromHorizontalPoule());
             }
@@ -155,14 +155,14 @@ export class NameService {
 
         if (qualifyRule.getQualifyTarget() === QualifyTarget.Winners) {
             const nameWinners = 'nummer' + (nrOfToPlaces > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
-            if (qualifyRule instanceof QualifyRuleMultiple) {
+            if (qualifyRule instanceof MultipleQualifyRule) {
                 return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'beste ' + nameWinners;
             }
             return nameWinners;
         }
         let name = (nrOfToPlaces > 1 ? 'nummers ' : '');
         name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
-        if (qualifyRule instanceof QualifyRuleMultiple) {
+        if (qualifyRule instanceof MultipleQualifyRule) {
             return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'slechtste ' + name;
         }
         return name;

@@ -4,8 +4,8 @@ import { Poule } from '../poule';
 import { Place } from '../place';
 import { QualifyGroup, Round } from './group';
 import { QualifyReservationService } from './reservationservice';
-import { QualifyRuleMultiple } from './rule/multiple';
-import { QualifyRuleSingle } from './rule/single';
+import { MultipleQualifyRule } from './rule/multiple';
+import { SingleQualifyRule } from './rule/single';
 import { State } from '../state';
 import { RoundRankingCalculator } from '../ranking/calculator/round';
 import { RoundRankingItem } from '../../public_api';
@@ -24,7 +24,7 @@ export class QualifyService {
     setQualifiers(filterPoule?: Poule): Place[] {
         let changedPlaces: Place[] = [];
 
-        const setQualifiersForSingleRule = (singleRule: QualifyRuleSingle, reservationService: QualifyReservationService) => {
+        const setQualifiersForSingleRule = (singleRule: SingleQualifyRule, reservationService: QualifyReservationService) => {
             singleRule.getMappings().forEach((qualifyPlaceMapping: QualifyPlaceMapping) => {
                 const fromPlace = qualifyPlaceMapping.getFromPlace();
                 if (filterPoule !== undefined && fromPlace.getPoule() !== filterPoule) {
@@ -59,7 +59,7 @@ export class QualifyService {
         reservationService.reserve(qualifyPlaceMapping.getToPlace().getPoule().getNumber(), poule);
     }
 
-    protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: QualifyRuleMultiple, reservationService: QualifyReservationService): Place[] {
+    protected setQualifiersForMultipleRuleAndReserve(ruleMultiple: MultipleQualifyRule, reservationService: QualifyReservationService): Place[] {
         const changedPlaces: Place[] = [];
         const toPlaces = ruleMultiple.getToPlaces();
         if (!this.isRoundFinished()) {

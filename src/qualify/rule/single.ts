@@ -5,15 +5,15 @@ import { HorizontalPoule } from '../../poule/horizontal';
 import { Place } from '../../place';
 import { QualifyTarget } from '../target';
 
-export class QualifyRuleSingle extends QualifyRule {
+export class SingleQualifyRule extends QualifyRule {
 
-    private next: QualifyRuleSingle | undefined;
+    private next: SingleQualifyRule | undefined;
 
     constructor(
         fromHorizontalPoule: HorizontalPoule,
         group: QualifyGroup,
         private placeMappings: QualifyPlaceMapping[],
-        private previous: QualifyRuleSingle | undefined) {
+        private previous: SingleQualifyRule | undefined) {
         super(fromHorizontalPoule/*, group*/);
         this.fromHorizontalPoule.setQualifyRule(this);
         if (this.previous !== undefined) {
@@ -51,27 +51,35 @@ export class QualifyRuleSingle extends QualifyRule {
         return this.placeMappings.length;
     }
 
-    getPrevious(): QualifyRuleSingle | undefined {
+    getPrevious(): SingleQualifyRule | undefined {
         return this.previous;
     }
 
-    setNext(next: QualifyRuleSingle | undefined): void {
+    setNext(next: SingleQualifyRule | undefined): void {
         this.next = next;
     }
 
-    getNext(): QualifyRuleSingle | undefined {
+    getNext(): SingleQualifyRule | undefined {
         return this.next;
     }
 
-    setPrevious(previous: QualifyRuleSingle | undefined): void {
+    setPrevious(previous: SingleQualifyRule | undefined): void {
         this.previous = previous;
     }
 
-    getNeighbour(targetSide: QualifyTarget): QualifyRuleSingle | undefined {
+    getNeighbour(targetSide: QualifyTarget): SingleQualifyRule | undefined {
         return targetSide === QualifyTarget.Winners ? this.previous : this.next;
     }
 
-    getLast(): QualifyRuleSingle {
+    getFirst(): SingleQualifyRule {
+        const previous = this.getPrevious();
+        if (previous !== undefined) {
+            return previous.getFirst();
+        }
+        return this;
+    }
+
+    getLast(): SingleQualifyRule {
         const next = this.getNext();
         if (next !== undefined) {
             return next.getLast();
@@ -79,10 +87,9 @@ export class QualifyRuleSingle extends QualifyRule {
         return this;
     }
 
-
     getNrOfToPlacesTargetSide(targetSide: QualifyTarget): number {
         let nrOfToPlacesTargetSide = 0;
-        let neighBour: QualifyRuleSingle | undefined = this.getNeighbour(targetSide);
+        let neighBour: SingleQualifyRule | undefined = this.getNeighbour(targetSide);
         if (neighBour === undefined) {
             return nrOfToPlacesTargetSide;
         }
@@ -97,6 +104,18 @@ export class QualifyRuleSingle extends QualifyRule {
         }
         this.getFromHorizontalPoule().setQualifyRule(undefined);
         this.setPrevious(undefined);
+    }
+
+    getGroup(): QualifyGroup {
+        const target = this.getQualifyTarget();
+        const firstSingleRule = this.getFirst()
+        const qualifGroup = this.getFromRound().getQualifyGroups(target).find((qualifyGroup: QualifyGroup) => {
+            return firstSingleRule === qualifyGroup.getFirstSingleRule();
+        });
+        if (qualifGroup === undefined) {
+            throw Error('voor de single-kwalificatieregel kan geen groep worden gevonden');
+        }
+        return qualifGroup;
     }
 }
 

@@ -1,7 +1,7 @@
 import { NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public_api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
-import { QualifyRuleMultiple } from "../../../src/qualify/rule/multiple";
-import { QualifyRuleSingle } from "../../../src/qualify/rule/single";
+import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
+import { SingleQualifyRule } from "../../../src/qualify/rule/single";
 import { QualifyTarget } from "../../../src/qualify/target";
 import { GridAlign } from "../grid/align";
 import { GridColor } from "../grid/color";
@@ -183,8 +183,8 @@ export class DrawHelper {
         });
     }
 
-    protected getQualifyRuleString(qualifyRule: QualifyRuleMultiple | QualifyRuleSingle): string {
-        return (qualifyRule instanceof QualifyRuleMultiple) ? 'M' : 'S';
+    protected getQualifyRuleString(qualifyRule: MultipleQualifyRule | SingleQualifyRule): string {
+        return (qualifyRule instanceof MultipleQualifyRule) ? 'M' : 'S';
     }
 
     protected drawQualifyGroups(round: Round, origin: Coordinate, nextRoundNumberHeight: number): void {

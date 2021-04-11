@@ -15,8 +15,8 @@ import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
-import { QualifyRuleSingle } from '../../../src/qualify/rule/single';
-import { QualifyRuleMultiple } from '../../../src/qualify/rule/multiple';
+import { SingleQualifyRule } from '../../../src/qualify/rule/single';
+import { MultipleQualifyRule } from '../../../src/qualify/rule/multiple';
 
 describe('QualifyService', () => {
 
@@ -223,7 +223,7 @@ describe('QualifyService', () => {
         expect(winnersPlace1).to.not.equal(undefined);
         if (winnersPlace1) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace1);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -231,7 +231,7 @@ describe('QualifyService', () => {
         expect(winnersPlace2).to.not.equal(undefined);
         if (winnersPlace2) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace2);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -239,7 +239,7 @@ describe('QualifyService', () => {
         expect(winnersPlace3).to.not.equal(undefined);
         if (winnersPlace3) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace3);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -247,7 +247,7 @@ describe('QualifyService', () => {
         expect(winnersPlace4).to.not.equal(undefined);
         if (winnersPlace4) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace4);
-            expect(qualifyRule).to.instanceOf(QualifyRuleMultiple);
+            expect(qualifyRule).to.instanceOf(MultipleQualifyRule);
             expect(competitorMap.getCompetitor(winnersPlace4.getStartLocation())?.getName()).to.equal('tc 3.2');
         }
 
@@ -266,7 +266,7 @@ describe('QualifyService', () => {
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace1);
-            expect(qualifyRule).to.instanceOf(QualifyRuleMultiple);
+            expect(qualifyRule).to.instanceOf(MultipleQualifyRule);
             expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -274,7 +274,7 @@ describe('QualifyService', () => {
         expect(losersPlace2).to.not.equal(undefined);
         if (losersPlace2) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace2);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -282,7 +282,7 @@ describe('QualifyService', () => {
         expect(losersPlace3).to.not.equal(undefined);
         if (losersPlace3) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace3);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(losersPlace3.getStartLocation())).to.not.equal(undefined);
         }
 
@@ -290,7 +290,7 @@ describe('QualifyService', () => {
         expect(losersPlace4).to.not.equal(undefined);
         if (losersPlace4) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace4);
-            expect(qualifyRule).to.instanceOf(QualifyRuleSingle);
+            expect(qualifyRule).to.instanceOf(SingleQualifyRule);
             expect(competitorMap.getCompetitor(losersPlace4.getStartLocation())).to.not.equal(undefined);
         }
 

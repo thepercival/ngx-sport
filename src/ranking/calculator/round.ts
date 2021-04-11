@@ -4,7 +4,7 @@ import { PlaceLocation } from "../../place/location";
 import { GameMode } from "../../planning/gameMode";
 import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
-import { QualifyRuleMultiple } from "../../qualify/rule/multiple";
+import { MultipleQualifyRule } from "../../qualify/rule/multiple";
 import { State } from "../../state";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
@@ -37,37 +37,28 @@ export class RoundRankingCalculator {
         );
     }
 
-    getPlacesForMultipleRule(multipleRule: QualifyRuleMultiple): Place[] {
-        return this.getItemsForMultipleRule(multipleRule/*, true*/).map((rankingItem: RoundRankingItem) => {
+    getPlacesForMultipleRule(multipleRule: MultipleQualifyRule): Place[] {
+        return this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule()).map((rankingItem: RoundRankingItem) => {
             return rankingItem.getPlace();
         });
     }
 
-    getPlaceLocationsForMultipleRule(multipleRule: QualifyRuleMultiple): PlaceLocation[] {
+    getPlaceLocationsForMultipleRule(multipleRule: MultipleQualifyRule): PlaceLocation[] {
         return this.getPlacesForMultipleRule(multipleRule)
     }
 
-    getItemsForMultipleRule(multipleRule: QualifyRuleMultiple): RoundRankingItem[] {
-        const fromHorPoule = multipleRule.getFromHorizontalPoule();
-        return this.convertSportRoundRankingsToRoundItems(
-            fromHorPoule.getPlaces(),
-            fromHorPoule.getRound().getNumber().getCompetitionSports().map((competitionSport: CompetitionSport): SportRoundRankingItem[] => {
-                return this.getSportRoundRankingCalculator(competitionSport).getItemsForMultipleRule(multipleRule);
-            })
-        );
-    }
-
     getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {
-        return this.getItemsForHorizontalPouleNew(horizontalPoule).map((rankingItem: RoundRankingItem) => {
+        return this.getItemsForHorizontalPoule(horizontalPoule).map((rankingItem: RoundRankingItem) => {
             return rankingItem.getPlace();
         });
     }
 
-    getItemsForHorizontalPouleNew(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
         return this.convertSportRoundRankingsToRoundItems(
             horizontalPoule.getPlaces(),
             horizontalPoule.getRound().getNumber().getCompetitionSports().map((competitionSport: CompetitionSport): SportRoundRankingItem[] => {
-                return this.getSportRoundRankingCalculator(competitionSport).getItemsForHorizontalPoule(horizontalPoule);
+                const sportCalculator = this.getSportRoundRankingCalculator(competitionSport);
+                return sportCalculator.getItemsForHorizontalPoule(horizontalPoule);
             })
         );
     }

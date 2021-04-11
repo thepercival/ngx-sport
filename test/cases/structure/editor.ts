@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, QualifyRuleSingle, QualifyTarget } from '../../../public_api';
+import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget } from '../../../public_api';
 import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
 
-describe('Structure', () => {
+describe('StructureEditor', () => {
 
     it('addChildRound [4,4,4,4]=>[W(2)]', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
@@ -299,6 +299,7 @@ describe('Structure', () => {
         // (new StructureOutput()).output(structure, console);
 
         const winnersChildRound = rootRound.getChild(QualifyTarget.Winners, 1);
+        expect(winnersChildRound).to.not.be.undefined;
         expect(winnersChildRound?.getNrOfPlaces()).to.equal(2);
     });
 
@@ -357,6 +358,7 @@ describe('Structure', () => {
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
         // (new StructureOutput()).output(structure, console);
 
+        expect(rootRound.getQualifyGroups(QualifyTarget.Winners).length).to.equal(0);
         expect(structure.getRoundNumbers().length).to.equal(1);
 
         expect(structure.getRoundNumber(2)).to.equal(undefined);
@@ -425,7 +427,7 @@ describe('Structure', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
+        let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         while (singleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(false);
             singleRule = singleRule.getNext();
@@ -451,11 +453,11 @@ describe('Structure', () => {
             return;
         }
 
-        let firstWinnersSingleRule: QualifyRuleSingle | undefined = winnersQualifyGroup.getFirstSingleRule();
+        let firstWinnersSingleRule: SingleQualifyRule | undefined = winnersQualifyGroup.getFirstSingleRule();
         if (firstWinnersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstWinnersSingleRule)).to.equal(false);
         }
-        let firstLosersSingleRule: QualifyRuleSingle | undefined = losersQualifyGroup.getFirstSingleRule();
+        let firstLosersSingleRule: SingleQualifyRule | undefined = losersQualifyGroup.getFirstSingleRule();
         if (firstLosersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstLosersSingleRule)).to.equal(false);
         }
@@ -477,7 +479,7 @@ describe('Structure', () => {
             return;
         }
 
-        let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
+        let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         expect(singleRule).to.not.equal(undefined);
         if (singleRule === undefined) {
             return;

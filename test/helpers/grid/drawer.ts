@@ -11,6 +11,21 @@ export class GridDrawer {
     public constructor(protected grid: Grid) {
     }
 
+    public drawToRight(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
+        const valueAsArray: string[] = value.split('');
+        let char: string | undefined = valueAsArray.shift();
+        while (char !== undefined) {
+            this.grid.setColor(coordinate, color);
+            coordinate = this.grid.setToRight(coordinate, char);
+            char = valueAsArray.shift();
+        }
+        return coordinate.decrementX();
+    }
+
+    public drawLineToRight(coordinate: Coordinate, length: number, value: string = '-', color: GridColor | string = 0): Coordinate {
+        return this.drawToRight(coordinate, this.initString(length, value), color);
+    }
+
     public drawToLeft(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
@@ -25,21 +40,6 @@ export class GridDrawer {
 
     public drawLineToLeft(coordinate: Coordinate, length: number, value: string = '-', color: GridColor | string = 0): Coordinate {
         return this.drawToLeft(coordinate, this.initString(length, value), color);
-    }
-
-    public drawToRight(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
-        const valueAsArray: string[] = value.split('');
-        let char: string | undefined = valueAsArray.shift();
-        while (char !== undefined) {
-            this.grid.setColor(coordinate, color);
-            coordinate = this.grid.setToRight(coordinate, char);
-            char = valueAsArray.shift();
-        }
-        return coordinate.decrementX();
-    }
-
-    public drawLineToRight(coordinate: Coordinate, length: number, value: string = '-', color: GridColor | string = 0): Coordinate {
-        return this.drawToRight(coordinate, this.initString(length, value), color);
     }
 
     public drawLineVertToOrigin(coordinate: Coordinate, length: number, value: string = '|', color: GridColor | string = 0): Coordinate {

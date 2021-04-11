@@ -1,6 +1,6 @@
 import { Place } from "../place";
 import { Poule } from "../poule";
-import { QualifyRuleSingle } from "./rule/single";
+import { SingleQualifyRule } from "./rule/single";
 
 /**
  * kunnen aangeven uit welke poules een bepaalde plek afkomstig is 
@@ -74,7 +74,7 @@ export class QualifyOriginCalculator {
         }
         try {
             const rule = parentQualifyGroup.getRule(place);
-            if (rule instanceof QualifyRuleSingle) {
+            if (rule instanceof SingleQualifyRule) {
                 return [rule.getFromPlace(place).getPoule()];
             }
             return parentQualifyGroup.getParentRound().getPoules();

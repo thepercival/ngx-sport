@@ -5,8 +5,8 @@ import { QualifyGroup, Round } from "../group";
 import { QualifyOriginCalculator } from "../originCalculator";
 import { QualifyPlaceMapping } from "../placeMapping";
 import { QualifyTarget } from "../target";
-import { QualifyRuleMultiple } from "./multiple";
-import { QualifyRuleSingle } from "./single";
+import { MultipleQualifyRule } from "./multiple";
+import { SingleQualifyRule } from "./single";
 
 /**
  * indeling obv 
@@ -20,14 +20,14 @@ export class DefaultQualifyRuleCreator {
     createRules(fromHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup) {
         const childRoundPlaces = this.getChildRoundPlaces(qualifyGroup);
         let fromHorPoule: HorizontalPoule | undefined = fromHorPoules.shift();
-        let previousRule: QualifyRuleSingle | undefined;
+        let previousRule: SingleQualifyRule | undefined;
         while (fromHorPoule !== undefined && childRoundPlaces.length > 0) {
             const toPlaces = childRoundPlaces.splice(0, fromHorPoule.getPlaces().length);
             if (fromHorPoule.getPlaces().length > toPlaces.length) {
-                new QualifyRuleMultiple(fromHorPoule, qualifyGroup, toPlaces);
+                new MultipleQualifyRule(fromHorPoule, qualifyGroup, toPlaces);
             } else {
                 const placeMappings = this.createPlaceMappings(fromHorPoule, toPlaces);
-                previousRule = new QualifyRuleSingle(fromHorPoule, qualifyGroup, placeMappings, previousRule);
+                previousRule = new SingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previousRule);
             }
             fromHorPoule = fromHorPoules.shift();
         }

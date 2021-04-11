@@ -13,7 +13,8 @@ import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { PlanningConfigMapper } from '../planning/config/mapper';
 import { HorizontalPouleCreator } from '../poule/horizontal/creator';
 import { QualifyRuleCreator } from '../qualify/rule/creator';
-import { QualifyRuleSingle } from '../qualify/rule/single';
+import { SingleQualifyRule } from '../qualify/rule/single';
+import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreator';
 
 @Injectable({
     providedIn: 'root'
@@ -230,7 +231,11 @@ export class StructureEditor {
         const childRound = qualifyGroup.getChildRound();
         this.rulesCreator.remove(parentRound);
         // begin editing
-        this.removePlaceFromRound(childRound);
+        if (childRound.getNrOfPlaces() <= 2) {
+            qualifyGroup.detach();
+        } else {
+            this.removePlaceFromRound(childRound);
+        }
         // end editing
         this.rulesCreator.create(parentRound);
         return true;
@@ -245,11 +250,11 @@ export class StructureEditor {
         });
     }
 
-    protected getNrOfQualifiersPrevious(singleRule: QualifyRuleSingle): number {
+    protected getNrOfQualifiersPrevious(singleRule: SingleQualifyRule): number {
         return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
     }
 
-    protected getNrOfQualifiersNext(singleRule: QualifyRuleSingle): number {
+    protected getNrOfQualifiersNext(singleRule: SingleQualifyRule): number {
         return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
     }
 
@@ -283,25 +288,11 @@ export class StructureEditor {
     }
 
     createBalanced(nrOfPlaces: number, nrOfPoules: number): BalancedPouleStructure {
-        const calculateNrOfPlacesPerPoule = (nrOfPlaces: number, nrOfPoules: number): number => {
-            const nrOfPlaceLeft = (nrOfPlaces % nrOfPoules);
-            if (nrOfPlaceLeft === 0) {
-                return nrOfPlaces / nrOfPoules;
-            }
-            return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules);
-        }
-
-        const nrOfPlacesPerPoule = calculateNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules)
-        const innerData: number[] = [];
-        while (nrOfPlaces > 0) {
-            const nrOfPlacesToAdd = nrOfPlaces >= nrOfPlacesPerPoule ? nrOfPlacesPerPoule : nrOfPlaces;
-            innerData.push(nrOfPlacesToAdd);
-            nrOfPlaces -= nrOfPlacesPerPoule;
-        }
-        return new BalancedPouleStructure(...innerData)
+        const creator = new BalancedPouleStructureCreator()
+        return creator.create(nrOfPlaces, nrOfPoules);
     }
 
-    isQualifyGroupSplittableAt(singleRule: QualifyRuleSingle): boolean {
+    isQualifyGroupSplittableAt(singleRule: SingleQualifyRule): boolean {
         const next = singleRule.getNext();
         if (next === undefined) {
             return false;
@@ -310,7 +301,7 @@ export class StructureEditor {
     }
 
     // horizontalPoule is split-points, from which qualifyGroup
-    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: QualifyRuleSingle) {
+    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: SingleQualifyRule) {
         const parentRound = qualifyGroup.getParentRound();
         if (parentRound === undefined) {
             return;

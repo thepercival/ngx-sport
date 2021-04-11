@@ -1,5 +1,5 @@
 import { HorizontalPoule } from '../poule/horizontal';
-import { Round } from './group';
+import { QualifyGroup, Round } from './group';
 import { QualifyTarget } from './target';
 
 export abstract class QualifyRule {

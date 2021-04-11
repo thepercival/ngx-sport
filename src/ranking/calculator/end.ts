@@ -7,7 +7,7 @@ import { State } from '../../state';
 import { Place } from '../../place';
 import { RoundRankingCalculator } from './round';
 import { QualifyTarget } from '../../qualify/target';
-import { QualifyRuleSingle } from '../../qualify/rule/single';
+import { SingleQualifyRule } from '../../qualify/rule/single';
 
 export class EndRankingCalculator {
 
@@ -79,7 +79,7 @@ export class EndRankingCalculator {
         if (qualifyRule === undefined) {
             return 0;
         }
-        if (qualifyRule instanceof QualifyRuleSingle) {
+        if (qualifyRule instanceof SingleQualifyRule) {
             return qualifyRule.getMappings().length;
         }
         return qualifyRule.getFromHorizontalPoule().getPlaces().length;
