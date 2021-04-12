@@ -341,7 +341,7 @@ export class StructureEditor {
             parentRound,
             qualifyGroup.getTarget(),
             childRound.getNumber(),
-            qualifyGroup.getNumber()
+            qualifyGroup.getNumber() + 1
         );
         this.renumber(parentRound, qualifyGroup.getTarget());
         return newQualifyGroup;

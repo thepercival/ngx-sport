@@ -87,6 +87,10 @@ export class QualifyGroup extends Identifiable {
         return nrOfToPlaces;
     }
 
+    getNext(): QualifyGroup | undefined {
+        return this.getParentRound().getQualifyGroup(this.getTarget(), this.getNumber() + 1);
+    }
+
     getRule(toPlace: Place): SingleQualifyRule | MultipleQualifyRule {
         let singleRule = this.firstSingleRule;
         while (singleRule !== undefined) {
@@ -113,8 +117,7 @@ export class QualifyGroup extends Identifiable {
     }
 
     isBorderGroup(): boolean {
-        const qualifyGroups = this.getParentRound().getQualifyGroups(this.getTarget());
-        return this === qualifyGroups[qualifyGroups.length - 1];
+        return this.getNext() === undefined;
     }
 
     detach() {

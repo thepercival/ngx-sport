@@ -26,6 +26,10 @@ export class NameService {
     constructor(private competitorMap?: CompetitorMap) {
     }
 
+    getCompetitorMap(): CompetitorMap | undefined {
+        return this.competitorMap;
+    }
+
     getQualifyTargetDescription(qualifyTarget: QualifyTarget, multiple: boolean = false): string {
         const descr = qualifyTarget === QualifyTarget.Winners ? 'winnaar' : (qualifyTarget === QualifyTarget.Losers ? 'verliezer' : '');
         return ((multiple && (descr !== '')) ? descr + 's' : descr);
@@ -304,6 +308,11 @@ export class NameService {
             }
         });
         return biggestMaxDepth;
+    }
+
+    resetStructure(): void {
+        this.previousNrOfDropoutsMap = undefined;
+        this.pouleStructureNumberMap = undefined;
     }
 
     private getPreviousNrOfDropoutsMap(round: Round): PreviousNrOfDropoutsMap {
