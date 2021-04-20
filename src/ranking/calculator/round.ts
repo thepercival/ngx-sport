@@ -5,6 +5,7 @@ import { GameMode } from "../../planning/gameMode";
 import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { MultipleQualifyRule } from "../../qualify/rule/multiple";
+import { AgainstSportVariant } from "../../sport/variant/against";
 import { State } from "../../state";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
@@ -22,7 +23,7 @@ export class RoundRankingCalculator {
     }
 
     protected getSportRoundRankingCalculator(competitionSport: CompetitionSport): SportRoundRankingCalculator {
-        if (competitionSport.getSport().getGameMode() === GameMode.Against) {
+        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
             return new AgainstSportRoundRankingCalculator(competitionSport, this.gameStates);
         }
         return new TogetherSportRoundRankingCalculator(competitionSport, this.gameStates);

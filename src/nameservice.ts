@@ -198,7 +198,13 @@ export class NameService {
     }
 
     getGameModeName(gameMode: GameMode): string {
-        return gameMode === GameMode.Against ? 'tegen elkaar' : 'met elkaar';
+        switch (gameMode) {
+            case GameMode.Single:
+                return 'alleen';
+            case GameMode.Against:
+                return 'tegen elkaar';
+        }
+        return 'iedereen tegelijk tegen elkaar';
     }
 
     getPointsCalculationName(pointsCalculation: PointsCalculation): string {
@@ -221,9 +227,9 @@ export class NameService {
         return nrOfGamePlaces + ' deelnemers';
     }
 
-    getRuleSetName(scoreConfig: ScoreConfig): string {
+    /*getRuleSetName(scoreConfig: ScoreConfig): string {
         return '?';
-    }
+    }*/
 
     getRulesName(ruleSet: RankingRuleSet): string[] {
         const rankingRuleGetter = new RankingRuleGetter();

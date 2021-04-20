@@ -4,6 +4,7 @@ import { RoundNumber } from '../../round/number';
 import { CompetitionSport } from '../../competition/sport';
 import { GameAmountConfig } from '../gameAmountConfig';
 import { GameMode } from '../gameMode';
+import { AgainstSportVariant } from '../../sport/variant/against';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +16,11 @@ export class GameAmountConfigService {
 
     createDefault(competitionSport: CompetitionSport, roundNumber: RoundNumber): GameAmountConfig {
         let amount = 1;
-        if (competitionSport.getSport().getGameMode() === GameMode.Together) {
-            amount = competitionSport.getFields().length;
+        const variant = competitionSport.getVariant();
+        if (variant instanceof AgainstSportVariant) {
+            amount = variant.getNrOfH2H();
+        } else {
+            amount = variant.getGameAmount()
         }
         return new GameAmountConfig(competitionSport, roundNumber, amount);
     }

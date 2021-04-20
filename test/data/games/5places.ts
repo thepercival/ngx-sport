@@ -11,9 +11,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -49,9 +55,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -87,9 +99,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -125,9 +143,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -163,9 +187,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -201,9 +231,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -239,9 +275,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -277,9 +319,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -315,9 +363,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [
@@ -353,9 +407,15 @@ export const jsonGames5Places: JsonAgainstGame[] = [
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                gameMode: GameMode.Against,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: []
         },
         places: [

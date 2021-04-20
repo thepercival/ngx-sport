@@ -21,12 +21,18 @@ export const jsonBaseCompetition: JsonCompetition = {
             id: 0,
             sport: {
                 id: 0,
-                gameMode: GameMode.Against,
                 name: 'voetbal',
                 team: true,
                 customId: CustomSport.Football,
-                nrOfGamePlaces: 2
+                defaultGameMode: GameMode.Against,
+                defaultNrOfSidePlaces: 1
             },
+            gameMode: GameMode.Against,
+            nrOfHomePlaces: 1,
+            nrOfAwayPlaces: 1,
+            nrOfH2H: 1,
+            nrOfGamePlaces: 0,
+            gameAmount: 0,
             fields: [
                 {
                     id: 1,
@@ -45,13 +51,3 @@ export const jsonBaseCompetition: JsonCompetition = {
     state: 1,
     rankingRuleSet: RankingRuleSet.Against
 };
-/*
-
-'winPoints: 3.0,
-            'drawPoints: 1.0,
-            'winPointsExt: 2.0,
-            'drawPointsExt: 1.0,
-            'losePointsExt: 0.0,
-            'nrOfGamePlaces: SportConfig.Default_NrOfGamePlaces,
-            'pointsCalculation: SportConfig.Points_Calc_GamePoints,
-            */

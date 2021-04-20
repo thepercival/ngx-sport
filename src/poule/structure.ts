@@ -1,3 +1,7 @@
+import { AgainstSportVariant } from "../sport/variant/against";
+import { AllInOneGameSportVariant } from "../sport/variant/all";
+import { SingleSportVariant } from "../sport/variant/single";
+
 export class PouleStructure extends Array<number> {
 
     constructor(...nrOfPlaces: number[]) {
@@ -26,27 +30,29 @@ export class PouleStructure extends Array<number> {
         return this[this.length - 1];
     }
 
-    public selfRefereeAvailable(nrOfGamePlaces: number): boolean {
-        return this.selfRefereeSamePouleAvailable(nrOfGamePlaces)
-            || this.selfRefereeOtherPoulesAvailable();
+    public isSelfRefereeAvailable(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): boolean {
+        return this.isSelfRefereeSamePouleAvailable(sportVariants)
+            || this.isSelfRefereeOtherPoulesAvailable();
     }
 
-    public selfRefereeOtherPoulesAvailable(): boolean {
+    public isSelfRefereeOtherPoulesAvailable(): boolean {
         return this.getNrOfPoules() > 1;
     }
 
-    public selfRefereeSamePouleAvailable(nrOfGamePlaces: number): boolean {
-        return this.getSmallestPoule() > nrOfGamePlaces;
+    public isSelfRefereeSamePouleAvailable(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): boolean {
+        return !sportVariants.some((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
+            return sportVariant.allPlacesParticipate(this.getSmallestPoule());
+        });
     }
 
-    /*public getNrOfPoulesByNrOfPlaces(): array {
-        nrOfPoulesByNrOfPlaces = [];
-        foreach(this.toArray() as pouleNrOfPlaces) {
-            if (array_key_exists(pouleNrOfPlaces, nrOfPoulesByNrOfPlaces) === false) {
-                nrOfPoulesByNrOfPlaces[pouleNrOfPlaces] = 0;
-            }
-            nrOfPoulesByNrOfPlaces[pouleNrOfPlaces]++;
-        }
-        return nrOfPoulesByNrOfPlaces;
-    }*/
+    // public getNrOfPoulesByNrOfPlaces(): array {
+    //     nrOfPoulesByNrOfPlaces = [];
+    //     foreach(this.toArray() as pouleNrOfPlaces) {
+    //         if (array_key_exists(pouleNrOfPlaces, nrOfPoulesByNrOfPlaces) === false) {
+    //             nrOfPoulesByNrOfPlaces[pouleNrOfPlaces] = 0;
+    //         }
+    //         nrOfPoulesByNrOfPlaces[pouleNrOfPlaces]++;
+    //     }
+    //     return nrOfPoulesByNrOfPlaces;
+    // }
 }

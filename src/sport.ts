@@ -1,4 +1,5 @@
 import { Identifiable } from "./identifiable";
+import { GameMode } from "./planning/gameMode";
 import { CustomSport } from "./sport/custom";
 
 export class Sport extends Identifiable {
@@ -9,8 +10,8 @@ export class Sport extends Identifiable {
     constructor(
         protected name: string,
         protected team: boolean,
-        protected gameMode: number,
-        protected nrOfGamePlaces: number) {
+        protected defaultGameMode: GameMode,
+        protected defaultNrOfSidePlaces: number) {
         super();
     }
 
@@ -26,20 +27,12 @@ export class Sport extends Identifiable {
         return this.team;
     }
 
-    // setTeam(team: boolean): void {
-    //     this.team = team;
-    // }
-
-    getGameMode(): number {
-        return this.gameMode;
+    getDefaultGameMode(): GameMode {
+        return this.defaultGameMode;
     }
 
-    // setGameMode(gameMode: number): void {
-    //     this.gameMode = gameMode;
-    // }
-
-    getNrOfGamePlaces(): number {
-        return this.nrOfGamePlaces;
+    getDefaultNrOfSidePlaces(): number {
+        return this.defaultNrOfSidePlaces;
     }
 
     getCustomId(): CustomSport {

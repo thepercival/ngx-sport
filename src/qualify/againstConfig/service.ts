@@ -7,6 +7,7 @@ import { Round } from '../group';
 import { PointsCalculation } from '../../ranking/pointsCalculation';
 import { GameMode } from '../../planning/gameMode';
 import { CustomSport } from '../../sport/custom';
+import { AgainstSportVariant } from '../../sport/variant/against';
 
 @Injectable({
     providedIn: 'root'
@@ -61,7 +62,7 @@ export class QualifyAgainstConfigService {
     }
 
     getDefaultPointCalculation(competitionSport: CompetitionSport): PointsCalculation {
-        if (competitionSport.getSport().getGameMode() === GameMode.Against) {
+        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
             return PointsCalculation.AgainstGamePoints;
         }
         return PointsCalculation.Scores;
