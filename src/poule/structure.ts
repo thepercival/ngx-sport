@@ -41,7 +41,10 @@ export class PouleStructure extends Array<number> {
 
     public isSelfRefereeSamePouleAvailable(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): boolean {
         return !sportVariants.some((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
-            return sportVariant.allPlacesParticipate(this.getSmallestPoule());
+            if (sportVariant instanceof AllInOneGameSportVariant) {
+                return true;
+            }
+            return sportVariant.getNrOfGamePlaces() < this.getSmallestPoule();
         });
     }
 

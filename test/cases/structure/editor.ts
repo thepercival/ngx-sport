@@ -1,10 +1,11 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget } from '../../../public_api';
-import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
+import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
+import { PlaceRanges } from '../../../src/structure/placeRanges';
 
 describe('StructureEditor', () => {
 
@@ -199,10 +200,16 @@ describe('StructureEditor', () => {
     it('incrementNrOfPoules too little placesperpoule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const ranges = {
-            min: 2, max: 100, placesPerPoule: { min: 2, max: 10 }
-        };
-        const structureEditor = getStructureEditor([ranges]);
+        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        const maxNrOfPlacesPerPoule = 2;
+        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound(competition.getSportVariants());
+        const maxNrOfPlacesPerRound = 100;
+        const placeRanges = new PlaceRanges(
+            minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
+            minNrOfPlacesPerRound, maxNrOfPlacesPerRound, undefined
+        );
+
+        const structureEditor = getStructureEditor(placeRanges);
         const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 2]);
         const rootRound = structure.getRootRound();
 
@@ -273,10 +280,17 @@ describe('StructureEditor', () => {
     it('addQualifiers out of range', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const ranges = {
-            min: 2, max: 6, placesPerPoule: { min: 2, max: 4 }
-        };
-        const structureEditor = getStructureEditor([ranges]);
+        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        const maxNrOfPlacesPerPoule = 4;
+        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound(competition.getSportVariants());
+        const maxNrOfPlacesPerRound = 6;
+        const placeRanges = new PlaceRanges(
+            minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
+            minNrOfPlacesPerRound, maxNrOfPlacesPerRound, undefined
+        );
+        // const placeRanges = new PlaceRanges(competition.getSportVariants(), 2, 6, 4);
+
+        const structureEditor = getStructureEditor(placeRanges);
         const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 3]);
         const rootRound = structure.getRootRound();
 

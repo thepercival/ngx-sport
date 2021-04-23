@@ -20,4 +20,12 @@ describe('BalancedPouleStructureCreator', () => {
         expect(structure.getBiggestPoule()).to.equal(4);
         expect(structure.getSmallestPoule()).to.equal(3);
     });
+
+    it('11 places and 0 poules', () => {
+        const creator = new BalancedPouleStructureCreator();
+
+        expect(function () {
+            const structure = creator.create(11, 0);
+        }).to.throw();
+    });
 });

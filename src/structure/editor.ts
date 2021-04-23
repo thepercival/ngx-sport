@@ -15,6 +15,7 @@ import { HorizontalPouleCreator } from '../poule/horizontal/creator';
 import { QualifyRuleCreator } from '../qualify/rule/creator';
 import { SingleQualifyRule } from '../qualify/rule/single';
 import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreator';
+import { PlaceRanges } from './placeRanges';
 
 @Injectable({
     providedIn: 'root'
@@ -22,14 +23,18 @@ import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreato
 export class StructureEditor {
     private horPouleCreator: HorizontalPouleCreator;
     private rulesCreator: QualifyRuleCreator;
-
+    private placeRanges: PlaceRanges | undefined;
 
     constructor(
         private competitionSportService: CompetitionSportService,
-        private planningConfigMapper: PlanningConfigMapper,
-        @Inject('placeRanges') private placeRanges: PlaceRange[]) {
+        private planningConfigMapper: PlanningConfigMapper/*,
+        @Inject('placeRanges') private placeRanges: PlaceRanges*/) {
         this.horPouleCreator = new HorizontalPouleCreator();
         this.rulesCreator = new QualifyRuleCreator();
+    }
+
+    setPlaceRanges(placeRanges: PlaceRanges): void {
+        this.placeRanges = placeRanges;
     }
 
     create(competition: Competition, jsonPlanningConfig: JsonPlanningConfig, pouleStructure: number[]): Structure {
@@ -52,6 +57,7 @@ export class StructureEditor {
 
     addChildRound(parentRound: Round, qualifyTarget: QualifyTarget, pouleStructure: number[]): Round {
         const balancedPouleStructure = new BalancedPouleStructure(...pouleStructure);
+        this.placeRanges?.validateStructure(balancedPouleStructure);
         this.rulesCreator.remove(parentRound);
         // begin editing
 
@@ -90,12 +96,12 @@ export class StructureEditor {
     // options:
     // 3,3 => 4, 5
     addPlaceToRootRound(rootRound: Round): Place {
-        this.horPouleCreator.remove(rootRound);
-        this.rulesCreator.remove(rootRound);
-
         const newNrOfPlaces = rootRound.getNrOfPlaces() + 1;
         const nrOfPoules = rootRound.getPoules().length;
-        this.checkRanges(newNrOfPlaces, nrOfPoules);
+        this.validate(newNrOfPlaces, nrOfPoules);
+
+        this.horPouleCreator.remove(rootRound);
+        this.rulesCreator.remove(rootRound);
         // begin editing        
         rootRound.addPlace();
         // end editing
@@ -110,10 +116,7 @@ export class StructureEditor {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');
         }
         const newNrOfPlaces = rootRound.getNrOfPlaces() - 1;
-        this.checkRanges(newNrOfPlaces);
-        if ((newNrOfPlaces / rootRound.getPoules().length) < 2) {
-            throw new Error('Er kan geen deelnemer verwijderd worden. De minimale aantal deelnemers per poule is 2.');
-        }
+        this.validate(newNrOfPlaces, rootRound.getPoules().length);
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
         // begin editing
@@ -126,7 +129,7 @@ export class StructureEditor {
     public addPouleToRootRound(rootRound: Round): Poule {
         const lastPoule = rootRound.getFirstPoule();
         const newNrOfPlaces = rootRound.getNrOfPlaces() + lastPoule.getPlaces().length;
-        this.checkRanges(newNrOfPlaces, rootRound.getPoules().length + 1);
+        this.validate(newNrOfPlaces, rootRound.getPoules().length + 1);
 
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
@@ -162,7 +165,7 @@ export class StructureEditor {
     }
 
     public incrementNrOfPoules(round: Round) {
-        this.checkRanges(round.getNrOfPlaces(), round.getPoules().length + 1);
+        this.validate(round.getNrOfPlaces(), round.getPoules().length + 1);
 
         this.horPouleCreator.remove(round);
         this.rulesCreator.remove(round);
@@ -194,33 +197,47 @@ export class StructureEditor {
         this.rulesCreator.create(round.getParent(), round);
     }
 
-    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfQualifiers: number) {
+    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number) {
         const nrOfPlaces = parentRound.getNrOfPlaces();
         const nrOfToPlaces = parentRound.getNrOfPlacesChildren();
-        if ((nrOfToPlaces + nrOfQualifiers) > nrOfPlaces) {
+        if ((nrOfToPlaces + nrOfToPlacesToAdd) > nrOfPlaces) {
             throw new Error('er mogen maximaal ' + (nrOfPlaces - nrOfToPlaces) + ' deelnemers naar de volgende ronde');
         }
-        this.horPouleCreator.remove(parentRound);
-        this.rulesCreator.remove(parentRound);
-        // begin editing
+
         let qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);
-        if (qualifyGroup === undefined) {
-            if (nrOfQualifiers < 2) {
-                throw Error('Voeg miniaal 2 gekwalificeerden toe');
+        const addChildRound = qualifyGroup === undefined;
+        if (addChildRound) {
+            const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? PlaceRanges.MinNrOfPlacesPerPoule;
+            if (nrOfToPlacesToAdd < minNrOfPlacesPerPoule) {
+                throw new Error('er moeten minimaal ' + minNrOfPlacesPerPoule + ' deelnemers naar de volgende ronde, vanwege het aantal deelnemers per wedstrijd');
             }
-            qualifyGroup = this.addChildRoundHelper(parentRound, qualifyTarget, new BalancedPouleStructure(2));
-            nrOfQualifiers -= 2;
+            const newStructure = new BalancedPouleStructure(minNrOfPlacesPerPoule);
+            this.placeRanges?.validateStructure(newStructure);
+            this.horPouleCreator.remove(parentRound);
+            this.rulesCreator.remove(parentRound);
+            // begin editing
+            qualifyGroup = this.addChildRoundHelper(parentRound, qualifyTarget, newStructure);
+            nrOfToPlacesToAdd -= minNrOfPlacesPerPoule;
+            const childRound = qualifyGroup.getChildRound();
+            while (nrOfToPlacesToAdd-- > 0) {
+                childRound.addPlace();
+            }
+            // end editing
+            this.horPouleCreator.create(parentRound, childRound);
+            this.rulesCreator.create(parentRound, childRound);
+        } else {
+            const childRound = qualifyGroup.getChildRound();
+            this.validate(childRound.getNrOfPlaces() + nrOfToPlacesToAdd, childRound.getPoules().length);
+            this.horPouleCreator.remove(childRound);
+            this.rulesCreator.remove(parentRound, childRound);
+            // begin editing        
+            while (nrOfToPlacesToAdd-- > 0) {
+                childRound.addPlace();
+            }
+            // end editing
+            this.horPouleCreator.create(childRound);
+            this.rulesCreator.create(parentRound, childRound);
         }
-        const childRound = qualifyGroup.getChildRound();
-        this.horPouleCreator.remove(childRound);
-        this.rulesCreator.remove(childRound);
-        for (let qualifier = 0; qualifier < nrOfQualifiers; qualifier++) {
-            this.checkRanges(childRound.getNrOfPlaces() + 1, childRound.getPoules().length);
-            childRound.addPlace();
-        }
-        // end editing
-        this.horPouleCreator.create(childRound.getParent(), childRound);
-        this.rulesCreator.create(childRound.getParent(), childRound);
     }
 
     removeQualifier(parentRound: Round, qualifyTarget: QualifyTarget): boolean {
@@ -231,7 +248,7 @@ export class StructureEditor {
         const childRound = qualifyGroup.getChildRound();
         this.rulesCreator.remove(parentRound);
         // begin editing
-        if (childRound.getNrOfPlaces() <= 2) {
+        if (childRound.getNrOfPlaces() <= this.getMinPlacesPerPouleSmall()) {
             qualifyGroup.detach();
         } else {
             this.removePlaceFromRound(childRound);
@@ -263,30 +280,6 @@ export class StructureEditor {
         return parent ? this.getRoot(parent) : round;
     }
 
-    protected checkRanges(nrOfPlaces: number, nrOfPoules?: number) {
-        if (this.placeRanges === undefined || this.placeRanges.length === 0) {
-            return;
-        }
-        const placeRange = this.placeRanges.find(placeRangeIt => {
-            return nrOfPlaces >= placeRangeIt.min && nrOfPlaces <= placeRangeIt.max;
-        });
-        if (placeRange === undefined) {
-            throw new Error('het aantal deelnemers is kleiner dan het minimum of groter dan het maximum');
-        }
-        if (nrOfPoules === undefined) {
-            return;
-        }
-        const pouleStructure = this.createBalanced(nrOfPlaces, nrOfPoules);
-        const smallestNrOfPlacesPerPoule = pouleStructure.getSmallestPoule();
-        if (smallestNrOfPlacesPerPoule < placeRange.placesPerPoule.min) {
-            throw new Error('vanaf ' + placeRange.min + ' deelnemers moeten er minimaal ' + placeRange.placesPerPoule.min + ' deelnemers per poule zijn');
-        }
-        const biggestNrOfPlacesPerPoule = pouleStructure.getBiggestPoule();
-        if (biggestNrOfPlacesPerPoule > placeRange.placesPerPoule.max) {
-            throw new Error('vanaf ' + placeRange.min + ' deelnemers mogen er maximaal ' + placeRange.placesPerPoule.max + ' deelnemers per poule zijn');
-        }
-    }
-
     createBalanced(nrOfPlaces: number, nrOfPoules: number): BalancedPouleStructure {
         const creator = new BalancedPouleStructureCreator()
         return creator.create(nrOfPlaces, nrOfPoules);
@@ -297,7 +290,8 @@ export class StructureEditor {
         if (next === undefined) {
             return false;
         }
-        return this.getNrOfQualifiersPrevious(singleRule) >= 2 && this.getNrOfQualifiersNext(next) >= 2;
+        return this.getNrOfQualifiersPrevious(singleRule) >= this.getMinPlacesPerPouleSmall()
+            && this.getNrOfQualifiersNext(next) >= this.getMinPlacesPerPouleSmall();
     }
 
     // horizontalPoule is split-points, from which qualifyGroup
@@ -308,7 +302,7 @@ export class StructureEditor {
         }
         const nrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
         const borderSideNrOfToPlaces = singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
-        if (nrOfToPlaces < 2 || borderSideNrOfToPlaces < 2) {
+        if (nrOfToPlaces < this.getMinPlacesPerPouleSmall() || borderSideNrOfToPlaces < this.getMinPlacesPerPouleSmall()) {
             throw new Error('de kwalificatiegroep is niet splitsbaar');
         }
         const childRound = qualifyGroup.getChildRound();
@@ -409,8 +403,22 @@ export class StructureEditor {
             qualifyGroup.setNumber(number++);
         });
     }
+
+    validate(nrOfPlaces: number, nrOfPoules: number) {
+        if (this.placeRanges) {
+            this.placeRanges.validate(nrOfPlaces, nrOfPoules);
+        }
+        if (nrOfPlaces < PlaceRanges.MinNrOfPlacesPerPoule) {
+            throw new Error('het minimaal aantal deelnemers is ' + PlaceRanges.MinNrOfPlacesPerPoule);
+        }
+    }
+
+    getMinPlacesPerPouleSmall(): number {
+        return this.placeRanges ? this.placeRanges.getPlacesPerPouleSmall().min : PlaceRanges.MinNrOfPlacesPerPoule;
+    }
 }
 
 export interface PlaceRange extends VoetbalRange {
     placesPerPoule: VoetbalRange;
+
 }

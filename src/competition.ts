@@ -9,6 +9,9 @@ import { TeamCompetitor } from './competitor/team';
 import { CompetitionSport } from './competition/sport';
 import { RankingRuleSet } from './ranking/ruleSet';
 import { Identifiable } from './identifiable';
+import { SingleSportVariant } from './sport/variant/single';
+import { AgainstSportVariant } from './sport/variant/against';
+import { AllInOneGameSportVariant } from './sport/variant/all';
 
 export class Competition extends Identifiable {
     protected startDateTime: Date;
@@ -83,6 +86,10 @@ export class Competition extends Identifiable {
 
     getSports(): CompetitionSport[] {
         return this.sports;
+    }
+
+    getSportVariants(): (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[] {
+        return this.sports.map((competitionSport: CompetitionSport) => competitionSport.getVariant());
     }
 
     getSport(sport: Sport): CompetitionSport | undefined {

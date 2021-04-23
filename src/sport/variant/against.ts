@@ -1,3 +1,4 @@
+import { GameAllocation } from "../../game/allocation";
 import { GameMode } from "../../planning/gameMode";
 import { Sport } from "../../sport";
 import { SportVariant } from "../variant";
@@ -23,7 +24,7 @@ export class AgainstSportVariant extends SportVariant {
         return this.nrOfH2H;
     }
 
-    allPlacesParticipate(nrOfPoulePlaces: number): boolean {
-        return this.getNrOfGamePlaces() >= nrOfPoulePlaces;
+    getGameAllocation(): GameAllocation {
+        return GameAllocation.Poule;
     }
 }

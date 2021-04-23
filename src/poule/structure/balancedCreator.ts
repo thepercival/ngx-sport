@@ -9,7 +9,9 @@ export class BalancedPouleStructureCreator {
             }
             return ((nrOfPlaces - nrOfPlaceLeft) / nrOfPoules);
         }
-
+        if (nrOfPoules < 1) {
+            throw new Error('er moet minimaal 1 poule aanwezig zijn');
+        }
         const innerData: number[] = [];
         while (nrOfPlaces > 0) {
             const nrOfPlacesPerPoule = calculateNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules--);
