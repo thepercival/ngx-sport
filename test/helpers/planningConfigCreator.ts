@@ -1,9 +1,8 @@
-import { CreationStrategy, GameMode, JsonPlanningConfig, SelfReferee } from '../../public_api';
+import { JsonPlanningConfig, SelfReferee } from '../../public_api';
 
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {
         id: 0,
-        creationStrategy: CreationStrategy.StaticPouleSize,
         extension: false,
         enableTime: false,
         minutesPerGame: 0,

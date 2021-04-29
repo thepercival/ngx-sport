@@ -13,7 +13,6 @@ export class PlanningConfigMapper {
     toObject(json: JsonPlanningConfig, roundNumber: RoundNumber): PlanningConfig {
         return new PlanningConfig(
             roundNumber,
-            json.creationStrategy,
             json.extension,
             json.enableTime,
             json.minutesPerGame,
@@ -26,7 +25,6 @@ export class PlanningConfigMapper {
     toJson(config: PlanningConfig): JsonPlanningConfig {
         return {
             id: config.getId(),
-            creationStrategy: config.getCreationStrategy(),
             extension: config.getExtension(),
             enableTime: config.getEnableTime(),
             minutesPerGame: config.getMinutesPerGame(),

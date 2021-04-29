@@ -36,11 +36,11 @@ export class CompetitionSportMapper {
 
     toVariant(json: JsonCompetitionSport, sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
         if (json.gameMode === GameMode.Single) {
-            return new SingleSportVariant(sport, json.nrOfGamePlaces, json.gameAmount);
+            return new SingleSportVariant(sport, json.nrOfGamePlaces, json.nrOfGamesPerPlace);
         } else if (json.gameMode === GameMode.Against) {
-            return new AgainstSportVariant(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.gameAmount);
+            return new AgainstSportVariant(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfH2H, json.nrOfPartials);
         }
-        return new AllInOneGameSportVariant(sport, json.gameAmount);
+        return new AllInOneGameSportVariant(sport, json.nrOfGamesPerPlace);
     }
 
     toJson(competitionSport: CompetitionSport): JsonCompetitionSport {
@@ -53,28 +53,29 @@ export class CompetitionSportMapper {
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,
             nrOfAwayPlaces: jsonVariant.nrOfAwayPlaces,
             nrOfH2H: jsonVariant.nrOfH2H,
+            nrOfPartials: jsonVariant.nrOfPartials,
             nrOfGamePlaces: jsonVariant.nrOfGamePlaces,
-            gameAmount: jsonVariant.gameAmount
+            nrOfGamesPerPlace: jsonVariant.nrOfGamesPerPlace
         }
         return json;
     }
 
     variantToJson(variant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): JsonPersistSportVariant {
         let json: JsonPersistSportVariant = {
-            gameMode: 0, nrOfHomePlaces: 0, nrOfAwayPlaces: 0, nrOfH2H: 0, nrOfGamePlaces: 0, gameAmount: 0
+            gameMode: 0, nrOfHomePlaces: 0, nrOfAwayPlaces: 0, nrOfH2H: 0, nrOfPartials: 0, nrOfGamePlaces: 0, nrOfGamesPerPlace: 0
         }
         if (variant instanceof SingleSportVariant) {
             json.gameMode = GameMode.Single;
             json.nrOfGamePlaces = variant.getNrOfGamePlaces();
-            json.gameAmount = variant.getGameAmount();
+            json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();
         } else if (variant instanceof AgainstSportVariant) {
             json.gameMode = GameMode.Against;
-            json.nrOfHomePlaces = variant.getNrOfHomePlaces(),
-                json.nrOfAwayPlaces = variant.getNrOfAwayPlaces(),
-                json.nrOfH2H = variant.getNrOfH2H()
+            json.nrOfHomePlaces = variant.getNrOfHomePlaces();
+            json.nrOfAwayPlaces = variant.getNrOfAwayPlaces();
+            json.nrOfH2H = variant.getNrOfH2H();
         } else {
             json.gameMode = GameMode.AllInOneGame;
-            json.gameAmount = variant.getGameAmount();
+            json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();
         }
         return json;
     }

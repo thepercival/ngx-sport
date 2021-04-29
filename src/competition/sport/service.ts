@@ -10,7 +10,6 @@ import { QualifyAgainstConfigService } from '../../qualify/againstConfig/service
 import { AgainstSportVariant } from '../../sport/variant/against';
 import { AllInOneGameSportVariant } from '../../sport/variant/all';
 import { SingleSportVariant } from '../../sport/variant/single';
-import { VoetbalRange } from '../../range';
 import { PlaceRanges } from '../../structure/placeRanges';
 
 @Injectable({
@@ -48,7 +47,7 @@ export class CompetitionSportService {
         return PlaceRanges.MinNrOfPlacesPerPoule;
     }
 
-    getMinNrOfPlacesPerRound(
+    /*getMinNrOfPlacesPerRound(
         sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): number {
         const sportsMinNrOfPlaces = sportVariants.map((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
             if (sportVariant instanceof SingleSportVariant) {
@@ -57,7 +56,7 @@ export class CompetitionSportService {
             return this.getMinNrOfPlacesPerPouleHelper(sportVariant);
         });
         return Math.max.apply(Math, sportsMinNrOfPlaces);
-    }
+    }*/
 
     // getPlacesPerPouleRange(
     //     maxNrOfPlacesPerPoule: number,

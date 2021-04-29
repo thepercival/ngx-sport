@@ -18,8 +18,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -62,8 +63,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -106,8 +108,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -150,8 +153,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -194,8 +198,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -238,8 +243,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -282,8 +288,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -326,8 +333,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -370,8 +378,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [
@@ -414,8 +423,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
+            nrOfPartials: 0,
             nrOfGamePlaces: 0,
-            gameAmount: 0,
+            nrOfGamesPerPlace: 0,
             fields: []
         },
         places: [

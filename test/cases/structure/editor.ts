@@ -202,7 +202,7 @@ describe('StructureEditor', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
         const maxNrOfPlacesPerPoule = 2;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound(competition.getSportVariants());
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 100;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -282,7 +282,7 @@ describe('StructureEditor', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
         const maxNrOfPlacesPerPoule = 4;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound(competition.getSportVariants());
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 6;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,

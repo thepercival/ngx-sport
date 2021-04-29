@@ -1,15 +1,11 @@
-import { CreationStrategy } from '../game/roundAssigner';
+
 import { Identifiable } from '../identifiable';
 import { SelfReferee } from '../referee/self';
 import { RoundNumber } from '../round/number';
 
 export class PlanningConfig extends Identifiable {
-    static readonly Teamup_Min = 4;
-    static readonly Teamup_Max = 6;
-
     constructor(
         protected roundNumber: RoundNumber,
-        protected creationStrategy: CreationStrategy,
         protected extension: boolean,
         protected enableTime: boolean,
         protected minutesPerGame: number,
@@ -20,11 +16,6 @@ export class PlanningConfig extends Identifiable {
         super();
         this.roundNumber.setPlanningConfig(this);
     }
-
-    getCreationStrategy(): CreationStrategy {
-        return this.creationStrategy;
-    }
-
     getExtension(): boolean {
         return this.extension;
     }

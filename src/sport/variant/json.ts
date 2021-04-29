@@ -5,6 +5,7 @@ export interface JsonPersistSportVariant {
     nrOfHomePlaces: number;
     nrOfAwayPlaces: number;
     nrOfH2H: number;
+    nrOfPartials: number;
     nrOfGamePlaces: number;
-    gameAmount: number;
+    nrOfGamesPerPlace: number;
 }

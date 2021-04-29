@@ -1,10 +1,9 @@
-import { GameAllocation } from "../../game/allocation";
 import { GameMode } from "../../planning/gameMode";
 import { Sport } from "../../sport";
 import { SportVariant } from "../variant";
 
 export class SingleSportVariant extends SportVariant {
-    constructor(sport: Sport, protected nrOfGamePlaces: number, protected gameAmount: number) {
+    constructor(sport: Sport, protected nrOfGamePlaces: number, protected nrOfGamesPerPlace: number) {
         super(sport, GameMode.Single);
     }
 
@@ -12,11 +11,7 @@ export class SingleSportVariant extends SportVariant {
         return this.nrOfGamePlaces;
     }
 
-    getGameAmount(): number {
-        return this.gameAmount;
-    }
-
-    getGameAllocation(): GameAllocation {
-        return GameAllocation.Round;
+    getNrOfGamesPerPlace(): number {
+        return this.nrOfGamesPerPlace;
     }
 }

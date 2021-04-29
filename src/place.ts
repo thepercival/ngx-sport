@@ -1,7 +1,7 @@
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
-import { QualifyGroup, Round } from './qualify/group';
+import { Round } from './qualify/group';
 import { QualifyTarget } from './qualify/target';
 
 export class Place extends PlaceLocation {

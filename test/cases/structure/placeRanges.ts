@@ -18,7 +18,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([singleSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 3;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -37,7 +37,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([singleSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 2;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -53,11 +53,11 @@ describe('PlaceRanges', () => {
     it('againstSport - nrOfGamePlaces - valid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 1;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
+        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1, 0);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([againstSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 4;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -73,11 +73,11 @@ describe('PlaceRanges', () => {
     it('againstSport - nrOfGamePlaces - invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 2;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
+        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 0, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 3;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([againstSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -89,14 +89,14 @@ describe('PlaceRanges', () => {
         }).to.throw();
     });
 
-    it('againstSport - nrOfGamePlaces - valid', () => {
+    it('againstSport - nrOfGamePlaces - valid 2', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 2;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
+        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 0, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 4;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([againstSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -114,7 +114,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([allInOneGameSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -132,7 +132,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 1;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([allInOneGameSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, undefined,
@@ -150,7 +150,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([allInOneGameSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, 5,
@@ -169,7 +169,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([allInOneGameSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, 5,
@@ -188,7 +188,7 @@ describe('PlaceRanges', () => {
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
-        const minNrOfPlacesPerRound = getCompetitionSportService().getMinNrOfPlacesPerRound([allInOneGameSportVariant]);
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
         const placeRanges = new PlaceRanges(
             minNrOfPlacesPerPoule, maxNrOfPlacesPerPoule, 5,
