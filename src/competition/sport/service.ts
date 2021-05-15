@@ -105,7 +105,7 @@ export class CompetitionSportService {
     // }
 
     addToStructure(competitionSport: CompetitionSport, structure: Structure) {
-        this.gameAmountConfigService.createDefault(competitionSport, structure.getFirstRoundNumber());
+        this.gameAmountConfigService.create(competitionSport, structure.getFirstRoundNumber());
         this.scoreConfigService.createDefault(competitionSport, structure.getRootRound());
         this.qualifyAgainstConfigService.createDefault(competitionSport, structure.getRootRound());
     }

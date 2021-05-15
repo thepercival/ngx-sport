@@ -13,13 +13,19 @@ export class GameAmountConfigService {
     constructor() {
     }
 
-    createDefault(competitionSport: CompetitionSport, roundNumber: RoundNumber): GameAmountConfig {
-        let amount = 1;
+    create(competitionSport: CompetitionSport, roundNumber: RoundNumber, amount?: number, partial?: number): GameAmountConfig {
+        if (amount === undefined) {
+            amount = 1;
+        }
+        if (partial === undefined) {
+            partial = 0;
+        }
         const variant = competitionSport.getVariant();
         if (variant instanceof AgainstSportVariant) {
-            amount = variant.getNrOfH2H();
+            amount = variant.getNrOfGamePlaces() <= 2 ? variant.getNrOfH2H() : 0;
+            partial = variant.getNrOfGamePlaces() <= 2 ? 0 : variant.getNrOfPartials();
         }
-        return new GameAmountConfig(competitionSport, roundNumber, amount);
+        return new GameAmountConfig(competitionSport, roundNumber, amount, partial);
     }
 
     removeFromRoundNumber(competitionSport: CompetitionSport, roundNumber: RoundNumber) {
@@ -31,9 +37,5 @@ export class GameAmountConfigService {
         if (nextRoundNumber) {
             this.removeFromRoundNumber(competitionSport, nextRoundNumber);
         }
-    }
-
-    copy(competitionSport: CompetitionSport, roundNumber: RoundNumber, amount: number): GameAmountConfig {
-        return new GameAmountConfig(competitionSport, roundNumber, amount);
     }
 }

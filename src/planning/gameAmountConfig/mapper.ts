@@ -13,11 +13,12 @@ export class GameAmountConfigMapper {
     toObject(json: JsonGameAmountConfig, roundNumber: RoundNumber, config?: GameAmountConfig): GameAmountConfig {
         if (config === undefined) {
             const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, roundNumber.getCompetition());
-            const newConfig = new GameAmountConfig(competitionSport, roundNumber, json.amount);
+            const newConfig = new GameAmountConfig(competitionSport, roundNumber, json.amount, json.partial);
             config = newConfig;
         }
         config.setId(json.id);
         config.setAmount(json.amount);
+        config.setPartial(json.partial);
         return config;
     }
 
@@ -25,7 +26,8 @@ export class GameAmountConfigMapper {
         return {
             id: config.getId(),
             competitionSport: this.competitionSportMapper.toJson(config.getCompetitionSport()),
-            amount: config.getAmount()
+            amount: config.getAmount(),
+            partial: config.getPartial()
         };
     }
 }
