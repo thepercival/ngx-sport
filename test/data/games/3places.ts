@@ -16,9 +16,8 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
-            nrOfH2H: 1,
-            nrOfPartials: 0,
             nrOfGamePlaces: 0,
+            nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
             fields: []
         },
@@ -61,9 +60,8 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
-            nrOfH2H: 1,
-            nrOfPartials: 0,
             nrOfGamePlaces: 0,
+            nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
             fields: []
         },
@@ -106,9 +104,8 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
-            nrOfH2H: 1,
-            nrOfPartials: 0,
             nrOfGamePlaces: 0,
+            nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
             fields: []
         },

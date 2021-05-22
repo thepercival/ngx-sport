@@ -3,7 +3,7 @@ import { Sport } from "../../sport";
 import { SportVariant } from "../variant";
 
 export class AgainstSportVariant extends SportVariant {
-    constructor(sport: Sport, protected nrOfHomePlaces: number, protected nrOfAwayPlaces: number, protected nrOfH2H: number, protected nrOfPartials: number) {
+    constructor(sport: Sport, protected nrOfHomePlaces: number, protected nrOfAwayPlaces: number, protected nrOfH2H: number, protected nrOfGamesPerPlace: number) {
         super(sport, GameMode.Against);
     }
 
@@ -31,7 +31,7 @@ export class AgainstSportVariant extends SportVariant {
         return this.nrOfH2H;
     }
 
-    getNrOfPartials(): number {
-        return this.nrOfPartials;
+    getNrOfGamesPerPlace(): number {
+        return this.nrOfGamesPerPlace;
     }
 }

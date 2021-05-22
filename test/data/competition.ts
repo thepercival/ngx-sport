@@ -31,9 +31,8 @@ export const jsonBaseCompetition: JsonCompetition = {
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
-            nrOfPartials: 0,
-            nrOfGamePlaces: 0,
             nrOfGamesPerPlace: 0,
+            nrOfGamePlaces: 0,
             fields: [
                 {
                     id: 1,

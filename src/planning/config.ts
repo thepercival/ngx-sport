@@ -2,10 +2,12 @@
 import { Identifiable } from '../identifiable';
 import { SelfReferee } from '../referee/self';
 import { RoundNumber } from '../round/number';
+import { GameCreationStrategy } from './strategy';
 
 export class PlanningConfig extends Identifiable {
     constructor(
         protected roundNumber: RoundNumber,
+        protected gameCreationStrategy: GameCreationStrategy,
         protected extension: boolean,
         protected enableTime: boolean,
         protected minutesPerGame: number,
@@ -16,6 +18,11 @@ export class PlanningConfig extends Identifiable {
         super();
         this.roundNumber.setPlanningConfig(this);
     }
+
+    getGameCreationStrategy(): GameCreationStrategy {
+        return this.gameCreationStrategy;
+    }
+
     getExtension(): boolean {
         return this.extension;
     }

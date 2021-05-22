@@ -27,7 +27,6 @@ export class CompetitionSportMapper {
             return this.cache[json.id];
         }
         const sport = this.sportMapper.toObject(json.sport);
-        console.log(json);
         const competitionSport = new CompetitionSport(sport, competition, this.toVariant(json, sport));
         json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport));
         competitionSport.setId(json.id);
@@ -39,7 +38,7 @@ export class CompetitionSportMapper {
         if (json.gameMode === GameMode.Single) {
             return new SingleSportVariant(sport, json.nrOfGamePlaces, json.nrOfGamesPerPlace);
         } else if (json.gameMode === GameMode.Against) {
-            return new AgainstSportVariant(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfH2H, json.nrOfPartials);
+            return new AgainstSportVariant(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfH2H, json.nrOfGamesPerPlace);
         }
         return new AllInOneGameSportVariant(sport, json.nrOfGamesPerPlace);
     }
@@ -53,9 +52,8 @@ export class CompetitionSportMapper {
             gameMode: jsonVariant.gameMode,
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,
             nrOfAwayPlaces: jsonVariant.nrOfAwayPlaces,
-            nrOfH2H: jsonVariant.nrOfH2H,
-            nrOfPartials: jsonVariant.nrOfPartials,
             nrOfGamePlaces: jsonVariant.nrOfGamePlaces,
+            nrOfH2H: jsonVariant.nrOfH2H,
             nrOfGamesPerPlace: jsonVariant.nrOfGamesPerPlace
         }
         return json;
@@ -63,7 +61,7 @@ export class CompetitionSportMapper {
 
     variantToJson(variant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): JsonPersistSportVariant {
         let json: JsonPersistSportVariant = {
-            gameMode: 0, nrOfHomePlaces: 0, nrOfAwayPlaces: 0, nrOfH2H: 0, nrOfPartials: 0, nrOfGamePlaces: 0, nrOfGamesPerPlace: 0
+            gameMode: 0, nrOfHomePlaces: 0, nrOfAwayPlaces: 0, nrOfGamePlaces: 0, nrOfH2H: 0, nrOfGamesPerPlace: 0
         }
         if (variant instanceof SingleSportVariant) {
             json.gameMode = GameMode.Single;
@@ -74,7 +72,7 @@ export class CompetitionSportMapper {
             json.nrOfHomePlaces = variant.getNrOfHomePlaces();
             json.nrOfAwayPlaces = variant.getNrOfAwayPlaces();
             json.nrOfH2H = variant.getNrOfH2H();
-            json.nrOfPartials = variant.getNrOfPartials();
+            json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();
         } else {
             json.gameMode = GameMode.AllInOneGame;
             json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();

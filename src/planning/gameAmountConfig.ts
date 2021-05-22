@@ -13,15 +13,15 @@ export class GameAmountConfig extends Identifiable {
         protected competitionSport: CompetitionSport,
         protected roundNumber: RoundNumber,
         protected amount: number,
-        protected partial: number) {
+        protected nrOfGamesPerPlace: number) {
         super();
         roundNumber.getGameAmountConfigs().push(this);
         /*
         if (amount === undefined) {
             amount = 1;
         }
-        if (partial === undefined) {
-            partial = 0;
+        if (nrOfGamesPerPlace === undefined) {
+            nrOfGamesPerPlace = 0;
         }
         const sourceVariant = this.competitionSport.getVariant();
         if (sourceVariant instanceof AgainstSportVariant) {
@@ -30,7 +30,7 @@ export class GameAmountConfig extends Identifiable {
                 sourceVariant.getNrOfHomePlaces(),
                 sourceVariant.getNrOfAwayPlaces(),
                 amount,
-                partial);
+                nrOfGamesPerPlace);
         } else if (sourceVariant instanceof SingleSportVariant) {
             this.sportVariant = new SingleSportVariant(this.competitionSport.getSport(), sourceVariant.getNrOfGamePlaces(), amount);
         } else {
@@ -46,12 +46,12 @@ export class GameAmountConfig extends Identifiable {
         this.amount = amount;
     }
 
-    getPartial(): number {
-        return this.partial;
+    getNrOfGamesPerPlace(): number {
+        return this.nrOfGamesPerPlace;
     }
 
-    setPartial(partial: number) {
-        this.partial = partial;
+    setNrOfGamesPerPlace(nrOfGamesPerPlace: number) {
+        this.nrOfGamesPerPlace = nrOfGamesPerPlace;
     }
 
     getCompetitionSport(): CompetitionSport {
