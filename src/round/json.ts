@@ -1,4 +1,4 @@
-import { JsonQualifyAgainstConfig } from "../qualify/againstConfig/json";
+import { JsonAgainstQualifyConfig } from "../qualify/againstConfig/json";
 import { JsonScoreConfig } from "../score/config/json";
 import { JsonPoule } from "../poule/json";
 import { JsonQualifyGroup } from "../qualify/group/json";
@@ -9,5 +9,5 @@ export interface JsonRound extends JsonIdentifiable {
     poules: JsonPoule[];
     qualifyGroups: JsonQualifyGroup[];
     scoreConfigs?: JsonScoreConfig[];
-    qualifyAgainstConfigs?: JsonQualifyAgainstConfig[];
+    againstQualifyConfigs?: JsonAgainstQualifyConfig[];
 }

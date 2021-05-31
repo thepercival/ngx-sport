@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 
-import { JsonQualifyAgainstConfig } from './json';
+import { JsonAgainstQualifyConfig } from './json';
 import { Round } from '../group';
 import { CompetitionSportMapper } from '../../competition/sport/mapper';
-import { QualifyAgainstConfig } from '../againstConfig';
+import { AgainstQualifyConfig } from '../againstConfig';
 
 @Injectable({
     providedIn: 'root'
 })
-export class QualifyAgainstConfigMapper {
+export class AgainstQualifyConfigMapper {
     constructor(private competitionSportMapper: CompetitionSportMapper) { }
 
-    toObject(json: JsonQualifyAgainstConfig, round: Round, qualifyAgainstConfig?: QualifyAgainstConfig): QualifyAgainstConfig {
-        if (qualifyAgainstConfig === undefined) {
+    toObject(json: JsonAgainstQualifyConfig, round: Round, againstQualifyConfig?: AgainstQualifyConfig): AgainstQualifyConfig {
+        if (againstQualifyConfig === undefined) {
             const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, round.getCompetition());
-            qualifyAgainstConfig = new QualifyAgainstConfig(competitionSport, round, json.pointsCalculation);
+            againstQualifyConfig = new AgainstQualifyConfig(competitionSport, round, json.pointsCalculation);
         }
-        qualifyAgainstConfig.setId(json.id);
-        qualifyAgainstConfig.setWinPoints(json.winPoints);
-        qualifyAgainstConfig.setDrawPoints(json.drawPoints);
-        qualifyAgainstConfig.setWinPointsExt(json.winPointsExt);
-        qualifyAgainstConfig.setDrawPointsExt(json.drawPointsExt);
-        qualifyAgainstConfig.setLosePointsExt(json.losePointsExt);
-        return qualifyAgainstConfig;
+        againstQualifyConfig.setId(json.id);
+        againstQualifyConfig.setWinPoints(json.winPoints);
+        againstQualifyConfig.setDrawPoints(json.drawPoints);
+        againstQualifyConfig.setWinPointsExt(json.winPointsExt);
+        againstQualifyConfig.setDrawPointsExt(json.drawPointsExt);
+        againstQualifyConfig.setLosePointsExt(json.losePointsExt);
+        return againstQualifyConfig;
     }
 
-    toJson(config: QualifyAgainstConfig): JsonQualifyAgainstConfig {
+    toJson(config: AgainstQualifyConfig): JsonAgainstQualifyConfig {
         return {
             id: config.getId(),
             competitionSport: this.competitionSportMapper.toJson(config.getCompetitionSport()),

@@ -34,6 +34,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
+        gameRoundNumber: 1,
         field: {
             id: 1,
             priority: 1,
@@ -78,6 +79,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
+        gameRoundNumber: 2,
         field: {
             id: 1,
             priority: 1,
@@ -122,6 +124,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
+        gameRoundNumber: 3,
         field: {
             id: 1,
             priority: 1,

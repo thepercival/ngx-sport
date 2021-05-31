@@ -1,7 +1,7 @@
 import { JsonCompetitionSport } from "../../competition/sport/json";
 import { JsonIdentifiable } from "../../identifiable/json";
 
-export interface JsonQualifyAgainstConfig extends JsonIdentifiable {
+export interface JsonAgainstQualifyConfig extends JsonIdentifiable {
     competitionSport: JsonCompetitionSport;
     winPoints: number;
     drawPoints: number;

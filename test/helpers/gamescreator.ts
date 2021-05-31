@@ -4,6 +4,7 @@ import { getGameMapper, getPlanningMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';
 import { jsonGames4Places } from '../data/games/4places';
 import { jsonGames5Places } from '../data/games/5places';
+import { AgainstGame } from '../../src/game/against';
 
 export function createGames(roundNumber: RoundNumber) {
 
@@ -21,6 +22,9 @@ export function createGames(roundNumber: RoundNumber) {
     const planningMapper = getPlanningMapper();
     const map = planningMapper.getCompetitionSportMap(roundNumber.getCompetition());
     roundNumber.getPoules().forEach((poule: Poule) => {
-        getJson(poule).forEach(jsonGame => getGameMapper().toNewAgainst(jsonGame, poule, map));
+        getJson(poule).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
+            const competitionSport = map[jsonGame.competitionSport.id];
+            return getGameMapper().toNewAgainst(jsonGame, poule, competitionSport);
+        });
     });
 }

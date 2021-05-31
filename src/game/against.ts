@@ -1,6 +1,6 @@
 import { Game } from '../game';
 import { CompetitionSport } from '../competition/sport';
-import { QualifyAgainstConfig } from '../qualify/againstConfig';
+import { AgainstQualifyConfig } from '../qualify/againstConfig';
 import { Place } from '../place';
 import { Poule } from '../poule';
 import { State } from '../state';
@@ -11,10 +11,14 @@ import { AgainstSide } from '../against/side';
 export class AgainstGame extends Game {
     protected scores: AgainstScore[] = [];
 
-    constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport) {
+    constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport, protected gameRoundNumber: number) {
         super(poule, batchNr, competitionSport);
         poule.getAgainstGames().push(this);
         this.state = State.Created;
+    }
+
+    getGameRoundNumber(): number {
+        return this.gameRoundNumber;
     }
 
     isParticipating(place: Place, side?: AgainstSide): boolean {
@@ -55,8 +59,8 @@ export class AgainstGame extends Game {
         return undefined;
     }
 
-    getQualifyAgainstConfig(): QualifyAgainstConfig | undefined {
-        return this.getRound().getValidQualifyAgainstConfig(this.competitionSport);
+    getAgainstQualifyConfig(): AgainstQualifyConfig | undefined {
+        return this.getRound().getValidAgainstQualifyConfig(this.competitionSport);
     }
 
     getFinalPhase(): number {

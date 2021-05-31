@@ -13,6 +13,8 @@ import { FieldMapper } from '../field/mapper';
 import { RefereeMapper } from '../referee/mapper';
 import { PlaceLocation } from '../place/location';
 import { PlaceMapper } from '../place/mapper';
+import { CompetitionSport } from '../competition/sport';
+import { AgainstSportVariant } from '../sport/variant/against';
 
 @Injectable({
     providedIn: 'root'
@@ -27,22 +29,30 @@ export class GameMapper {
         private competitionSportMapper: CompetitionSportMapper
     ) { }
 
-    toNewAgainst(json: JsonAgainstGame, poule: Poule, map: CompetitionSportMap): Game {
-        const game = new AgainstGame(poule, json.batchNr, map[json.competitionSport.id]);
+    toNew(json: JsonTogetherGame | JsonAgainstGame, poule: Poule, map: CompetitionSportMap): TogetherGame | AgainstGame {
+        const competitionSport = map[json.competitionSport.id];
+        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
+            return this.toNewAgainst(<JsonAgainstGame>json, poule, competitionSport);
+        }
+        return this.toNewTogether(<JsonTogetherGame>json, poule, competitionSport);
+    }
+
+    toNewAgainst(json: JsonAgainstGame, poule: Poule, competitionSport: CompetitionSport): AgainstGame {
+        const game = new AgainstGame(poule, json.batchNr, competitionSport, json.gameRoundNumber);
         this.toNewHelper(json, game);
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toAgainstObject(jsonGamePlace, game));
         return game;
     }
 
-    toNewTogether(json: JsonTogetherGame, poule: Poule, map: CompetitionSportMap): Game {
-        const game = new TogetherGame(poule, json.batchNr, map[json.competitionSport.id]);
+    toNewTogether(json: JsonTogetherGame, poule: Poule, competitionSport: CompetitionSport): TogetherGame {
+        const game = new TogetherGame(poule, json.batchNr, competitionSport);
         this.toNewHelper(json, game);
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toTogetherObject(jsonGamePlace, game));
         return game;
     }
 
-    protected toNewHelper(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame): Game {
+    protected toNewHelper(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame): AgainstGame | TogetherGame {
         game.setId(json.id);
         game.setState(json.state);
         if (json.field) {
@@ -107,7 +117,8 @@ export class GameMapper {
             state: game.getState(),
             refereePlaceLocation: refereePlace ? this.placeMapper.toJsonLocation(refereePlace) : undefined,
             startDateTime: game.getStartDateTime()?.toISOString(),
-            scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score))
+            scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score)),
+            gameRoundNumber: game.getGameRoundNumber()
         };
     }
 

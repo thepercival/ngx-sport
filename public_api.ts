@@ -43,6 +43,7 @@ export * from './src/game/place/against';
 export * from './src/game/place/together';
 export * from './src/game/place/mapper';
 export * from './src/game/place/json';
+export * from './src/planning/editMode';
 export * from './src/planning/strategy';
 export * from './src/game/together';
 export * from './src/game/together/json';

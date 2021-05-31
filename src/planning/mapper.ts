@@ -54,16 +54,15 @@ export class PlanningMapper {
                 if (!poule) {
                     return;
                 }
-                if (jsonPoule.againstGames !== undefined) {
-                    jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
-                        this.gameMapper.toNewAgainst(jsonGame, poule, map);
-                    });
-                }
-                if (jsonPoule.togetherGames !== undefined) {
-                    jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
-                        this.gameMapper.toNewTogether(jsonGame, poule, map);
-                    });
-                }
+                jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
+                    const competitionSport = map[jsonGame.competitionSport.id];
+                    this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
+                });
+                jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
+                    const competitionSport = map[jsonGame.competitionSport.id];
+                    this.gameMapper.toNewTogether(jsonGame, poule, competitionSport);
+                });
+
             });
         }
         jsonRound.qualifyGroups.forEach((jsonQualifyGroup: JsonQualifyGroup) => {

@@ -7,7 +7,7 @@ import { Poule } from '../poule';
 import { State } from '../state';
 import { CompetitionSport } from '../competition/sport';
 import { ScoreConfig } from '../score/config';
-import { QualifyAgainstConfig } from './againstConfig';
+import { AgainstQualifyConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
@@ -152,7 +152,7 @@ export class Round extends Identifiable {
     protected winnersHorizontalPoules: HorizontalPoule[] = [];
     protected structurePathNode: StructurePathNode;
     protected scoreConfigs: ScoreConfig[] = [];
-    protected qualifyAgainstConfigs: QualifyAgainstConfig[] = [];
+    protected againstQualifyConfigs: AgainstQualifyConfig[] = [];
 
     constructor(protected number: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
         super();
@@ -366,36 +366,36 @@ export class Round extends Identifiable {
         return parentScoreConfig;
     }
 
-    getQualifyAgainstConfigs(): QualifyAgainstConfig[] {
-        return this.qualifyAgainstConfigs;
+    getAgainstQualifyConfigs(): AgainstQualifyConfig[] {
+        return this.againstQualifyConfigs;
     }
 
-    getQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig | undefined {
-        return this.qualifyAgainstConfigs.find(qualifyAgainstConfigIt => qualifyAgainstConfigIt.getCompetitionSport() === competitionSport);
+    getAgainstQualifyConfig(competitionSport: CompetitionSport): AgainstQualifyConfig | undefined {
+        return this.againstQualifyConfigs.find(againstQualifyConfigIt => againstQualifyConfigIt.getCompetitionSport() === competitionSport);
     }
 
-    setQualifyAgainstConfig(qualifyagainstConfig: QualifyAgainstConfig) {
-        this.qualifyAgainstConfigs.push(qualifyagainstConfig);
+    setAgainstQualifyConfig(qualifyagainstConfig: AgainstQualifyConfig) {
+        this.againstQualifyConfigs.push(qualifyagainstConfig);
     }
 
-    getValidQualifyAgainstConfigs(): QualifyAgainstConfig[] {
-        return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidQualifyAgainstConfig(competitionSport));
+    getValidAgainstQualifyConfigs(): AgainstQualifyConfig[] {
+        return this.getNumber().getCompetitionSports().map(competitionSport => this.getValidAgainstQualifyConfig(competitionSport));
     }
 
-    getValidQualifyAgainstConfig(competitionSport: CompetitionSport): QualifyAgainstConfig {
-        const qualifyAgainstConfig = this.getQualifyAgainstConfig(competitionSport);
-        if (qualifyAgainstConfig !== undefined) {
-            return qualifyAgainstConfig;
+    getValidAgainstQualifyConfig(competitionSport: CompetitionSport): AgainstQualifyConfig {
+        const againstQualifyConfig = this.getAgainstQualifyConfig(competitionSport);
+        if (againstQualifyConfig !== undefined) {
+            return againstQualifyConfig;
         }
         const parent = this.getParent();
         if (!parent) {
             throw Error('de ronde heeft geen geldige punten-instellingen');
         }
-        const parentQualifyAgainstConfig = parent.getQualifyAgainstConfig(competitionSport);
-        if (!parentQualifyAgainstConfig) {
+        const parentAgainstQualifyConfig = parent.getAgainstQualifyConfig(competitionSport);
+        if (!parentAgainstQualifyConfig) {
             throw Error('de ronde heeft geen geldige punten-instellingen');
         }
-        return parentQualifyAgainstConfig;
+        return parentAgainstQualifyConfig;
     }
 
     hasAncestor(ancestor: Round): boolean {

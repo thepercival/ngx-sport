@@ -1,4 +1,4 @@
-import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, QualifyAgainstConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper } from "../../public_api";
+import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper } from "../../public_api";
 
 export function getStructureEditor(placeRanges?: PlaceRanges): StructureEditor {
     const structureEditor = new StructureEditor(getCompetitionSportService(), new PlanningConfigMapper());
@@ -12,7 +12,7 @@ export function getCompetitionSportService(): CompetitionSportService {
     return new CompetitionSportService(
         new ScoreConfigService(),
         new GameAmountConfigService(),
-        new QualifyAgainstConfigService()
+        new AgainstQualifyConfigService()
     );
 }
 

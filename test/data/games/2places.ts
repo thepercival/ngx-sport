@@ -4,6 +4,7 @@ import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../.
 export const jsonGames2Places: JsonAgainstGame[] = [{
     id: 0,
     batchNr: 1,
+    gameRoundNumber: 1,
     competitionSport: {
         id: 0,
         sport: {

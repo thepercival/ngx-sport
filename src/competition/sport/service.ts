@@ -6,7 +6,7 @@ import { Structure } from '../../structure';
 import { ScoreConfigService } from '../../score/config/service';
 import { CompetitionSport } from '../sport';
 import { GameAmountConfigService } from '../../planning/gameAmountConfig/service';
-import { QualifyAgainstConfigService } from '../../qualify/againstConfig/service';
+import { AgainstQualifyConfigService } from '../../qualify/againstConfig/service';
 import { AgainstSportVariant } from '../../sport/variant/against';
 import { AllInOneGameSportVariant } from '../../sport/variant/all';
 import { SingleSportVariant } from '../../sport/variant/single';
@@ -19,13 +19,13 @@ export class CompetitionSportService {
     constructor(
         private scoreConfigService: ScoreConfigService,
         private gameAmountConfigService: GameAmountConfigService,
-        private qualifyAgainstConfigService: QualifyAgainstConfigService/*,
+        private againstQualifyConfigService: AgainstQualifyConfigService/*,
         competitionSportMapper: CompetitionSportMapper,
         sportMapper: SportMapper,*/
     ) {
         this.scoreConfigService = scoreConfigService;
         this.gameAmountConfigService = gameAmountConfigService;
-        this.qualifyAgainstConfigService = qualifyAgainstConfigService;
+        this.againstQualifyConfigService = againstQualifyConfigService;
         // this.competitionSportMapper = competitionSportMapper;
         // this.sportMapper = sportMapper;
     }
@@ -107,13 +107,13 @@ export class CompetitionSportService {
     addToStructure(competitionSport: CompetitionSport, structure: Structure) {
         this.gameAmountConfigService.create(competitionSport, structure.getFirstRoundNumber());
         this.scoreConfigService.createDefault(competitionSport, structure.getRootRound());
-        this.qualifyAgainstConfigService.createDefault(competitionSport, structure.getRootRound());
+        this.againstQualifyConfigService.createDefault(competitionSport, structure.getRootRound());
     }
 
     removeFromStructure(competitionSport: CompetitionSport, structure: Structure) {
         this.gameAmountConfigService.removeFromRoundNumber(competitionSport, structure.getFirstRoundNumber());
         this.scoreConfigService.removeFromRound(competitionSport, structure.getRootRound());
-        this.qualifyAgainstConfigService.removeFromRound(competitionSport, structure.getRootRound());
+        this.againstQualifyConfigService.removeFromRound(competitionSport, structure.getRootRound());
     }
 
     // isDefault(sportConfig: SportConfig): boolean {

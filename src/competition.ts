@@ -72,10 +72,6 @@ export class Competition extends Identifiable {
         return fields;
     }
 
-    getField(priority: number): Field | undefined {
-        return this.getFields().find(field => field.getPriority() === priority);
-    }
-
     getReferees(): Referee[] {
         return this.referees;
     }

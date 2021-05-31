@@ -6,6 +6,7 @@ import { PlaceTogetherSportPerformanceCalculator } from "../../../../place/sport
 import { Poule } from "../../../../poule";
 import { Round } from "../../../../qualify/group";
 import { State } from "../../../../state";
+import { RankingFunctionMapCreator } from "../../../functionMapCreator";
 import { SportRoundRankingItem } from "../../../item/round/sport";
 import { SportRoundRankingCalculator } from "../sport";
 
@@ -13,6 +14,8 @@ export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalcul
 
     constructor(competitionSport: CompetitionSport, gameStates?: State[]) {
         super(competitionSport, gameStates ?? [State.Finished]);
+        const functionMapCreator = new RankingFunctionMapCreator();
+        this.rankFunctionMap = functionMapCreator.getMap();
     }
 
     getItemsForPoule(poule: Poule): SportRoundRankingItem[] {

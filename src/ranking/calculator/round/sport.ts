@@ -8,10 +8,12 @@ import { Round } from "../../../qualify/group";
 import { MultipleQualifyRule } from "../../../qualify/rule/multiple";
 import { SingleQualifyRule } from "../../../qualify/rule/single";
 import { QualifyTarget } from "../../../qualify/target";
+import { AgainstSportVariant } from "../../../sport/variant/against";
 import { State } from "../../../state";
 import { SportRoundRankingItem } from "../../item/round/sport";
 import { RankingRule } from "../../rule";
 import { RankingRuleGetter } from "../../rule/getter";
+import { RankingRuleSet } from "../../ruleSet";
 
 export abstract class SportRoundRankingCalculator {
     protected gameStateMap: GameStateMap = {};
@@ -55,9 +57,16 @@ export abstract class SportRoundRankingCalculator {
         });
 
         const scoreConfig = horizontalPoule.getRound().getValidScoreConfig(this.competitionSport);
-        const ruleSet = this.competitionSport.getCompetition().getRankingRuleSet();
+        const ruleSet = this.getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
         return this.rankItems(performances, rankingRules);
+    }
+
+    protected getRankingRuleSet(): RankingRuleSet {
+        if (this.competitionSport.getVariant() instanceof AgainstSportVariant) {
+            return this.competitionSport.getCompetition().getRankingRuleSet();
+        }
+        return RankingRuleSet.Together;
     }
 
     protected rankItems(performances: PlaceSportPerformance[], rankingRules: RankingRule[]): SportRoundRankingItem[] {
@@ -82,7 +91,7 @@ export abstract class SportRoundRankingCalculator {
 
     protected getItemsHelper(round: Round, performances: PlaceSportPerformance[]): SportRoundRankingItem[] {
         const scoreConfig = round.getValidScoreConfig(this.competitionSport);
-        const ruleSet = this.competitionSport.getCompetition().getRankingRuleSet();
+        const ruleSet = this.getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
         return this.rankItems(performances, rankingRules);
     }

@@ -62,24 +62,24 @@ export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanc
         if (finalScore === undefined) {
             return 0;
         }
-        const qualifyAgainstConfig = game.getQualifyAgainstConfig();
-        if (qualifyAgainstConfig === undefined) {
+        const againstQualifyConfig = game.getAgainstQualifyConfig();
+        if (againstQualifyConfig === undefined) {
             return 0;
         }
         if (finalScore.getResult(side) === AgainstResult.Win) {
             if (game.getFinalPhase() === Game.Phase_RegularTime) {
-                return qualifyAgainstConfig.getWinPoints();
+                return againstQualifyConfig.getWinPoints();
             } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
-                return qualifyAgainstConfig.getWinPointsExt();
+                return againstQualifyConfig.getWinPointsExt();
             }
         } else if (finalScore.getResult(side) === AgainstResult.Draw) {
             if (game.getFinalPhase() === Game.Phase_RegularTime) {
-                return qualifyAgainstConfig.getDrawPoints();
+                return againstQualifyConfig.getDrawPoints();
             } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
-                return qualifyAgainstConfig.getDrawPointsExt();
+                return againstQualifyConfig.getDrawPointsExt();
             }
         } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
-            return qualifyAgainstConfig.getLosePointsExt();
+            return againstQualifyConfig.getLosePointsExt();
         }
         return 0;
     }

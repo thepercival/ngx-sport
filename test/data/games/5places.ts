@@ -35,6 +35,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
+        gameRoundNumber: 1,
         field: {
             id: 1,
             priority: 1,
@@ -79,6 +80,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 1,
+        gameRoundNumber: 1,
         field: {
             id: 2,
             priority: 2,
@@ -123,6 +125,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
+        gameRoundNumber: 2,
         field: {
             id: 1,
             priority: 1,
@@ -167,6 +170,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 2,
+        gameRoundNumber: 2,
         field: {
             id: 2,
             priority: 2,
@@ -211,6 +215,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
+        gameRoundNumber: 3,
         field: {
             id: 1,
             priority: 1,
@@ -255,6 +260,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 3,
+        gameRoundNumber: 3,
         field: {
             id: 2,
             priority: 2,
@@ -299,6 +305,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 4,
+        gameRoundNumber: 4,
         field: {
             id: 1,
             priority: 1,
@@ -343,6 +350,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 4,
+        gameRoundNumber: 4,
         field: {
             id: 2,
             priority: 2,
@@ -387,6 +395,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 5,
+        gameRoundNumber: 5,
         field: {
             id: 1,
             priority: 1,
@@ -431,6 +440,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             }
         ],
         batchNr: 5,
+        gameRoundNumber: 5,
         field: {
             id: 2,
             priority: 2,

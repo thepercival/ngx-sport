@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { CompetitionSport } from '../../competition/sport';
-import { QualifyAgainstConfig } from '../againstConfig';
+import { AgainstQualifyConfig } from '../againstConfig';
 import { Sport } from '../../sport';
 import { Round } from '../group';
 import { PointsCalculation } from '../../ranking/pointsCalculation';
@@ -12,13 +12,13 @@ import { AgainstSportVariant } from '../../sport/variant/against';
 @Injectable({
     providedIn: 'root'
 })
-export class QualifyAgainstConfigService {
+export class AgainstQualifyConfigService {
 
     constructor(/*private competitionSportMapper: CompetitionSportMapper,
-        private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper*/) {
+        private againstQualifyConfigMapper: AgainstQualifyConfigMapper*/) {
     }
 
-    // createDefaultJson(competitionSport: CompetitionSport): JsonQualifyAgainstConfig {
+    // createDefaultJson(competitionSport: CompetitionSport): JsonAgainstQualifyConfig {
     //     const sport = competitionSport.getSport();
     //     return {
     //         id: 0,
@@ -32,8 +32,8 @@ export class QualifyAgainstConfigService {
     //     };
     // }
 
-    createDefault(competitionSport: CompetitionSport, round: Round): QualifyAgainstConfig {
-        const config = new QualifyAgainstConfig(competitionSport, round, this.getDefaultPointCalculation(competitionSport));
+    createDefault(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
+        const config = new AgainstQualifyConfig(competitionSport, round, this.getDefaultPointCalculation(competitionSport));
         const sport = competitionSport.getSport();
         config.setWinPoints(this.getDefaultWinPoints(sport));
         config.setDrawPoints(this.getDefaultDrawPoints(sport));
@@ -44,15 +44,15 @@ export class QualifyAgainstConfigService {
     }
 
     removeFromRound(competitionSport: CompetitionSport, round: Round) {
-        const qualifyagainstConfig = round.getQualifyAgainstConfig(competitionSport);
+        const qualifyagainstConfig = round.getAgainstQualifyConfig(competitionSport);
         if (qualifyagainstConfig) {
-            round.getQualifyAgainstConfigs().splice(round.getQualifyAgainstConfigs().indexOf(qualifyagainstConfig), 1);
+            round.getAgainstQualifyConfigs().splice(round.getAgainstQualifyConfigs().indexOf(qualifyagainstConfig), 1);
         }
         round.getChildren().forEach((child: Round) => this.removeFromRound(competitionSport, child));
     }
 
-    copy(competitionSport: CompetitionSport, round: Round, sourceConfig: QualifyAgainstConfig): QualifyAgainstConfig {
-        const config = new QualifyAgainstConfig(competitionSport, round, sourceConfig.getPointsCalculation());
+    copy(competitionSport: CompetitionSport, round: Round, sourceConfig: AgainstQualifyConfig): AgainstQualifyConfig {
+        const config = new AgainstQualifyConfig(competitionSport, round, sourceConfig.getPointsCalculation());
         config.setWinPoints(sourceConfig.getWinPoints());
         config.setDrawPoints(sourceConfig.getDrawPoints());
         config.setWinPointsExt(sourceConfig.getWinPointsExt());
@@ -69,22 +69,22 @@ export class QualifyAgainstConfigService {
     }
 
     getDefaultWinPoints(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_WinPoints : 1;
+        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_WinPoints : 1;
     }
 
     getDefaultDrawPoints(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_DrawPoints : 0.5;
+        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_DrawPoints : 0.5;
     }
 
     getDefaultWinPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_WinPointsExt : 1;
+        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_WinPointsExt : 1;
     }
 
     getDefaultDrawPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? QualifyAgainstConfig.Default_DrawPointsExt : 0.5;
+        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_DrawPointsExt : 0.5;
     }
 
     getDefaultLosePointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.IceHockey ? QualifyAgainstConfig.Default_LosePointsExt : 1;
+        return sport.getCustomId() !== CustomSport.IceHockey ? AgainstQualifyConfig.Default_LosePointsExt : 1;
     }
 }

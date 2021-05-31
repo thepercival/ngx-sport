@@ -1,8 +1,10 @@
 import { JsonIdentifiable } from "../../identifiable/json";
-import { GameCreationStrategy } from "../strategy";
+import { PlanningEditMode } from "../editMode";
+import { GamePlaceStrategy } from "../strategy";
 
 export interface JsonPlanningConfig extends JsonIdentifiable {
-    gameCreationStrategy: GameCreationStrategy;
+    editMode: PlanningEditMode;
+    gamePlaceStrategy: GamePlaceStrategy;
     extension: boolean;
     enableTime: boolean;
     minutesPerGame: number;

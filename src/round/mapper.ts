@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QualifyAgainstConfigMapper } from '../qualify/againstConfig/mapper';
+import { AgainstQualifyConfigMapper } from '../qualify/againstConfig/mapper';
 import { ScoreConfigMapper } from '../score/config/mapper';
 import { PouleMapper } from '../poule/mapper';
 import { QualifyGroupMapper } from '../qualify/group/mapper';
@@ -18,7 +18,7 @@ export class RoundMapper {
     constructor(
         private pouleMapper: PouleMapper,
         private scoreConfigMapper: ScoreConfigMapper,
-        private qualifyAgainstConfigMapper: QualifyAgainstConfigMapper,
+        private againstQualifyConfigMapper: AgainstQualifyConfigMapper,
     ) {
         this.qualifyRuleCreator = new QualifyRuleCreator();
         this.horizontalPouleCreator = new HorizontalPouleCreator();
@@ -41,9 +41,9 @@ export class RoundMapper {
                 this.scoreConfigMapper.toObject(jsonScoreConfig, round);
             });
         }
-        if (json.qualifyAgainstConfigs) {
-            json.qualifyAgainstConfigs.forEach(jsonQualifyAgainstConfigs => {
-                this.qualifyAgainstConfigMapper.toObject(jsonQualifyAgainstConfigs, round);
+        if (json.againstQualifyConfigs) {
+            json.againstQualifyConfigs.forEach(jsonAgainstQualifyConfigs => {
+                this.againstQualifyConfigMapper.toObject(jsonAgainstQualifyConfigs, round);
             });
         }
 
@@ -64,7 +64,7 @@ export class RoundMapper {
             poules: round.getPoules().map(poule => this.pouleMapper.toJson(poule)),
             qualifyGroups: round.getQualifyGroups().map(qualifyGroupIt => qualifyGroupMapper.toJson(qualifyGroupIt)),
             scoreConfigs: round.getScoreConfigs().map(scoreConfigIt => this.scoreConfigMapper.toJson(scoreConfigIt)),
-            qualifyAgainstConfigs: round.getQualifyAgainstConfigs().map(qualifyGroupIt => this.qualifyAgainstConfigMapper.toJson(qualifyGroupIt))
+            againstQualifyConfigs: round.getAgainstQualifyConfigs().map(qualifyGroupIt => this.againstQualifyConfigMapper.toJson(qualifyGroupIt))
         };
     }
 }

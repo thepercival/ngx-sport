@@ -4,22 +4,22 @@ import { CompetitionSport } from '../competition/sport';
 import { PointsCalculation } from '../ranking/pointsCalculation';
 import { Sport } from '../sport';
 
-export class QualifyAgainstConfig extends Identifiable {
+export class AgainstQualifyConfig extends Identifiable {
     static readonly Default_WinPoints = 3;
     static readonly Default_DrawPoints = 1;
     static readonly Default_WinPointsExt = 2;
     static readonly Default_DrawPointsExt = 1;
     static readonly Default_LosePointsExt = 0;
 
-    protected winPoints: number = QualifyAgainstConfig.Default_WinPoints;
-    protected drawPoints: number = QualifyAgainstConfig.Default_DrawPoints;
-    protected winPointsExt: number = QualifyAgainstConfig.Default_WinPointsExt;
-    protected drawPointsExt: number = QualifyAgainstConfig.Default_DrawPointsExt;
-    protected losePointsExt: number = QualifyAgainstConfig.Default_LosePointsExt;
+    protected winPoints: number = AgainstQualifyConfig.Default_WinPoints;
+    protected drawPoints: number = AgainstQualifyConfig.Default_DrawPoints;
+    protected winPointsExt: number = AgainstQualifyConfig.Default_WinPointsExt;
+    protected drawPointsExt: number = AgainstQualifyConfig.Default_DrawPointsExt;
+    protected losePointsExt: number = AgainstQualifyConfig.Default_LosePointsExt;
 
     constructor(protected competitionSport: CompetitionSport, protected round: Round, protected pointsCalculation: PointsCalculation) {
         super();
-        round.getQualifyAgainstConfigs().push(this);
+        round.getAgainstQualifyConfigs().push(this);
     }
 
     getCompetitionSport(): CompetitionSport {
