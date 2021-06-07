@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { GamePlace } from '../place';
-import { PlanningReferences } from '../../planning/mapper';
 import { AgainstGame } from '../against';
 import { TogetherGame } from '../together';
 import { JsonAgainstGamePlace } from './against/json';
@@ -9,24 +8,24 @@ import { JsonTogetherGamePlace } from './together/json';
 import { AgainstGamePlace } from './against';
 import { TogetherGamePlace } from './together';
 import { ScoreMapper } from '../../score/mapper';
-import { Place } from '../../place';
+import { PlaceMapper } from '../../place/mapper';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GamePlaceMapper {
 
-    constructor(private scoreMapper: ScoreMapper) { }
+    constructor(private scoreMapper: ScoreMapper, private placeMapper: PlaceMapper) { }
 
     toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame): GamePlace {
-        const place = game.getPoule().getPlace(json.placeNr);
+        const place = game.getPoule().getPlace(json.place.placeNr);
         const gamePlace = new AgainstGamePlace(game, place, json.side);
         gamePlace.setId(json.id);
         return gamePlace;
     }
 
     toTogetherObject(json: JsonTogetherGamePlace, game: TogetherGame): GamePlace {
-        const place = game.getPoule().getPlace(json.placeNr);
+        const place = game.getPoule().getPlace(json.place.placeNr);
         const gamePlace = new TogetherGamePlace(game, place, json.gameRoundNumber);
         gamePlace.setId(json.id);
         json.scores.map(jsonScore => this.scoreMapper.toTogetherObject(jsonScore, gamePlace));
@@ -36,7 +35,7 @@ export class GamePlaceMapper {
     toJsonAgainst(gamePlace: AgainstGamePlace): JsonAgainstGamePlace {
         return {
             id: gamePlace.getId(),
-            placeNr: gamePlace.getPlace().getNumber(),
+            place: this.placeMapper.toJson(gamePlace.getPlace()),
             side: gamePlace.getSide()
         };
     }
@@ -44,7 +43,7 @@ export class GamePlaceMapper {
     toJsonTogether(gamePlace: TogetherGamePlace): JsonTogetherGamePlace {
         const json = {
             id: gamePlace.getId(),
-            placeNr: gamePlace.getPlace().getNumber(),
+            place: this.placeMapper.toJson(gamePlace.getPlace()),
             gameRoundNumber: gamePlace.getGameRoundNumber(),
             scores: []
         };

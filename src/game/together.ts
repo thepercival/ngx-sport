@@ -7,8 +7,8 @@ import { TogetherGamePlace } from './place/together';
 
 export class TogetherGame extends Game {
 
-    constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport) {
-        super(poule, batchNr, competitionSport);
+    constructor(poule: Poule, batchNr: number, protected startDateTime: Date, competitionSport: CompetitionSport) {
+        super(poule, batchNr, startDateTime, competitionSport);
         poule.getTogetherGames().push(this);
         this.state = State.Created;
     }

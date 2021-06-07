@@ -10,6 +10,7 @@ import { GameAmountConfig } from '../planning/gameAmountConfig';
 import { CompetitionSport } from '../competition/sport';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
+import { GameOrder } from '../game/order';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -125,12 +126,12 @@ export class RoundNumber {
         return previousPlanningConfig;
     }
 
-    getGames(order?: number): (AgainstGame | TogetherGame)[] {
+    getGames(order: GameOrder): (AgainstGame | TogetherGame)[] {
         let games: (AgainstGame | TogetherGame)[] = [];
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
-        if (order === Game.Order_By_Batch) {
+        if (order === GameOrder.ByBatch) {
             games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
                 if (g1.getBatchNr() === g2.getBatchNr()) {
                     const field1 = g1.getField();
@@ -142,6 +143,22 @@ export class RoundNumber {
                 }
                 return g1.getBatchNr() - g2.getBatchNr();
             });
+        } else {
+            if (order === GameOrder.ByDate) {
+                games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
+                    const date1 = g1.getStartDateTime()?.getTime() ?? 0;
+                    const date2 = g2.getStartDateTime()?.getTime() ?? 0;
+                    if (date1 === date2) {
+                        const field1 = g1.getField();
+                        const field2 = g2.getField();
+                        if (field1 && field2) {
+                            const retVal = field1.getPriority() - field2.getPriority();
+                            return this.isFirst() ? retVal : -retVal;
+                        }
+                    }
+                    return date1 - date2;
+                });
+            }
         }
         return games;
     }
@@ -227,13 +244,13 @@ export class RoundNumber {
         return previous.getValidGameAmountConfig(competitionSport);
     }
 
-    getFirstStartDateTime(): Date | undefined {
-        const games = this.getGames(Game.Order_By_Batch);
+    getFirstStartDateTime(): Date {
+        const games = this.getGames(GameOrder.ByDate);
         return games[0].getStartDateTime();
     }
 
-    getLastStartDateTime(): Date | undefined {
-        const games = this.getGames(Game.Order_By_Batch);
+    getLastStartDateTime(): Date {
+        const games = this.getGames(GameOrder.ByDate);
         return games[games.length - 1].getStartDateTime();
     }
 

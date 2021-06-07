@@ -1,9 +1,9 @@
+import { JsonIdentifiable } from "../identifiable/json";
 import { JsonPlaceLocation } from "./location/json";
 
-export interface JsonPlace {
+export interface JsonPlace extends JsonPlaceLocation {
     id: number;
-    number: number;
     name?: string;
     penaltyPoints: number;
-    qualifiedPlaceLocation: JsonPlaceLocation | undefined;
+    qualifiedPlace: JsonPlace | undefined;
 }

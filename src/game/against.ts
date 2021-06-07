@@ -11,8 +11,8 @@ import { AgainstSide } from '../against/side';
 export class AgainstGame extends Game {
     protected scores: AgainstScore[] = [];
 
-    constructor(poule: Poule, batchNr: number, competitionSport: CompetitionSport, protected gameRoundNumber: number) {
-        super(poule, batchNr, competitionSport);
+    constructor(poule: Poule, batchNr: number, protected startDateTime: Date, competitionSport: CompetitionSport, protected gameRoundNumber: number) {
+        super(poule, batchNr, startDateTime, competitionSport);
         poule.getAgainstGames().push(this);
         this.state = State.Created;
     }

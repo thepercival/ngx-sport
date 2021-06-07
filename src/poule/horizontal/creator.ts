@@ -1,4 +1,5 @@
 import { Place } from '../../place';
+import { Poule } from '../../poule';
 import { Round } from '../../qualify/group';
 import { QualifyTarget } from '../../qualify/target';
 import { HorizontalPoule } from '../horizontal';
@@ -54,23 +55,27 @@ export class HorizontalPouleCreator {
 
     protected getPlacesHorizontal(round: Round): Place[] {
         let places: Place[] = [];
-        round.getPoules().forEach((poule) => {
+        round.getPoules().forEach((poule: Poule) => {
             places = places.concat(poule.getPlaces());
         });
-        places.sort((placeA, placeB) => {
-            if (placeA.getNumber() > placeB.getNumber()) {
-                return 1;
+        places.sort((placeA: Place, placeB: Place) => {
+            if (placeA.getPlaceNr() === placeB.getPlaceNr()) {
+                return placeA.getPouleNr() - placeB.getPouleNr();
             }
-            if (placeA.getNumber() < placeB.getNumber()) {
-                return -1;
-            }
-            if (placeA.getPoule().getNumber() > placeB.getPoule().getNumber()) {
-                return 1;
-            }
-            if (placeA.getPoule().getNumber() < placeB.getPoule().getNumber()) {
-                return -1;
-            }
-            return 0;
+            return placeA.getPlaceNr() - placeB.getPlaceNr();
+            // if (placeA.getNumber() > placeB.getNumber()) {
+            //     return 1;
+            // }
+            // if (placeA.getNumber() < placeB.getNumber()) {
+            //     return -1;
+            // }
+            // if (placeA.getPoule().getNumber() > placeB.getPoule().getNumber()) {
+            //     return 1;
+            // }
+            // if (placeA.getPoule().getNumber() < placeB.getPoule().getNumber()) {
+            //     return -1;
+            // }
+            // return 0;
         });
         return places;
     }

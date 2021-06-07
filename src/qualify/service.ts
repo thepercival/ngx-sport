@@ -53,7 +53,7 @@ export class QualifyService {
         qualifyPlaceMapping: QualifyPlaceMapping,
         reservationService: QualifyReservationService): void {
         const poule = qualifyPlaceMapping.getFromPlace().getPoule();
-        const rank = qualifyPlaceMapping.getFromPlace().getNumber();
+        const rank = qualifyPlaceMapping.getFromPlace().getPlaceNr();
         const qualifiedPlace = this.getQualifiedPlace(poule, rank);
         qualifyPlaceMapping.getToPlace().setQualifiedPlace(qualifiedPlace);
         reservationService.reserve(qualifyPlaceMapping.getToPlace().getPoule().getNumber(), poule);

@@ -38,7 +38,7 @@ export class GameMapper {
     }
 
     toNewAgainst(json: JsonAgainstGame, poule: Poule, competitionSport: CompetitionSport): AgainstGame {
-        const game = new AgainstGame(poule, json.batchNr, competitionSport, json.gameRoundNumber);
+        const game = new AgainstGame(poule, json.batchNr, new Date(json.startDateTime), competitionSport, json.gameRoundNumber);
         this.toNewHelper(json, game);
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toAgainstObject(jsonGamePlace, game));
@@ -46,7 +46,7 @@ export class GameMapper {
     }
 
     toNewTogether(json: JsonTogetherGame, poule: Poule, competitionSport: CompetitionSport): TogetherGame {
-        const game = new TogetherGame(poule, json.batchNr, competitionSport);
+        const game = new TogetherGame(poule, json.batchNr, new Date(json.startDateTime), competitionSport);
         this.toNewHelper(json, game);
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toTogetherObject(jsonGamePlace, game));
         return game;
@@ -61,14 +61,14 @@ export class GameMapper {
         if (json.referee) {
             game.setReferee(this.refereeMapper.getFromCompetition(json.referee.id, game.getCompetition()));
         }
-        if (json.refereePlaceLocation) {
+        if (json.refereePlace) {
             game.setRefereePlace(
                 game.getRound().getPlace(
-                    new PlaceLocation(json.refereePlaceLocation.pouleNr, json.refereePlaceLocation.placeNr)
+                    new PlaceLocation(json.refereePlace.pouleNr, json.refereePlace.placeNr)
                 )
             );
         }
-        game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
+        game.setStartDateTime(new Date(json.startDateTime));
         return game;
     }
 
@@ -95,7 +95,7 @@ export class GameMapper {
 
     protected toExistingHelper(json: JsonAgainstGame | JsonTogetherGame, game: Game | TogetherGame) {
         game.setState(json.state);
-        game.setStartDateTime(json.startDateTime !== undefined ? new Date(json.startDateTime) : undefined);
+        game.setStartDateTime(new Date(json.startDateTime));
         return game;
     }
 
@@ -115,7 +115,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocation: refereePlace ? this.placeMapper.toJsonLocation(refereePlace) : undefined,
+            refereePlace: refereePlace ? this.placeMapper.toJsonLocation(refereePlace) : undefined,
             startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score)),
             gameRoundNumber: game.getGameRoundNumber()
@@ -134,7 +134,7 @@ export class GameMapper {
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
             state: game.getState(),
-            refereePlaceLocation: refereePlace ? this.placeMapper.toJsonLocation(refereePlace) : undefined,
+            refereePlace: refereePlace ? this.placeMapper.toJsonLocation(refereePlace) : undefined,
             startDateTime: game.getStartDateTime()?.toISOString()
         };
     }

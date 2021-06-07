@@ -31,15 +31,11 @@ export class Place extends PlaceLocation {
         return this.getPoule().getRound();
     }
 
-    getNumber(): number {
-        return this.placeNr;
-    }
-
     private getHorizontalNumber(qualifyTarget: QualifyTarget): number {
         if (qualifyTarget === QualifyTarget.Winners) {
-            return this.getNumber();
+            return this.getPlaceNr();
         }
-        return this.getPoule().getPlaces().length + 1 - this.getNumber();
+        return this.getPoule().getPlaces().length + 1 - this.getPlaceNr();
     }
 
     getHorizontalPoule(qualifyTarget: QualifyTarget): HorizontalPoule {

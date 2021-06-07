@@ -100,10 +100,10 @@ export class NameService {
             }
         }
         if (longName === true) {
-            return this.getPouleName(place.getPoule(), true) + ' nr. ' + place.getNumber();
+            return this.getPouleName(place.getPoule(), true) + ' nr. ' + place.getPlaceNr();
         }
         const name = this.getPouleName(place.getPoule(), false);
-        return name + place.getNumber();
+        return name + place.getPlaceNr();
     }
 
     getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
@@ -133,7 +133,7 @@ export class NameService {
         if (longName !== true || fromPlace.getPoule().needsRanking()) {
             return this.getPlaceName(fromPlace, false, longName);
         }
-        const name = this.getQualifyTargetDescription(fromPlace.getNumber() === 1 ? QualifyTarget.Winners : QualifyTarget.Losers);
+        const name = this.getQualifyTargetDescription(fromPlace.getPlaceNr() === 1 ? QualifyTarget.Winners : QualifyTarget.Losers);
         return name + ' ' + this.getPouleName(fromPlace.getPoule(), false);
     }
 

@@ -1,4 +1,3 @@
-import { JsonGamePlace } from "./place/json";
 import { JsonIdentifiable } from '../identifiable/json';
 import { JsonCompetitionSport } from '../competition/sport/json';
 import { JsonField } from "../field/json";
@@ -8,10 +7,9 @@ import { JsonPlaceLocation } from "../place/location/json";
 export interface JsonGame extends JsonIdentifiable {
     batchNr: number;
     competitionSport: JsonCompetitionSport;
-    places: JsonGamePlace[];
     field: JsonField | undefined;
     referee: JsonReferee | undefined;
     state: number;
-    startDateTime: string | undefined;
-    refereePlaceLocation: JsonPlaceLocation | undefined;
+    startDateTime: string;
+    refereePlace: JsonPlaceLocation | undefined;
 }

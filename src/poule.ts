@@ -45,7 +45,7 @@ export class Poule extends Identifiable {
     }
 
     getPlace(number: number): Place {
-        const place = this.getPlaces().find(place => place.getNumber() === number);
+        const place = this.getPlaces().find(place => place.getPlaceNr() === number);
         if (place === undefined) {
             throw Error('de pouleplek kan niet gevonden worden');
         }

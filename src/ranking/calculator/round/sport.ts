@@ -49,7 +49,7 @@ export abstract class SportRoundRankingCalculator {
         const performances: PlaceSportPerformance[] = [];
         horizontalPoule.getPlaces().forEach((place: Place) => {
             const pouleRankingItems: SportRoundRankingItem[] = this.getItemsForPoule(place.getPoule());
-            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getNumber());
+            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getPlaceNr());
             if (pouleRankingItem === undefined) {
                 return;
             }

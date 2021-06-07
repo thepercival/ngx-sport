@@ -15,13 +15,13 @@ export class PlaceMapper {
 
     toObject(json: JsonPlace, poule: Poule, place?: Place): Place {
         if (place === undefined) {
-            place = new Place(poule, json.number);
+            place = new Place(poule, json.placeNr);
         }
         place.setId(json.id);
         place.setPenaltyPoints(json.penaltyPoints);
-        if (json.qualifiedPlaceLocation) {
+        if (json.qualifiedPlace) {
             place.setQualifiedPlace(
-                poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(this.toLocation(json.qualifiedPlaceLocation))
+                poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(this.toLocation(json.qualifiedPlace))
             );
         }
         return place;
@@ -35,15 +35,16 @@ export class PlaceMapper {
         const qualifiedPlace: Place | undefined = place.getQualifiedPlace();
         return {
             id: place.getId(),
-            number: place.getNumber(),
+            pouleNr: place.getPouleNr(),
+            placeNr: place.getPlaceNr(),
             penaltyPoints: place.getPenaltyPoints(),
-            qualifiedPlaceLocation: qualifiedPlace ? this.toJsonLocation(qualifiedPlace) : undefined
+            qualifiedPlace: qualifiedPlace ? this.toJson(qualifiedPlace) : undefined
         };
     }
 
     toJsonLocation(place: Place): JsonPlaceLocation {
         return {
-            placeNr: place.getNumber(),
+            placeNr: place.getPlaceNr(),
             pouleNr: place.getPoule().getNumber()
         };
     }

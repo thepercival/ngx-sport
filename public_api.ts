@@ -38,6 +38,7 @@ export * from './src/game/against';
 export * from './src/game/against/json';
 export * from './src/game/mapper';
 export * from './src/game/json';
+export * from './src/game/order';
 export * from './src/game/place';
 export * from './src/game/place/against';
 export * from './src/game/place/together';

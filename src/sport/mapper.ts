@@ -14,12 +14,12 @@ export class SportMapper {
     toObject(json: JsonSport, disableCache?: boolean): Sport {
         let sport;
         if (disableCache !== true) {
-            sport = this.cache[json.name];
+            sport = this.cache[json.id];
         }
         if (sport === undefined) {
             sport = new Sport(json.name, json.team, json.defaultGameMode, json.defaultNrOfSidePlaces);
             sport.setId(json.id);
-            this.cache[sport.getName()] = sport;
+            this.cache[json.id] = sport;
         }
         this.updateObject(json, sport);
         return sport;

@@ -40,9 +40,9 @@ export class PouleStructure extends Array<number> {
     }
 
     public isSelfRefereeSamePouleAvailable(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): boolean {
-        return !sportVariants.some((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
+        return sportVariants.every((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
             if (sportVariant instanceof AllInOneGameSportVariant) {
-                return true;
+                return false;
             }
             return sportVariant.getNrOfGamePlaces() < this.getSmallestPoule();
         });
