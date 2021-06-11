@@ -26,12 +26,12 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
     places: [
         {
             id: 0,
-            placeNr: 1,
+            place: { placeNr: 1, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
             side: AgainstSide.Home
         },
         {
             id: 0,
-            placeNr: 2,
+            place: { placeNr: 2, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
             side: AgainstSide.Away
         }
     ],
@@ -41,8 +41,8 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
         name: '1'
     },
     state: State.Created,
-    startDateTime: undefined,
+    startDateTime: '2021-06-11T11:00:00.000000Z',
     referee: undefined,
-    refereePlaceLocation: undefined,
+    refereePlace: undefined,
     scores: []
 }];

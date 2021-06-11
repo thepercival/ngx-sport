@@ -1,10 +1,6 @@
-import { Round } from '../qualify/group';
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
 import { RoundNumber } from '../round/number';
-import { SingleSportVariant } from '../sport/variant/single';
-import { AgainstSportVariant } from '../sport/variant/against';
-import { AllInOneGameSportVariant } from '../sport/variant/all';
 
 export class GameAmountConfig extends Identifiable {
     // protected sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant;
@@ -13,7 +9,7 @@ export class GameAmountConfig extends Identifiable {
         protected competitionSport: CompetitionSport,
         protected roundNumber: RoundNumber,
         protected amount: number,
-        protected nrOfGamesPerPlace: number) {
+        protected nrOfGamesPerPlaceMixed: number) {
         super();
         roundNumber.getGameAmountConfigs().push(this);
         /*
@@ -46,12 +42,12 @@ export class GameAmountConfig extends Identifiable {
         this.amount = amount;
     }
 
-    getNrOfGamesPerPlace(): number {
-        return this.nrOfGamesPerPlace;
+    getNrOfGamesPerPlaceMixed(): number {
+        return this.nrOfGamesPerPlaceMixed;
     }
 
-    setNrOfGamesPerPlace(nrOfGamesPerPlace: number) {
-        this.nrOfGamesPerPlace = nrOfGamesPerPlace;
+    setNrOfGamesPerPlaceMixed(nrOfGamesPerPlaceMixed: number) {
+        this.nrOfGamesPerPlaceMixed = nrOfGamesPerPlaceMixed;
     }
 
     getCompetitionSport(): CompetitionSport {

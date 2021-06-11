@@ -4,5 +4,5 @@ import { JsonIdentifiable } from "../../identifiable/json";
 export interface JsonGameAmountConfig extends JsonIdentifiable {
     competitionSport: JsonCompetitionSport;
     amount: number;
-    nrOfGamesPerPlace: number;
+    nrOfGamesPerPlaceMixed: number;
 }

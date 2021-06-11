@@ -15,6 +15,8 @@ import { PlaceLocation } from '../place/location';
 import { PlaceMapper } from '../place/mapper';
 import { CompetitionSport } from '../competition/sport';
 import { AgainstSportVariant } from '../sport/variant/against';
+import { TogetherGamePlace } from './place/together';
+import { JsonTogetherGamePlace } from './place/together/json';
 
 @Injectable({
     providedIn: 'root'
@@ -80,6 +82,13 @@ export class GameMapper {
     }
 
     toExistingTogether(json: JsonTogetherGame, game: TogetherGame): TogetherGame {
+        // while (game.getPlaces().length > 0) {
+        //     game.getPlaces().pop();
+        // }
+        // json.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
+        //     const place = game.getPoule().getPlace(jsonGamePlace.place.placeNr);
+        //     this.gamePlaceMapper.toTogetherObject(jsonGamePlace, game);
+        // });
         this.toExistingHelper(json, game);
         return game;
     }

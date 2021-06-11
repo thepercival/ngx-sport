@@ -47,10 +47,6 @@ export class GamePlaceMapper {
             gameRoundNumber: gamePlace.getGameRoundNumber(),
             scores: []
         };
-        while (gamePlace.getScores().length > 0) {
-            gamePlace.getScores().pop();
-        }
-        json.scores.map(jsonScore => this.scoreMapper.toTogetherObject(jsonScore, gamePlace));
         return json;
     }
 }
