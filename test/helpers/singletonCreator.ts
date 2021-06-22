@@ -1,4 +1,8 @@
-import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper } from "../../public_api";
+import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper } from "../../public_api";
+import { GameAmountConfigMapper } from "../../src/planning/gameAmountConfig/mapper";
+import { PouleMapper } from "../../src/poule/mapper";
+import { AgainstQualifyConfigMapper } from "../../src/qualify/againstConfig/mapper";
+import { ScoreConfigMapper } from "../../src/score/config/mapper";
 
 export function getStructureEditor(placeRanges?: PlaceRanges): StructureEditor {
     const structureEditor = new StructureEditor(getCompetitionSportService(), new PlanningConfigMapper());
@@ -62,4 +66,27 @@ export function getGameMapper(): GameMapper {
 
 export function getScoreMapper(): ScoreMapper {
     return new ScoreMapper();
+}
+
+export function getStructureMapper(): StructureMapper {
+    return new StructureMapper(
+        getRoundNumberMapper(),
+        getRoundMapper(),
+        getPlanningMapper()
+    );
+}
+
+export function getRoundNumberMapper(): RoundNumberMapper {
+    return new RoundNumberMapper(
+        new PlanningConfigMapper(),
+        new GameAmountConfigMapper(getCompetitionSportMapper()),
+    );
+}
+
+export function getRoundMapper(): RoundMapper {
+    return new RoundMapper(
+        new PouleMapper(new PlaceMapper()),
+        new ScoreConfigMapper(getCompetitionSportMapper()),
+        new AgainstQualifyConfigMapper(getCompetitionSportMapper())
+    );
 }

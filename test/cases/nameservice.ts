@@ -243,7 +243,7 @@ describe('NameService', () => {
             expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('A1');
             expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('poule A nr. 1');
 
-            const winnersLastPlace = winnersChildRound.getLastPoule().getPlace(2);
+            const winnersLastPlace = winnersChildRound.getFirstPoule().getPlace(2);
             expect(nameService.getPlaceFromName(winnersLastPlace, false, false)).to.equal('?2');
             expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('beste nummer 2');
 

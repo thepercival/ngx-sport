@@ -54,7 +54,7 @@ export class RoundRankingCalculator {
         });
     }
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
+    /*getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
         return this.convertSportRoundRankingsToRoundItems(
             horizontalPoule.getPlaces(),
             horizontalPoule.getRound().getNumber().getCompetitionSports().map((competitionSport: CompetitionSport): SportRoundRankingItem[] => {
@@ -62,6 +62,35 @@ export class RoundRankingCalculator {
                 return sportCalculator.getItemsForHorizontalPoule(horizontalPoule);
             })
         );
+    }*/
+
+    /*getPlaceLocationsForMultipleRule(multipleRule: MultipleQualifyRule): PlaceLocation[] {
+        const sportRoundRankingItems = this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
+        return sportRoundRankingItems.map((rankingItem: SportRoundRankingItem): PlaceLocation => {
+            return rankingItem.getPlaceLocation();
+        });
+    }
+
+    getPlacesForMultipleRule(multipleRule: MultipleQualifyRule): Place[] {
+        const fromRound = multipleRule.getFromHorizontalPoule().getRound();
+        const sportRoundRankingItems = this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
+        return sportRoundRankingItems.map((rankingSportItem: SportRoundRankingItem): Place => {
+            return fromRound.getPlace(rankingSportItem.getPlaceLocation());
+        });
+    }*/
+
+    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): RoundRankingItem[] {
+        const rankingItems: RoundRankingItem[] = [];
+        horizontalPoule.getPlaces().forEach((place: Place) => {
+            const pouleRankingItems: RoundRankingItem[] = this.getItemsForPoule(place.getPoule());
+            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getPlaceNr());
+            if (pouleRankingItem === undefined) {
+                return;
+            }
+            rankingItems.push(pouleRankingItem);
+        });
+
+        return this.rankItems(rankingItems);
     }
 
     getItemByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem | undefined {
@@ -89,24 +118,30 @@ export class RoundRankingCalculator {
     protected rankItems(cumulativeRoundRankingItems: RoundRankingItem[]): RoundRankingItem[] {
         cumulativeRoundRankingItems.sort((a: RoundRankingItem, b: RoundRankingItem) => {
             if (a.getCumulativeRank() === b.getCumulativeRank()) {
-                if (a.getPlace().getPouleNr() === b.getPlace().getPouleNr()) {
-                    return a.getPlaceLocation().getPlaceNr() - b.getPlaceLocation().getPlaceNr();
+                const cmp = a.compareCumulativePerformances(b)
+                if (cmp === 0) {
+                    if (a.getPlace().getPouleNr() === b.getPlace().getPouleNr()) {
+                        return a.getPlaceLocation().getPlaceNr() - b.getPlaceLocation().getPlaceNr();
+                    }
+                    return a.getPlace().getPouleNr() - b.getPlace().getPouleNr();
                 }
-                return a.getPlace().getPouleNr() - b.getPlace().getPouleNr();
+                return cmp;
             }
             return a.getCumulativeRank() < b.getCumulativeRank() ? -1 : 1;
         });
         const roundRankingItems: RoundRankingItem[] = [];
         let nrOfIterations = 0;
         let rank = 0;
-        let previousCumulativeRank = 0;
+        let previousCumulativeRankItem: RoundRankingItem | undefined;
         let cumulativeRoundRankingItem: RoundRankingItem | undefined;
         while (cumulativeRoundRankingItem = cumulativeRoundRankingItems.shift()) {
-            if (previousCumulativeRank < cumulativeRoundRankingItem.getCumulativeRank()) {
+            if (previousCumulativeRankItem === undefined || previousCumulativeRankItem.getCumulativeRank() < cumulativeRoundRankingItem.getCumulativeRank() ||
+                previousCumulativeRankItem.getCumulativeRank() === cumulativeRoundRankingItem.getCumulativeRank()
+                && cumulativeRoundRankingItem.compareCumulativePerformances(previousCumulativeRankItem) < 0) {
                 rank++;
             }
             cumulativeRoundRankingItem.setRank(rank, ++nrOfIterations);
-            previousCumulativeRank = cumulativeRoundRankingItem.getCumulativeRank();
+            previousCumulativeRankItem = cumulativeRoundRankingItem;
             roundRankingItems.push(cumulativeRoundRankingItem);
         }
         return roundRankingItems;

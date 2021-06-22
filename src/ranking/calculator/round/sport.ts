@@ -30,7 +30,7 @@ export abstract class SportRoundRankingCalculator {
 
     abstract getItemsForPoule(poule: Poule): SportRoundRankingItem[];
 
-    getPlaceLocationsForMultipleRule(multipleRule: MultipleQualifyRule): PlaceLocation[] {
+    /*getPlaceLocationsForMultipleRule(multipleRule: MultipleQualifyRule): PlaceLocation[] {
         const sportRoundRankingItems = this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
         return sportRoundRankingItems.map((rankingItem: SportRoundRankingItem): PlaceLocation => {
             return rankingItem.getPlaceLocation();
@@ -43,9 +43,9 @@ export abstract class SportRoundRankingCalculator {
         return sportRoundRankingItems.map((rankingSportItem: SportRoundRankingItem): Place => {
             return fromRound.getPlace(rankingSportItem.getPlaceLocation());
         });
-    }
+    }*/
 
-    getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): SportRoundRankingItem[] {
+    /*getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): SportRoundRankingItem[] {
         const performances: PlaceSportPerformance[] = [];
         horizontalPoule.getPlaces().forEach((place: Place) => {
             const pouleRankingItems: SportRoundRankingItem[] = this.getItemsForPoule(place.getPoule());
@@ -60,7 +60,7 @@ export abstract class SportRoundRankingCalculator {
         const ruleSet = this.getRankingRuleSet();
         const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
         return this.rankItems(performances, rankingRules);
-    }
+    }*/
 
     protected getRankingRuleSet(): RankingRuleSet {
         if (this.competitionSport.getVariant() instanceof AgainstSportVariant) {

@@ -1,6 +1,6 @@
 import { JsonAgainstGame, Poule, RoundNumber } from '../../public_api';
 import { jsonGames2Places } from '../data/games/2places';
-import { getGameMapper, getPlanningMapper } from './singletonCreator';
+import { getGameMapper, getPlanningMapper, getStructureMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';
 import { jsonGames4Places } from '../data/games/4places';
 import { jsonGames5Places } from '../data/games/5places';
@@ -20,11 +20,14 @@ export function createGames(roundNumber: RoundNumber) {
         }
     };
     const planningMapper = getPlanningMapper();
+    const gameMapper = getGameMapper();
+    const structureMapper = getStructureMapper();
+    gameMapper.setPlaceMap(structureMapper.getPlaceMap(roundNumber.getRounds()));
     const map = planningMapper.getCompetitionSportMap(roundNumber.getCompetition());
     roundNumber.getPoules().forEach((poule: Poule) => {
         getJson(poule).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
             const competitionSport = map[jsonGame.competitionSport.id];
-            return getGameMapper().toNewAgainst(jsonGame, poule, competitionSport);
+            return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
     });
 }

@@ -119,11 +119,7 @@ export class RoundNumber {
         if (!previous) {
             throw Error('het 1ste rondenummer moet gezet zijn');
         }
-        const previousPlanningConfig = previous.getPlanningConfig();
-        if (!previousPlanningConfig) {
-            throw Error('het vorige rondenummer moet planning-config hebben');
-        }
-        return previousPlanningConfig;
+        return previous.getValidPlanningConfig();
     }
 
     getGames(order: GameOrder): (AgainstGame | TogetherGame)[] {

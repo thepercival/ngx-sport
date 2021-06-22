@@ -37,8 +37,7 @@ export class QualifyRuleCreator {
                         fromHorPoules.push(fromRoundHorPoule);
                         childRoundPlaces -= fromRoundHorPoule.getPlaces().length;
                     }
-                    const c = new DefaultQualifyRuleCreator()
-                    c.createRules(fromHorPoules, qualifyGroup);
+                    (new DefaultQualifyRuleCreator()).createRules(fromHorPoules, qualifyGroup);
                 });
             })
         });

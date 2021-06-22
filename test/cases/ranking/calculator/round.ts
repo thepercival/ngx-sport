@@ -48,6 +48,47 @@ describe('RoundRankingCalculator', () => {
         cachedItems.forEach(item => expect(item.getRank()).to.equal(1));
     });
 
+    // it('hor poule ranked', () => {
+    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+    //     const structureEditor = getStructureEditor();
+    //     const jsonPlanningConfig = createPlanningConfigNoTime();
+    //     const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3]);
+    //     const rootRound: Round = structure.getRootRound();
+
+    //     const pouleOne = rootRound.getPoule(1);
+    //     expect(pouleOne).to.not.equal(undefined);
+    //     if (!pouleOne) {
+    //         return;
+    //     }
+    //     createGames(structure.getFirstRoundNumber());
+    //     setAgainstScoreSingle(pouleOne, 1, 2, 0, 0);
+    //     setAgainstScoreSingle(pouleOne, 1, 3, 0, 0);
+    //     setAgainstScoreSingle(pouleOne, 2, 3, 0, 0);
+
+    //     const pouleTwo = rootRound.getPoule(1);
+    //     expect(pouleTwo).to.not.equal(undefined);
+    //     if (!pouleTwo) {
+    //         return;
+    //     }
+    //     createGames(structure.getFirstRoundNumber());
+    //     setAgainstScoreSingle(pouleTwo, 1, 2, 1, 0);
+    //     setAgainstScoreSingle(pouleTwo, 1, 3, 1, 0);
+    //     setAgainstScoreSingle(pouleTwo, 2, 3, 0, 1);
+
+    //     const equalRank = 1;
+
+    //     const nrTwos = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
+    //     const rankingService = new RoundRankingCalculator();
+    //     const items = rankingService.getItemsForHorizontalPoule(nrTwos);
+
+    //     items.forEach((item: RoundRankingItem) => {
+    //         if (item.getRank() === 1) {
+    //             expect(item.getPlace()).to.equal(pouleTwo.getPlace(3));
+    //         }
+    //     });
+    // });
+
     it('single ranked, state played', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
@@ -186,43 +227,93 @@ describe('RoundRankingCalculator', () => {
         expect(places2[1].getPouleNr()).to.equal(1);
     });
 
-    // it('horizontal ranked no single rule', () => {
-    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+    it('[3,3], multiple rule third place against diff', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-    //     const structureEditor = getStructureEditor();
-    //     const jsonPlanningConfig = createPlanningConfigNoTime();
-    //     const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3]);
-    //     const rootRound: Round = structure.getRootRound();
+        const structureEditor = getStructureEditor();
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3]);
+        const rootRound: Round = structure.getRootRound();
 
-    //     structureEditor.addQualifier(rootRound, QualifyTarget.Winners);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
 
-    //     const pouleOne = rootRound.getPoule(1);
-    //     expect(pouleOne).to.not.equal(undefined);
-    //     if (!pouleOne) {
-    //         return;
-    //     }
-    //     const pouleTwo = rootRound.getPoule(2);
-    //     expect(pouleTwo).to.not.equal(undefined);
-    //     if (!pouleTwo) {
-    //         return;
-    //     }
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
 
-    //     createGames(structure.getFirstRoundNumber());
+        createGames(structure.getFirstRoundNumber());
 
-    //     setAgainstScoreSingle(pouleOne, 1, 2, 2, 1);
-    //     setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
-    //     setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 0);
+        setAgainstScoreSingle(pouleOne, 2, 3, 0, 1);
 
-    //     setAgainstScoreSingle(pouleTwo, 1, 2, 4, 2);
-    //     setAgainstScoreSingle(pouleTwo, 1, 3, 6, 2);
-    //     setAgainstScoreSingle(pouleTwo, 2, 3, 6, 4);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 0, 2);
 
-    //     const rankingService = new RoundRankingCalculator();
-    //     const firstHorizontalPoule = rootRound.getHorizontalPoules(QualifyTarget.Winners)[0];
-    //     const placeLocations = rankingService.getPlaceLocationsForHorizontalPoule(firstHorizontalPoule);
+        const rankingService = new RoundRankingCalculator();
+        const nrsTwo = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
+        const rankingItems = rankingService.getItemsForHorizontalPoule(nrsTwo);
 
-    //     expect(placeLocations.length).to.equal(0); why should this be zero?
-    // });
+        const thirdPlacedItem = rankingService.getItemByRank(rankingItems, 1);
+        // console.log(thirdPlace);
+        expect(thirdPlacedItem).to.not.equal(undefined);
+        if (!thirdPlacedItem) {
+            return;
+        }
+        expect(thirdPlacedItem.getPlace()).to.equal(pouleTwo.getPlace(3));
+    });
+
+    it('[3,3], multiple rule third place against totally equal', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const jsonPlanningConfig = createPlanningConfigNoTime();
+        const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3]);
+        const rootRound: Round = structure.getRootRound();
+
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
+
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
+
+        createGames(structure.getFirstRoundNumber());
+
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 0);
+        setAgainstScoreSingle(pouleOne, 2, 3, 0, 1);
+
+        setAgainstScoreSingle(pouleTwo, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 0, 1);
+
+        const rankingService = new RoundRankingCalculator();
+        const nrsTwo = rootRound.getHorizontalPoule(QualifyTarget.Winners, 2);
+        const rankingItems = rankingService.getItemsForHorizontalPoule(nrsTwo);
+
+        const thirdPlace = rankingService.getItemByRank(rankingItems, 1);
+        // console.log(thirdPlace);
+        expect(thirdPlace).to.not.equal(undefined);
+        if (!thirdPlace) {
+            return;
+        }
+        expect(thirdPlace.getPlace()).to.equal(pouleOne.getPlace(3));
+    });
 
     it('single ranked, AgainstAmount vs Against', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);

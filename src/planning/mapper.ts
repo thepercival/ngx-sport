@@ -6,14 +6,11 @@ import { JsonStructure } from '../structure/json';
 import { JsonRound } from '../round/json';
 import { JsonRoundNumber } from '../round/number/json';
 import { Structure } from '../structure';
-import { Place } from '../place';
 import { Competition } from '../competition';
-import { Poule } from '../poule';
 import { Round } from '../qualify/group';
 import { CompetitionSport } from '../competition/sport';
 import { PlaceMap } from '../place/mapper';
 import { CompetitionSportMap } from '../competition/sport/mapper';
-import { GameMode } from './gameMode';
 import { JsonAgainstGame } from '../game/against/json';
 import { JsonTogetherGame } from '../game/together/json';
 import { JsonQualifyGroup } from '../qualify/group/json';
@@ -23,6 +20,10 @@ import { JsonQualifyGroup } from '../qualify/group/json';
 })
 export class PlanningMapper {
     constructor(private gameMapper: GameMapper) { }
+
+    setPlaceMap(placeMap: PlaceMap) {
+        this.gameMapper.setPlaceMap(placeMap);
+    }
 
     toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber {
         const firstRoundNumber = structure.getFirstRoundNumber();

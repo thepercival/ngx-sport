@@ -31,6 +31,14 @@ export class Place extends PlaceLocation {
         return this.getPoule().getRound();
     }
 
+    getRoundNodeName(): string {
+        return this.getRound().getStructurePathNode().pathToString();
+    }
+
+    getStructureLocation(): string {
+        return this.getPoule().getStructureLocation() + '.' + this.getPlaceNr();
+    }
+
     private getHorizontalNumber(qualifyTarget: QualifyTarget): number {
         if (qualifyTarget === QualifyTarget.Winners) {
             return this.getPlaceNr();

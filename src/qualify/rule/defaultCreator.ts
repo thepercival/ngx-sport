@@ -18,7 +18,7 @@ export class DefaultQualifyRuleCreator {
     private qualifyOriginCalculator = new QualifyOriginCalculator();
 
     createRules(fromHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup) {
-        const childRoundPlaces = this.getChildRoundPlaces(qualifyGroup);
+        const childRoundPlaces = this.getChildRoundPlacesLikeSnake(qualifyGroup);
         let fromHorPoule: HorizontalPoule | undefined = fromHorPoules.shift();
         let previousRule: SingleQualifyRule | undefined;
         while (fromHorPoule !== undefined && childRoundPlaces.length > 0) {
@@ -33,9 +33,20 @@ export class DefaultQualifyRuleCreator {
         }
     }
 
-    protected getChildRoundPlaces(qualifyGroup: QualifyGroup): Place[] {
-        const childRoundPlaces = qualifyGroup.getChildRound().getPlaces(Round.ORDER_NUMBER_POULE);
-        return qualifyGroup.getTarget() === QualifyTarget.Winners ? childRoundPlaces : childRoundPlaces.reverse();
+    protected getChildRoundPlacesLikeSnake(qualifyGroup: QualifyGroup): Place[] {
+        const horPoules = qualifyGroup.getChildRound().getHorizontalPoules(qualifyGroup.getTarget());
+        const places: Place[] = [];
+        let reverse = false;
+        horPoules.forEach((horPoule: HorizontalPoule) => {
+            const horPoulePlaces = horPoule.getPlaces().slice();
+            let horPoulePlace: Place | undefined = reverse ? horPoulePlaces.pop() : horPoulePlaces.shift();
+            while (horPoulePlace !== undefined) {
+                places.push(horPoulePlace);
+                horPoulePlace = reverse ? horPoulePlaces.pop() : horPoulePlaces.shift();
+            }
+            reverse = !reverse;
+        })
+        return places;
     }
 
     createPlaceMappings(fromHorPoule: HorizontalPoule, childRoundPlaces: Place[]): QualifyPlaceMapping[] {
@@ -43,7 +54,7 @@ export class DefaultQualifyRuleCreator {
         const fromHorPoulePlaces = fromHorPoule.getPlaces().slice();
         let childRoundPlace: Place | undefined;
         while (childRoundPlace = childRoundPlaces.shift()) {
-            const fromHorPoulePlace = this.getBestPick(childRoundPlace, fromHorPoulePlaces);
+            const fromHorPoulePlace = this.getBestPick(childRoundPlace, fromHorPoulePlaces, childRoundPlaces);
             const idx = fromHorPoulePlaces.indexOf(fromHorPoulePlace);
             if (idx < 0) {
                 continue;
@@ -54,12 +65,12 @@ export class DefaultQualifyRuleCreator {
         return mappings;
     }
 
-    protected getBestPick(childRoundPlace: Place, fromHorPoulePlaces: Place[]): Place {
+    protected getBestPick(childRoundPlace: Place, fromHorPoulePlaces: Place[], otherChildRoundPlaces: Place[]): Place {
         const fromHorPoulePlacesWithFewestPouleOrigins = this.getFewestOverlappingPouleOrigins(childRoundPlace.getPoule(), fromHorPoulePlaces);
         if (fromHorPoulePlacesWithFewestPouleOrigins.length === 1) {
             return fromHorPoulePlacesWithFewestPouleOrigins[0];
         }
-        const otherChildRoundPoules = this.getOtherChildRoundPoules(childRoundPlace.getPoule());
+        const otherChildRoundPoules = this.getOtherChildRoundPoules(otherChildRoundPlaces);
         const fromHorPoulePlacesWithMostOtherPouleOrigins = this.getMostOtherOverlappingPouleOrigins(
             otherChildRoundPoules, fromHorPoulePlacesWithFewestPouleOrigins)
         return fromHorPoulePlacesWithMostOtherPouleOrigins[0];
@@ -80,8 +91,14 @@ export class DefaultQualifyRuleCreator {
         return bestFromPlaces;
     }
 
-    protected getOtherChildRoundPoules(poule: Poule): Poule[] {
-        return poule.getRound().getPoules().filter((pouleIt: Poule) => pouleIt !== poule);
+    protected getOtherChildRoundPoules(otherChildRoundPlaces: Place[]): Poule[] {
+        const poules: Poule[] = [];
+        otherChildRoundPlaces.forEach((place: Place) => {
+            if (poules.indexOf(place.getPoule()) < 0) {
+                poules.push(place.getPoule());
+            }
+        });
+        return poules;
     }
 
     protected getMostOtherOverlappingPouleOrigins(otherChildRoundPoules: Poule[], fromHorPoulePlaces: Place[]): Place[] {

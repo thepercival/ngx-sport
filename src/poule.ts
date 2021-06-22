@@ -70,7 +70,7 @@ export class Poule extends Identifiable {
     }
 
     getStructureLocation(): string {
-        return this.getRound().getStructurePathNode().pathToString() + this.getNumber();
+        return this.getRound().getStructurePathNode().pathToString() + '.' + this.getNumber();
     }
 
     // getTogetherGamePlaces(place?: Place): TogetherGamePlace[] {

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { GameMapper } from '../game/mapper';
 import { Poule } from '../poule';
 import { PlaceMapper } from '../place/mapper';
 import { JsonPoule } from './json';
@@ -10,7 +9,7 @@ import { Round } from '../qualify/group';
     providedIn: 'root'
 })
 export class PouleMapper {
-    constructor(private placeMapper: PlaceMapper, private gameMapper: GameMapper) { }
+    constructor(private placeMapper: PlaceMapper) { }
 
     toObject(json: JsonPoule, round: Round, existingPoule: Poule | undefined): Poule {
         const poule = existingPoule ? existingPoule : new Poule(round, json.number);

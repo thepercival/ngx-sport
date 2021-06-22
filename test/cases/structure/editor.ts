@@ -58,7 +58,7 @@ describe('StructureEditor', () => {
         }
         const fromPlace = qualifyGroup.getFromPlace(childRound.getPoule(1).getPlace(1));
 
-        expect(fromPlace?.getPouleNr()).to.equal(2);
+        expect(fromPlace?.getPouleNr()).to.equal(3);
         expect(fromPlace?.getPlaceNr()).to.equal(4);
 
         expect(rootRound.getNrOfPlaces()).to.equal(17);
@@ -90,8 +90,8 @@ describe('StructureEditor', () => {
         }
         const fromPlace = qualifyGroup.getFromPlace(childRound.getPoule(1).getPlace(1));
 
-        expect(fromPlace?.getPouleNr()).to.equal(4);
-        expect(fromPlace?.getPlaceNr()).to.equal(3);
+        expect(fromPlace?.getPouleNr()).to.equal(1);
+        expect(fromPlace?.getPlaceNr()).to.equal(4);
 
         expect(rootRound.getNrOfPlaces()).to.equal(15);
     });
