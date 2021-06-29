@@ -66,9 +66,12 @@ export class Place extends PlaceLocation {
         this.qualifiedPlace = place;
     }
 
-    getStartLocation(): PlaceLocation {
+    getStartLocation(): PlaceLocation | undefined {
         if (this.qualifiedPlace === undefined) {
-            return this;
+            if (this.getRound().getNumberAsValue() === 1) {
+                return this;
+            }
+            return undefined;
         }
         return this.qualifiedPlace.getStartLocation();
     }

@@ -18,6 +18,7 @@ import { RankingRuleSet } from './ranking/ruleSet';
 import { QualifyTarget } from './qualify/target';
 import { PreviousNrOfDropoutsMap } from './ranking/map/previousNrOfDropouts';
 import { PouleStructureNumberMap } from './ranking/map/pouleStructureNumber';
+import { PlaceLocation } from './place/location';
 
 export class NameService {
     private previousNrOfDropoutsMap: PreviousNrOfDropoutsMap | undefined;
@@ -93,8 +94,9 @@ export class NameService {
 
     getPlaceName(place: Place, p_competitorName?: boolean, longName?: boolean): string {
         let competitorName = p_competitorName && this.competitorMap;
-        if (competitorName && this.competitorMap) {
-            const particpant = this.competitorMap.getCompetitor(place.getStartLocation());
+        const startLocation: PlaceLocation | undefined = place.getStartLocation();
+        if (competitorName && this.competitorMap && startLocation) {
+            const particpant = this.competitorMap.getCompetitor(startLocation);
             if (particpant !== undefined) {
                 return particpant.getName();
             }
@@ -108,8 +110,9 @@ export class NameService {
 
     getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
         competitorName = competitorName ? (this.competitorMap !== undefined) : false;
-        if (competitorName && this.competitorMap) {
-            const particpant = this.competitorMap.getCompetitor(place.getStartLocation());
+        const startLocation: PlaceLocation | undefined = place.getStartLocation();
+        if (competitorName && this.competitorMap && startLocation) {
+            const particpant = this.competitorMap.getCompetitor(startLocation);
             if (particpant !== undefined) {
                 return particpant.getName();
             }
