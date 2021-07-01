@@ -4,7 +4,7 @@ import { CompetitionSport } from '../../../../competition/sport';
 import { AgainstGame } from '../../../../game/against';
 import { Place } from '../../../../place';
 import { PlaceSportPerformance } from '../../../../place/sportPerformance';
-import { PlaceSportPerformanceCalculator, PlaceSportPerformanceMap } from '../../../../place/sportPerformance/calculator';
+import { PlaceSportPerformanceMap } from '../../../../place/sportPerformance/calculator';
 import { PlaceAgainstSportPerformanceCalculator } from '../../../../place/sportPerformance/calculator/against';
 import { Poule } from '../../../../poule';
 import { Round } from '../../../../qualify/group';
@@ -38,7 +38,7 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
     }
 
     protected getFilteredGames(games: AgainstGame[]): AgainstGame[] {
-        return games.filter((game: AgainstGame) => this.gameStateMap[game.getState()] !== undefined);
+        return games.filter((game: AgainstGame) => this.gameStateMap[+game.getState()] !== undefined);
     }
 
     private getGamesAmongEachOther = (places: Place[], games: AgainstGame[]): AgainstGame[] => {

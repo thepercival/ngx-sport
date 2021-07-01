@@ -68,7 +68,7 @@ export class Place extends PlaceLocation {
 
     getStartLocation(): PlaceLocation | undefined {
         if (this.qualifiedPlace === undefined) {
-            if (this.getRound().getNumberAsValue() === 1) {
+            if (this.getRound().isRoot()) {
                 return this;
             }
             return undefined;

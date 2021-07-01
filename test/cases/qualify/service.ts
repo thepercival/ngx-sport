@@ -60,14 +60,20 @@ describe('QualifyService', () => {
         const winnersPlace1 = winnersPoule.getPlace(1);
         expect(winnersPlace1).to.not.equal(undefined);
         if (winnersPlace1) {
-            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())?.getName()).to.equal('tc 1.1');
+            const winnersLocation1 = winnersPlace1.getStartLocation();
+            if (winnersLocation1) {
+                expect(competitorMap.getCompetitor(winnersLocation1)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersLocation1)?.getName()).to.equal('tc 1.1');
+            }
         }
         const winnersPlace2 = winnersPoule.getPlace(2);
         expect(winnersPlace2).to.not.equal(undefined);
         if (winnersPlace2) {
-            expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())?.getName()).to.equal('tc 1.2');
+            const winnersLocation2 = winnersPlace2.getStartLocation();
+            if (winnersLocation2) {
+                expect(competitorMap.getCompetitor(winnersLocation2)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersLocation2)?.getName()).to.equal('tc 1.2');
+            }
         }
 
         const loserssPoule = losersRound.getPoule(1);
@@ -78,14 +84,20 @@ describe('QualifyService', () => {
         const losersPlace1 = loserssPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())?.getName()).to.equal('tc 1.4');
+            const losersLocation1 = losersPlace1.getStartLocation();
+            if (losersLocation1) {
+                expect(competitorMap.getCompetitor(losersLocation1)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersLocation1)?.getName()).to.equal('tc 1.4');
+            }
         }
         const losersPlace2 = loserssPoule.getPlace(2);
         expect(losersPlace2).to.not.equal(undefined);
         if (losersPlace2) {
-            expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())?.getName()).to.equal('tc 1.5');
+            const losersLocation2 = losersPlace2.getStartLocation();
+            if (losersLocation2) {
+                expect(competitorMap.getCompetitor(losersLocation2)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersLocation2)?.getName()).to.equal('tc 1.5');
+            }
         }
 
     });
@@ -135,8 +147,11 @@ describe('QualifyService', () => {
         const winnersPlace1 = winnersPoule.getPlace(1);
         expect(winnersPlace1).to.not.equal(undefined);
         if (winnersPlace1) {
-            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())?.getName()).to.equal('tc 1.1');
+            const winnersLocation1 = winnersPlace1.getStartLocation();
+            if (winnersLocation1) {
+                expect(competitorMap.getCompetitor(winnersLocation1)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersLocation1)?.getName()).to.equal('tc 1.1');
+            }
         }
 
         const winnersPlace2 = winnersPoule.getPlace(2);
@@ -154,7 +169,10 @@ describe('QualifyService', () => {
         const losersPlace1 = losersPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+            const losersLocation1 = losersPlace1.getStartLocation();
+            if (losersLocation1) {
+                expect(competitorMap.getCompetitor(losersLocation1)).to.not.equal(undefined);
+            }
         }
 
         const losersPlace2 = losersPoule.getPlace(2);
@@ -224,7 +242,10 @@ describe('QualifyService', () => {
         if (winnersPlace1) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace1);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(winnersPlace1.getStartLocation())).to.not.equal(undefined);
+            const winnersLocation1 = winnersPlace1.getStartLocation();
+            if (winnersLocation1) {
+                expect(competitorMap.getCompetitor(winnersLocation1)).to.not.equal(undefined);
+            }
         }
 
         const winnersPlace2 = winnersPoule.getPlace(2);
@@ -232,7 +253,10 @@ describe('QualifyService', () => {
         if (winnersPlace2) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace2);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(winnersPlace2.getStartLocation())).to.not.equal(undefined);
+            const winnersLocation2 = winnersPlace2.getStartLocation();
+            if (winnersLocation2) {
+                expect(competitorMap.getCompetitor(winnersLocation2)).to.not.equal(undefined);
+            }
         }
 
         const winnersPlace3 = winnersPoule.getPlace(3);
@@ -240,7 +264,10 @@ describe('QualifyService', () => {
         if (winnersPlace3) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace3);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
+            const winnersLocation3 = winnersPlace3.getStartLocation();
+            if (winnersLocation3) {
+                expect(competitorMap.getCompetitor(winnersLocation3)).to.not.equal(undefined);
+            }
         }
 
         const winnersPlace4 = winnersPoule.getPlace(4);
@@ -248,7 +275,10 @@ describe('QualifyService', () => {
         if (winnersPlace4) {
             const qualifyRule = winnersQualifyGroup.getRule(winnersPlace4);
             expect(qualifyRule).to.instanceOf(MultipleQualifyRule);
-            expect(competitorMap.getCompetitor(winnersPlace4.getStartLocation())?.getName()).to.equal('tc 3.2');
+            const winnersLocation4 = winnersPlace4.getStartLocation();
+            if (winnersLocation4) {
+                expect(competitorMap.getCompetitor(winnersLocation4)?.getName()).to.equal('tc 3.2');
+            }
         }
 
         const losersQualifyGroup = losersRound.getParentQualifyGroup();
@@ -267,7 +297,10 @@ describe('QualifyService', () => {
         if (losersPlace1) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace1);
             expect(qualifyRule).to.instanceOf(MultipleQualifyRule);
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
+            const losersLocation1 = losersPlace1.getStartLocation();
+            if (losersLocation1) {
+                expect(competitorMap.getCompetitor(losersLocation1)?.getName()).to.not.equal(undefined);
+            }
         }
 
         const losersPlace2 = losersPoule.getPlace(2);
@@ -275,7 +308,10 @@ describe('QualifyService', () => {
         if (losersPlace2) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace2);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(losersPlace2.getStartLocation())).to.not.equal(undefined);
+            const losersLocation2 = losersPlace2.getStartLocation();
+            if (losersLocation2) {
+                expect(competitorMap.getCompetitor(losersLocation2)?.getName()).to.not.equal(undefined);
+            }
         }
 
         const losersPlace3 = losersPoule.getPlace(3);
@@ -283,7 +319,10 @@ describe('QualifyService', () => {
         if (losersPlace3) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace3);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(losersPlace3.getStartLocation())).to.not.equal(undefined);
+            const losersLocation3 = losersPlace3.getStartLocation();
+            if (losersLocation3) {
+                expect(competitorMap.getCompetitor(losersLocation3)).to.not.equal(undefined);
+            }
         }
 
         const losersPlace4 = losersPoule.getPlace(4);
@@ -291,7 +330,10 @@ describe('QualifyService', () => {
         if (losersPlace4) {
             const qualifyRule = losersQualifyGroup.getRule(losersPlace4);
             expect(qualifyRule).to.instanceOf(SingleQualifyRule);
-            expect(competitorMap.getCompetitor(losersPlace4.getStartLocation())).to.not.equal(undefined);
+            const losersLocation4 = losersPlace4.getStartLocation();
+            if (losersLocation4) {
+                expect(competitorMap.getCompetitor(losersLocation4)).to.not.equal(undefined);
+            }
         }
 
     });
@@ -347,7 +389,10 @@ describe('QualifyService', () => {
         if (!winnersPlace4) {
             return;
         }
-        expect(competitorMap.getCompetitor(winnersPlace4.getStartLocation())).to.equal(undefined);
+        const winnersLocation4 = winnersPlace4.getStartLocation();
+        if (winnersLocation4) {
+            expect(competitorMap.getCompetitor(winnersLocation4)).to.not.equal(undefined);
+        }
     });
 
     /**
@@ -395,8 +440,11 @@ describe('QualifyService', () => {
         const winnersPlace3 = winnersPoule.getPlace(3);
         expect(winnersPlace3).to.not.equal(undefined);
         if (winnersPlace3) {
-            expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(winnersPlace3.getStartLocation())?.getName()).to.equal('tc 1.2');
+            const winnersLocation3 = winnersPlace3.getStartLocation();
+            if (winnersLocation3) {
+                expect(competitorMap.getCompetitor(winnersLocation3)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(winnersLocation3)?.getName()).to.equal('tc 1.2');
+            }
         }
 
         const losersPoule = losersRound.getPoule(1);
@@ -407,8 +455,11 @@ describe('QualifyService', () => {
         const losersPlace1 = losersPoule.getPlace(1);
         expect(losersPlace1).to.not.equal(undefined);
         if (losersPlace1) {
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())).to.not.equal(undefined);
-            expect(competitorMap.getCompetitor(losersPlace1.getStartLocation())?.getName()).to.equal('tc 2.2');
+            const losersLocation1 = losersPlace1.getStartLocation();
+            if (losersLocation1) {
+                expect(competitorMap.getCompetitor(losersLocation1)).to.not.equal(undefined);
+                expect(competitorMap.getCompetitor(losersLocation1)?.getName()).to.equal('tc 2.2');
+            }
         }
     });
 });

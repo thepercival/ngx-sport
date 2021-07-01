@@ -1,6 +1,7 @@
 import { AgainstResult } from '../against/result';
 import { AgainstSide } from '../against/side';
 import { AgainstGame } from '../game/against';
+import { GamePhase } from '../game/phase';
 import { Score } from '../score';
 import { AgainstScoreHelper } from './againstHelper';
 
@@ -9,7 +10,7 @@ export class AgainstScore extends Score {
     static readonly RECEIVED = 2;
     protected helper: AgainstScoreHelper;
 
-    constructor(protected game: AgainstGame, home: number, away: number, phase: number, number?: number) {
+    constructor(protected game: AgainstGame, home: number, away: number, phase: GamePhase, number?: number) {
         super(phase, number ? number : game.getScores().length + 1);
         this.helper = new AgainstScoreHelper(home, away);
         this.game.getScores().push(this);

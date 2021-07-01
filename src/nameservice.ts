@@ -96,9 +96,9 @@ export class NameService {
         let competitorName = p_competitorName && this.competitorMap;
         const startLocation: PlaceLocation | undefined = place.getStartLocation();
         if (competitorName && this.competitorMap && startLocation) {
-            const particpant = this.competitorMap.getCompetitor(startLocation);
-            if (particpant !== undefined) {
-                return particpant.getName();
+            const competitor = this.competitorMap.getCompetitor(startLocation);
+            if (competitor !== undefined) {
+                return competitor.getName();
             }
         }
         if (longName === true) {

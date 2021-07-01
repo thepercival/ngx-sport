@@ -1,13 +1,13 @@
-import { Game } from './game';
+import { GamePhase } from './game/phase';
 import { Identifiable } from './identifiable';
 
 export class Score extends Identifiable {
 
-    constructor(protected phase: number, protected number: number) {
+    constructor(protected phase: GamePhase, protected number: number) {
         super();
     }
 
-    getPhase(): number {
+    getPhase(): GamePhase {
         return this.phase;
     }
 

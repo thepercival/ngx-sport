@@ -13,14 +13,10 @@ import { Competition } from './competition';
 import { PlanningConfig } from './planning/config';
 
 export abstract class Game extends Identifiable {
-    static readonly Phase_RegularTime = 1;
-    static readonly Phase_ExtraTime = 2;
-    static readonly Phase_Penalties = 4;
-
     protected field: Field | undefined;
     protected referee: Referee | undefined;
     protected refereePlace: Place | undefined;
-    protected state: number;
+    protected state: State;
     protected places: (AgainstGamePlace | TogetherGamePlace)[] = [];
 
     constructor(protected poule: Poule, protected batchNr: number, protected startDateTime: Date, protected competitionSport: CompetitionSport) {
@@ -68,11 +64,11 @@ export abstract class Game extends Identifiable {
         this.startDateTime = startDateTime;
     }
 
-    getState(): number {
+    getState(): State {
         return this.state;
     }
 
-    setState(state: number): void {
+    setState(state: State): void {
         this.state = state;
     }
 

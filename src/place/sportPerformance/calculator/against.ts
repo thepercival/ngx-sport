@@ -11,6 +11,7 @@ import { AgainstGamePlace } from '../../../game/place/against';
 import { AgainstResult } from '../../../against/result';
 import { CompetitionSport } from '../../../competition/sport';
 import { PlaceSportPerformance } from '../../sportPerformance';
+import { GamePhase } from '../../../game/phase';
 
 export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanceCalculator {
 
@@ -67,18 +68,18 @@ export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanc
             return 0;
         }
         if (finalScore.getResult(side) === AgainstResult.Win) {
-            if (game.getFinalPhase() === Game.Phase_RegularTime) {
+            if (game.getFinalPhase() === GamePhase.RegularTime) {
                 return againstQualifyConfig.getWinPoints();
-            } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
+            } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
                 return againstQualifyConfig.getWinPointsExt();
             }
         } else if (finalScore.getResult(side) === AgainstResult.Draw) {
-            if (game.getFinalPhase() === Game.Phase_RegularTime) {
+            if (game.getFinalPhase() === GamePhase.RegularTime) {
                 return againstQualifyConfig.getDrawPoints();
-            } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
+            } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
                 return againstQualifyConfig.getDrawPointsExt();
             }
-        } else if (game.getFinalPhase() === Game.Phase_ExtraTime) {
+        } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
             return againstQualifyConfig.getLosePointsExt();
         }
         return 0;
