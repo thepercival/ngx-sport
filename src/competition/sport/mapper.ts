@@ -79,6 +79,14 @@ export class CompetitionSportMapper {
         }
         return json;
     }
+
+    getMap(competition: Competition): CompetitionSportMap {
+        const sportMap: CompetitionSportMap = {};
+        competition.getSports().forEach((competitionSport: CompetitionSport) => {
+            sportMap[competitionSport.getId()] = competitionSport;
+        });
+        return sportMap;
+    }
 }
 
 export interface CompetitionSportMap {

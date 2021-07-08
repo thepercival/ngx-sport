@@ -18,7 +18,6 @@ export class RoundNumberMapper {
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
         const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
         roundNumber.setId(json.id);
-        roundNumber.setHasPlanning(json.hasPlanning);
 
         if (json.planningConfig !== undefined) {
             this.planningConfigMapper.toObject(json.planningConfig, roundNumber);
@@ -42,8 +41,7 @@ export class RoundNumberMapper {
             number: roundNumber.getNumber(),
             planningConfig: planningConfig ? this.planningConfigMapper.toJson(planningConfig) : undefined,
             gameAmountConfigs: roundNumber.getGameAmountConfigs().map(config => this.gameAmountConfigMapper.toJson(config)),
-            next: nextRoundNumber ? this.toJson(nextRoundNumber) : undefined,
-            hasPlanning: false
+            next: nextRoundNumber ? this.toJson(nextRoundNumber) : undefined
         };
     }
 }

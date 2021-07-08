@@ -1,0 +1,1 @@
+export enum AgainstRuleSet { DiffFirst = 1, AmongFirst }

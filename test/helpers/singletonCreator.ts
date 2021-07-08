@@ -70,6 +70,7 @@ export function getScoreMapper(): ScoreMapper {
 
 export function getStructureMapper(): StructureMapper {
     return new StructureMapper(
+        getCompetitionSportMapper(),
         getRoundNumberMapper(),
         getRoundMapper(),
         getPlanningMapper()

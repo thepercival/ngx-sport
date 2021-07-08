@@ -1,6 +1,6 @@
-import { JsonAgainstGame, Poule, RoundNumber } from '../../public_api';
+import { CompetitionSportMap, JsonAgainstGame, Place, PlaceMap, Poule, Round, RoundNumber } from '../../public_api';
 import { jsonGames2Places } from '../data/games/2places';
-import { getGameMapper, getPlanningMapper, getStructureMapper } from './singletonCreator';
+import { getCompetitionSportMapper, getGameMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';
 import { jsonGames4Places } from '../data/games/4places';
 import { jsonGames5Places } from '../data/games/5places';
@@ -19,15 +19,34 @@ export function createGames(roundNumber: RoundNumber) {
             return jsonGames5Places;
         }
     };
-    const planningMapper = getPlanningMapper();
+
+    const fillPlaceMap = (roundNumber: RoundNumber, placeMap: PlaceMap) => {
+        roundNumber.getRounds().forEach((round: Round) => {
+            round.getPoules().forEach((poule: Poule) => {
+                poule.getPlaces().forEach((place: Place) => {
+                    placeMap[place.getStructureLocation()] = place;
+                });
+            });
+        });
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber) {
+            fillPlaceMap(nextRoundNumber, placeMap);
+        }
+    }
+
     const gameMapper = getGameMapper();
-    const structureMapper = getStructureMapper();
-    gameMapper.setPlaceMap(structureMapper.getPlaceMap(roundNumber.getRounds()));
-    const map = planningMapper.getCompetitionSportMap(roundNumber.getCompetition());
+    const competitionSportMapper = getCompetitionSportMapper();
+
+    const placeMap: PlaceMap = {};
+    fillPlaceMap(roundNumber, placeMap);
+    gameMapper.setPlaceMap(placeMap);
+    const sportMap: CompetitionSportMap = competitionSportMapper.getMap(roundNumber.getCompetition());
     roundNumber.getPoules().forEach((poule: Poule) => {
         getJson(poule).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
-            const competitionSport = map[jsonGame.competitionSport.id];
+            const competitionSport = sportMap[jsonGame.competitionSport.id];
             return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
     });
+
+
 }

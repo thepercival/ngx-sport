@@ -100,7 +100,7 @@ export * from './src/ranking/item/round';
 export * from './src/place/sportPerformance';
 export * from './src/ranking/item/round/sport';
 export * from './src/ranking/pointsCalculation';
-export * from './src/ranking/ruleSet';
+export * from './src/ranking/againstRuleSet';
 export * from './src/referee';
 export * from './src/referee/mapper';
 export * from './src/referee/json';

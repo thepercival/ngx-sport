@@ -12,9 +12,8 @@ import { PointsCalculation } from './ranking/pointsCalculation';
 import { FootballLine } from './sport/football';
 import { RankingRule } from './ranking/rule';
 import { RankingRuleGetter } from './ranking/rule/getter';
-import { ScoreConfig } from './score/config';
 import { CompetitorMap } from './competitor/map';
-import { RankingRuleSet } from './ranking/ruleSet';
+import { AgainstRuleSet } from './ranking/againstRuleSet';
 import { QualifyTarget } from './qualify/target';
 import { PreviousNrOfDropoutsMap } from './ranking/map/previousNrOfDropouts';
 import { PouleStructureNumberMap } from './ranking/map/pouleStructureNumber';
@@ -234,9 +233,9 @@ export class NameService {
         return '?';
     }*/
 
-    getRulesName(ruleSet: RankingRuleSet): string[] {
+    getRulesName(againstRuleSet: AgainstRuleSet | undefined): string[] {
         const rankingRuleGetter = new RankingRuleGetter();
-        return rankingRuleGetter.getRules(ruleSet, false).map((rule: RankingRule): string => {
+        return rankingRuleGetter.getRules(againstRuleSet, false).map((rule: RankingRule): string => {
             switch (rule) {
                 case RankingRule.MostPoints:
                     return 'meeste aantal punten';

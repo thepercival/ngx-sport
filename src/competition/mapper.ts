@@ -4,7 +4,6 @@ import { Competition } from '../competition';
 
 import { LeagueMapper } from '../league/mapper';
 import { SeasonMapper } from '../season/mapper';
-import { SportMapper } from '../sport/mapper';
 import { RefereeMapper } from '../referee/mapper';
 import { CompetitionSportMapper } from './sport/mapper';
 import { JsonCompetition } from './json';
@@ -42,7 +41,7 @@ export class CompetitionMapper {
 
     updateObject(json: JsonCompetition, competition: Competition) {
         competition.setState(json.state);
-        competition.setRankingRuleSet(json.rankingRuleSet);
+        competition.setAgainstRuleSet(json.againstRuleSet);
     }
 
     toJson(competition: Competition): JsonCompetition {
@@ -50,7 +49,7 @@ export class CompetitionMapper {
             id: competition.getId(),
             league: this.leagueMapper.toJson(competition.getLeague()),
             season: this.seasonMapper.toJson(competition.getSeason()),
-            rankingRuleSet: competition.getRankingRuleSet(),
+            againstRuleSet: competition.getAgainstRuleSet(),
             sports: competition.getSports().map(sport => this.competitionSportMapper.toJson(sport)),
             referees: competition.getReferees().map(referee => this.refereeMapper.toJson(referee)),
             startDateTime: competition.getStartDateTime().toISOString(),

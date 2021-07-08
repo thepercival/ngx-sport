@@ -350,6 +350,9 @@ export class StructureEditor {
         if (nrOfToPlaces === 1) {
             nrOfPoules--;
         }
+        if (nrOfPoules === 0) {
+            nrOfPoules++;
+        }
         return nrOfPoules;
     }
 

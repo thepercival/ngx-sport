@@ -2,18 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { RoundNumber } from '../round/number';
 import { GameMapper } from '../game/mapper';
-import { JsonStructure } from '../structure/json';
-import { JsonRound } from '../round/json';
-import { JsonRoundNumber } from '../round/number/json';
-import { Structure } from '../structure';
 import { Competition } from '../competition';
-import { Round } from '../qualify/group';
 import { CompetitionSport } from '../competition/sport';
 import { PlaceMap } from '../place/mapper';
 import { CompetitionSportMap } from '../competition/sport/mapper';
 import { JsonAgainstGame } from '../game/against/json';
 import { JsonTogetherGame } from '../game/together/json';
-import { JsonQualifyGroup } from '../qualify/group/json';
+import { JsonPoule } from '../poule/json';
+import { Poule } from '../poule';
 
 @Injectable({
     providedIn: 'root'
@@ -25,62 +21,30 @@ export class PlanningMapper {
         this.gameMapper.setPlaceMap(placeMap);
     }
 
-    toObject(json: JsonStructure, structure: Structure, startRoundNumber: number): RoundNumber {
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const map: CompetitionSportMap = this.getCompetitionSportMap(firstRoundNumber.getCompetition());
-        this.toRoundNumber(json.firstRoundNumber, firstRoundNumber, startRoundNumber);
-        this.toRounds(json.rootRound, structure.getRootRound(), firstRoundNumber, startRoundNumber, map);
-        const retVal = structure.getRoundNumber(startRoundNumber);
-        return retVal ?? firstRoundNumber;
-    }
-
-    protected toRoundNumber(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
-        if (roundNumber.getNumber() >= startRoundNumber) {
-            roundNumber.setHasPlanning(jsonRoundNumber.hasPlanning);
-        }
-        const nextRoundNumber = roundNumber.getNext();
-        if (nextRoundNumber && jsonRoundNumber.next) {
-            this.toRoundNumber(jsonRoundNumber.next, nextRoundNumber, startRoundNumber);
-        }
-    }
-    protected toRounds(
-        jsonRound: JsonRound,
-        round: Round,
-        roundNumber: RoundNumber,
-        startRoundNumber: number,
-        map: CompetitionSportMap) {
-        if (roundNumber.getNumber() >= startRoundNumber && roundNumber.getHasPlanning()) {
-            jsonRound.poules.forEach(jsonPoule => {
-                const poule = round.getPoule(jsonPoule.number);
-                if (!poule) {
-                    return;
-                }
-                jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
-                    const competitionSport = map[jsonGame.competitionSport.id];
-                    this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
-                });
-                jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
-                    const competitionSport = map[jsonGame.competitionSport.id];
-                    this.gameMapper.toNewTogether(jsonGame, poule, competitionSport);
-                });
-
+    toObject(jsonPoules: JsonPoule[], roundNumber: RoundNumber, sportMap: CompetitionSportMap): boolean {
+        const poules = roundNumber.getPoules();
+        const complete = jsonPoules.every((jsonPoule: JsonPoule) => {
+            const poule = poules.find((poule: Poule): boolean => {
+                return poule.getId() === jsonPoule.id;
             });
-        }
-        jsonRound.qualifyGroups.forEach((jsonQualifyGroup: JsonQualifyGroup) => {
-            const qualifyGroup = round.getQualifyGroup(jsonQualifyGroup.target, jsonQualifyGroup.number);
-            const nextRoundNumber = roundNumber.getNext();
-            if (nextRoundNumber && qualifyGroup) {
-                this.toRounds(jsonQualifyGroup.childRound, qualifyGroup.getChildRound(), nextRoundNumber, startRoundNumber, map);
+            if (poule === undefined) {
+                return false;
             }
+            return this.toPouleGames(jsonPoule, poule, sportMap);
         });
+        return jsonPoules.length > 0 && complete;
     }
 
-    getCompetitionSportMap(competition: Competition): CompetitionSportMap {
-        const map: CompetitionSportMap = {};
-        competition.getSports().forEach((competitionSport: CompetitionSport) => {
-            map[competitionSport.getId()] = competitionSport;
+    protected toPouleGames(jsonPoule: JsonPoule, poule: Poule, sportMap: CompetitionSportMap): boolean {
+        jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
+            const competitionSport = sportMap[jsonGame.competitionSport.id];
+            this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
-        return map;
+        jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
+            const competitionSport = sportMap[jsonGame.competitionSport.id];
+            this.gameMapper.toNewTogether(jsonGame, poule, competitionSport);
+        });
+        return poule.getGames().length > 0;
     }
 }
 

@@ -1,19 +1,13 @@
 import { CompetitionSport } from "../../../competition/sport";
-import { Place } from "../../../place";
-import { PlaceLocation } from "../../../place/location";
 import { PlaceSportPerformance } from "../../../place/sportPerformance";
 import { Poule } from "../../../poule";
-import { HorizontalPoule } from "../../../poule/horizontal";
 import { Round } from "../../../qualify/group";
-import { MultipleQualifyRule } from "../../../qualify/rule/multiple";
-import { SingleQualifyRule } from "../../../qualify/rule/single";
-import { QualifyTarget } from "../../../qualify/target";
 import { AgainstSportVariant } from "../../../sport/variant/against";
 import { State } from "../../../state";
 import { SportRoundRankingItem } from "../../item/round/sport";
 import { RankingRule } from "../../rule";
 import { RankingRuleGetter } from "../../rule/getter";
-import { RankingRuleSet } from "../../ruleSet";
+import { AgainstRuleSet } from "../../againstRuleSet";
 
 export abstract class SportRoundRankingCalculator {
     protected gameStateMap: GameStateMap = {};
@@ -62,11 +56,11 @@ export abstract class SportRoundRankingCalculator {
         return this.rankItems(performances, rankingRules);
     }*/
 
-    protected getRankingRuleSet(): RankingRuleSet {
+    protected getRankingRuleSet(): AgainstRuleSet | undefined {
         if (this.competitionSport.getVariant() instanceof AgainstSportVariant) {
-            return this.competitionSport.getCompetition().getRankingRuleSet();
+            return this.competitionSport.getCompetition().getAgainstRuleSet();
         }
-        return RankingRuleSet.Together;
+        return undefined;
     }
 
     protected rankItems(performances: PlaceSportPerformance[], rankingRules: RankingRule[]): SportRoundRankingItem[] {

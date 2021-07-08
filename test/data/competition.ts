@@ -1,4 +1,4 @@
-import { CustomSport, GameMode, JsonCompetition, RankingRuleSet } from "../../public_api";
+import { CustomSport, GameMode, JsonCompetition, AgainstRuleSet } from "../../public_api";
 
 export const jsonBaseCompetition: JsonCompetition = {
     id: 0,
@@ -49,5 +49,5 @@ export const jsonBaseCompetition: JsonCompetition = {
     referees: [],
     startDateTime: '2030-01-01T12:00:00.000Z',
     state: 1,
-    rankingRuleSet: RankingRuleSet.Against
+    againstRuleSet: AgainstRuleSet.DiffFirst
 };

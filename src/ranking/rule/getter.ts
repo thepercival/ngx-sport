@@ -1,18 +1,18 @@
 import { RankingRule } from "../rule";
-import { RankingRuleSet } from "../ruleSet";
+import { AgainstRuleSet } from "../againstRuleSet";
 
 export class RankingRuleGetter {
 
-    getRules(ruleSet: RankingRuleSet, useSubScore: boolean): RankingRule[] {
-        if (ruleSet === RankingRuleSet.Together) {
+    getRules(ruleSet: AgainstRuleSet | undefined, useSubScore: boolean): RankingRule[] {
+        if (ruleSet === undefined) {
             return this.getTogetherRules(useSubScore);
         }
         return this.getAgainstRules(ruleSet, useSubScore);
     }
 
-    protected getAgainstRules(ruleSet: RankingRuleSet, useSubScore: boolean): RankingRule[] {
+    protected getAgainstRules(ruleSet: AgainstRuleSet, useSubScore: boolean): RankingRule[] {
         const rules: RankingRule[] = [RankingRule.MostPoints, RankingRule.FewestGames];
-        if (ruleSet === RankingRuleSet.AgainstAmong) {
+        if (ruleSet === AgainstRuleSet.AmongFirst) {
             rules.push(RankingRule.BestAmongEachOther);
         }
         rules.push(RankingRule.BestUnitDifference);
@@ -21,7 +21,7 @@ export class RankingRuleGetter {
             rules.push(RankingRule.BestSubUnitDifference);
             rules.push(RankingRule.MostSubUnitsScored);
         }
-        if (ruleSet === RankingRuleSet.Against) {
+        if (ruleSet === AgainstRuleSet.DiffFirst) {
             rules.push(RankingRule.BestAmongEachOther);
         }
         return rules;

@@ -7,7 +7,7 @@ import { Sport } from './sport';
 import { Association } from './association';
 import { TeamCompetitor } from './competitor/team';
 import { CompetitionSport } from './competition/sport';
-import { RankingRuleSet } from './ranking/ruleSet';
+import { AgainstRuleSet } from './ranking/againstRuleSet';
 import { Identifiable } from './identifiable';
 import { SingleSportVariant } from './sport/variant/single';
 import { AgainstSportVariant } from './sport/variant/against';
@@ -15,7 +15,7 @@ import { AllInOneGameSportVariant } from './sport/variant/all';
 
 export class Competition extends Identifiable {
     protected startDateTime: Date;
-    protected rankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
+    protected againstRuleSet: AgainstRuleSet = AgainstRuleSet.DiffFirst;
     protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sports: CompetitionSport[] = [];
@@ -38,12 +38,12 @@ export class Competition extends Identifiable {
         return this.season;
     }
 
-    getRankingRuleSet(): RankingRuleSet {
-        return this.rankingRuleSet;
+    getAgainstRuleSet(): AgainstRuleSet {
+        return this.againstRuleSet;
     }
 
-    setRankingRuleSet(rankingRuleSet: RankingRuleSet): void {
-        this.rankingRuleSet = rankingRuleSet;
+    setAgainstRuleSet(againstRuleSet: AgainstRuleSet): void {
+        this.againstRuleSet = againstRuleSet;
     }
 
     getStartDateTime(): Date {

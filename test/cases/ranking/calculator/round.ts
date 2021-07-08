@@ -5,7 +5,7 @@ import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singl
 import { jsonBaseCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
-import { PouleStructure, QualifyGroup, QualifyTarget, RankingRuleSet, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public_api';
+import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public_api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
@@ -219,7 +219,7 @@ describe('RoundRankingCalculator', () => {
         expect(places[0].getPouleNr()).to.equal(2);
         expect(places[1].getPouleNr()).to.equal(1);
 
-        competition.setRankingRuleSet(RankingRuleSet.AgainstAmong);
+        competition.setAgainstRuleSet(AgainstRuleSet.AmongFirst);
         const rankingService2 = new RoundRankingCalculator();
         const places2 = rankingService2.getPlacesForHorizontalPoule(firstHorizontalPoule);
 
@@ -359,7 +359,7 @@ describe('RoundRankingCalculator', () => {
         }
         expect(rankingItemSecondPlace.getPlace()).to.equal(pouleOne.getPlace(1));
 
-        competition.setRankingRuleSet(RankingRuleSet.AgainstAmong);
+        competition.setAgainstRuleSet(AgainstRuleSet.AmongFirst);
         const amongRankingCalculator = new RoundRankingCalculator();
         const amongItems = amongRankingCalculator.getItemsForPoule(pouleOne);
 

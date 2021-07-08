@@ -26,6 +26,7 @@ export class LeagueMapper {
     }
 
     updateObject(json: JsonLeague, league: League) {
+        league.setName(json.name);
         league.setAbbreviation(json.abbreviation);
     }
 
