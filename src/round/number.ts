@@ -21,8 +21,6 @@ export class RoundNumber {
     protected planningConfig: PlanningConfig | undefined;
     protected gameAmountConfigs: GameAmountConfig[] = [];
 
-    protected hasPlanning: boolean = false;;
-
     constructor(competition: Competition, protected previous?: RoundNumber) {
         this.competition = competition;
         this.number = this.previous === undefined ? 1 : this.previous.getNumber() + 1;
@@ -248,14 +246,6 @@ export class RoundNumber {
     getLastStartDateTime(): Date {
         const games = this.getGames(GameOrder.ByDate);
         return games[games.length - 1].getStartDateTime();
-    }
-
-    getHasPlanning(): boolean {
-        return this.hasPlanning;
-    }
-
-    setHasPlanning(hasPlanning: boolean) {
-        this.hasPlanning = hasPlanning;
     }
 
     detach() {

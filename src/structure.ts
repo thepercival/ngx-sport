@@ -1,3 +1,4 @@
+import { GameOrder } from './game/order';
 import { Poule } from './poule';
 import { QualifyGroup, Round } from './qualify/group';
 import { QualifyTarget } from './qualify/target';
@@ -61,11 +62,12 @@ export class Structure {
     }
 
     protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
-        const nextRoundNumber = roundNumber.getNext();
-        if (!nextRoundNumber || !roundNumber.getHasPlanning()) {
-            return roundNumber.getHasPlanning();
+        const hasGames = roundNumber.getGames(GameOrder.ByPoule).length > 0;
+        if (!hasGames) {
+            return false;
         }
-        return this.hasRoundNumberPlanning(nextRoundNumber);
+        const nextRoundNumber = roundNumber.getNext();
+        return nextRoundNumber !== undefined && this.hasRoundNumberPlanning(nextRoundNumber);
     }
 
     /* '1W1W2L2L1'

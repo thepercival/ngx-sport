@@ -46,7 +46,7 @@ export class StructureMapper {
 
     protected planningToRoundNumber(roundNumber: RoundNumber, sportMap: CompetitionSportMap): void {
         const jsonPoules = this.poulesMap[roundNumber.getNumber()];
-        roundNumber.setHasPlanning(this.planningMapper.toObject(jsonPoules, roundNumber, sportMap));
+        this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
         const nextRoundNumber = roundNumber.getNext();
         if (nextRoundNumber) {
             this.planningToRoundNumber(nextRoundNumber, sportMap);
