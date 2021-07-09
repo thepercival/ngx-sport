@@ -57,17 +57,16 @@ export class Structure {
         return getRoundNumber(initRoundNumberAsValue, this.getFirstRoundNumber());
     }
 
-    hasPlanning(): boolean {
-        return this.hasRoundNumberPlanning(this.getFirstRoundNumber());
+    allPoulesHaveGames(): boolean {
+        return this.hasRoundNumberGames(this.getFirstRoundNumber());
     }
 
-    protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
-        const hasGames = roundNumber.getGames(GameOrder.ByPoule).length > 0;
-        if (!hasGames) {
+    protected hasRoundNumberGames(roundNumber: RoundNumber): boolean {
+        if (!roundNumber.allPoulesHaveGames()) {
             return false;
         }
         const nextRoundNumber = roundNumber.getNext();
-        return nextRoundNumber !== undefined && this.hasRoundNumberPlanning(nextRoundNumber);
+        return nextRoundNumber === undefined || this.hasRoundNumberGames(nextRoundNumber);
     }
 
     /* '1W1W2L2L1'

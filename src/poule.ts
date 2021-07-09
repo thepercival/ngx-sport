@@ -69,6 +69,10 @@ export class Poule extends Identifiable {
         return this.togetherGames;
     }
 
+    getNrOfGames(): number {
+        return this.getAgainstGames().length + this.getTogetherGames().length;
+    }
+
     getStructureLocation(): string {
         return this.getRound().getStructurePathNode().pathToString() + '.' + this.getNumber();
     }
@@ -89,9 +93,10 @@ export class Poule extends Identifiable {
     // }
 
     getState(): number {
-        if (this.getGames().length > 0 && this.getGames().every((game: AgainstGame | TogetherGame) => game.getState() === State.Finished)) {
+        const games = this.getGames();
+        if (games.length > 0 && games.every((game: AgainstGame | TogetherGame) => game.getState() === State.Finished)) {
             return State.Finished;
-        } else if (this.getGames().some((game: Game) => game.getState() !== State.Created)) {
+        } else if (games.some((game: Game) => game.getState() !== State.Created)) {
             return State.InProgress;
         }
         return State.Created;

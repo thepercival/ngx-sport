@@ -300,7 +300,7 @@ export class Round extends Identifiable {
     getNrOfGames(): number {
         let nrOfGames = 0;
         this.getPoules().forEach(poule => {
-            nrOfGames += poule.getGames().length;
+            nrOfGames += poule.getNrOfGames();
         });
         return nrOfGames;
     }

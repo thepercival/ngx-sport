@@ -157,6 +157,14 @@ export class RoundNumber {
         return games;
     }
 
+    allPoulesHaveGames(): boolean {
+        return this.getRounds().every((round: Round) => {
+            return round.getPoules().every((poule: Poule) => {
+                return poule.getNrOfGames() > 0;
+            });
+        });
+    }
+
     getNrOfGames(): number {
         let nrOfGames = 0;
         this.getRounds().forEach(round => {
