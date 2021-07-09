@@ -80,6 +80,7 @@ export class Structure {
          return getStructurePathNode(this.rootRound, structurePath)
      }
  
+ 
      convertStringToStructurePathNode(pathNodeAsString: string): StructurePathNode {
  
  
