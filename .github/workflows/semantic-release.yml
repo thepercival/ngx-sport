@@ -6,7 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - run: npm ci && npm run test
+      - run: npm ci && npm run build && npm run test
       - run: npx semantic-release
         env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
           GITHUB_TOKEN: ${{secrets.REPO_ACCESS_TOKEN}}
