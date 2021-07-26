@@ -110,5 +110,7 @@
     "report-dir": "coverage/reports",
     "temp-dir": "coverage/.nyc_output"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@semantic-release/changelog": "^5.0.1"
+  }
 }
