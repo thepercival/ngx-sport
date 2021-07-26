@@ -54,7 +54,7 @@
     "voetbal",
     "sport",
     "library",
-    "bibliotheek"
+    "bibliotheek voor sporten"
   ],
   "license": "ISC",
   "main": "./bundles/ngx-sport.umd.js",
