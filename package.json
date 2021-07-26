@@ -6,7 +6,7 @@
   "bugs": {
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "sideAffects": false,
   "peerDependencies": {},
   "devDependencies": {
@@ -33,7 +33,7 @@
     "nyc": "github:istanbuljs/nyc",
     "rollup": "^2.48.0",
     "rxjs": "^6.6",
-    "semantic-release": "^17.4",
+    "semantic-release": "^17.4.4",
     "travis-deploy-once": "^5.0",
     "ts-node": "^9.1",
     "tslib": "^2.2",
@@ -109,27 +109,6 @@
     ],
     "report-dir": "coverage/reports",
     "temp-dir": "coverage/.nyc_output"
-  },
-  "release": {
-    "verifyConditions": [
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ],
-    "getLastRelease": "@semantic-release/npm",
-    "prepare": [
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json"
-        ]
-      }
-    ],
-    "publish": [
-      {
-        "path": "@semantic-release/npm",
-        "pkgRoot": "dist"
-      }
-    ]
   },
   "dependencies": {}
 }
