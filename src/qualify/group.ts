@@ -356,14 +356,10 @@ export class Round extends Identifiable {
             return scoreConfig;
         }
         const parent = this.getParent();
-        if (!parent) {
-            throw Error('de ronde heeft geen geldige score-regels');
+        if (parent === undefined) {
+            throw Error('de score-regels kunnen niet gevonden worden');
         }
-        const parentScoreConfig = parent.getScoreConfig(competitionSport);
-        if (!parentScoreConfig) {
-            throw Error('de ronde heeft geen geldige score-regels');
-        }
-        return parentScoreConfig;
+        return parent.getValidScoreConfig(competitionSport);
     }
 
     getAgainstQualifyConfigs(): AgainstQualifyConfig[] {
@@ -388,14 +384,10 @@ export class Round extends Identifiable {
             return againstQualifyConfig;
         }
         const parent = this.getParent();
-        if (!parent) {
-            throw Error('de ronde heeft geen geldige punten-instellingen');
+        if (parent === undefined) {
+            throw Error('de punten-regels kunnen niet gevonden worden');
         }
-        const parentAgainstQualifyConfig = parent.getAgainstQualifyConfig(competitionSport);
-        if (!parentAgainstQualifyConfig) {
-            throw Error('de ronde heeft geen geldige punten-instellingen');
-        }
-        return parentAgainstQualifyConfig;
+        return parent.getValidAgainstQualifyConfig(competitionSport);
     }
 
     hasAncestor(ancestor: Round): boolean {
