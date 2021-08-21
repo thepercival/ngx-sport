@@ -69,18 +69,21 @@ export class StructureMapper {
 
     protected initJsonPoulesMap(jsonRounds: JsonRound[], roundNumber: RoundNumber): void {
         const nextRoundNumber = roundNumber.getNext();
-        this.poulesMap[roundNumber.getNumber()] = [];
+        if (this.poulesMap[roundNumber.getNumber()] === undefined) {
+            this.poulesMap[roundNumber.getNumber()] = [];
+        }
         jsonRounds.forEach((jsonRound: JsonRound) => {
             jsonRound.poules.forEach((jsonPoule: JsonPoule) => {
                 this.poulesMap[roundNumber.getNumber()].push(jsonPoule);
 
             });
-            if (nextRoundNumber) {
-                const jsonChildRounds = jsonRound.qualifyGroups.map((jsonQualifyGroup: JsonQualifyGroup): JsonRound => {
-                    return jsonQualifyGroup.childRound;
-                });
-                this.initJsonPoulesMap(jsonChildRounds, nextRoundNumber);
+            if (nextRoundNumber === undefined) {
+                return;
             }
+            const jsonChildRounds = jsonRound.qualifyGroups.map((jsonQualifyGroup: JsonQualifyGroup): JsonRound => {
+                return jsonQualifyGroup.childRound;
+            });
+            this.initJsonPoulesMap(jsonChildRounds, nextRoundNumber);
         });
     }
 
