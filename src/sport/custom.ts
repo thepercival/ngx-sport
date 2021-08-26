@@ -15,8 +15,5 @@ export enum CustomSport {
     IceHockey,
     Shuffleboard,
     Jass,
-    BadmintonDouble,
-    SquashDouble,
-    TennisDouble,
-    TableTennisDouble,
+    Padel,
 }

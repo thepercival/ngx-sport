@@ -42,10 +42,7 @@ export class ScoreConfigService {
             || customId === CustomSport.TableTennis
             || customId === CustomSport.Tennis
             || customId === CustomSport.Volleyball
-            || customId === CustomSport.SquashDouble
-            || customId === CustomSport.TableTennisDouble
-            || customId === CustomSport.TennisDouble
-            || customId === CustomSport.BadmintonDouble
+            || customId === CustomSport.Padel
         ) {
             return true;
         }
