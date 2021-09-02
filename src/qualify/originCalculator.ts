@@ -7,6 +7,8 @@ import { SingleQualifyRule } from "./rule/single";
  */
 export class QualifyOriginCalculator {
 
+    private possiblePreviousPoulesMap: PreviousPoulesMap = {};
+
     getPossibleOverlapses(poule1: Poule, poule2: Poule): number {
         const possibleOriginsMap = new OriginMap();
         this.addPossibleOrigin(poule1, possibleOriginsMap);
@@ -56,14 +58,21 @@ export class QualifyOriginCalculator {
     }
 
     protected getPossiblePreviousPoules(poule: Poule): Poule[] {
+        const strucureLocation = poule.getStructureLocation();
+        if (this.possiblePreviousPoulesMap[strucureLocation] !== undefined) {
+            return this.possiblePreviousPoulesMap[strucureLocation];
+        }
+
+        let possiblePreviousPoules: Poule[] = [];
         const parentQualifyGroup = poule.getRound().getParentQualifyGroup();
         if (parentQualifyGroup !== undefined && parentQualifyGroup.getMultipleRule() !== undefined) {
-            return parentQualifyGroup.getParentRound().getPoules();
+            possiblePreviousPoules = parentQualifyGroup.getParentRound().getPoules();
+        } else {
+            poule.getPlaces().forEach((place: Place) => {
+                possiblePreviousPoules = possiblePreviousPoules.concat(this.getPlacePossiblePreviousPoules(place));
+            });
         }
-        let possiblePreviousPoules: Poule[] = [];
-        poule.getPlaces().forEach((place: Place) => {
-            possiblePreviousPoules = possiblePreviousPoules.concat(this.getPlacePossiblePreviousPoules(place));
-        });
+        this.possiblePreviousPoulesMap[strucureLocation] = possiblePreviousPoules;
         return possiblePreviousPoules;
     }
 
@@ -85,3 +94,7 @@ export class QualifyOriginCalculator {
 }
 
 class OriginMap extends Map<string, Poule> { }
+
+interface PreviousPoulesMap {
+    [key: string]: Poule[];
+}

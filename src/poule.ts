@@ -13,11 +13,13 @@ export class Poule extends Identifiable {
     protected places: Place[] = [];
     protected againstGames: AgainstGame[] = [];
     protected togetherGames: TogetherGame[] = [];
+    protected structureLocation: string;
 
     constructor(protected round: Round, number?: number) {
         super();
         this.round.getPoules().push(this);
         this.number = number ? number : (round.getPoules().length);
+        this.structureLocation = round.getStructurePathNode().pathToString() + '.' + this.number;
     }
 
     getRound(): Round {
@@ -74,7 +76,7 @@ export class Poule extends Identifiable {
     }
 
     getStructureLocation(): string {
-        return this.getRound().getStructurePathNode().pathToString() + '.' + this.getNumber();
+        return this.structureLocation;
     }
 
     // getTogetherGamePlaces(place?: Place): TogetherGamePlace[] {
