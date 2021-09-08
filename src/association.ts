@@ -11,6 +11,7 @@ export class Association {
     protected parent: Association | undefined;
     protected children: Association[] = [];
     protected teams: Team[] = [];
+    // fix
 
     constructor(protected name: string, parent?: Association) {
         if (parent !== undefined) {
