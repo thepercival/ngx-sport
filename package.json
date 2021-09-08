@@ -8,7 +8,6 @@
   },
   "version": "1.0.12",
   "sideAffects": false,
-  "peerDependencies": {},
   "devDependencies": {
     "@angular-devkit/schematics": "^12.0",
     "@angular/common": "^12.0",
@@ -35,7 +34,7 @@
     "rollup": "^2.48.0",
     "rxjs": "^6.6",
     "semantic-release": "^17.4.4",
-    "travis-deploy-once": "^5.0",
+    "travis-deploy-once": "^3.3.0",
     "ts-node": "^9.1",
     "tslib": "^2.2",
     "typescript": "4.2.4",
@@ -110,6 +109,5 @@
     ],
     "report-dir": "coverage/reports",
     "temp-dir": "coverage/.nyc_output"
-  },
-  "dependencies": {}
+  }
 }

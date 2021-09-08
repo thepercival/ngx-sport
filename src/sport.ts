@@ -35,11 +35,11 @@ export class Sport extends Identifiable {
         return this.defaultNrOfSidePlaces;
     }
 
-    getCustomId(): CustomSport {
+    getCustomId(): CustomSport | 0 {
         return this.customId;
     }
 
-    setCustomId(id: CustomSport): void {
+    setCustomId(id: CustomSport | 0): void {
         this.customId = id;
     }
 }
