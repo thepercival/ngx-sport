@@ -30,7 +30,6 @@
     "karma-jasmine-html-reporter": "^1.6",
     "mocha": "^8.4.0",
     "ng-packagr": "^12.0.0",
-    "nyc": "github:istanbuljs/nyc",
     "rollup": "^2.48.0",
     "rxjs": "^6.6",
     "semantic-release": "^17.4.4",
