@@ -8,10 +8,9 @@ jobs:
         with:
           key: ${{secrets.SSH_TOKEN}}
           #name: id_rsa # optional
-          #known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          known_hosts: ${{secrets.KNOWN_HOSTS}}
           #config: ${{ secrets.CONFIG }} # ssh_config; optional
           #if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
-
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - run: npm ci && npm run build && npm run test
