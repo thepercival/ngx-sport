@@ -3,7 +3,7 @@ import { JsonPeriod } from '../../period/json';
 import { JsonTeam } from "../json";
 
 export interface JsonPlayer extends JsonPeriod {
-    id: number;
+    id: string | number;
     team: JsonTeam;
     line: number;
     person?: JsonPerson;

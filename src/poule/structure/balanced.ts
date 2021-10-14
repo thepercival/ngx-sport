@@ -4,7 +4,7 @@ export class BalancedPouleStructure extends PouleStructure {
     constructor(...nrOfPlaces: number[]) {
         super(...nrOfPlaces);
         if (this.getBiggestPoule() - this.getSmallestPoule() > 1) {
-            new Error('this poulestructure is not balanced');
+            throw new Error('this poulestructure is not balanced');
         }
     }
 

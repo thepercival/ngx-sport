@@ -1,20 +1,14 @@
+import { Identifiable } from '../identifiable';
 import { Period } from '../period';
 import { Person } from '../person';
 import { Team } from '../team';
 
-export class Player {
+export class Player extends Identifiable {
     protected id: number = 0;
 
     constructor(protected team: Team, protected person: Person, protected period: Period, protected line: number) {
+        super();
         person.getPlayers().push(this);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     public getTeam(): Team {
