@@ -6,7 +6,6 @@ export class Team extends Identifiable {
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_INFO = 200;
-    static readonly MAX_LENGTH_IMAGEURL = 150;
 
     protected abbreviation: string | undefined;
 
