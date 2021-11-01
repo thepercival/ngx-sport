@@ -1,10 +1,9 @@
+import { JsonIdentifiable } from "../identifiable/json";
 import { JsonPlayer } from "../team/player/json";
 
-export interface JsonPerson {
-    id: number;
+export interface JsonPerson extends JsonIdentifiable {
     firstName: string;
     nameInsertion?: string;
     lastName: string;
-    imageUrl?: string;
     players?: JsonPlayer[];
 }

@@ -1,6 +1,6 @@
-export interface JsonTeam {
+import { JsonIdentifiable } from "../identifiable/json";
+
+export interface JsonTeam extends JsonIdentifiable {
     name: string;
-    id: string | number;
     abbreviation?: string;
-    imageUrl?: string;
 }

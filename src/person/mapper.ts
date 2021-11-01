@@ -19,7 +19,7 @@ export class PersonMapper {
     }
 
     toObject(json: JsonPerson, association: Association, disableCache?: boolean): Person {
-        let cachedPerson = (disableCache !== true) ? this.cache.get(json.id) : undefined;
+        let cachedPerson = (disableCache !== true) ? this.cache.get(+json.id) : undefined;
         let person: Person;
         if (cachedPerson === undefined) {
             person = this.createObject(json);
@@ -27,9 +27,6 @@ export class PersonMapper {
             this.cache.set(+person.getId(), person);
         } else {
             person = cachedPerson;
-        }
-        if (json.imageUrl) {
-            person.setImageUrl(json.imageUrl);
         }
         if (json.players) {
             json.players.forEach(jsonPlayer => this.playerMapper.toObject(jsonPlayer, association, person));
