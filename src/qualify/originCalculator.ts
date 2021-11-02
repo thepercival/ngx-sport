@@ -7,7 +7,7 @@ import { SingleQualifyRule } from "./rule/single";
  */
 export class QualifyOriginCalculator {
 
-    private possiblePreviousPoulesMap: PreviousPoulesMap = {};
+    // private possiblePreviousPoulesMap: PreviousPoulesMap = {};
 
     getPossibleOverlapses(poule1: Poule, poule2: Poule): number {
         const possibleOriginsMap = new OriginMap();
@@ -59,9 +59,9 @@ export class QualifyOriginCalculator {
 
     protected getPossiblePreviousPoules(poule: Poule): Poule[] {
         const strucureLocation = poule.getStructureLocation();
-        if (this.possiblePreviousPoulesMap[strucureLocation] !== undefined) {
-            return this.possiblePreviousPoulesMap[strucureLocation];
-        }
+        // if (this.possiblePreviousPoulesMap[strucureLocation] !== undefined) {
+        //     return this.possiblePreviousPoulesMap[strucureLocation];
+        // }
 
         let possiblePreviousPoules: Poule[] = [];
         const parentQualifyGroup = poule.getRound().getParentQualifyGroup();
@@ -72,7 +72,7 @@ export class QualifyOriginCalculator {
                 possiblePreviousPoules = possiblePreviousPoules.concat(this.getPlacePossiblePreviousPoules(place));
             });
         }
-        this.possiblePreviousPoulesMap[strucureLocation] = possiblePreviousPoules;
+        // this.possiblePreviousPoulesMap[strucureLocation] = possiblePreviousPoules;
         return possiblePreviousPoules;
     }
 

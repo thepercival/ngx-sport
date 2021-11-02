@@ -15,7 +15,7 @@
                 "${workspaceFolder}/test/hook.js",
                 "--colors",
                 "--recursive",
-                "${workspaceFolder}/test/cases/cdk.ts"
+                "${workspaceFolder}/test/cases/qualify/rule/defaultCreator.ts"
             ],
             "env": {
                 "NODE_ENV": "development",
