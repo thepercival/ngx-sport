@@ -89,7 +89,7 @@ describe('DefaultQualifyRuleCreator', () => {
             throw Error('lastQualifyGroup can not be undefined');
         }
 
-        (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).output(structure, console);
 
         quarterFinal.getPoules().forEach((poule: Poule) => {
             // fromPlace1
