@@ -27,17 +27,19 @@ export class QualifyRuleCreator {
                 }
                 const fromRoundHorPoules = parentRound.getHorizontalPoules(target).slice();
                 parentRound.getQualifyGroups(target).forEach((qualifyGroup: QualifyGroup) => {
-                    let childRoundPlaces = qualifyGroup.getChildRound().getNrOfPlaces();
+                    const childRound = qualifyGroup.getChildRound();
+                    const defaultCreator = new DefaultQualifyRuleCreator(childRound);
+                    let nrOfChildRoundPlaces = childRound.getNrOfPlaces();
                     const fromHorPoules: HorizontalPoule[] = [];
-                    while (childRoundPlaces > 0) {
+                    while (nrOfChildRoundPlaces > 0) {
                         const fromRoundHorPoule = fromRoundHorPoules.shift();
                         if (fromRoundHorPoule === undefined) {
                             throw new Error('fromRoundHorPoule should not be undefined');
                         }
                         fromHorPoules.push(fromRoundHorPoule);
-                        childRoundPlaces -= fromRoundHorPoule.getPlaces().length;
+                        nrOfChildRoundPlaces -= fromRoundHorPoule.getPlaces().length;
                     }
-                    (new DefaultQualifyRuleCreator()).createRules(fromHorPoules, qualifyGroup);
+                    defaultCreator.createRules(fromHorPoules, qualifyGroup);
                 });
             })
         });

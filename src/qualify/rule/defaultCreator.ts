@@ -1,9 +1,11 @@
 import { Place } from "../../place";
 import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
+import { FromPoulePicker } from "../fromPoulePicker";
 import { QualifyGroup, Round } from "../group";
 import { QualifyOriginCalculator } from "../originCalculator";
 import { QualifyPlaceMapping } from "../placeMapping";
+import { PossibleFromMap } from "../possibleFromMap";
 import { QualifyTarget } from "../target";
 import { MultipleQualifyRule } from "./multiple";
 import { SingleQualifyRule } from "./single";
@@ -15,22 +17,26 @@ import { SingleQualifyRule } from "./single";
  */
 export class DefaultQualifyRuleCreator {
 
-    private qualifyOriginCalculator = new QualifyOriginCalculator();
+    private possibleFromMap: PossibleFromMap;
+
+    constructor(leafRound: Round) {
+        this.possibleFromMap = new PossibleFromMap(leafRound);
+    }
 
     createRules(fromHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup) {
         const childRoundPlaces = this.getChildRoundPlacesLikeSnake(qualifyGroup);
         let fromHorPoule: HorizontalPoule | undefined = fromHorPoules.shift();
         let previousRule: SingleQualifyRule | undefined;
-        while (fromHorPoule !== undefined && childRoundPlaces.length > 0) {
+        while (fromHorPoule !== undefined && childRoundPlaces.length >= fromHorPoule.getPlaces().length) {
             const toPlaces = childRoundPlaces.splice(0, fromHorPoule.getPlaces().length);
-            if (fromHorPoule.getPlaces().length > toPlaces.length) {
-                new MultipleQualifyRule(fromHorPoule, qualifyGroup, toPlaces);
-            } else {
-                const placeMappings = this.createPlaceMappings(fromHorPoule, toPlaces);
-                previousRule = new SingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previousRule);
-            }
+            const placeMappings = this.createPlaceMappings(fromHorPoule, toPlaces);
+            previousRule = new SingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previousRule);
             fromHorPoule = fromHorPoules.shift();
         }
+        if (fromHorPoule !== undefined && childRoundPlaces.length > 0 && childRoundPlaces !== undefined) {
+            new MultipleQualifyRule(fromHorPoule, qualifyGroup, childRoundPlaces);
+        }
+
     }
 
     protected getChildRoundPlacesLikeSnake(qualifyGroup: QualifyGroup): Place[] {
@@ -50,77 +56,36 @@ export class DefaultQualifyRuleCreator {
     }
 
     createPlaceMappings(fromHorPoule: HorizontalPoule, childRoundPlaces: Place[]): QualifyPlaceMapping[] {
+        const picker = new FromPoulePicker(this.possibleFromMap);
         const mappings: QualifyPlaceMapping[] = [];
         const fromHorPoulePlaces = fromHorPoule.getPlaces().slice();
         let childRoundPlace: Place | undefined;
         while (childRoundPlace = childRoundPlaces.shift()) {
-            const fromHorPoulePlace = this.getBestPick(childRoundPlace, fromHorPoulePlaces, childRoundPlaces);
-            const idx = fromHorPoulePlaces.indexOf(fromHorPoulePlace);
-            if (idx < 0) {
-                continue;
-            }
-            fromHorPoulePlaces.splice(idx, 1);
-            mappings.push(new QualifyPlaceMapping(fromHorPoulePlace, childRoundPlace));
+            const bestFromPoule = picker.getBestFromPoule(
+                childRoundPlace.getPoule(),
+                fromHorPoulePlaces.map((place: Place) => place.getPoule()),
+                childRoundPlaces.map((place: Place) => place.getPoule()));
+
+            const bestFromPlace = this.removeBestHorizontalPlace(fromHorPoulePlaces, bestFromPoule);
+            const placeMapping = new QualifyPlaceMapping(bestFromPlace, childRoundPlace);
+            mappings.push(placeMapping);
+            this.possibleFromMap.addPlaceMapping(placeMapping);
         }
         return mappings;
     }
 
-    protected getBestPick(childRoundPlace: Place, fromHorPoulePlaces: Place[], otherChildRoundPlaces: Place[]): Place {
-        const fromHorPoulePlacesWithFewestPouleOrigins = this.getFewestOverlappingPouleOrigins(childRoundPlace.getPoule(), fromHorPoulePlaces);
-        if (fromHorPoulePlacesWithFewestPouleOrigins.length === 1) {
-            return fromHorPoulePlacesWithFewestPouleOrigins[0];
+    protected removeBestHorizontalPlace(fromHorPoulePlaces: Place[], bestFromPoule: Poule): Place {
+        const bestPouleNr = bestFromPoule.getNumber();
+        const fromPlaces = fromHorPoulePlaces.filter((place: Place) => place.getPouleNr() === bestPouleNr);
+        const bestFromPlace = fromPlaces[0];
+        if (bestFromPlace === undefined) {
+            throw new Error('fromPlace should be found');
         }
-        const otherChildRoundPoules = this.getOtherChildRoundPoules(otherChildRoundPlaces);
-        const fromHorPoulePlacesWithMostOtherPouleOrigins = this.getMostOtherOverlappingPouleOrigins(
-            otherChildRoundPoules, fromHorPoulePlacesWithFewestPouleOrigins)
-        return fromHorPoulePlacesWithMostOtherPouleOrigins[0];
-    }
-
-    protected getFewestOverlappingPouleOrigins(toPoule: Poule, fromHorPoulePlaces: Place[]): Place[] {
-        let bestFromPlaces: Place[] = [];
-        let fewestOverlappingOrigins: number | undefined;
-        fromHorPoulePlaces.forEach((fromHorPoulePlace: Place) => {
-            const nrOfOverlappingOrigins = this.getPossibleOverlapses(fromHorPoulePlace.getPoule(), [toPoule]);
-            if (fewestOverlappingOrigins === undefined || nrOfOverlappingOrigins < fewestOverlappingOrigins) {
-                bestFromPlaces = [fromHorPoulePlace];
-                fewestOverlappingOrigins = nrOfOverlappingOrigins;
-            } else if (fewestOverlappingOrigins === nrOfOverlappingOrigins) {
-                bestFromPlaces.push(fromHorPoulePlace);
-            }
-        });
-        return bestFromPlaces;
-    }
-
-    protected getOtherChildRoundPoules(otherChildRoundPlaces: Place[]): Poule[] {
-        const poules: Poule[] = [];
-        otherChildRoundPlaces.forEach((place: Place) => {
-            if (poules.indexOf(place.getPoule()) < 0) {
-                poules.push(place.getPoule());
-            }
-        });
-        return poules;
-    }
-
-    protected getMostOtherOverlappingPouleOrigins(otherChildRoundPoules: Poule[], fromHorPoulePlaces: Place[]): Place[] {
-        let bestFromPlaces: Place[] = [];
-        let mostOverlappingOrigins: number | undefined;
-        fromHorPoulePlaces.forEach((fromHorPoulePlace: Place) => {
-            const nrOfOverlappingOrigins = this.getPossibleOverlapses(fromHorPoulePlace.getPoule(), otherChildRoundPoules);
-            if (mostOverlappingOrigins === undefined || nrOfOverlappingOrigins > mostOverlappingOrigins) {
-                bestFromPlaces = [fromHorPoulePlace];
-                mostOverlappingOrigins = nrOfOverlappingOrigins;
-            } else if (mostOverlappingOrigins === nrOfOverlappingOrigins) {
-                bestFromPlaces.push(fromHorPoulePlace);
-            }
-        });
-        return bestFromPlaces;
-    }
-
-    protected getPossibleOverlapses(fromPoule: Poule, toPoules: Poule[]): number {
-        let nrOfOverlapses = 0;
-        toPoules.forEach((toPoule: Poule) => {
-            nrOfOverlapses += this.qualifyOriginCalculator.getPossibleOverlapses(fromPoule, toPoule);
-        });
-        return nrOfOverlapses;
+        const idx = fromHorPoulePlaces.indexOf(bestFromPlace);
+        if (idx < 0) {
+            throw new Error('fromPlace should be found');
+        }
+        fromHorPoulePlaces.splice(idx, 1);
+        return bestFromPlace;
     }
 }

@@ -4,6 +4,7 @@ import { QualifyRule } from '../rule';
 import { QualifyGroup } from '../group';
 
 export class MultipleQualifyRule extends QualifyRule {
+
     constructor(fromHorizontalPoule: HorizontalPoule, group: QualifyGroup, private toPlaces: Place[]) {
         super(fromHorizontalPoule/*, group*/);
         this.fromHorizontalPoule.setQualifyRule(this);
