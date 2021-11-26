@@ -5,12 +5,13 @@ import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
 import { State } from '../state';
 import { PouleStructure } from '../poule/structure';
-import { Round } from '../qualify/group';
+import { QualifyGroup, Round } from '../qualify/group';
 import { GameAmountConfig } from '../planning/gameAmountConfig';
 import { CompetitionSport } from '../competition/sport';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
 import { GameOrder } from '../game/order';
+import { QualifyTarget } from '../qualify/target';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -125,15 +126,43 @@ export class RoundNumber {
         this.getPoules().forEach(poule => {
             games = games.concat(poule.getGames());
         });
+
+
+
+        const baseSort = (g1: TogetherGame | AgainstGame, g2: TogetherGame | AgainstGame): number => {
+            // const qualifySort = (
+            //     qualifyG1: QualifyGroup | undefined, qualifyG2: QualifyGroup | undefined): number => {
+            //     if (qualifyG1 === undefined || qualifyG2 === undefined) {
+            //         return 0;
+            //     }
+            //     if (qualifyG1.getTarget() === QualifyTarget.Winners && qualifyG2.getTarget() !== QualifyTarget.Winners) {
+            //         return 1;
+            //     }
+            //     if (qualifyG2.getTarget() === QualifyTarget.Winners && qualifyG1.getTarget() !== QualifyTarget.Winners) {
+            //         return -1;
+            //     }
+            //     if (qualifyG1.getTarget() === QualifyTarget.Winners) {
+            //         return qualifyG2.getNumber() - qualifyG1.getNumber();
+            //     }
+            //     return qualifyG1.getNumber() - qualifyG2.getNumber();
+            // };
+            // const qualifySorted = qualifySort(g1.getRound().getParentQualifyGroup(), g2.getRound().getParentQualifyGroup());
+            // if (qualifySorted !== 0) {
+            //     return qualifySorted;
+            // }
+            const field1 = g1.getField();
+            const field2 = g2.getField();
+            if (field1 === undefined || field2 === undefined) {
+                return 0;
+            }
+            const retVal = field1.getPriority() - field2.getPriority();
+            return this.isFirst() ? retVal : -retVal;
+        };
+
         if (order === GameOrder.ByBatch) {
             games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
                 if (g1.getBatchNr() === g2.getBatchNr()) {
-                    const field1 = g1.getField();
-                    const field2 = g2.getField();
-                    if (field1 && field2) {
-                        const retVal = field1.getPriority() - field2.getPriority();
-                        return this.isFirst() ? retVal : -retVal;
-                    }
+                    return baseSort(g1, g2);
                 }
                 return g1.getBatchNr() - g2.getBatchNr();
             });
@@ -143,12 +172,7 @@ export class RoundNumber {
                     const date1 = g1.getStartDateTime()?.getTime() ?? 0;
                     const date2 = g2.getStartDateTime()?.getTime() ?? 0;
                     if (date1 === date2) {
-                        const field1 = g1.getField();
-                        const field2 = g2.getField();
-                        if (field1 && field2) {
-                            const retVal = field1.getPriority() - field2.getPriority();
-                            return this.isFirst() ? retVal : -retVal;
-                        }
+                        return baseSort(g1, g2);
                     }
                     return date1 - date2;
                 });
