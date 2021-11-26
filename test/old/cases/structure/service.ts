@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { QualifyTarget, StructureEditor } from '../../../../public_api';
-import { QualifyGroup, HorizontalPoule } from '../../../../public_api';
+import { QualifyTarget, StructureEditor } from '../../../../public-api';
+import { QualifyGroup, HorizontalPoule } from '../../../../public-api';
 import { getMapper } from '../../../helpers/singletonCreator';
 import { jsonCompetition } from '../../../data/competition';
 import { check332astructure } from './332a';

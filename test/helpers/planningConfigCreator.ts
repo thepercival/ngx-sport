@@ -1,4 +1,4 @@
-import { JsonPlanningConfig, SelfReferee } from '../../public_api';
+import { JsonPlanningConfig, SelfReferee } from '../../public-api';
 import { PlanningEditMode } from '../../src/planning/editMode';
 import { GamePlaceStrategy } from '../../src/planning/strategy';
 

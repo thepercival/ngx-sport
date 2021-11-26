@@ -8,9 +8,9 @@ import { MultipleQualifyRule } from './rule/multiple';
 import { SingleQualifyRule } from './rule/single';
 import { State } from '../state';
 import { RoundRankingCalculator } from '../ranking/calculator/round';
-import { RoundRankingItem } from '../../public_api';
 import { QualifyTarget } from './target';
 import { QualifyPlaceMapping } from './placeMapping';
+import { RoundRankingItem } from '../ranking/item/round';
 
 export class QualifyService {
     private roundRankingCalculator: RoundRankingCalculator;

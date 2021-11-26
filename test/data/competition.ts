@@ -1,4 +1,4 @@
-import { CustomSport, GameMode, JsonCompetition, AgainstRuleSet } from "../../public_api";
+import { CustomSport, GameMode, JsonCompetition, AgainstRuleSet } from "../../public-api";
 
 export const jsonBaseCompetition: JsonCompetition = {
     id: 0,

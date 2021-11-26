@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { Association, Competition, League, Season, State } from '../../public_api';
+import { Association, Competition, League, Season, State } from '../../public-api';
 
 describe('Competition', () => {
     it('StartDateTime/Season', () => {

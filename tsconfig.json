@@ -1,6 +1,5 @@
 {
     "angularCompilerOptions": {
-        "enableIvy": false,
         "skipTemplateCodegen": true,
         "strictMetadataEmit": true,
         "fullTemplateTypeCheck": true,

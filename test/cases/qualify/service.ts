@@ -8,7 +8,7 @@ import {
     QualifyService,
     QualifyTarget,
     StructureEditor,
-} from '../../../public_api';
+} from '../../../public-api';
 import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createGames } from '../../helpers/gamescreator';

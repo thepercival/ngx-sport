@@ -1,4 +1,4 @@
-import { AgainstGame, AgainstScore, AgainstSide, Game, Poule, State } from "../../public_api";
+import { AgainstGame, AgainstScore, AgainstSide, Game, Poule, State } from "../../public-api";
 import { GamePhase } from "../../src/game/phase";
 
 export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number

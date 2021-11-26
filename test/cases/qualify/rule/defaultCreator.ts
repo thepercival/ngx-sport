@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, Place, Poule, QualifyTarget } from '../../../../public_api';
+import { BalancedPouleStructure, Place, Poule, QualifyTarget } from '../../../../public-api';
 import { QualifyOriginCalculator } from '../../../../src/qualify/originCalculator';
 import { QualifyRuleCreator } from '../../../../src/qualify/rule/creator';
 import { DefaultQualifyRuleCreator } from '../../../../src/qualify/rule/defaultCreator';

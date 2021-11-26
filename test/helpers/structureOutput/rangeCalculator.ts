@@ -1,4 +1,4 @@
-import { NameService, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public_api";
+import { NameService, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
 import { QualifyTarget } from "../../../src/qualify/target";
 
 export class RangeCalculator {

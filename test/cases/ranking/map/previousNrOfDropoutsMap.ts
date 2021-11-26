@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
-import { PouleStructure, QualifyTarget, Round } from '../../../../public_api';
+import { PouleStructure, QualifyTarget, Round } from '../../../../public-api';
 import { PreviousNrOfDropoutsMap } from '../../../../src/ranking/map/previousNrOfDropouts';
 import { StructureOutput } from '../../../helpers/structureOutput';
 

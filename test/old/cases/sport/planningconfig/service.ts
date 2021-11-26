@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import {
     Competition,
     StructureEditor,
-} from '../../../../../public_api';
+} from '../../../../../public-api';
 
 
 import { jsonCompetition } from '../../../../data/competition';

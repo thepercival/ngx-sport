@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { CompetitorMap, EndRankingCalculator, PouleStructure, QualifyGroup, QualifyService, QualifyTarget } from '../../../../public_api';
+import { CompetitorMap, EndRankingCalculator, PouleStructure, QualifyGroup, QualifyService, QualifyTarget } from '../../../../public-api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';

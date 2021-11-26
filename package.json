@@ -9,18 +9,18 @@
   "version": "1.0.12",
   "sideAffects": false,
   "devDependencies": {
-    "@angular-devkit/schematics": "^12.2.12",
-    "@angular/common": "^12.2.12",
-    "@angular/compiler": "^12.2.12",
-    "@angular/compiler-cli": "^12.2.12",
-    "@angular/core": "^12.2.12",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0",
-    "@semantic-release/npm": "^7.1",
+    "@angular-devkit/schematics": "^13.0.3",
+    "@angular/common": "^13.0.2",
+    "@angular/compiler": "^13.0.2",
+    "@angular/compiler-cli": "^13.0.2",
+    "@angular/core": "^13.0.2",
+    "@semantic-release/changelog": "^6.0",
+    "@semantic-release/git": "^10.0",
+    "@semantic-release/npm": "^8.0",
     "@types/chai": "^4.2.22",
-    "@types/mocha": "^8.2",
+    "@types/mocha": "^9.0",
     "chai": "^4.3",
-    "chalk": "^2.4",
+    "chalk": "^5.0",
     "chokidar": "^3.5.1",
     "colors": "^1.4",
     "cross-env": "^7.0",
@@ -28,13 +28,12 @@
     "karma": "^6.3.6",
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.6",
-    "mocha": "^8.4.0",
-    "ng-packagr": "^12.2.5",
+    "mocha": "^9.1.0",
+    "ng-packagr": "^13.0.8",
     "rollup": "^2.58.3",
-    "rxjs": "^6.6",
-    "semantic-release": "^17.4.4",
-    "travis-deploy-once": "^3.3.0",
-    "ts-node": "^9.1",
+    "rxjs": "^7.4",
+    "semantic-release": "^18.0",
+    "ts-node": "^10.0",
     "tslib": "^2.2",
     "typescript": "4.4.4",
     "zone.js": "^0.11"
@@ -70,7 +69,7 @@
     "url": "https://github.com/thepercival/ngx-sport.git"
   },
   "scripts": {
-    "build": "ng-packagr -p package.json -c tsconfig.json",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.json",
     "build-fct": "npm run build && npm run copy-to-fct",
     "build-sup": "npm run build && npm run copy-to-sup",
     "build-vob": "npm run build && npm run copy-to-vob",
@@ -84,11 +83,6 @@
     "test1": "mocha -r test/hook.js 'test/cases/structure.ts'",
     "profile": "ngc -p tsconfig-profile.json",
     "help": "nyc help"
-  },
-  "ngPackage": {
-    "lib": {
-      "entryFile": "public_api.ts"
-    }
   },
   "sideEffects": false,
   "nyc": {

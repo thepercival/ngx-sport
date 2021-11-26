@@ -5,7 +5,7 @@ import { SingleSportVariant } from '../../../src/sport/variant/single';
 import { Sport } from '../../../src/sport';
 import { GameMode } from '../../../src/planning/gameMode';
 import { BalancedPouleStructure } from '../../../src/poule/structure/balanced';
-import { AgainstSportVariant } from '../../../public_api';
+import { AgainstSportVariant } from '../../../public-api';
 import { AllInOneGameSportVariant } from '../../../src/sport/variant/all';
 import { getCompetitionSportService } from '../../helpers/singletonCreator';
 

@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../data/competition';
 
 import { createGames } from '../helpers/gamescreator';
 import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { NameService, CompetitorMap, Referee, PouleStructure, QualifyTarget } from '../../public_api';
+import { NameService, CompetitorMap, Referee, PouleStructure, QualifyTarget } from '../../public-api';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
 import { StructureOutput } from '../helpers/structureOutput';
 

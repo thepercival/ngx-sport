@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, QualifyTarget } from '../../../public_api';
+import { BalancedPouleStructure, QualifyTarget } from '../../../public-api';
 import { QualifyOriginCalculator } from '../../../src/qualify/originCalculator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';

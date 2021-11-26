@@ -1,4 +1,4 @@
-import { CompetitionSportMap, JsonAgainstGame, Place, PlaceMap, Poule, Round, RoundNumber } from '../../public_api';
+import { CompetitionSportMap, JsonAgainstGame, Place, PlaceMap, Poule, Round, RoundNumber } from '../../public-api';
 import { jsonGames2Places } from '../data/games/2places';
 import { getCompetitionSportMapper, getGameMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';

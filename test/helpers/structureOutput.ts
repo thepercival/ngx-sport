@@ -1,4 +1,4 @@
-import { Structure } from "../../public_api";
+import { Structure } from "../../public-api";
 import { Grid } from "./grid";
 import { Coordinate } from "./grid/coordinate";
 import { GridDrawer } from "./grid/drawer";

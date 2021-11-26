@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { QualifyGroup, QualifyTarget, Structure } from '../../../../public_api';
+import { QualifyGroup, QualifyTarget, Structure } from '../../../../public-api';
 
 export const check332astructure = (structure: Structure) => {
     // roundnumbers

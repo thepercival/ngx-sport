@@ -5,7 +5,7 @@ import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singl
 import { jsonBaseCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
-import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public_api';
+import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public-api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 

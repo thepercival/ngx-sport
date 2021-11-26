@@ -1,4 +1,4 @@
-import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../../../public_api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../../../public-api";
 
 
 export const jsonGames4Places: JsonAgainstGame[] = [

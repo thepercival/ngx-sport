@@ -1,4 +1,4 @@
-import { NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public_api";
+import { NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
 import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
 import { SingleQualifyRule } from "../../../src/qualify/rule/single";

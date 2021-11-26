@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { describe, it } from 'mocha';
-import { QualifyTarget, Round, RoundRankingCalculator } from '../../public_api';
+import { QualifyTarget, Round, RoundRankingCalculator } from '../../public-api';
 import { jsonBaseCompetition } from '../data/competition';
 import { createGames } from '../helpers/gamescreator';
 import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';

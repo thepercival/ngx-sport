@@ -1,4 +1,4 @@
-import { Competition, Place, RoundNumber, Team, TeamCompetitor } from "../../public_api";
+import { Competition, Place, RoundNumber, Team, TeamCompetitor } from "../../public-api";
 
 
 export function createTeamCompetitors(competition: Competition, firstRoundNumber: RoundNumber): TeamCompetitor[] {
