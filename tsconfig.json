@@ -5,7 +5,8 @@
         "fullTemplateTypeCheck": true,
         "enableResourceInlining": true,
         "strictTemplates": true,
-        "strictInjectionParameters": true
+        "strictInjectionParameters": true,
+        "compilationMode": "partial"
     },
     "buildOnSave": false,
     "compileOnSave": false,
