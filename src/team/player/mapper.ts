@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Period } from '../../period';
 import { Association } from '../../association';
 import { Person } from '../../person';
 import { TeamMapper } from '../mapper';
@@ -18,7 +17,7 @@ export class PlayerMapper {
         const player = new Player(
             this.teamMapper.toObject(json.team, association),
             person,
-            new Period(new Date(json.start), new Date(json.end)),
+            new Date(json.start), new Date(json.end),
             json.line);
 
         player.setId(json.id);
@@ -30,8 +29,8 @@ export class PlayerMapper {
         return {
             id: player.getId(),
             team: this.teamMapper.toJson(player.getTeam()),
-            start: player.getPeriod().getStartDateTime().toISOString(),
-            end: player.getPeriod().getEndDateTime().toISOString(),
+            start: player.getStartDateTime().toISOString(),
+            end: player.getEndDateTime().toISOString(),
             line: player.getLine()
         };
     }

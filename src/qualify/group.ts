@@ -423,12 +423,11 @@ export class Round extends Identifiable {
     }
 
     getFirstPoule(): Poule {
-        return this.getPoules()[0];
+        return this.getPoule(1);
     }
 
     getLastPoule(): Poule {
-        const poules = this.getPoules();
-        return poules[poules.length - 1];
+        return this.getPoule(this.getPoules().length);
     }
 
 

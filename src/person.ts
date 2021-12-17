@@ -53,7 +53,7 @@ export class Person {
             filters.push((player: Player) => player.getTeam() === team);
         }
         if (period) {
-            filters.push((player: Player) => player.getPeriod().overlaps(period));
+            filters.push((player: Player) => player.overlaps(period));
         }
         if (line) {
             filters.push((player: Player) => player.getLine() === line);
@@ -70,7 +70,7 @@ export class Person {
         const checkDate = date ? date : new Date();
         const filters: { (player: Player): boolean; }[] = [
             (player: Player) => player.getTeam() === team,
-            (player: Player) => player.getPeriod().isIn(checkDate)
+            (player: Player) => player.isIn(checkDate)
         ]
         return this.players.find((player: Player): boolean => {
             return filters.every(filter => filter(player));

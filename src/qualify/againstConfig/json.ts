@@ -1,5 +1,6 @@
 import { JsonCompetitionSport } from "../../competition/sport/json";
 import { JsonIdentifiable } from "../../identifiable/json";
+import { PointsCalculation } from "../../ranking/pointsCalculation";
 
 export interface JsonAgainstQualifyConfig extends JsonIdentifiable {
     competitionSport: JsonCompetitionSport;
@@ -8,5 +9,5 @@ export interface JsonAgainstQualifyConfig extends JsonIdentifiable {
     winPointsExt: number;
     drawPointsExt: number;
     losePointsExt: number;
-    pointsCalculation: number;
+    pointsCalculation: PointsCalculation;
 }

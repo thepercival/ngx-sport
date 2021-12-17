@@ -74,7 +74,7 @@ export class AgainstQualifyConfig extends Identifiable {
         this.losePointsExt = losePointsExt;
     }
 
-    getPointsCalculation(): number {
+    getPointsCalculation(): PointsCalculation {
         return this.pointsCalculation;
     }
 }

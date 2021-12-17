@@ -11,6 +11,8 @@ import { AgainstGamePlace } from './game/place/against';
 import { TogetherGamePlace } from './game/place/together';
 import { Competition } from './competition';
 import { PlanningConfig } from './planning/config';
+import { CompetitorMap } from './competitor/map';
+import { GamePlace } from './game/place';
 
 export abstract class Game extends Identifiable {
     protected field: Field | undefined;
@@ -94,5 +96,15 @@ export abstract class Game extends Identifiable {
 
     getPlaces(): (AgainstGamePlace | TogetherGamePlace)[] {
         return this.places;
+    }
+
+    public hasCompetitor(competitorMap: CompetitorMap): boolean {
+        return this.getPlaces().some((gamePlace: GamePlace): boolean => {
+            const startLocation = gamePlace.getPlace().getStartLocation();
+            if (startLocation === undefined) {
+                return false;
+            }
+            return competitorMap.getCompetitor(startLocation) !== undefined;
+        });
     }
 }

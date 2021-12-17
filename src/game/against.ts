@@ -7,6 +7,7 @@ import { State } from '../state';
 import { AgainstGamePlace } from './place/against';
 import { AgainstScore } from '../score/against';
 import { AgainstSide } from '../against/side';
+import { CompetitorMap } from '../competitor/map';
 
 export class AgainstGame extends Game {
     protected scores: AgainstScore[] = [];
