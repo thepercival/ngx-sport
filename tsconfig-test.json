@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es2020",
         "lib": [
             "es2017"
         ],
@@ -9,11 +9,13 @@
         "noImplicitAny": false,
         "removeComments": true,
         "inlineSourceMap": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
     },
     "include": [
         "scripts/**/*.ts",
         "src/**/*.ts",
+        "test/**/*.ts",
         "src/**/*.ts",
         "node_modules/lodash-es/**/*.js"
     ]
