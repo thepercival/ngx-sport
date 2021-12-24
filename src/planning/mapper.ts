@@ -36,6 +36,10 @@ export class PlanningMapper {
     }
 
     protected toPouleGames(jsonPoule: JsonPoule, poule: Poule, sportMap: CompetitionSportMap): boolean {
+        if (jsonPoule.againstGames === undefined || jsonPoule.togetherGames === undefined) {
+            return false;
+        }
+
         jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
             const competitionSport = sportMap[jsonGame.competitionSport.id];
             this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);

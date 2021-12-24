@@ -6,6 +6,6 @@ export interface JsonPoule extends JsonIdentifiable {
     number: number;
     name?: string;
     places: JsonPlace[];
-    againstGames: JsonAgainstGame[];
-    togetherGames: JsonTogetherGame[];
+    againstGames: JsonAgainstGame[] | undefined;
+    togetherGames: JsonTogetherGame[] | undefined;
 }
