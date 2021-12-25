@@ -1,6 +1,6 @@
 
 import { HorizontalPoule } from '../../poule/horizontal';
-import { QualifyGroup, Round } from '../../qualify/group';
+import { Round } from '../../qualify/group';
 import { Structure } from '../../structure';
 import { EndRankingItem } from '../item/end';
 import { State } from '../../state';
@@ -33,7 +33,10 @@ export class EndRankingCalculator {
             });
             return items;
         };
-        return getItems(this.structure.getRootRound());
+        const items = getItems(this.structure.getRootRound());
+        return items.sort((itemA: EndRankingItem, itemB: EndRankingItem): number => {
+            return itemA.getUniqueRank() - itemB.getUniqueRank();
+        });
     }
 
     protected getDropoutsNotPlayed(round: Round): EndRankingItem[] {
