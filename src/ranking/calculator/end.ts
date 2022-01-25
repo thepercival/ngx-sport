@@ -3,11 +3,11 @@ import { HorizontalPoule } from '../../poule/horizontal';
 import { Round } from '../../qualify/group';
 import { Structure } from '../../structure';
 import { EndRankingItem } from '../item/end';
-import { State } from '../../state';
 import { Place } from '../../place';
 import { RoundRankingCalculator } from './round';
 import { QualifyTarget } from '../../qualify/target';
 import { SingleQualifyRule } from '../../qualify/rule/single';
+import { GameState } from '../../game/state';
 
 export class EndRankingCalculator {
 
@@ -23,10 +23,10 @@ export class EndRankingCalculator {
             round.getQualifyGroups(QualifyTarget.Winners).forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
             });
-            if (round.getState() === State.Finished) {
+            if (round.getGamesState() === GameState.Finished) {
                 items = items.concat(this.getDropouts(round));
             } else {
-                items = items.concat(this.getDropoutsNotPlayed(round));
+                items = items.concat(this.getDropoutsNotFinished(round));
             }
             round.getQualifyGroups(QualifyTarget.Losers).slice().reverse().forEach(qualifyGroup => {
                 items = items.concat(getItems(qualifyGroup.getChildRound()));
@@ -39,7 +39,7 @@ export class EndRankingCalculator {
         });
     }
 
-    protected getDropoutsNotPlayed(round: Round): EndRankingItem[] {
+    protected getDropoutsNotFinished(round: Round): EndRankingItem[] {
         const items: EndRankingItem[] = [];
         const nrOfDropouts: number = round.getNrOfPlaces() - round.getNrOfPlacesChildren();
         for (let i = 0; i < nrOfDropouts; i++) {

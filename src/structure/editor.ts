@@ -37,7 +37,7 @@ export class StructureEditor {
         this.placeRanges = placeRanges;
     }
 
-    create(competition: Competition, jsonPlanningConfig: JsonPlanningConfig, pouleStructure: number[]): Structure {
+    create(competition: Competition, pouleStructure: number[], jsonPlanningConfig?: JsonPlanningConfig | undefined): Structure {
         const balancedPouleStructure = new BalancedPouleStructure(...pouleStructure);
         // begin editing
         const firstRoundNumber = new RoundNumber(competition);

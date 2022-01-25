@@ -3,11 +3,11 @@ import { CompetitionSport } from '../competition/sport';
 import { AgainstQualifyConfig } from '../qualify/againstConfig';
 import { Place } from '../place';
 import { Poule } from '../poule';
-import { State } from '../state';
 import { AgainstGamePlace } from './place/against';
 import { AgainstScore } from '../score/against';
 import { AgainstSide } from '../against/side';
 import { CompetitorMap } from '../competitor/map';
+import { GameState } from './state';
 
 export class AgainstGame extends Game {
     protected scores: AgainstScore[] = [];
@@ -15,7 +15,7 @@ export class AgainstGame extends Game {
     constructor(poule: Poule, batchNr: number, protected startDateTime: Date, competitionSport: CompetitionSport, protected gameRoundNumber: number) {
         super(poule, batchNr, startDateTime, competitionSport);
         poule.getAgainstGames().push(this);
-        this.state = State.Created;
+        this.state = GameState.Created;
     }
 
     getGameRoundNumber(): number {

@@ -138,7 +138,7 @@ describe('QualifyReservationService', () => {
 
     });
 
-    it('2 roundnumbers, [3,3,3] => W[4], not played', () => {
+    it('2 roundnumbers, [3,3,3] => W[4], not finished', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 3, 3]);

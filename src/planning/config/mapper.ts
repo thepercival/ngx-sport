@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { SelfReferee } from '../../referee/self';
 
 import { RoundNumber } from '../../round/number';
 import { PlanningConfig } from '../config';
+import { PlanningEditMode } from '../editMode';
+import { GamePlaceStrategy } from '../strategy';
 import { JsonPlanningConfig } from './json';
 
 @Injectable({
@@ -10,7 +13,21 @@ import { JsonPlanningConfig } from './json';
 export class PlanningConfigMapper {
     constructor() { }
 
-    toObject(json: JsonPlanningConfig, roundNumber: RoundNumber): PlanningConfig {
+    toObject(json: JsonPlanningConfig | undefined, roundNumber: RoundNumber): PlanningConfig {
+        if (json === undefined) {
+            return new PlanningConfig(
+                roundNumber,
+                PlanningEditMode.Manual,
+                GamePlaceStrategy.EquallyAssigned,
+                false,
+                false,
+                0,
+                0,
+                0,
+                0,
+                SelfReferee.Disabled
+            );
+        }
         return new PlanningConfig(
             roundNumber,
             json.editMode,

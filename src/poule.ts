@@ -1,11 +1,11 @@
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
+import { GameState } from './game/state';
 import { TogetherGame } from './game/together';
 import { Identifiable } from './identifiable';
 import { Place } from './place';
 import { Round } from './qualify/group';
-import { State } from './state';
 
 export class Poule extends Identifiable {
     protected number: number;
@@ -94,14 +94,14 @@ export class Poule extends Identifiable {
     //     return gamePlaces;
     // }
 
-    getState(): number {
+    getGamesState(): GameState {
         const games = this.getGames();
-        if (games.length > 0 && games.every((game: AgainstGame | TogetherGame) => game.getState() === State.Finished)) {
-            return State.Finished;
-        } else if (games.some((game: Game) => game.getState() !== State.Created)) {
-            return State.InProgress;
+        if (games.length > 0 && games.every((game: AgainstGame | TogetherGame) => game.getState() === GameState.Finished)) {
+            return GameState.Finished;
+        } else if (games.some((game: Game) => game.getState() !== GameState.Created)) {
+            return GameState.InProgress;
         }
-        return State.Created;
+        return GameState.Created;
     }
 
     needsRanking(): boolean {

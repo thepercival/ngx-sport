@@ -1,4 +1,5 @@
 import { JsonIdentifiable } from "../../identifiable/json";
+import { SelfReferee } from "../../referee/self";
 import { PlanningEditMode } from "../editMode";
 import { GamePlaceStrategy } from "../strategy";
 
@@ -11,5 +12,5 @@ export interface JsonPlanningConfig extends JsonIdentifiable {
     minutesPerGameExt: number;
     minutesBetweenGames: number;
     minutesAfter: number;
-    selfReferee: number;
+    selfReferee: SelfReferee;
 }

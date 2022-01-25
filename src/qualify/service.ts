@@ -6,11 +6,11 @@ import { QualifyGroup, Round } from './group';
 import { QualifyReservationService } from './reservationservice';
 import { MultipleQualifyRule } from './rule/multiple';
 import { SingleQualifyRule } from './rule/single';
-import { State } from '../state';
 import { RoundRankingCalculator } from '../ranking/calculator/round';
 import { QualifyTarget } from './target';
 import { QualifyPlaceMapping } from './placeMapping';
 import { RoundRankingItem } from '../ranking/item/round';
+import { GameState } from '../game/state';
 
 export class QualifyService {
     private roundRankingCalculator: RoundRankingCalculator;
@@ -104,7 +104,7 @@ export class QualifyService {
 
     protected isPouleFinished(poule: Poule): boolean {
         if (this.poulesFinished[poule.getNumber()] === undefined) {
-            this.poulesFinished[poule.getNumber()] = (poule.getState() === State.Finished);
+            this.poulesFinished[poule.getNumber()] = (poule.getGamesState() === GameState.Finished);
         }
         return this.poulesFinished[poule.getNumber()];
     }

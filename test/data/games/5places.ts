@@ -1,4 +1,4 @@
-import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, State } from "../../../public-api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState } from "../../../public-api";
 
 
 export const jsonGames5Places: JsonAgainstGame[] = [
@@ -41,7 +41,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 1,
             name: '1'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -86,7 +86,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 2,
             name: '2'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -131,7 +131,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 1,
             name: '1'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -176,7 +176,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 2,
             name: '2'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -221,7 +221,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 1,
             name: '1'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -266,7 +266,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 2,
             name: '2'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -311,7 +311,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 1,
             name: '1'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -356,7 +356,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 2,
             name: '2'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -401,7 +401,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 1,
             name: '1'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
@@ -446,7 +446,7 @@ export const jsonGames5Places: JsonAgainstGame[] = [
             priority: 2,
             name: '2'
         },
-        state: State.Created,
+        state: GameState.Created,
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,

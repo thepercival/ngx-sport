@@ -1,4 +1,4 @@
-import { AgainstGame, AgainstScore, AgainstSide, Game, Poule, State } from "../../public-api";
+import { AgainstGame, AgainstScore, AgainstSide, Poule, GameState } from "../../public-api";
 import { GamePhase } from "../../src/game/phase";
 
 export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number
@@ -23,5 +23,5 @@ export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPla
     const newAwayGoals = foundGame.getSide(awayPlace) === AgainstSide.Away ? awayGoals : homeGoals;
     foundGame.getScores().push(new AgainstScore(foundGame, newHomeGoals, newAwayGoals, GamePhase.RegularTime));
 
-    foundGame.setState(state ? state : State.Finished);
+    foundGame.setState(state ? state : GameState.Finished);
 }

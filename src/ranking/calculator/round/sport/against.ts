@@ -2,13 +2,13 @@
 import { AgainstSide } from '../../../../against/side';
 import { CompetitionSport } from '../../../../competition/sport';
 import { AgainstGame } from '../../../../game/against';
+import { GameState } from '../../../../game/state';
 import { Place } from '../../../../place';
 import { PlaceSportPerformance } from '../../../../place/sportPerformance';
 import { PlaceSportPerformanceMap } from '../../../../place/sportPerformance/calculator';
 import { PlaceAgainstSportPerformanceCalculator } from '../../../../place/sportPerformance/calculator/against';
 import { Poule } from '../../../../poule';
 import { Round } from '../../../../qualify/group';
-import { State } from '../../../../state';
 import { RankingFunctionMapCreator } from '../../../functionMapCreator';
 import { SportRoundRankingItem } from '../../../item/round/sport';
 import { RankingRule } from '../../../rule';
@@ -16,9 +16,9 @@ import { SportRoundRankingCalculator } from '../sport';
 
 export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalculator {
 
-    constructor(competitionSport: CompetitionSport, gameStates?: State[]) {
-        super(competitionSport, gameStates ?? [State.Finished]);
-        const functionMapCreator = new AgainstRankingFunctionMapCreator(competitionSport, gameStates ?? [State.Finished]);
+    constructor(competitionSport: CompetitionSport, gameStates?: GameState[]) {
+        super(competitionSport, gameStates ?? [GameState.Finished]);
+        const functionMapCreator = new AgainstRankingFunctionMapCreator(competitionSport, gameStates ?? [GameState.Finished]);
         this.rankFunctionMap = functionMapCreator.getMap();
     }
 
@@ -56,7 +56,7 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
 
 export class AgainstRankingFunctionMapCreator extends RankingFunctionMapCreator {
 
-    constructor(private competitionSport: CompetitionSport, private gameStates: State[]) {
+    constructor(private competitionSport: CompetitionSport, private gameStates: GameState[]) {
         super();
         this.myInitMap();
     }

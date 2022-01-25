@@ -3,7 +3,6 @@ import { Place } from './place';
 import { Poule } from './poule';
 import { Referee } from './referee';
 import { CompetitionSport } from './competition/sport';
-import { State } from './state';
 import { ScoreConfig } from './score/config';
 import { Round } from './qualify/group';
 import { Identifiable } from './identifiable';
@@ -13,17 +12,18 @@ import { Competition } from './competition';
 import { PlanningConfig } from './planning/config';
 import { CompetitorMap } from './competitor/map';
 import { GamePlace } from './game/place';
+import { GameState } from './game/state';
 
 export abstract class Game extends Identifiable {
     protected field: Field | undefined;
     protected referee: Referee | undefined;
     protected refereePlace: Place | undefined;
-    protected state: State;
+    protected state: GameState;
     protected places: (AgainstGamePlace | TogetherGamePlace)[] = [];
 
     constructor(protected poule: Poule, protected batchNr: number, protected startDateTime: Date, protected competitionSport: CompetitionSport) {
         super();
-        this.state = State.Created;
+        this.state = GameState.Created;
     }
 
     getPoule(): Poule {
@@ -66,11 +66,11 @@ export abstract class Game extends Identifiable {
         this.startDateTime = startDateTime;
     }
 
-    getState(): State {
+    getState(): GameState {
         return this.state;
     }
 
-    setState(state: State): void {
+    setState(state: GameState): void {
         this.state = state;
     }
 

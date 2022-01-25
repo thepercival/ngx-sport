@@ -2,7 +2,6 @@ import { Field } from './field';
 import { League } from './league';
 import { Referee } from './referee';
 import { Season } from './season';
-import { State } from './state';
 import { Sport } from './sport';
 import { Association } from './association';
 import { TeamCompetitor } from './competitor/team';
@@ -16,7 +15,6 @@ import { AllInOneGameSportVariant } from './sport/variant/all';
 export class Competition extends Identifiable {
     protected startDateTime: Date;
     protected againstRuleSet: AgainstRuleSet = AgainstRuleSet.DiffFirst;
-    protected state: number = State.Created;
     protected referees: Referee[] = [];
     protected sports: CompetitionSport[] = [];
     protected teamCompetitors: TeamCompetitor[] = [];
@@ -52,14 +50,6 @@ export class Competition extends Identifiable {
 
     setStartDateTime(date: Date) {
         this.startDateTime = date;
-    }
-
-    getState(): number {
-        return this.state;
-    }
-
-    setState(state: number): void {
-        this.state = state;
     }
 
     getName(): string {

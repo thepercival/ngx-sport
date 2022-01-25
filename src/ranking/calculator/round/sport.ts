@@ -3,11 +3,11 @@ import { PlaceSportPerformance } from "../../../place/sportPerformance";
 import { Poule } from "../../../poule";
 import { Round } from "../../../qualify/group";
 import { AgainstSportVariant } from "../../../sport/variant/against";
-import { State } from "../../../state";
 import { SportRoundRankingItem } from "../../item/round/sport";
 import { RankingRule } from "../../rule";
 import { RankingRuleGetter } from "../../rule/getter";
 import { AgainstRuleSet } from "../../againstRuleSet";
+import { GameState } from "../../../game/state";
 
 export abstract class SportRoundRankingCalculator {
     protected gameStateMap: GameStateMap = {};
@@ -16,9 +16,9 @@ export abstract class SportRoundRankingCalculator {
 
     constructor(
         protected competitionSport: CompetitionSport,
-        gameStates: State[]
+        gameStates: GameState[]
     ) {
-        gameStates.forEach((state: State) => this.gameStateMap[+state] = true);
+        gameStates.forEach((state: GameState) => this.gameStateMap[+state] = true);
         this.rankingRuleGetter = new RankingRuleGetter();
     }
 

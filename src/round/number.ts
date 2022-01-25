@@ -1,17 +1,15 @@
 import { Competition } from '../competition';
-import { Game } from '../game';
 import { Place } from '../place';
 import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
-import { State } from '../state';
 import { PouleStructure } from '../poule/structure';
-import { QualifyGroup, Round } from '../qualify/group';
+import { Round } from '../qualify/group';
 import { GameAmountConfig } from '../planning/gameAmountConfig';
 import { CompetitionSport } from '../competition/sport';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
 import { GameOrder } from '../game/order';
-import { QualifyTarget } from '../qualify/target';
+import { GameState } from '../game/state';
 
 export class RoundNumber {
     protected id: number = 0;
@@ -217,13 +215,13 @@ export class RoundNumber {
         return this.getRounds().some(round => round.needsRanking());
     }
 
-    getState(): number {
-        if (this.getRounds().every(round => round.getState() === State.Finished)) {
-            return State.Finished;
-        } else if (this.getRounds().some(round => round.getState() !== State.Created)) {
-            return State.InProgress;
+    getGamesState(): GameState {
+        if (this.getRounds().every(round => round.getGamesState() === GameState.Finished)) {
+            return GameState.Finished;
+        } else if (this.getRounds().some(round => round.getGamesState() !== GameState.Created)) {
+            return GameState.InProgress;
         }
-        return State.Created;
+        return GameState.Created;
     }
 
     hasBegun(): boolean {

@@ -4,7 +4,6 @@ import { Competition } from '../competition';
 import { Place } from '../place';
 import { PlaceLocation } from '../place/location';
 import { Poule } from '../poule';
-import { State } from '../state';
 import { CompetitionSport } from '../competition/sport';
 import { ScoreConfig } from '../score/config';
 import { AgainstQualifyConfig } from './againstConfig';
@@ -16,6 +15,7 @@ import { MultipleQualifyRule } from './rule/multiple';
 import { QualifyTarget } from './target';
 import { StructurePathNode } from '../structure/path';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
+import { GameState } from '../game/state';
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
@@ -305,17 +305,17 @@ export class Round extends Identifiable {
         return nrOfGames;
     }
 
-    getState(): number {
-        if (this.getPoules().every(poule => poule.getState() === State.Finished)) {
-            return State.Finished;
-        } else if (this.getPoules().some(poule => poule.getState() !== State.Created)) {
-            return State.InProgress;
+    getGamesState(): GameState {
+        if (this.getPoules().every(poule => poule.getGamesState() === GameState.Finished)) {
+            return GameState.Finished;
+        } else if (this.getPoules().some(poule => poule.getGamesState() !== GameState.Created)) {
+            return GameState.InProgress;
         }
-        return State.Created;
+        return GameState.Created;
     }
 
     hasBegun(): boolean {
-        return this.getState() > State.Created;
+        return this.getGamesState() > GameState.Created;
     }
 
     needsRanking(): boolean {

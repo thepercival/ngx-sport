@@ -11,7 +11,6 @@ export interface JsonCompetition extends JsonIdentifiable {
     referees: JsonReferee[];
     againstRuleSet: AgainstRuleSet;
     startDateTime: string;
-    state: number;
     sports: JsonCompetitionSport[];
     teamCompetitors?: JsonTeamCompetitor[];
 }

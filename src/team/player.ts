@@ -7,7 +7,7 @@ export class Player extends Period {
 
     constructor(protected team: Team, protected person: Person, start: Date, end: Date, protected line: number) {
         super(start, end);
-        person.getPlayers().push(this);
+        // person.getPlayers().push(this);
     }
 
     public getId(): string | number {

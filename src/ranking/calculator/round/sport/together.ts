@@ -1,19 +1,19 @@
 import { CompetitionSport } from "../../../../competition/sport";
+import { GameState } from "../../../../game/state";
 import { TogetherGame } from "../../../../game/together";
 import { Place } from "../../../../place";
 import { PlaceSportPerformance } from "../../../../place/sportPerformance";
 import { PlaceTogetherSportPerformanceCalculator } from "../../../../place/sportPerformance/calculator/together";
 import { Poule } from "../../../../poule";
 import { Round } from "../../../../qualify/group";
-import { State } from "../../../../state";
 import { RankingFunctionMapCreator } from "../../../functionMapCreator";
 import { SportRoundRankingItem } from "../../../item/round/sport";
 import { SportRoundRankingCalculator } from "../sport";
 
 export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalculator {
 
-    constructor(competitionSport: CompetitionSport, gameStates?: State[]) {
-        super(competitionSport, gameStates ?? [State.Finished]);
+    constructor(competitionSport: CompetitionSport, gameStates?: GameState[]) {
+        super(competitionSport, gameStates ?? [GameState.Finished]);
         const functionMapCreator = new RankingFunctionMapCreator();
         this.rankFunctionMap = functionMapCreator.getMap();
     }

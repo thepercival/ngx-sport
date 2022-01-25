@@ -5,7 +5,7 @@ import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singl
 import { jsonBaseCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
-import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, State } from '../../../../public-api';
+import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, GameState } from '../../../../public-api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
@@ -89,7 +89,7 @@ describe('RoundRankingCalculator', () => {
     //     });
     // });
 
-    it('single ranked, state played', () => {
+    it('single ranked, state finished', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
@@ -133,7 +133,7 @@ describe('RoundRankingCalculator', () => {
         expect(rankingItemThree.getPlace()).to.equal(pouleOne.getPlace(3));
     });
 
-    it('single ranked, state progress && played', () => {
+    it('single ranked, state progress && finished', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
@@ -147,11 +147,11 @@ describe('RoundRankingCalculator', () => {
             return;
         }
         createGames(structure.getFirstRoundNumber());
-        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1, State.InProgress);
-        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1, State.InProgress);
-        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2, State.InProgress);
+        setAgainstScoreSingle(pouleOne, 1, 2, 2, 1, GameState.InProgress);
+        setAgainstScoreSingle(pouleOne, 1, 3, 3, 1, GameState.InProgress);
+        setAgainstScoreSingle(pouleOne, 2, 3, 3, 2, GameState.InProgress);
 
-        const rankingService = new RoundRankingCalculator([State.InProgress, State.Finished]);
+        const rankingService = new RoundRankingCalculator([GameState.InProgress, GameState.Finished]);
         const items = rankingService.getItemsForPoule(pouleOne);
 
         const rankingItemOne = rankingService.getItemByRank(items, 1);

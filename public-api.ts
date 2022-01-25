@@ -137,7 +137,7 @@ export * from './src/sport/variant/against';
 export * from './src/sport/variant/all';
 export * from './src/sport/variant/json';
 export * from './src/structure';
-export * from './src/state';
+export * from './src/game/state';
 export * from './src/structure/editor';
 export * from './src/structure/mapper';
 export * from './src/structure/json';

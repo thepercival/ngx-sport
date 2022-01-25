@@ -1,4 +1,5 @@
 import { CompetitionSport } from "../../competition/sport";
+import { GameState } from "../../game/state";
 import { Place } from "../../place";
 import { PlaceLocation } from "../../place/location";
 import { GameMode } from "../../planning/gameMode";
@@ -6,7 +7,6 @@ import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { MultipleQualifyRule } from "../../qualify/rule/multiple";
 import { AgainstSportVariant } from "../../sport/variant/against";
-import { State } from "../../state";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
 import { SportRoundRankingCalculator } from "./round/sport";
@@ -14,12 +14,12 @@ import { AgainstSportRoundRankingCalculator } from "./round/sport/against";
 import { TogetherSportRoundRankingCalculator } from "./round/sport/together";
 
 export class RoundRankingCalculator {
-    protected gameStates: State[];
+    protected gameStates: GameState[];
 
     constructor(
-        gameStates?: State[]
+        gameStates?: GameState[]
     ) {
-        this.gameStates = gameStates ?? [State.Finished];
+        this.gameStates = gameStates ?? [GameState.Finished];
     }
 
     protected getSportRoundRankingCalculator(competitionSport: CompetitionSport): SportRoundRankingCalculator {
