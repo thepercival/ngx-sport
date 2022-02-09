@@ -15,7 +15,7 @@ describe('DefaultQualifyRuleCreator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [3, 3, 3]);
+        const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const rootRound = structure.getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2]);
@@ -43,7 +43,7 @@ describe('DefaultQualifyRuleCreator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4, 4, 4, 4]);
+        const structure = structureEditor.create(competition, [4, 4, 4, 4, 4], createPlanningConfigNoTime());
         const rootRound = structure.getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2, 2, 2, 2, 2]);
@@ -72,7 +72,7 @@ describe('DefaultQualifyRuleCreator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4, 4, 4]);
+        const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
         const rootRound = structure.getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2, 2, 2, 2, 2]);
@@ -138,7 +138,7 @@ describe('DefaultQualifyRuleCreator', () => {
             const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
             const structureEditor = getStructureEditor();
-            const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [8, 8, 8, 8, 8]);
+            const structure = structureEditor.create(competition, [8, 8, 8, 8, 8], createPlanningConfigNoTime());
             const rootRound = structure.getRootRound();
 
             const secondRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [6, 6, 6, 6, 6]);

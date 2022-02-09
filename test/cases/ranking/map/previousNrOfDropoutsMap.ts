@@ -17,8 +17,7 @@ describe('PreviousNrOfDropoutsMap', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [7, 7]);
+        const structure = structureEditor.create(competition, [7, 7], createPlanningConfigNoTime());
         const rootRound: Round = structure.getRootRound();
 
         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [5]);

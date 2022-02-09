@@ -16,8 +16,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3, 2]);
+        const structure = structureEditor.create(competition, [3, 3, 2], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -33,8 +32,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3, 2]);
+        const structure = structureEditor.create(competition, [3, 3, 2], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -64,8 +62,7 @@ describe('NameService', () => {
 
         // root needs no ranking, unequal depth
         {
-            const jsonPlanningConfig = createPlanningConfigNoTime();
-            const structure = structureEditor.create(competition, jsonPlanningConfig, [2, 2]);
+            const structure = structureEditor.create(competition, [2, 2], createPlanningConfigNoTime());
             const firstRoundNumber = structure.getFirstRoundNumber();
             const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
             const nameService = new NameService(competitorMap);
@@ -80,8 +77,7 @@ describe('NameService', () => {
 
         // root needs ranking
         {
-            const jsonPlanningConfig = createPlanningConfigNoTime();
-            const structure2 = structureEditor.create(competition, jsonPlanningConfig, [4, 4, 4, 4]);
+            const structure2 = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
             const competitorMap2 = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber2));
             const nameService2 = new NameService(competitorMap2);
@@ -100,8 +96,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [2, 2, 2, 2, 2, 2, 2, 2]);
+        const structure = structureEditor.create(competition, [2, 2, 2, 2, 2, 2, 2, 2], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -132,9 +127,8 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
         const pouleStructure = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2];
-        const structure = structureEditor.create(competition, jsonPlanningConfig, pouleStructure);
+        const structure = structureEditor.create(competition, pouleStructure, createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -169,8 +163,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3]);
+        const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -206,8 +199,7 @@ describe('NameService', () => {
 
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3, 3, 3]);
+        const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const firstTeamCompetitor = createTeamCompetitors(competition, firstRoundNumber).shift();
         expect(firstTeamCompetitor).to.not.equal(undefined);
@@ -274,8 +266,7 @@ describe('NameService', () => {
     it('places fromname', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3]);
+        const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -301,7 +292,7 @@ describe('NameService', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [4, 4, 4]);
+        const structure = structureEditor.create(competition, [4, 4, 4], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
@@ -351,7 +342,7 @@ describe('NameService', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, jsonPlanningConfig, [3]);
+        const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
