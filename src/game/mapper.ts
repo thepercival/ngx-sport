@@ -11,14 +11,10 @@ import { CompetitionSportMap, CompetitionSportMapper } from '../competition/spor
 import { ScoreMapper } from '../score/mapper';
 import { FieldMapper } from '../field/mapper';
 import { RefereeMapper } from '../referee/mapper';
-import { PlaceLocation } from '../place/location';
 import { PlaceMap, PlaceMapper } from '../place/mapper';
 import { CompetitionSport } from '../competition/sport';
-import { AgainstSportVariant } from '../sport/variant/against';
-import { TogetherGamePlace } from './place/together';
-import { JsonTogetherGamePlace } from './place/together/json';
-import { JsonPlace } from '../place/json';
 import { Place } from '../place';
+import { AgainstVariant } from '../sport/variant/against';
 
 @Injectable({
     providedIn: 'root'
@@ -41,7 +37,7 @@ export class GameMapper {
 
     toNew(json: JsonTogetherGame | JsonAgainstGame, poule: Poule, map: CompetitionSportMap): TogetherGame | AgainstGame {
         const competitionSport = map[json.competitionSport.id];
-        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
+        if (competitionSport.getVariant() instanceof AgainstVariant) {
             return this.toNewAgainst(<JsonAgainstGame>json, poule, competitionSport);
         }
         return this.toNewTogether(<JsonTogetherGame>json, poule, competitionSport);

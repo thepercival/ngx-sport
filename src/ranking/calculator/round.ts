@@ -2,11 +2,10 @@ import { CompetitionSport } from "../../competition/sport";
 import { GameState } from "../../game/state";
 import { Place } from "../../place";
 import { PlaceLocation } from "../../place/location";
-import { GameMode } from "../../planning/gameMode";
 import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { MultipleQualifyRule } from "../../qualify/rule/multiple";
-import { AgainstSportVariant } from "../../sport/variant/against";
+import { AgainstVariant } from "../../sport/variant/against";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
 import { SportRoundRankingCalculator } from "./round/sport";
@@ -23,7 +22,7 @@ export class RoundRankingCalculator {
     }
 
     protected getSportRoundRankingCalculator(competitionSport: CompetitionSport): SportRoundRankingCalculator {
-        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
+        if (competitionSport.getVariant() instanceof AgainstVariant) {
             return new AgainstSportRoundRankingCalculator(competitionSport, this.gameStates);
         }
         return new TogetherSportRoundRankingCalculator(competitionSport, this.gameStates);

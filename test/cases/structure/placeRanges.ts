@@ -1,20 +1,19 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { PlaceRanges } from '../../../src/structure/placeRanges';
-import { SingleSportVariant } from '../../../src/sport/variant/single';
 import { Sport } from '../../../src/sport';
 import { GameMode } from '../../../src/planning/gameMode';
 import { BalancedPouleStructure } from '../../../src/poule/structure/balanced';
-import { AgainstSportVariant } from '../../../public-api';
-import { AllInOneGameSportVariant } from '../../../src/sport/variant/all';
+import { AgainstH2h, AllInOneGame, Single } from '../../../public-api';
 import { getCompetitionSportService } from '../../helpers/singletonCreator';
+import { AgainstGpp } from '../../../src/sport/variant/against/gamesPerPlace';
 
 describe('PlaceRanges', () => {
 
     it('singleSport - nrOfGamePlaces - valid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfGamePlaces = 3;
-        const singleSportVariant = new SingleSportVariant(dummySport, nrOfGamePlaces, 3);
+        const singleSportVariant = new Single(dummySport, nrOfGamePlaces, 3);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
@@ -33,7 +32,7 @@ describe('PlaceRanges', () => {
     it('singleSport - nrOfGamePlaces - invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfGamePlaces = 3;
-        const singleSportVariant = new SingleSportVariant(dummySport, nrOfGamePlaces, 1);
+        const singleSportVariant = new Single(dummySport, nrOfGamePlaces, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
@@ -53,7 +52,7 @@ describe('PlaceRanges', () => {
     it('againstSport - nrOfGamePlaces - valid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 1;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1, 0);
+        const againstSportVariant = new AgainstH2h(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
@@ -73,7 +72,7 @@ describe('PlaceRanges', () => {
     it('againstSport - nrOfGamePlaces - invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 2;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 0, 1);
+        const againstSportVariant = new AgainstGpp(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 3;
@@ -92,7 +91,7 @@ describe('PlaceRanges', () => {
     it('againstSport - nrOfGamePlaces - valid 2', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const nrOfSidePlaces = 2;
-        const againstSportVariant = new AgainstSportVariant(dummySport, nrOfSidePlaces, nrOfSidePlaces, 0, 1);
+        const againstSportVariant = new AgainstGpp(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 4;
@@ -110,7 +109,7 @@ describe('PlaceRanges', () => {
 
     it('allInOneGameSport - nrOfGamePlaces - valid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
-        const allInOneGameSportVariant = new AllInOneGameSportVariant(dummySport, 1);
+        const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
@@ -128,7 +127,7 @@ describe('PlaceRanges', () => {
 
     it('MinNrOfPlacesPerPoule invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
-        const allInOneGameSportVariant = new AllInOneGameSportVariant(dummySport, 1);
+        const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 1;
@@ -146,7 +145,7 @@ describe('PlaceRanges', () => {
 
     it('Large per poule/round valid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
-        const allInOneGameSportVariant = new AllInOneGameSportVariant(dummySport, 1);
+        const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
@@ -165,7 +164,7 @@ describe('PlaceRanges', () => {
 
     it('Large per poule invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
-        const allInOneGameSportVariant = new AllInOneGameSportVariant(dummySport, 1);
+        const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
@@ -184,7 +183,7 @@ describe('PlaceRanges', () => {
 
     it('Large per round invalid', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
-        const allInOneGameSportVariant = new AllInOneGameSportVariant(dummySport, 1);
+        const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
         const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;

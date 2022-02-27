@@ -2,7 +2,7 @@ import { GameMode } from "../../planning/gameMode";
 import { Sport } from "../../sport";
 import { SportVariant } from "../variant";
 
-export class AllInOneGameSportVariant extends SportVariant {
+export class AllInOneGame extends SportVariant {
     constructor(sport: Sport, protected nrOfGamesPerPlace: number) {
         super(sport, GameMode.AllInOneGame);
     }

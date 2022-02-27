@@ -2,12 +2,12 @@ import { CompetitionSport } from "../../../competition/sport";
 import { PlaceSportPerformance } from "../../../place/sportPerformance";
 import { Poule } from "../../../poule";
 import { Round } from "../../../qualify/group";
-import { AgainstSportVariant } from "../../../sport/variant/against";
 import { SportRoundRankingItem } from "../../item/round/sport";
 import { RankingRule } from "../../rule";
 import { RankingRuleGetter } from "../../rule/getter";
 import { AgainstRuleSet } from "../../againstRuleSet";
 import { GameState } from "../../../game/state";
+import { AgainstVariant } from "../../../sport/variant/against";
 
 export abstract class SportRoundRankingCalculator {
     protected gameStateMap: GameStateMap = {};
@@ -57,7 +57,7 @@ export abstract class SportRoundRankingCalculator {
     }*/
 
     protected getRankingRuleSet(): AgainstRuleSet | undefined {
-        if (this.competitionSport.getVariant() instanceof AgainstSportVariant) {
+        if (this.competitionSport.getVariant() instanceof AgainstVariant) {
             return this.competitionSport.getCompetition().getAgainstRuleSet();
         }
         return undefined;

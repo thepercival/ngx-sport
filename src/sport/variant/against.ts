@@ -2,8 +2,8 @@ import { GameMode } from "../../planning/gameMode";
 import { Sport } from "../../sport";
 import { SportVariant } from "../variant";
 
-export class AgainstSportVariant extends SportVariant {
-    constructor(sport: Sport, protected nrOfHomePlaces: number, protected nrOfAwayPlaces: number, protected nrOfH2H: number, protected nrOfGamesPerPlace: number) {
+export class AgainstVariant extends SportVariant {
+    constructor(sport: Sport, protected nrOfHomePlaces: number, protected nrOfAwayPlaces: number) {
         super(sport, GameMode.Against);
     }
 
@@ -19,19 +19,11 @@ export class AgainstSportVariant extends SportVariant {
         return this.nrOfHomePlaces + this.nrOfAwayPlaces;
     }
 
-    isMixed(): boolean {
+    hasMultipleSidePlaces(): boolean {
         return this.getNrOfGamePlaces() > 2;
     }
 
     isBalanced(): boolean {
         return this.nrOfHomePlaces === this.nrOfAwayPlaces;
-    }
-
-    getNrOfH2H(): number {
-        return this.nrOfH2H;
-    }
-
-    getNrOfGamesPerPlace(): number {
-        return this.nrOfGamesPerPlace;
     }
 }

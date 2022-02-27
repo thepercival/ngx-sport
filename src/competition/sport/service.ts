@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 
-import { RoundNumber } from '../../round/number';
 import { Structure } from '../../structure';
 
 import { ScoreConfigService } from '../../score/config/service';
 import { CompetitionSport } from '../sport';
 import { GameAmountConfigService } from '../../planning/gameAmountConfig/service';
 import { AgainstQualifyConfigService } from '../../qualify/againstConfig/service';
-import { AgainstSportVariant } from '../../sport/variant/against';
-import { AllInOneGameSportVariant } from '../../sport/variant/all';
-import { SingleSportVariant } from '../../sport/variant/single';
 import { PlaceRanges } from '../../structure/placeRanges';
+import { AgainstGpp } from '../../sport/variant/against/gamesPerPlace';
+import { AgainstH2h } from '../../sport/variant/against/h2h';
+import { AllInOneGame } from '../../sport/variant/allInOneGame';
+import { Single } from '../../sport/variant/single';
+import { GameAmountConfig } from '../../planning/gameAmountConfig';
 
 @Injectable({
     providedIn: 'root'
@@ -31,20 +32,18 @@ export class CompetitionSportService {
     }
 
     getMinNrOfPlacesPerPoule(
-        sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): number {
-        const minNrOfPlacesPerPoule = sportVariants.map((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant) => {
+        sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): number {
+        const minNrOfPlacesPerPoule = sportVariants.map((sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame) => {
             return this.getMinNrOfPlacesPerPouleHelper(sportVariant);
         });
         return Math.max.apply(Math, minNrOfPlacesPerPoule);
     }
 
-    getMinNrOfPlacesPerPouleHelper(sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): number {
-        if (sportVariant instanceof AgainstSportVariant) {
-            return sportVariant.getNrOfGamePlaces();
-        } else if (sportVariant instanceof SingleSportVariant) {
-            return sportVariant.getNrOfGamePlaces();
+    getMinNrOfPlacesPerPouleHelper(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): number {
+        if (sportVariant instanceof AllInOneGame) {
+            return PlaceRanges.MinNrOfPlacesPerPoule;
         }
-        return PlaceRanges.MinNrOfPlacesPerPoule;
+        return sportVariant.getNrOfGamePlaces();
     }
 
     /*getMinNrOfPlacesPerRound(
@@ -105,7 +104,10 @@ export class CompetitionSportService {
     // }
 
     addToStructure(competitionSport: CompetitionSport, structure: Structure) {
-        this.gameAmountConfigService.create(competitionSport, structure.getFirstRoundNumber());
+
+        const variant = competitionSport.getVariant();
+        const amount = (variant instanceof AgainstH2h) ? variant.getNrOfH2H() : variant.getNrOfGamesPerPlace();
+        new GameAmountConfig(competitionSport, structure.getFirstRoundNumber(), amount);
         this.scoreConfigService.createDefault(competitionSport, structure.getRootRound());
         this.againstQualifyConfigService.createDefault(competitionSport, structure.getRootRound());
     }

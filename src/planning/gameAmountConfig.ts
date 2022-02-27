@@ -8,8 +8,7 @@ export class GameAmountConfig extends Identifiable {
     constructor(
         protected competitionSport: CompetitionSport,
         protected roundNumber: RoundNumber,
-        protected amount: number,
-        protected nrOfGamesPerPlaceMixed: number) {
+        protected amount: number) {
         super();
         roundNumber.getGameAmountConfigs().push(this);
         /*
@@ -40,14 +39,6 @@ export class GameAmountConfig extends Identifiable {
 
     setAmount(amount: number) {
         this.amount = amount;
-    }
-
-    getNrOfGamesPerPlaceMixed(): number {
-        return this.nrOfGamesPerPlaceMixed;
-    }
-
-    setNrOfGamesPerPlaceMixed(nrOfGamesPerPlaceMixed: number) {
-        this.nrOfGamesPerPlaceMixed = nrOfGamesPerPlaceMixed;
     }
 
     getCompetitionSport(): CompetitionSport {

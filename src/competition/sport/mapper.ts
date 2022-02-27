@@ -6,12 +6,13 @@ import { FieldMapper } from '../../field/mapper';
 import { JsonCompetitionSport } from './json';
 import { CompetitionSport } from '../sport';
 import { Field } from '../../field';
-import { AgainstSportVariant } from '../../sport/variant/against';
-import { SingleSportVariant } from '../../sport/variant/single';
-import { AllInOneGameSportVariant } from '../../sport/variant/all';
 import { GameMode } from '../../planning/gameMode';
 import { Sport } from '../../sport';
 import { JsonPersistSportVariant } from '../../sport/variant/json';
+import { AllInOneGame } from '../../sport/variant/allInOneGame';
+import { AgainstGpp } from '../../sport/variant/against/gamesPerPlace';
+import { AgainstH2h } from '../../sport/variant/against/h2h';
+import { Single } from '../../sport/variant/single';
 
 @Injectable({
     providedIn: 'root'
@@ -34,13 +35,16 @@ export class CompetitionSportMapper {
         return competitionSport;
     }
 
-    toVariant(json: JsonCompetitionSport, sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
+    toVariant(json: JsonCompetitionSport, sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
         if (json.gameMode === GameMode.Single) {
-            return new SingleSportVariant(sport, json.nrOfGamePlaces, json.nrOfGamesPerPlace);
+            return new Single(sport, json.nrOfGamePlaces, json.nrOfGamesPerPlace);
         } else if (json.gameMode === GameMode.Against) {
-            return new AgainstSportVariant(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfH2H, json.nrOfGamesPerPlace);
+            if (json.nrOfH2H > 0) {
+                return new AgainstH2h(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfH2H);
+            }
+            return new AgainstGpp(sport, json.nrOfHomePlaces, json.nrOfAwayPlaces, json.nrOfGamesPerPlace);
         }
-        return new AllInOneGameSportVariant(sport, json.nrOfGamesPerPlace);
+        return new AllInOneGame(sport, json.nrOfGamesPerPlace);
     }
 
     toJson(competitionSport: CompetitionSport): JsonCompetitionSport {
@@ -59,19 +63,23 @@ export class CompetitionSportMapper {
         return json;
     }
 
-    variantToJson(variant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): JsonPersistSportVariant {
+    variantToJson(variant: Single | AgainstH2h | AgainstGpp | AllInOneGame): JsonPersistSportVariant {
         let json: JsonPersistSportVariant = {
             gameMode: 0, nrOfHomePlaces: 0, nrOfAwayPlaces: 0, nrOfGamePlaces: 0, nrOfH2H: 0, nrOfGamesPerPlace: 0
         }
-        if (variant instanceof SingleSportVariant) {
+        if (variant instanceof Single) {
             json.gameMode = GameMode.Single;
             json.nrOfGamePlaces = variant.getNrOfGamePlaces();
             json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();
-        } else if (variant instanceof AgainstSportVariant) {
+        } else if (variant instanceof AgainstH2h) {
             json.gameMode = GameMode.Against;
             json.nrOfHomePlaces = variant.getNrOfHomePlaces();
             json.nrOfAwayPlaces = variant.getNrOfAwayPlaces();
             json.nrOfH2H = variant.getNrOfH2H();
+        } else if (variant instanceof AgainstGpp) {
+            json.gameMode = GameMode.Against;
+            json.nrOfHomePlaces = variant.getNrOfHomePlaces();
+            json.nrOfAwayPlaces = variant.getNrOfAwayPlaces();
             json.nrOfGamesPerPlace = variant.getNrOfGamesPerPlace();
         } else {
             json.gameMode = GameMode.AllInOneGame;
