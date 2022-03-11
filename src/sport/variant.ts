@@ -13,5 +13,6 @@ export class SportVariant extends Identifiable {
 
     getGameMode(): GameMode {
         return this.gameMode;
+
     }
 }
