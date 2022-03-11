@@ -33,13 +33,19 @@ export class CompetitionSportService {
 
     getMinNrOfPlacesPerPoule(
         sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): number {
-        const minNrOfPlacesPerPoule = sportVariants.map((sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame) => {
-            return this.getMinNrOfPlacesPerPouleHelper(sportVariant);
+        let minNrOfPlacesPerPouleForSports = sportVariants.map((sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame) => {
+            return this.getMinNrOfPlacesPerPouleForSport(sportVariant);
         });
-        return Math.max.apply(Math, minNrOfPlacesPerPoule);
+        let minimum = Math.min.apply(Math, minNrOfPlacesPerPouleForSports);
+
+        if (minimum < PlaceRanges.MinNrOfPlacesPerPoule) {
+            minimum = PlaceRanges.MinNrOfPlacesPerPoule;
+        }
+        return minimum;
+        // return Math.max.apply(Math, minNrOfPlacesPerPouleForSports);
     }
 
-    getMinNrOfPlacesPerPouleHelper(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): number {
+    getMinNrOfPlacesPerPouleForSport(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): number {
         if (sportVariant instanceof AllInOneGame) {
             return PlaceRanges.MinNrOfPlacesPerPoule;
         }

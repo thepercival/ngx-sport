@@ -10,4 +10,8 @@ export class SportVariant extends Identifiable {
     getSport(): Sport {
         return this.sport;
     }
+
+    getGameMode(): GameMode {
+        return this.gameMode;
+    }
 }
