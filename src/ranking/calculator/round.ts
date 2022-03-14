@@ -15,12 +15,14 @@ import { TogetherSportRoundRankingCalculator } from "./round/sport/together";
 
 export class RoundRankingCalculator {
     protected gameStates: GameState[];
+    protected cumulative: Cumulative;
 
     constructor(
         gameStates?: GameState[],
-        protected cumulative: Cumulative = Cumulative.byRank,
+        cumulative?: Cumulative,
     ) {
         this.gameStates = gameStates ?? [GameState.Finished];
+        this.cumulative = cumulative ?? Cumulative.byRank;
     }
 
     protected getSportRoundRankingCalculator(competitionSport: CompetitionSport): SportRoundRankingCalculator {
@@ -93,17 +95,7 @@ export class RoundRankingCalculator {
 
     protected rankItems(cumulativeRoundRankingItems: RoundRankingItem[]): RoundRankingItem[] {
         cumulativeRoundRankingItems.sort((a: RoundRankingItem, b: RoundRankingItem) => {
-            if (a.getCumulativeRank() === b.getCumulativeRank()) {
-                const cmp = a.compareCumulativePerformances(b)
-                if (cmp === 0) {
-                    if (a.getPlace().getPouleNr() === b.getPlace().getPouleNr()) {
-                        return a.getPlaceLocation().getPlaceNr() - b.getPlaceLocation().getPlaceNr();
-                    }
-                    return a.getPlace().getPouleNr() - b.getPlace().getPouleNr();
-                }
-                return cmp;
-            }
-            return a.getCumulativeRank() < b.getCumulativeRank() ? -1 : 1;
+            return this.compareBy(a, b);
         });
         const roundRankingItems: RoundRankingItem[] = [];
         let nrOfIterations = 0;

@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
-import { jsonBaseCompetition } from '../../../data/competition';
+import { jsonBaseCompetition, jsonMultiSportsCompetition } from '../../../data/competition';
 
 import { createGames } from '../../../helpers/gamescreator';
-import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, GameState } from '../../../../public-api';
+import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, GameState, Poule, Cumulative } from '../../../../public-api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 
@@ -609,4 +609,93 @@ describe('RoundRankingCalculator', () => {
         }
         expect(rankingItemFour.getPlace()).to.equal(pouleOne.getPlace(2));
     });
+
+    it('test2SportsByRank', () => {
+
+        const competition = getCompetitionMapper().toObject(jsonMultiSportsCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
+        const rootRound: Round = structure.getRootRound();
+
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        createGames(structure.getFirstRoundNumber());
+
+        setScoresHelper(pouleOne);
+
+        const roundRankingCalculator = new RoundRankingCalculator();
+        const roundRankingItems = roundRankingCalculator.getItemsForPoule(pouleOne);
+
+        const roundRankingItem1 = roundRankingItems.shift();
+        expect(roundRankingItem1).not.to.equal(undefined);
+        expect(roundRankingItem1.getPlace().getPlaceNr()).to.equal(4);
+
+        const roundRankingItem2 = roundRankingItems.shift();
+        expect(roundRankingItem2).not.to.equal(undefined);
+        expect(roundRankingItem2.getPlace().getPlaceNr()).to.equal(1);
+
+        const roundRankingItem3 = roundRankingItems.shift();
+        expect(roundRankingItem3).not.to.equal(undefined);
+        expect(roundRankingItem3.getPlace().getPlaceNr()).to.equal(3);
+
+        const roundRankingItem4 = roundRankingItems.shift();
+        expect(roundRankingItem4).not.to.equal(undefined);
+        expect(roundRankingItem4.getPlace().getPlaceNr()).to.equal(2);
+    });
+
+    it('test2SportsByPerformance', () => {
+
+        const competition = getCompetitionMapper().toObject(jsonMultiSportsCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
+        const rootRound: Round = structure.getRootRound();
+
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        createGames(structure.getFirstRoundNumber());
+
+        setScoresHelper(pouleOne);
+
+        const roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
+        const roundRankingItems = roundRankingCalculator.getItemsForPoule(pouleOne);
+
+        const roundRankingItem1 = roundRankingItems.shift();
+        expect(roundRankingItem1).not.to.equal(undefined);
+        expect(roundRankingItem1.getPlace().getPlaceNr()).to.equal(1);
+
+        const roundRankingItem2 = roundRankingItems.shift();
+        expect(roundRankingItem2).not.to.equal(undefined);
+        expect(roundRankingItem2.getPlace().getPlaceNr()).to.equal(4);
+
+        const roundRankingItem3 = roundRankingItems.shift();
+        expect(roundRankingItem3).not.to.equal(undefined);
+        expect(roundRankingItem3.getPlace().getPlaceNr()).to.equal(3);
+
+        const roundRankingItem4 = roundRankingItems.shift();
+        expect(roundRankingItem4).not.to.equal(undefined);
+        expect(roundRankingItem4.getPlace().getPlaceNr()).to.equal(2);
+    });
 });
+
+function setScoresHelper(poule: Poule) {
+    setAgainstScoreSingle(poule, 1, 2, 6, 0); // V
+    setAgainstScoreSingle(poule, 3, 4, 1, 0); // V
+    setAgainstScoreSingle(poule, 1, 4, 0, 3); // S2
+    setAgainstScoreSingle(poule, 2, 3, 0, 2); // S2
+    setAgainstScoreSingle(poule, 2, 4, 0, 1); // S3
+    setAgainstScoreSingle(poule, 1, 3, 1, 0); // S3
+    // pl     rank      pnt    saldo        cumulativeRank
+    //                                      V   S2      S3      TOT        RANK
+    //  1        1        6      7-3        1    4      1        6          2
+    //  2        4        0      0-9        4    3      2        9          4
+    //  3        3        6      3-1        2    2      2        6          3
+    //  4        2        6      4-1        3    1      1        5          1
+}

@@ -2,18 +2,21 @@ import { CompetitionSportMap, JsonAgainstGame, Place, PlaceMap, Poule, Round, Ro
 import { jsonGames2Places } from '../data/games/2places';
 import { getCompetitionSportMapper, getGameMapper } from './singletonCreator';
 import { jsonGames3Places } from '../data/games/3places';
-import { jsonGames4Places } from '../data/games/4places';
+import { jsonGames4Places, jsonGames4PlacesMultipleSports } from '../data/games/4places';
 import { jsonGames5Places } from '../data/games/5places';
 import { AgainstGame } from '../../src/game/against';
 
 export function createGames(roundNumber: RoundNumber) {
 
-    const getJson = (poule: Poule): JsonAgainstGame[] => {
+    const getJson = (poule: Poule, multiSports: boolean): JsonAgainstGame[] => {
         if (poule.getPlaces().length === 2) {
             return jsonGames2Places;
         } else if (poule.getPlaces().length === 3) {
             return jsonGames3Places;
         } else if (poule.getPlaces().length === 4) {
+            if (multiSports) {
+                return jsonGames4PlacesMultipleSports;
+            }
             return jsonGames4Places;
         } else /*if (poule.getPlaces().length === 5)*/ {
             return jsonGames5Places;
@@ -41,8 +44,11 @@ export function createGames(roundNumber: RoundNumber) {
     fillPlaceMap(roundNumber, placeMap);
     gameMapper.setPlaceMap(placeMap);
     const sportMap: CompetitionSportMap = competitionSportMapper.getMap(roundNumber.getCompetition());
+    console.log(sportMap);
+    const multiSports = roundNumber.getCompetition().hasMultipleSports();
     roundNumber.getPoules().forEach((poule: Poule) => {
-        getJson(poule).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
+        getJson(poule, multiSports).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
+            console.log(jsonGame.competitionSport.id);
             const competitionSport = sportMap[jsonGame.competitionSport.id];
             return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
