@@ -61,7 +61,7 @@ export class PlanningConfig extends Identifiable {
         return this.selfReferee !== SelfReferee.Disabled;
     }
 
-    getMaximalNrOfMinutesPerGame(): number {
+    getMaxNrOfMinutesPerGame(): number {
         return this.getMinutesPerGame() + this.getMinutesPerGameExt();
     }
 

@@ -99,6 +99,7 @@ export * from './src/qualify/rule/single';
 export * from './src/qualify/service';
 export * from './src/qualify/target';
 export * from './src/range';
+export * from './src/ranking/calculator/cumulative';
 export * from './src/ranking/calculator/end';
 export * from './src/ranking/calculator/round';
 export * from './src/ranking/calculator/round/sport/against';

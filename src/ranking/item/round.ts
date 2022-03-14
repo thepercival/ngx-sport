@@ -2,7 +2,7 @@ import { CompetitionSport } from '../../competition/sport';
 import { Place } from '../../place';
 import { PlaceLocation } from '../../place/location';
 import { PlacePerformance } from '../../place/performance';
-import { PlaceSportPerformance } from '../../place/sportPerformance';
+import { Cumulative } from '../calculator/cumulative';
 import { SportRoundRankingItem } from './round/sport';
 
 export class RoundRankingItem {

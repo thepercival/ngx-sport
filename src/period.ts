@@ -12,11 +12,15 @@ export class Period {
         return this.endDateTime;
     }
 
-    isIn(date?: Date): boolean {
-        if (date === undefined) {
-            date = new Date();
+    isIn(dateOrPeriod?: Date | Period): boolean {
+        if (dateOrPeriod === undefined) {
+            dateOrPeriod = new Date();
         }
-        return date.getTime() >= this.startDateTime.getTime() && date.getTime() <= this.endDateTime.getTime();
+        if (dateOrPeriod instanceof Date) {
+            return dateOrPeriod.getTime() >= this.startDateTime.getTime() && dateOrPeriod.getTime() <= this.endDateTime.getTime();
+        }
+        return dateOrPeriod.getStartDateTime().getTime() >= this.startDateTime.getTime()
+            && dateOrPeriod.getEndDateTime().getTime() <= this.endDateTime.getTime();
     }
 
     overlaps(period: Period): boolean {
