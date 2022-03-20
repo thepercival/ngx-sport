@@ -10,7 +10,6 @@ export class Field extends Identifiable {
     constructor(protected competitionSport: CompetitionSport, protected priority: number) {
         super();
         this.competitionSport.getFields().push(this);
-        this.setPriority(priority);
     }
 
     getCompetitionSport(): CompetitionSport {

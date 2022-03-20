@@ -125,29 +125,7 @@ export class RoundNumber {
             games = games.concat(poule.getGames());
         });
 
-
-
         const baseSort = (g1: TogetherGame | AgainstGame, g2: TogetherGame | AgainstGame): number => {
-            // const qualifySort = (
-            //     qualifyG1: QualifyGroup | undefined, qualifyG2: QualifyGroup | undefined): number => {
-            //     if (qualifyG1 === undefined || qualifyG2 === undefined) {
-            //         return 0;
-            //     }
-            //     if (qualifyG1.getTarget() === QualifyTarget.Winners && qualifyG2.getTarget() !== QualifyTarget.Winners) {
-            //         return 1;
-            //     }
-            //     if (qualifyG2.getTarget() === QualifyTarget.Winners && qualifyG1.getTarget() !== QualifyTarget.Winners) {
-            //         return -1;
-            //     }
-            //     if (qualifyG1.getTarget() === QualifyTarget.Winners) {
-            //         return qualifyG2.getNumber() - qualifyG1.getNumber();
-            //     }
-            //     return qualifyG1.getNumber() - qualifyG2.getNumber();
-            // };
-            // const qualifySorted = qualifySort(g1.getRound().getParentQualifyGroup(), g2.getRound().getParentQualifyGroup());
-            // if (qualifySorted !== 0) {
-            //     return qualifySorted;
-            // }
             const field1 = g1.getField();
             const field2 = g2.getField();
             if (field1 === undefined || field2 === undefined) {

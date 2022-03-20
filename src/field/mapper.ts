@@ -32,8 +32,3 @@ export class FieldMapper {
         };
     }
 }
-
-export interface FieldMap {
-    [key: string]: Field;
-}
-
