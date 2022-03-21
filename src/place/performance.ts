@@ -25,8 +25,8 @@ export class PlacePerformance {
         return this.games;
     }
 
-    addGame() {
-        this.games++;
+    addGames(games: number) {
+        this.games += games;
     }
 
     getPoints(): number {
@@ -78,7 +78,7 @@ export class PlacePerformance {
     }
 
     addSportPerformace(sportPerformance: PlaceSportPerformance) {
-        this.addGame();
+        this.addGames(sportPerformance.getGames());
         this.addPoints(sportPerformance.getPoints());
         this.addScored(sportPerformance.getScored());
         this.addReceived(sportPerformance.getReceived());

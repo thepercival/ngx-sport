@@ -44,11 +44,9 @@ export function createGames(roundNumber: RoundNumber) {
     fillPlaceMap(roundNumber, placeMap);
     gameMapper.setPlaceMap(placeMap);
     const sportMap: CompetitionSportMap = competitionSportMapper.getMap(roundNumber.getCompetition());
-    console.log(sportMap);
     const multiSports = roundNumber.getCompetition().hasMultipleSports();
     roundNumber.getPoules().forEach((poule: Poule) => {
         getJson(poule, multiSports).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
-            console.log(jsonGame.competitionSport.id);
             const competitionSport = sportMap[jsonGame.competitionSport.id];
             return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });

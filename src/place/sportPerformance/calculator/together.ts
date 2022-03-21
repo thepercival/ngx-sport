@@ -27,7 +27,7 @@ export class PlaceTogetherSportPerformanceCalculator extends PlaceSportPerforman
                 if (performance === undefined) {
                     return;
                 }
-                performance.addGame();
+                performance.addGames(1);
                 performance.addPoints(finalScore);
                 performance.addScored(finalScore);
                 if (useSubScore) {
