@@ -197,7 +197,7 @@ export class StructureEditor {
         this.rulesCreator.create(round.getParent(), round);
     }
 
-    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number) {
+    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number, maxNrOfPoulePlaces?: number) {
         const nrOfPlaces = parentRound.getNrOfPlaces();
         const nrOfToPlaces = parentRound.getNrOfPlacesChildren();
         if ((nrOfToPlaces + nrOfToPlacesToAdd) > nrOfPlaces) {
@@ -206,8 +206,8 @@ export class StructureEditor {
 
         let qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);
         const addChildRound = qualifyGroup === undefined;
+        const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? PlaceRanges.MinNrOfPlacesPerPoule;
         if (addChildRound) {
-            const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? PlaceRanges.MinNrOfPlacesPerPoule;
             if (nrOfToPlacesToAdd < minNrOfPlacesPerPoule) {
                 throw new Error('er moeten minimaal ' + minNrOfPlacesPerPoule + ' deelnemers naar de volgende ronde, vanwege het aantal deelnemers per wedstrijd');
             }
@@ -232,12 +232,31 @@ export class StructureEditor {
             this.rulesCreator.remove(parentRound, childRound);
             // begin editing        
             while (nrOfToPlacesToAdd-- > 0) {
-                childRound.addPlace();
+                const pouleStructure = childRound.createPouleStructure();
+                if (maxNrOfPoulePlaces && this.canAddPouleByAddingOnePlace(pouleStructure, maxNrOfPoulePlaces)) {
+                    const nrOfPlacesToRemove = childRound.addPoule().getPlaces().length;
+                    for (let i = 0; i < nrOfPlacesToRemove - 1; i++) {
+                        childRound.removePlace();
+                    }
+                } else {
+                    childRound.addPlace();
+                }
             }
             // end editing
             this.horPouleCreator.create(childRound);
             this.rulesCreator.create(parentRound, childRound);
         }
+    }
+
+    protected canAddPouleByAddingOnePlace(pouleStructure: BalancedPouleStructure, maxNrOfPoulePlaces: number): boolean {
+        let nrOfPlacesForNewPoule = 0;
+        pouleStructure.forEach((nrOfPoulePlaces: number) => {
+            const nrOfPoulePlacesForNewPoule = nrOfPoulePlaces - maxNrOfPoulePlaces;
+            if (nrOfPoulePlacesForNewPoule > 0) {
+                nrOfPlacesForNewPoule += nrOfPoulePlacesForNewPoule;
+            }
+        });
+        return (nrOfPlacesForNewPoule + 1) >= maxNrOfPoulePlaces;
     }
 
     removeQualifier(parentRound: Round, qualifyTarget: QualifyTarget): boolean {
@@ -424,4 +443,8 @@ export class StructureEditor {
 export interface PlaceRange extends VoetbalRange {
     placesPerPoule: VoetbalRange;
 
+}
+
+export enum ExpandDirection {
+    Horizontal, Vertical
 }

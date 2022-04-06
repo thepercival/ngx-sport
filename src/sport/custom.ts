@@ -16,4 +16,5 @@ export enum CustomSport {
     Shuffleboard,
     Jass,
     Padel,
+    Rugby
 }

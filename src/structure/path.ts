@@ -13,10 +13,6 @@ export class StructurePathNode {
         return path;
     }
 
-    nodeToString(): string {
-        return this.qualifyTargettoString() + this.qualifyGroupNumber;
-    }
-
     pathToString(): string {
         if (this.previous === undefined) {
             return this.nodeToString();
@@ -24,7 +20,15 @@ export class StructurePathNode {
         return this.previous.pathToString() + this.nodeToString();
     }
 
-    protected qualifyTargettoString(): string {
+    protected nodeToString(): string {
+        return this.qualifyTargetToString() + this.qualifyGroupNumber;
+    }
+
+    protected qualifyTargetToString(): string {
         return this.qualifyTarget ?? '';
+    }
+
+    getLevel(): number {
+        return this.previous ? this.previous.getLevel() + 1 : 1;
     }
 }

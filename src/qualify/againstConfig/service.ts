@@ -32,13 +32,15 @@ export class AgainstQualifyConfigService {
     // }
 
     createDefault(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
-        const config = new AgainstQualifyConfig(competitionSport, round, this.getDefaultPointCalculation(competitionSport));
         const sport = competitionSport.getSport();
-        config.setWinPoints(this.getDefaultWinPoints(sport));
-        config.setDrawPoints(this.getDefaultDrawPoints(sport));
-        config.setWinPointsExt(this.getDefaultWinPointsExt(sport));
-        config.setDrawPointsExt(this.getDefaultDrawPointsExt(sport));
-        config.setLosePointsExt(this.getDefaultLosePointsExt(sport));
+        const config = new AgainstQualifyConfig(competitionSport, round,
+            sport.getDefaultPointCalculation(),
+            sport.getDefaultWinPoints(),
+            sport.getDefaultDrawPoints(),
+            sport.getDefaultWinPointsExt(),
+            sport.getDefaultDrawPointsExt(),
+            sport.getDefaultLosePointsExt()
+        );
         return config;
     }
 
@@ -51,39 +53,15 @@ export class AgainstQualifyConfigService {
     }
 
     copy(competitionSport: CompetitionSport, round: Round, sourceConfig: AgainstQualifyConfig): AgainstQualifyConfig {
-        const config = new AgainstQualifyConfig(competitionSport, round, sourceConfig.getPointsCalculation());
-        config.setWinPoints(sourceConfig.getWinPoints());
-        config.setDrawPoints(sourceConfig.getDrawPoints());
-        config.setWinPointsExt(sourceConfig.getWinPointsExt());
-        config.setDrawPointsExt(sourceConfig.getDrawPointsExt());
-        config.setLosePointsExt(sourceConfig.getLosePointsExt());
-        return config;
-    }
-
-    getDefaultPointCalculation(competitionSport: CompetitionSport): PointsCalculation {
-        if (competitionSport.getVariant() instanceof AgainstVariant) {
-            return PointsCalculation.AgainstGamePoints;
-        }
-        return PointsCalculation.Scores;
-    }
-
-    getDefaultWinPoints(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_WinPoints : 1;
-    }
-
-    getDefaultDrawPoints(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_DrawPoints : 0.5;
-    }
-
-    getDefaultWinPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_WinPointsExt : 1;
-    }
-
-    getDefaultDrawPointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.Chess ? AgainstQualifyConfig.Default_DrawPointsExt : 0.5;
-    }
-
-    getDefaultLosePointsExt(sport: Sport): number {
-        return sport.getCustomId() !== CustomSport.IceHockey ? AgainstQualifyConfig.Default_LosePointsExt : 1;
+        return new AgainstQualifyConfig(
+            competitionSport,
+            round,
+            sourceConfig.getPointsCalculation(),
+            sourceConfig.getWinPoints(),
+            sourceConfig.getDrawPoints(),
+            sourceConfig.getWinPointsExt(),
+            sourceConfig.getDrawPointsExt(),
+            sourceConfig.getLosePointsExt()
+        );
     }
 }

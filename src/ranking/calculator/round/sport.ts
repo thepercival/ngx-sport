@@ -24,38 +24,6 @@ export abstract class SportRoundRankingCalculator {
 
     abstract getItemsForPoule(poule: Poule): SportRoundRankingItem[];
 
-    /*getPlaceLocationsForMultipleRule(multipleRule: MultipleQualifyRule): PlaceLocation[] {
-        const sportRoundRankingItems = this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
-        return sportRoundRankingItems.map((rankingItem: SportRoundRankingItem): PlaceLocation => {
-            return rankingItem.getPlaceLocation();
-        });
-    }
-
-    getPlacesForMultipleRule(multipleRule: MultipleQualifyRule): Place[] {
-        const fromRound = multipleRule.getFromHorizontalPoule().getRound();
-        const sportRoundRankingItems = this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule());
-        return sportRoundRankingItems.map((rankingSportItem: SportRoundRankingItem): Place => {
-            return fromRound.getPlace(rankingSportItem.getPlaceLocation());
-        });
-    }*/
-
-    /*getItemsForHorizontalPoule(horizontalPoule: HorizontalPoule): SportRoundRankingItem[] {
-        const performances: PlaceSportPerformance[] = [];
-        horizontalPoule.getPlaces().forEach((place: Place) => {
-            const pouleRankingItems: SportRoundRankingItem[] = this.getItemsForPoule(place.getPoule());
-            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getPlaceNr());
-            if (pouleRankingItem === undefined) {
-                return;
-            }
-            performances.push(pouleRankingItem.getPerformance());
-        });
-
-        const scoreConfig = horizontalPoule.getRound().getValidScoreConfig(this.competitionSport);
-        const ruleSet = this.getRankingRuleSet();
-        const rankingRules: RankingRule[] = this.rankingRuleGetter.getRules(ruleSet, scoreConfig.useSubScore());
-        return this.rankItems(performances, rankingRules);
-    }*/
-
     protected getRankingRuleSet(): AgainstRuleSet | undefined {
         if (this.competitionSport.getVariant() instanceof AgainstVariant) {
             return this.competitionSport.getCompetition().getAgainstRuleSet();

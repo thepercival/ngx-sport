@@ -25,6 +25,11 @@ export class MultipleQualifyRule extends QualifyRule {
         return this.toPlaces.indexOf(place) >= 0;
     }
 
+    public getToPlaceNumber(place: Place): number {
+        const idx = this.toPlaces.indexOf(place);
+        return idx < 0 ? 0 : idx + 1;
+    }
+
     getToPlaces(): Place[] {
         return this.toPlaces;
     }

@@ -31,6 +31,10 @@ export class PouleStructure extends Array<number> {
         return this[this.length - 1];
     }
 
+    public isBalanced(): boolean {
+        return this.getBiggestPoule() === this.getSmallestPoule();
+    }
+
     public isSelfRefereeAvailable(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): boolean {
         return this.isSelfRefereeSamePouleAvailable(sportVariants)
             || this.isSelfRefereeOtherPoulesAvailable();

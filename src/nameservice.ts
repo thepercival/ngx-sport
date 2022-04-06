@@ -43,7 +43,7 @@ export class NameService {
         if (this.roundsHaveSameName(roundNumber) && roundNumber.getRounds().length > 0) {
             return this.getRoundName(roundNumber.getRounds()[0], true);
         }
-        return this.getHtmlNumber(roundNumber.getNumber()) + ' ronde';
+        return this.getOrdinalAsHtml(roundNumber.getNumber()) + ' ronde';
     }
 
     getRoundNumbersName(startRoundNumber: RoundNumber): string {
@@ -58,7 +58,7 @@ export class NameService {
 
     getRoundName(round: Round, sameName: boolean = false): string {
         if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {
-            return this.getHtmlNumber(round.getNumberAsValue()) + ' ronde';
+            return this.getOrdinalAsHtml(round.getNumberAsValue()) + ' ronde';
         }
 
         const nrOfRoundsToGo = this.getMaxDepth(round);
@@ -67,7 +67,7 @@ export class NameService {
         }
         if (round.getNrOfPlaces() === 2 && sameName === false) {
             const rank = this.getPreviousNrOfDropoutsMap(round).get(round) + 1;
-            return this.getHtmlNumber(rank) + ' / ' + this.getHtmlNumber(rank + 1) + ' pl';
+            return this.getOrdinalAsHtml(rank) + ' / ' + this.getOrdinalAsHtml(rank + 1) + ' pl';
         }
         return 'finale';
     }
@@ -101,8 +101,9 @@ export class NameService {
             }
         }
         if (longName === true) {
-            return this.getPouleName(place.getPoule(), true) + ' nr. ' + place.getPlaceNr();
+            return 'nr. ' + place.getPlaceNr() + ' ' + this.getPouleName(place.getPoule(), true);
         }
+
         const name = this.getPouleName(place.getPoule(), false);
         return name + place.getPlaceNr();
     }
@@ -124,23 +125,71 @@ export class NameService {
         if (fromQualifyRule === undefined) {
             return this.getPlaceName(place, false, longName);
         }
+        const balanced = place.getRound().createPouleStructure().isBalanced();
+        const absolute = !longName || fromQualifyRule.getQualifyTarget() === QualifyTarget.Winners || balanced;
         if (fromQualifyRule instanceof MultipleQualifyRule) {
-            if (longName) {
-                return this.getHorizontalPouleName(fromQualifyRule.getFromHorizontalPoule());
-            }
-            return '?' + fromQualifyRule.getFromPlaceNumber();
+            return this.getMultipleQualifyRuleName(fromQualifyRule, place, longName, absolute);
         }
-
+        // SingleQualifyRule
         const fromPlace = fromQualifyRule.getFromPlace(place);
-        if (longName !== true || fromPlace.getPoule().needsRanking()) {
-            return this.getPlaceName(fromPlace, false, longName);
-        }
-        const name = this.getQualifyTargetDescription(fromPlace.getPlaceNr() === 1 ? QualifyTarget.Winners : QualifyTarget.Losers);
-        return name + ' ' + this.getPouleName(fromPlace.getPoule(), false);
+        const rank = fromPlace.getPlaceNr();
+
+        const poule = fromPlace.getPoule();
+        const pouleName = this.getPouleName(poule, longName);
+        const ordinal = this.getOrdinalAsHtml(rank) + (!poule.needsRanking() ? ' pl.' : '');
+        return longName ? ordinal + ' ' + pouleName : pouleName + rank;
     }
 
     getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName?: boolean): string {
         return gamePlaces.map(gamePlace => this.getPlaceFromName(gamePlace.getPlace(), competitorName, longName)).join(' & ');
+    }
+
+    public getQualifyRuleName(rule: SingleQualifyRule | MultipleQualifyRule): string {
+
+        const balanced = rule.getFromRound().createPouleStructure().isBalanced();
+        const absolute = rule.getQualifyTarget() === QualifyTarget.Winners || balanced;
+
+        const fromHorPoule = rule.getFromHorizontalPoule();
+        const fromNumber = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
+
+        let name = this.getOrdinalAsHtml(fromNumber);
+        if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
+            return name + ' pl. van onderen';
+        }
+        return name + ' plekken';
+    }
+
+    public getMultipleQualifyRuleName(
+        rule: MultipleQualifyRule,
+        place: Place,
+        longName: boolean,
+        absolute: boolean
+    ): string {
+        const fromHorPoule = rule.getFromHorizontalPoule();
+        const fromNumber = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
+
+        const nrOfToPlaces = rule.getNrOfToPlaces();
+        let toPlaceNumber;
+        if (rule.getQualifyTarget() === QualifyTarget.Winners) {
+            toPlaceNumber = rule.getToPlaceNumber(place);
+        } else {
+            toPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - rule.getToPlaceNumber(place));
+        }
+
+        const ordinal = this.getOrdinalAsHtml(toPlaceNumber);
+        if (!longName) {
+            return ordinal + fromNumber;
+        }
+
+        const firstpart = ordinal + ' van';
+
+        let name = firstpart + ' ' + this.getOrdinalAsHtml(fromNumber);
+        if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
+            name += ' pl. van onderen';
+        } else {
+            name += ' plekken';
+        }
+        return name;
     }
 
     /**
@@ -152,27 +201,27 @@ export class NameService {
      *
      * @param horizontalPoule
      */
-    getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
-        const qualifyRule = horizontalPoule.getQualifyRule();
-        if (qualifyRule === undefined) {
-            return 'nummers ' + horizontalPoule.getNumber();
-        }
-        const nrOfToPlaces = qualifyRule.getNrOfToPlaces();
+    // getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
+    //     const qualifyRule = horizontalPoule.getQualifyRule();
+    //     if (qualifyRule === undefined) {
+    //         return 'nummers ' + horizontalPoule.getNumber();
+    //     }
+    //     const nrOfToPlaces = qualifyRule.getNrOfToPlaces();
 
-        if (qualifyRule.getQualifyTarget() === QualifyTarget.Winners) {
-            const nameWinners = 'nummer' + (nrOfToPlaces > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
-            if (qualifyRule instanceof MultipleQualifyRule) {
-                return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'beste ' + nameWinners;
-            }
-            return nameWinners;
-        }
-        let name = (nrOfToPlaces > 1 ? 'nummers ' : '');
-        name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
-        if (qualifyRule instanceof MultipleQualifyRule) {
-            return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'slechtste ' + name;
-        }
-        return name;
-    }
+    //     if (qualifyRule.getQualifyTarget() === QualifyTarget.Winners) {
+    //         const nameWinners = 'nummer' + (nrOfToPlaces > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
+    //         if (qualifyRule instanceof MultipleQualifyRule) {
+    //             return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'beste ' + nameWinners;
+    //         }
+    //         return nameWinners;
+    //     }
+    //     let name = (nrOfToPlaces > 1 ? 'nummers ' : '');
+    //     name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
+    //     if (qualifyRule instanceof MultipleQualifyRule) {
+    //         return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'slechtste ' + name;
+    //     }
+    //     return name;
+    // }
 
     getRefereeName(game: Game, longName?: boolean): string | undefined {
         const referee = game.getReferee();
@@ -228,10 +277,6 @@ export class NameService {
         }
         return nrOfGamePlaces + ' deelnemers';
     }
-
-    /*getRuleSetName(scoreConfig: ScoreConfig): string {
-        return '?';
-    }*/
 
     getRulesName(againstRuleSet: AgainstRuleSet | undefined): string[] {
         const rankingRuleGetter = new RankingRuleGetter();
@@ -303,8 +348,8 @@ export class NameService {
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
     }
 
-    private getHtmlNumber(number: number): string {
-        return number + '<sup>' + (number === 1 ? 'st' : 'd') + 'e</sup>';
+    private getOrdinalAsHtml(number: number): string {
+        return number + '<sup>e</sup>';
     }
 
     private getMaxDepth(round: Round): number {

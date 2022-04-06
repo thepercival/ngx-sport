@@ -147,6 +147,7 @@ export * from './src/structure';
 export * from './src/structure/editor';
 export * from './src/structure/mapper';
 export * from './src/structure/json';
+export * from './src/structure/path';
 export * from './src/structure/placeRanges';
 export * from './src/team';
 export * from './src/team/mapper';

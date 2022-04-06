@@ -15,17 +15,6 @@ export class ScoreConfigService {
     constructor() {
     }
 
-    createDefault(competitionSport: CompetitionSport, round: Round) {
-        const scoreConfig = new ScoreConfig(competitionSport, round, undefined);
-        if (this.hasNext(competitionSport.getSport().getCustomId())) {
-            const subScoreConfig = new ScoreConfig(competitionSport, round, scoreConfig);
-            subScoreConfig.setDirection(ScoreConfig.UPWARDS);
-            subScoreConfig.setMaximum(0);
-            subScoreConfig.setEnabled(false);
-        }
-        return scoreConfig;
-    }
-
     removeFromRound(competitionSport: CompetitionSport, round: Round) {
         const scoreConfig = round.getScoreConfig(competitionSport);
         if (scoreConfig) {
@@ -34,20 +23,7 @@ export class ScoreConfigService {
         round.getChildren().forEach((child: Round) => this.removeFromRound(competitionSport, child));
     }
 
-    protected hasNext(customId?: CustomSport): boolean {
-        if (
-            customId === CustomSport.Badminton
-            || customId === CustomSport.Darts
-            || customId === CustomSport.Squash
-            || customId === CustomSport.TableTennis
-            || customId === CustomSport.Tennis
-            || customId === CustomSport.Volleyball
-            || customId === CustomSport.Padel
-        ) {
-            return true;
-        }
-        return false;
-    }
+
 
     copy(competitionSport: CompetitionSport, round: Round, sourceScoreConfig: ScoreConfig) {
         const newScoreConfig = new ScoreConfig(competitionSport, round, undefined);
@@ -61,6 +37,17 @@ export class ScoreConfigService {
             newSubScoreConfig.setMaximum(previousSubScoreConfig.getMaximum());
             newSubScoreConfig.setEnabled(previousSubScoreConfig.getEnabled());
         }
+    }
+
+    createDefault(competitionSport: CompetitionSport, round: Round): ScoreConfig {
+        const scoreConfig = new ScoreConfig(competitionSport, round, undefined);
+        if (competitionSport.getSport().hasNextDefaultScoreConfig()) {
+            const subScoreConfig = new ScoreConfig(competitionSport, round, scoreConfig);
+            subScoreConfig.setDirection(ScoreConfig.UPWARDS);
+            subScoreConfig.setMaximum(0);
+            subScoreConfig.setEnabled(false);
+        }
+        return scoreConfig;
     }
 
     isDefault(scoreConfig: ScoreConfig): boolean {

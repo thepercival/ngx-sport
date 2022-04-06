@@ -1,5 +1,6 @@
 import { Identifiable } from "./identifiable";
 import { GameMode } from "./planning/gameMode";
+import { PointsCalculation } from "./ranking/pointsCalculation";
 import { CustomSport } from "./sport/custom";
 
 export class Sport extends Identifiable {
@@ -41,5 +42,68 @@ export class Sport extends Identifiable {
 
     setCustomId(id: CustomSport | 0): void {
         this.customId = id;
+    }
+
+    hasNextDefaultScoreConfig(): boolean {
+        if (
+            this.customId === CustomSport.Badminton
+            || this.customId === CustomSport.Darts
+            || this.customId === CustomSport.Squash
+            || this.customId === CustomSport.TableTennis
+            || this.customId === CustomSport.Tennis
+            || this.customId === CustomSport.Volleyball
+            || this.customId === CustomSport.Padel
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    getDefaultPointCalculation(): PointsCalculation {
+        if (this.getDefaultGameMode() === GameMode.Against) {
+            return PointsCalculation.AgainstGamePoints;
+        }
+        return PointsCalculation.Scores;
+    }
+
+    getDefaultWinPoints(): number {
+        if (this.customId === CustomSport.Rugby) {
+            return 4;
+        }
+        if (this.customId === CustomSport.Chess) {
+            return 1;
+        }
+        return 3;
+    }
+
+    getDefaultDrawPoints(): number {
+        if (this.customId === CustomSport.Rugby) {
+            return 2;
+        }
+        if (this.customId === CustomSport.Chess) {
+            return 0.5;
+        }
+        return 1;
+    }
+
+    getDefaultWinPointsExt(): number {
+        if (this.customId === CustomSport.Chess) {
+            return 1;
+        }
+        return 2;
+    }
+
+    getDefaultDrawPointsExt(): number {
+        if (this.customId === CustomSport.Chess) {
+            return 0.5;
+        }
+        return 1;
+    }
+
+    getDefaultLosePointsExt(): number {
+        if (this.customId === CustomSport.IceHockey) {
+            return 1;
+        }
+        return 0;
     }
 }

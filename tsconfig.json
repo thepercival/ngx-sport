@@ -22,12 +22,9 @@
         "importHelpers": true,
         "lib": [
             "dom",
-            "es2018"
+            "es2020"
         ]
-    } /*,
-    "files": [
-        "123"
-    ]*/,
+    },
     "exclude": [
         "node_modules",
         "dist",
@@ -35,48 +32,3 @@
         "**/*.spec.ts"
     ]
 }
-// {
-//     "angularCompilerOptions": {
-//         "skipTemplateCodegen": true,
-//         "strictMetadataEmit": true,
-//         "fullTemplateTypeCheck": true,
-//         "enableResourceInlining": true,
-//         "strictTemplates": true,
-//         "strictInjectionParameters": true,
-//         "enableIvy": true,
-//         "compilationMode": "partial"
-//     },
-//     "buildOnSave": false,
-//     "compileOnSave": false,
-//     "compilerOptions": {
-//         "baseUrl": ".",
-//         "target": "es2015",
-//         "module": "es2020",
-//         "moduleResolution": "node",
-//         "declaration": true,
-//         "inlineSourceMap": true,
-//         "inlineSources": true,
-//         "skipLibCheck": true,
-//         "emitDecoratorMetadata": false,
-//         "experimentalDecorators": true,
-//         "importHelpers": true,
-//         "lib": [
-//             "dom",
-//             "es2018"
-//         ],
-//         "strict": true,
-//         "forceConsistentCasingInFileNames": true,
-//         "noFallthroughCasesInSwitch": true,
-//         "noImplicitReturns": true,
-//         "typeRoots": [
-//             "node_modules/@types"
-//         ]
-//     },
-//     "exclude": [
-//         "node_modules",
-//         "dist",
-//         "**/*.ngfactory.ts",
-//         "**/*.shim.ts",
-//         "**/*.spec.ts"
-//     ]
-// }
