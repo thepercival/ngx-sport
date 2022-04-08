@@ -16,7 +16,7 @@ export class PlanningConfig extends Identifiable {
         protected minutesPerGameExt: number,
         protected minutesBetweenGames: number,
         protected minutesAfter: number,
-        protected selfReferee: number) {
+        protected selfReferee: SelfReferee) {
         super();
         this.roundNumber.setPlanningConfig(this);
     }
@@ -53,7 +53,7 @@ export class PlanningConfig extends Identifiable {
         return this.minutesAfter;
     }
 
-    getSelfReferee(): number {
+    getSelfReferee(): SelfReferee {
         return this.selfReferee;
     }
 
