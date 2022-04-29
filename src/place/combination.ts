@@ -20,7 +20,7 @@ export class PlaceCombination {
     }
 
     static getNumber(place: Place): number {
-        return Math.pow(2, place.getNumber() - 1);
+        return Math.pow(2, place.getPlaceNr() - 1);
     }
 
     getHome(): Place[] { return this.home; }

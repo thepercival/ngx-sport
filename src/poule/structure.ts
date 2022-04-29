@@ -7,12 +7,12 @@ export class PouleStructure extends Array<number> {
 
     constructor(...nrOfPlaces: number[]) {
         super();
-        nrOfPlaces.sort((nrOfPlacesPouleA: number, nrOfPlacesPouleB: number): number => {
-            return nrOfPlacesPouleA > nrOfPlacesPouleB ? -1 : 1;
-        });
         for (let nrOfPlacesIt of nrOfPlaces) {
             this.push(nrOfPlacesIt);
         }
+        this.sort((nrOfPlacesPouleA: number, nrOfPlacesPouleB: number): number => {
+            return nrOfPlacesPouleA > nrOfPlacesPouleB ? -1 : 1;
+        });
     }
 
     public getNrOfPoules(): number {

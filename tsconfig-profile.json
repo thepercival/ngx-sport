@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "outDir": "./test/profile/dist",
+        "outDir": "./test/out",
         "sourceMap": true,
         "declaration": false,
         "module": "commonjs",
@@ -20,7 +20,7 @@
     "exclude": [
         "node_modules"
     ],
-    "files": [
-        "./test/profile/planning.ts"
+    "include": [
+        "./test/cases/**/*.ts"
     ]
 }

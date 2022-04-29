@@ -45,6 +45,7 @@ export class Grid {
             line.forEach((cell: GridCell) => {
                 lineAsString += cell.toString();
             });
+            console.log(lineAsString);
         });
     }
 

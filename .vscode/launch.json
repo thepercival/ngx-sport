@@ -4,59 +4,20 @@
         {
             "type": "node",
             "request": "launch",
-            "preLaunchTask": "tsc",
-            "name": "Mocha Tests",
+            "name": "Launch Program",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "preLaunchTask": "tsc: build - tsconfig-profile.json",
+            "outFiles": [
+                "${workspaceFolder}/test/out/**/*.js"
+            ],
             "runtimeArgs": [
-                "-r",
-                "ts-node/register"
+                "--loader",
+                "ts-node/esm"
             ],
             "args": [
-                "--require",
-                "ts-node/esm",
-                "-u",
-                "tdd",
-                "--timeout",
-                "999999",
-                "--colors",
-                "--recursive",
-                "${workspaceFolder}/test/cases/ranking/calculator/*.js"
+                "${workspaceFolder}/test/out/helloworld.{ts,js}"
             ],
-            "env": {
-                "TS_NODE_PROJECT": "tsconfig-test.json",
-                "NODE_ENV": "development",
-            },
             "internalConsoleOptions": "openOnSessionStart"
-        },
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "profiler",
-        //     "runtimeArgs": [
-        //         "-r",
-        //         "ts-node/register"
-        //     ],
-        //     "env": {
-        //         "TS_NODE_PROJECT": "tsconfig-profile.json"
-        //     },
-        //     "args": [
-        //         "${workspaceFolder}/test/profile/planning.ts"
-        //     ]
-        // },
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "profilerjs",
-        //     "runtimeArgs": [
-        //         "-r",
-        //         "ts-node/register"
-        //     ],
-        //     "env": {
-        //         "TS_NODE_PROJECT": "tsconfig-profile-2.json"
-        //     },
-        //     "args": [
-        //         "${workspaceFolder}/test/profile/planning.ts"
-        //     ]
-        // }
+        }
     ]
 }

@@ -36,7 +36,7 @@
     "semantic-release": "^19.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.2",
-    "typescript": "4.4.4",
+    "typescript": "^4.4.4",
     "zone.js": "^0.11"
   },
   "directories": {},
