@@ -30,6 +30,7 @@ export * from './src/competitor/json';
 export * from './src/competitor/team';
 export * from './src/competitor/team/mapper';
 export * from './src/competitor/team/json';
+export * from './src/console/ansiColor';
 export * from './src/field';
 export * from './src/field/mapper';
 export * from './src/field/json';
@@ -83,8 +84,9 @@ export * from './src/planning/gameAmountConfig/service';
 export * from './src/planning/gameAmountConfig/json';
 export * from './src/planning/gameMode';
 export * from './src/poule';
-export * from './src/poule/mapper';
 export * from './src/poule/horizontal';
+export * from './src/poule/json';
+export * from './src/poule/mapper';
 export * from './src/poule/structure';
 export * from './src/poule/structure/balanced';
 export * from './src/qualify/againstConfig';
@@ -156,5 +158,8 @@ export * from './src/team/player/json';
 export * from './src/team/player/mapper';
 export * from './src/ngx-sport.module';
 // export { registerLocaleData as ɵregisterLocaleData } from './src/i18n/locale_data';
+
+// tmp
+// export * from './test/helpers/structureOutput';
 
 // This file only reexports content of the `src` folder. Keep it that way.

@@ -27,7 +27,7 @@ describe('DefaultQualifyRuleCreator', () => {
             throw Error('qualifyGroup can not be undefined');
         }
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         winnersRound.getPoules().forEach((poule: Poule) => {
             const fromPlace1 = qualifyGroup.getFromPlace(poule.getPlace(1));
@@ -55,7 +55,7 @@ describe('DefaultQualifyRuleCreator', () => {
             throw Error('qualifyGroup can not be undefined');
         }
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         winnersRound.getPoules().forEach((poule: Poule) => {
             const fromPlace1 = qualifyGroup.getFromPlace(poule.getPlace(1));
@@ -89,7 +89,7 @@ describe('DefaultQualifyRuleCreator', () => {
             throw Error('lastQualifyGroup can not be undefined');
         }
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         quarterFinal.getPoules().forEach((poule: Poule) => {
             // fromPlace1
@@ -147,7 +147,7 @@ describe('DefaultQualifyRuleCreator', () => {
             const quarterFinal = structureEditor.addChildRound(fourthRound, QualifyTarget.Winners, [2, 2, 2, 2]);
             const semiFinal = structureEditor.addChildRound(quarterFinal, QualifyTarget.Winners, [2, 2]);
             structureEditor.addChildRound(semiFinal, QualifyTarget.Winners, [2]);
-            // (new StructureOutput()).output(structure, console);
+            // (new StructureOutput()).toConsole(structure, console);
         };
 
         // (async function demo() {

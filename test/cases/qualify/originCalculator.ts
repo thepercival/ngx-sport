@@ -46,7 +46,7 @@ describe('QualifyOriginCalculator', () => {
 
         expect(origins.length).to.equal(8);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('single rule, winners->depth 1', () => {
@@ -68,7 +68,7 @@ describe('QualifyOriginCalculator', () => {
         const lastWinnerOrigins = originCalculator.getPossibleOrigins(lastPouleWinnersRound);
         expect(lastWinnerOrigins.length).to.equal(2);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('single rule, winners->depth 1', () => {
@@ -82,7 +82,7 @@ describe('QualifyOriginCalculator', () => {
 
         const winnersWinnersRound = structureEditor.addChildRound(winnersChildRound, QualifyTarget.Winners, [2, 2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const originCalculator = new QualifyOriginCalculator();
 

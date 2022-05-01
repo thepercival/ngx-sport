@@ -1,16 +1,14 @@
-import { NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
+import { AnsiColor, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
 import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
 import { SingleQualifyRule } from "../../../src/qualify/rule/single";
 import { QualifyTarget } from "../../../src/qualify/target";
 import { GridAlign } from "../grid/align";
-import { GridColor } from "../grid/color";
 import { Coordinate } from "../grid/coordinate";
 import { GridDrawer } from "../grid/drawer";
 import { RangeCalculator } from "./rangeCalculator";
 
 export class DrawHelper {
-    // use Color;
 
     protected nameService: NameService;
     protected rangeCalculator: RangeCalculator;
@@ -39,6 +37,13 @@ export class DrawHelper {
 
     public drawRound(round: Round, origin: Coordinate, roundNumberHeight: number): Coordinate {
         this.drawRoundBorder(round, origin, roundNumberHeight);
+        if (round.isRoot()) {
+            const width = this.rangeCalculator.getRoundWidth(round);
+            let catName = 'Cat "?"';
+            catName = catName.substring(0, width - 4);
+            const startCoord = origin.addX(Math.round((width - catName.length) / 2));
+            this.drawer.drawToRight(startCoord, catName, AnsiColor.Cyan);
+        }
 
         let pouleCoordinate = this.getPoulesStartCoordinate(origin, round);
         round.getPoules().forEach((poule: Poule) => {
@@ -174,7 +179,7 @@ export class DrawHelper {
                 let color = losersColor;
                 if (winnersMultipleRuleCoordinate !== undefined
                     && winnersMultipleRuleCoordinate.getX() === currentCoordinate.getX()) {
-                    color = 'Magenta';
+                    color = AnsiColor.Magenta;
                 }
                 this.drawer.drawVertAwayFromOrigin(
                     currentCoordinate, this.getQualifyRuleString(multipleRule), color
@@ -218,30 +223,18 @@ export class DrawHelper {
         return origin.addX(roundWidth + RangeCalculator.PADDING);
     }
 
-    getQualifyGroupColor(qualifyGroup: QualifyGroup): string {
+    getQualifyGroupColor(qualifyGroup: QualifyGroup): AnsiColor {
         if (qualifyGroup.getTarget() === QualifyTarget.Winners) {
             switch (qualifyGroup.getNumber()) {
                 case 1:
-                    return '#298F00';
-                case 2:
-                    return '#84CF96';
-                case 3:
-                    return '#0588BC';
-                case 4:
-                    return '#00578A';
+                    return AnsiColor.Green;
             }
-            return '#FFFFFF';
+            return AnsiColor.Blue;
         }
         switch (qualifyGroup.getNumber()) {
             case 1:
-                return '#FFFF66';
-            case 2:
-                return '#FFCC00';
-            case 3:
-                return '#FF9900';
-            case 4:
-                return '#FF0000';
+                return AnsiColor.Red;
         }
-        return '#FFFFFF';
+        return AnsiColor.Yellow;
     }
 }

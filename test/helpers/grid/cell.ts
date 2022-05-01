@@ -1,9 +1,7 @@
-import { GridColor } from "./color";
-
-import chalk from 'chalk';
+import { AnsiColor, AnsiColorHelper } from "../../../public-api";
 
 export class GridCell {
-    protected color: GridColor | string = GridColor.White;
+    protected color: AnsiColor | undefined;
 
     public constructor(protected value: string) {
     }
@@ -16,26 +14,18 @@ export class GridCell {
         this.value = value;
     }
 
-    public getColor(): GridColor | string {
+    public getColor(): AnsiColor | undefined {
         return this.color;
     }
 
-    public setColor(color: GridColor | string): void {
+    public setColor(color: AnsiColor | undefined): void {
         this.color = color;
     }
 
     public toString() {
-        if (typeof this.color === 'string') {
-            return chalk.hex(this.color)(this.value);
+        if (this.color === undefined) {
+            return this.value;
         }
-        switch (this.color) {
-            case GridColor.Red:
-                return chalk.red(this.value);
-            case GridColor.Green:
-                return chalk.green(this.value);
-            case GridColor.Yellow:
-                return chalk.yellow(this.value);
-        }
-        return chalk(this.value);
+        return AnsiColorHelper.getColored(this.color, this.value);
     }
 }

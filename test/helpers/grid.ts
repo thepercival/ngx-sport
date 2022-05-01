@@ -1,3 +1,4 @@
+import { AnsiColor } from "../../public-api";
 import { GridCell } from "./grid/cell";
 import { Coordinate } from "./grid/coordinate";
 
@@ -14,7 +15,11 @@ export class Grid {
         }
     }
 
-    public setColor(coordinate: Coordinate, color: number | string): void {
+    public getLines(): GridCell[][] {
+        return this.grid;
+    }
+
+    public setColor(coordinate: Coordinate, color: AnsiColor | undefined): void {
         this.grid[coordinate.getY()][coordinate.getX()].setColor(color);
     }
 
@@ -38,17 +43,6 @@ export class Grid {
         return coordinate.decrementY();
     }
 
-    public output(console: Console): void {
-        let lineNr = 1;
-        this.grid.forEach((line: GridCell[]) => {
-            let lineAsString = '';
-            line.forEach((cell: GridCell) => {
-                lineAsString += cell.toString();
-            });
-            console.log(lineAsString);
-        });
-    }
-
     private getLineNr(lineNr: number): string {
         const maxStringLength = ('' + this.grid.length).length;
         let lineNrAsString = '' + lineNr;
@@ -56,5 +50,15 @@ export class Grid {
             lineNrAsString = ' ' + lineNrAsString;
         }
         return lineNrAsString + ' ';
+    }
+
+    public equalsGrid(grid: Grid): boolean {
+
+        for (let lineNr = 1; lineNr <= this.height; lineNr++) {
+            if (this.getLineNr(lineNr) !== grid.getLineNr(lineNr)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

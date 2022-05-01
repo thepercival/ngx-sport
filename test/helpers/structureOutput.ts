@@ -1,5 +1,6 @@
 import { Structure } from "../../public-api";
 import { Grid } from "./grid";
+import { GridCell } from "./grid/cell";
 import { Coordinate } from "./grid/coordinate";
 import { GridDrawer } from "./grid/drawer";
 import { DrawHelper } from "./structureOutput/drawerHelper";
@@ -13,22 +14,35 @@ export class StructureOutput {
         this.rangeCalculator = new RangeCalculator();
     }
 
-    public output(structure: Structure, console: Console): void {
-        const grid = this.getGrid(structure);
+
+    public createGrid(structure: Structure): Grid {
+        const width = this.rangeCalculator.getStructureWidth(structure);
+        const height = this.rangeCalculator.getStructureHeight(structure);
+        const grid = new Grid(height, width);
+
+        // fill
         const drawer = new GridDrawer(grid);
         const coordinate = new Coordinate(0, 0);
         const drawHelper = new DrawHelper(drawer);
         drawHelper.drawStructure(structure, coordinate);
 
+        return grid;
+
         //        batchColor = this->useColors() ? (batchNr % 10) : -1;
         //        retVal = 'batch ' . (batchNr < 10 ? ' ' : '') . batchNr;
         //        return this->outputColor(batchColor, retVal);
-        grid.output(console);
+
     }
 
-    protected getGrid(structure: Structure): Grid {
-        const width = this.rangeCalculator.getStructureWidth(structure);
-        const height = this.rangeCalculator.getStructureHeight(structure);
-        return new Grid(height, width);
+    public toConsole(structure: Structure, console: Console): void {
+        const grid = this.createGrid(structure);
+
+        grid.getLines().forEach((line: GridCell[]) => {
+            let lineAsString = '';
+            line.forEach((cell: GridCell) => {
+                lineAsString += cell.toString();
+            });
+            console.log(lineAsString);
+        });
     }
 }

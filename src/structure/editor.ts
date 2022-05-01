@@ -301,7 +301,7 @@ export class StructureEditor {
         if (childRound.getNrOfPlaces() <= this.getMinPlacesPerPouleSmall()) {
             qualifyGroup.detach();
         } else {
-            this.removePlaceFromRound(childRound);
+            this.removePlaceFromRound(childRound, false);
         }
         // end editing
         this.rulesCreator.create(parentRound);
@@ -419,7 +419,7 @@ export class StructureEditor {
         }
         this.horPouleCreator.create(round);
         const nrOfDropoutPlaces = round.getNrOfDropoutPlaces();
-        if (nrOfDropoutPlaces < 0 || (canHaveZeroDropoutPlaces && round.getNrOfDropoutPlaces() === 0)) {
+        if (nrOfDropoutPlaces < 0 || (!canHaveZeroDropoutPlaces && round.getNrOfDropoutPlaces() === 0)) {
             const losersBorderQualifyGroup = round.getBorderQualifyGroup(QualifyTarget.Losers);
             const childQualifyTarget = losersBorderQualifyGroup !== undefined ? QualifyTarget.Losers : QualifyTarget.Winners;
             this.removeQualifier(round, childQualifyTarget);

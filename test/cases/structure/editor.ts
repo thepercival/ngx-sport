@@ -31,7 +31,7 @@ describe('StructureEditor', () => {
         expect(structure.getRoundNumber(3)).to.equal(undefined);
         expect(structure.getRoundNumber(0)).to.equal(undefined);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('addPlaceToRootRound when losersChildRound is present', () => {
@@ -49,7 +49,7 @@ describe('StructureEditor', () => {
 
         structureEditor.addPlaceToRootRound(rootRound);
 
-        //(new StructureOutput()).output(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         const qualifyGroup = childRound.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
@@ -77,11 +77,11 @@ describe('StructureEditor', () => {
 
         const childRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2, 2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         structureEditor.removePlaceFromRootRound(rootRound);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const qualifyGroup = childRound.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
@@ -110,7 +110,7 @@ describe('StructureEditor', () => {
         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [4]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(function () {
             structureEditor.removePlaceFromRootRound(rootRound);
@@ -126,7 +126,7 @@ describe('StructureEditor', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         structureEditor.addPouleToRootRound(rootRound);
-        //(new StructureOutput()).output(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         expect(rootRound.getLastPoule().getNumber()).to.equal(3);
         expect(rootRound.getLastPoule().getPlaces().length).to.equal(2);
@@ -144,7 +144,7 @@ describe('StructureEditor', () => {
         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
 
         structureEditor.addPouleToRootRound(rootRound);
-        //(new StructureOutput()).output(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         const qualifyGroup = losersChildRound.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
@@ -166,12 +166,12 @@ describe('StructureEditor', () => {
         const firstPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const secondPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         // console.log('');
 
         structureEditor.addPouleToRootRound(rootRound);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const firstPlaces = firstPlacesRound.getPoule(1).getPlaces();
         expect(firstPlaces.length).to.equal(3);
@@ -190,12 +190,12 @@ describe('StructureEditor', () => {
         const lastPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
         const secondLastPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         //console.log('');
 
         structureEditor.addPouleToRootRound(rootRound);
 
-        //(new StructureOutput()).output(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         const lastPlaces = lastPlacesRound.getPoule(1).getPlaces();
         expect(lastPlaces.length).to.equal(3);
@@ -217,12 +217,12 @@ describe('StructureEditor', () => {
         structureEditor.addChildRound(winnersRound, QualifyTarget.Winners, [2]);
         structureEditor.addChildRound(winnersRound, QualifyTarget.Winners, [2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         // console.log('');
 
         structureEditor.incrementNrOfPoules(winnersRound);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const firstQualifyGroup = winnersRound.getQualifyGroups()[0];
         expect(firstQualifyGroup).to.not.be.undefined;
@@ -245,12 +245,12 @@ describe('StructureEditor', () => {
         structureEditor.addChildRound(winnersRound, QualifyTarget.Winners, [4]);
         structureEditor.addChildRound(winnersRound, QualifyTarget.Winners, [4]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         // console.log('');
 
         structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1, 3);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const firstQualifyGroup = winnersRound.getQualifyGroups()[0];
         expect(firstQualifyGroup).to.not.be.undefined;
@@ -298,12 +298,11 @@ describe('StructureEditor', () => {
         structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
 
         structureEditor.removePouleFromRootRound(rootRound);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(rootRound.getChildren().length).to.equal(2);
     });
 
-    // 4,3 with childplaces
     it('remove poule from rootRound with second-round-no-cross-finals', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
@@ -317,9 +316,9 @@ describe('StructureEditor', () => {
         structureEditor.addChildRound(firstPlacesRound, QualifyTarget.Winners, [2]);
         structureEditor.addChildRound(firstPlacesRound, QualifyTarget.Winners, [2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removePouleFromRootRound(rootRound);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(firstPlacesRound.getQualifyGroups(QualifyTarget.Winners).length).to.equal(2);
         expect(firstPlacesRound.getPoule(1).getPlaces().length).to.equal(3);
@@ -327,24 +326,27 @@ describe('StructureEditor', () => {
 
         expect(secondPlacesRound.getPoule(1).getPlaces().length).to.equal(3);
         expect(secondPlacesRound.getPoule(2).getPlaces().length).to.equal(2);
+    });
 
+    it('remove poule from rootRound than remove last roundnumber', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4, 4, 4], createPlanningConfigNoTime());
+        const rootRound = structure.getRootRound();
+
+        const firstPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
+        const secondPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
+
+        structureEditor.addChildRound(firstPlacesRound, QualifyTarget.Winners, [2]);
+        structureEditor.addChildRound(secondPlacesRound, QualifyTarget.Winners, [2]);
+
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removePouleFromRootRound(rootRound);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
-        expect(firstPlacesRound.getQualifyGroups(QualifyTarget.Winners).length).to.equal(2);
-        expect(firstPlacesRound.getPoule(1).getPlaces().length).to.equal(2);
-        expect(firstPlacesRound.getPoule(2).getPlaces().length).to.equal(2);
-
-        expect(secondPlacesRound.getPoule(1).getPlaces().length).to.equal(2);
-        expect(secondPlacesRound.getPoule(2).getPlaces().length).to.equal(2);
-
-        it('should throw "no poules available"', function (done) {
-            try {
-                structureEditor.removePouleFromRootRound(rootRound)
-            } catch (error) {
-                done();
-            }
-        });
+        expect(firstPlacesRound.getChildren().length).to.equal(0);
+        expect(secondPlacesRound.getChildren().length).to.equal(0);
     });
 
     it('incrementNrOfPoules too little placesperpoule', () => {
@@ -379,9 +381,9 @@ describe('StructureEditor', () => {
 
         structureEditor.addChildRound(winnersChildRound, QualifyTarget.Winners, [4]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.incrementNrOfPoules(winnersChildRound);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(winnersChildRound.getNrOfPlaces()).to.equal(6);
     });
@@ -406,7 +408,7 @@ describe('StructureEditor', () => {
         const rootRound = structure.getRootRound();
 
         structureEditor.decrementNrOfPoules(rootRound);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(rootRound.getPoules().length).to.equal(2);
         expect(rootRound.getFirstPoule().getPlaces().length).to.equal(4);
@@ -420,11 +422,11 @@ describe('StructureEditor', () => {
         const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
         const rootRound = structure.getRootRound();
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
             structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1);
         }).to.throw();
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('addQualifiers out of range', () => {
@@ -445,11 +447,11 @@ describe('StructureEditor', () => {
         const rootRound = structure.getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
             structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1);
         }).to.throw();
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('addQualifiers new Round', () => {
@@ -460,7 +462,7 @@ describe('StructureEditor', () => {
         const rootRound = structure.getRootRound();
 
         structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 2);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const winnersChildRound = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(winnersChildRound).to.not.be.undefined;
@@ -478,17 +480,17 @@ describe('StructureEditor', () => {
         const semiFinals = structureEditor.addChildRound(quarterFinals, QualifyTarget.Winners, [2, 2]);
         const final = structureEditor.addChildRound(semiFinals, QualifyTarget.Winners, [2]);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        //(new StructureOutput()).output(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const newSemiFinals = rootRound.getChild(QualifyTarget.Winners, 1);
         expect(newSemiFinals).to.not.equal(undefined);
@@ -516,11 +518,11 @@ describe('StructureEditor', () => {
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
         expect(structure.getLastRoundNumber()).to.equal(firstRoundNumber);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.removeQualifier(rootRound, QualifyTarget.Winners);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(rootRound.getQualifyGroups(QualifyTarget.Winners).length).to.equal(0);
         expect(structure.getRoundNumbers().length).to.equal(1);
@@ -548,7 +550,7 @@ describe('StructureEditor', () => {
         if (firstSingleQualifyRule === undefined) {
             return;
         }
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
             structureEditor.splitQualifyGroupFrom(qualifyGroup, firstSingleQualifyRule);
         }).to.throw();
@@ -573,9 +575,9 @@ describe('StructureEditor', () => {
         if (firstSingleQualifyRule === undefined) {
             return;
         }
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         structureEditor.splitQualifyGroupFrom(qualifyGroup, firstSingleQualifyRule);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('isQualifyGroupSplittableAt no', () => {
@@ -607,7 +609,7 @@ describe('StructureEditor', () => {
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const winnersQualifyGroup = winnersRound.getParentQualifyGroup();
         const losersQualifyGroup = losersRound.getParentQualifyGroup();
@@ -635,7 +637,7 @@ describe('StructureEditor', () => {
         const rootRound = structure.getRootRound();
 
         const nextRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const qualifyGroup = nextRound.getParentQualifyGroup();
         expect(qualifyGroup).to.not.equal(undefined);

@@ -61,7 +61,7 @@ describe('QualifyReservationService', () => {
         const rootRound: Round = structure.getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2]);
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -127,7 +127,7 @@ describe('QualifyReservationService', () => {
         const fromPlaceLocations = firstWinnersHorPoule.getPlaces().map(place => {
             return place;
         });
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
         // none available
         const placeLocationOne = resService.getFreeAndLeastAvailabe(1, rootRound, fromPlaceLocations);
         expect(placeLocationOne.getPouleNr()).to.equal(pouleOne.getNumber());

@@ -1,6 +1,6 @@
+import { AnsiColor } from "../../../public-api";
 import { Grid } from "../grid";
 import { GridAlign } from "./align";
-import { GridColor } from "./color";
 import { Coordinate } from "./coordinate";
 
 export class GridDrawer {
@@ -11,7 +11,7 @@ export class GridDrawer {
     public constructor(protected grid: Grid) {
     }
 
-    public drawToRight(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
+    public drawToRight(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -22,11 +22,11 @@ export class GridDrawer {
         return coordinate.decrementX();
     }
 
-    public drawLineToRight(coordinate: Coordinate, length: number, value: string = '-', color: GridColor | string = 0): Coordinate {
+    public drawLineToRight(coordinate: Coordinate, length: number, value: string = '-', color?: AnsiColor | undefined): Coordinate {
         return this.drawToRight(coordinate, this.initString(length, value), color);
     }
 
-    public drawToLeft(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
+    public drawToLeft(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -38,15 +38,15 @@ export class GridDrawer {
     }
 
 
-    public drawLineToLeft(coordinate: Coordinate, length: number, value: string = '-', color: GridColor | string = 0): Coordinate {
+    public drawLineToLeft(coordinate: Coordinate, length: number, value: string = '-', color?: AnsiColor | undefined): Coordinate {
         return this.drawToLeft(coordinate, this.initString(length, value), color);
     }
 
-    public drawLineVertToOrigin(coordinate: Coordinate, length: number, value: string = '|', color: GridColor | string = 0): Coordinate {
+    public drawLineVertToOrigin(coordinate: Coordinate, length: number, value: string = '|', color?: AnsiColor | undefined): Coordinate {
         return this.drawVertToOrigin(coordinate, this.initString(length, value), color);
     }
 
-    public drawVertToOrigin(coordinate: Coordinate, value: string, color: GridColor | string = 0): Coordinate {
+    public drawVertToOrigin(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -57,11 +57,11 @@ export class GridDrawer {
         return coordinate.incrementY();
     }
 
-    public drawLineVertAwayFromOrigin(coordinate: Coordinate, length: number, value: string = '|', color: GridColor | string = 0): Coordinate {
+    public drawLineVertAwayFromOrigin(coordinate: Coordinate, length: number, value: string = '|', color?: AnsiColor | undefined): Coordinate {
         return this.drawVertAwayFromOrigin(coordinate, this.initString(length, value), color);
     }
 
-    public drawVertAwayFromOrigin(coordinate: Coordinate, value: string, color: number | string = 0): Coordinate {
+    public drawVertAwayFromOrigin(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -72,7 +72,7 @@ export class GridDrawer {
         return coordinate.decrementY();
     }
 
-    public drawCellToRight(coordinate: Coordinate, text: string, width: number, align: GridAlign, color: GridColor | string = 0): Coordinate {
+    public drawCellToRight(coordinate: Coordinate, text: string, width: number, align: GridAlign, color?: AnsiColor | undefined): Coordinate {
         const char = ' ';
         if (text.length > width) {
             text = text.substr(0, width);
@@ -112,5 +112,10 @@ export class GridDrawer {
             return text + char;
         }
         return char + text;
+    }
+
+    public equalsGrid(grid: Grid): boolean {
+
+        return this.grid.equalsGrid(grid);
     }
 }

@@ -39,7 +39,7 @@ describe('PreviousNrOfDropoutsMap', () => {
 
         expect(previousDropoutsMap.get(rootRound)).to.equal(5);
 
-        // (new StructureOutput()).output(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     /*it('setStructureNumbers', () => {
