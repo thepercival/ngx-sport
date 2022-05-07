@@ -21,6 +21,9 @@
         "node_modules"
     ],
     "include": [
-        "./test/cases/**/*.ts"
+        "./src/**/*.ts",
+        "./test/cases/**/*.ts",
+        "./test/helpers/**/*.ts",
+        "./public-api.ts",
     ]
 }

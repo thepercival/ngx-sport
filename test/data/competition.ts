@@ -1,4 +1,31 @@
-import { CustomSport, GameMode, JsonCompetition, AgainstRuleSet } from "../../public-api";
+import { CustomSport, GameMode, JsonCompetition, AgainstRuleSet, PointsCalculation, JsonSport } from "../../public-api";
+
+export const jsonVoetbal: JsonSport = {
+    id: 0,
+    name: 'voetbal',
+    team: true,
+    customId: CustomSport.Football,
+    defaultGameMode: GameMode.Against,
+    defaultNrOfSidePlaces: 1
+};
+
+export const jsonHockey: JsonSport = {
+    id: 0,
+    name: 'hockey',
+    team: true,
+    customId: CustomSport.Hockey,
+    defaultGameMode: GameMode.Against,
+    defaultNrOfSidePlaces: 1
+};
+
+export const jsonBasketball: JsonSport = {
+    id: 0,
+    name: 'basketbal',
+    team: true,
+    customId: CustomSport.Basketball,
+    defaultGameMode: GameMode.Against,
+    defaultNrOfSidePlaces: 1
+};
 
 export const jsonBaseCompetition: JsonCompetition = {
     id: 0,
@@ -19,20 +46,14 @@ export const jsonBaseCompetition: JsonCompetition = {
     sports: [
         {
             id: 0,
-            sport: {
-                id: 0,
-                name: 'voetbal',
-                team: true,
-                customId: CustomSport.Football,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
             nrOfGamePlaces: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: [
                 {
                     id: 1,
@@ -50,6 +71,9 @@ export const jsonBaseCompetition: JsonCompetition = {
     startDateTime: '2030-01-01T12:00:00.000Z',
     againstRuleSet: AgainstRuleSet.DiffFirst
 };
+
+export const jsonCompetitionScoresOnly = jsonBaseCompetition;
+jsonCompetitionScoresOnly.sports[0].defaultPointsCalculation = PointsCalculation.Scores;
 
 export const jsonMultiSportsCompetition: JsonCompetition = {
     id: 0,
@@ -70,20 +94,14 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
     sports: [
         {
             id: CustomSport.Football,
-            sport: {
-                id: 0,
-                name: 'voetbal',
-                team: true,
-                customId: CustomSport.Football,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
             nrOfGamePlaces: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: [
                 {
                     id: 1,
@@ -99,20 +117,14 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
         },
         {
             id: CustomSport.Hockey,
-            sport: {
-                id: 0,
-                name: 'hockey',
-                team: true,
-                customId: CustomSport.Hockey,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonHockey,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
             nrOfGamePlaces: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: [
                 {
                     id: 3,
@@ -128,20 +140,14 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
         },
         {
             id: CustomSport.Basketball,
-            sport: {
-                id: 0,
-                name: 'basketbal',
-                team: true,
-                customId: CustomSport.Basketball,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonBasketball,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
             nrOfGamePlaces: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: [
                 {
                     id: 5,

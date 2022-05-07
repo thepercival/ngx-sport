@@ -60,7 +60,7 @@ export class AgainstGame extends Game {
         return undefined;
     }
 
-    getAgainstQualifyConfig(): AgainstQualifyConfig | undefined {
+    getAgainstQualifyConfig(): AgainstQualifyConfig {
         return this.getRound().getValidAgainstQualifyConfig(this.competitionSport);
     }
 

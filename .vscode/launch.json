@@ -12,10 +12,12 @@
             ],
             "runtimeArgs": [
                 "--loader",
-                "ts-node/esm"
+                "ts-node/esm",
+                "--trace-warnings"
             ],
             "args": [
-                "${workspaceFolder}/test/out/helloworld.{ts,js}"
+                "${workspaceFolder}/test/cases/ranking/calculator/round.ts"
+                // "${workspaceFolder}/test/out/helloworld.{ts,js}"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }

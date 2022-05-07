@@ -4,7 +4,7 @@ import { PlaceRanges } from '../../../src/structure/placeRanges';
 import { Sport } from '../../../src/sport';
 import { GameMode } from '../../../src/planning/gameMode';
 import { BalancedPouleStructure } from '../../../src/poule/structure/balanced';
-import { AgainstH2h, AllInOneGame, Single } from '../../../public-api';
+import { AgainstH2h, AllInOneGame, PointsCalculation, Single } from '../../../public-api';
 import { getCompetitionSportService } from '../../helpers/singletonCreator';
 import { AgainstGpp } from '../../../src/sport/variant/against/gamesPerPlace';
 

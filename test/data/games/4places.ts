@@ -1,4 +1,5 @@
-import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState } from "../../../public-api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState, PointsCalculation } from "../../../public-api";
+import { jsonBasketball } from "../competition";
 
 
 export const jsonGames4Places: JsonAgainstGame[] = [
@@ -20,6 +21,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -65,6 +67,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -110,6 +113,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -157,6 +161,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -194,7 +199,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 team: true,
                 customId: CustomSport.Football,
                 defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
+                defaultNrOfSidePlaces: 1,
             },
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -202,6 +207,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -239,7 +245,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
                 team: true,
                 customId: CustomSport.Football,
                 defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
+                defaultNrOfSidePlaces: 1,
             },
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -247,6 +253,7 @@ export const jsonGames4Places: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -287,7 +294,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
                 team: true,
                 customId: CustomSport.Football,
                 defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
+                defaultNrOfSidePlaces: 1,
             },
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -295,6 +302,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -332,7 +340,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
                 team: true,
                 customId: CustomSport.Football,
                 defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
+                defaultNrOfSidePlaces: 1,
             },
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -340,6 +348,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -377,7 +386,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
                 team: true,
                 customId: CustomSport.Hockey,
                 defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
+                defaultNrOfSidePlaces: 1,
             },
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -385,6 +394,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -432,6 +442,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -463,20 +474,14 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         id: 0,
         competitionSport: {
             id: CustomSport.Basketball,
-            sport: {
-                id: 0,
-                name: 'basketbal',
-                team: true,
-                customId: CustomSport.Basketball,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonBasketball,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -522,6 +527,7 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
             nrOfGamePlaces: 0,
             nrOfH2H: 0,
             nrOfGamesPerPlace: 1,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [

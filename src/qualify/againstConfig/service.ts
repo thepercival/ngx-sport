@@ -34,7 +34,7 @@ export class AgainstQualifyConfigService {
     createDefault(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
         const sport = competitionSport.getSport();
         const config = new AgainstQualifyConfig(competitionSport, round,
-            sport.getDefaultPointCalculation(),
+            competitionSport.getDefaultPointsCalculation(),
             sport.getDefaultWinPoints(),
             sport.getDefaultDrawPoints(),
             sport.getDefaultWinPointsExt(),

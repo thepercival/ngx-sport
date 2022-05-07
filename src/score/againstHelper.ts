@@ -6,15 +6,19 @@ export class AgainstScoreHelper {
     constructor(protected home: number, protected away: number) {
     }
 
-    getHome(): number {
+    public getHome(): number {
         return this.home;
     }
 
-    getAway(): number {
+    public getAway(): number {
         return this.away;
     }
 
-    getResult(side: AgainstSide): AgainstResult {
+    public get(side: AgainstSide): number {
+        return side === AgainstSide.Home ? this.getHome() : this.getAway();
+    }
+
+    public getResult(side: AgainstSide): AgainstResult {
         if (this.getHome() === this.getAway()) {
             return AgainstResult.Draw;
         }

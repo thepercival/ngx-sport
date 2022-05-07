@@ -1,24 +1,19 @@
-import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState } from "../../../public-api";
+import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState, PointsCalculation } from "../../../public-api";
+import { jsonVoetbal } from "../competition";
 
 export const jsonGames3Places: JsonAgainstGame[] = [
     {
         id: 0,
         competitionSport: {
             id: 0,
-            sport: {
-                id: 0,
-                name: 'voetbal',
-                team: true,
-                customId: CustomSport.Football,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -50,20 +45,14 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         id: 0,
         competitionSport: {
             id: 0,
-            sport: {
-                id: 0,
-                name: 'voetbal',
-                team: true,
-                customId: CustomSport.Football,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [
@@ -95,20 +84,14 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         id: 0,
         competitionSport: {
             id: 0,
-            sport: {
-                id: 0,
-                name: 'voetbal',
-                team: true,
-                customId: CustomSport.Football,
-                defaultGameMode: GameMode.Against,
-                defaultNrOfSidePlaces: 1
-            },
+            sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
             nrOfAwayPlaces: 1,
             nrOfGamePlaces: 0,
             nrOfH2H: 1,
             nrOfGamesPerPlace: 0,
+            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
             fields: []
         },
         places: [

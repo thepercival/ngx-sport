@@ -12,6 +12,7 @@ import { AgainstResult } from '../../../against/result';
 import { CompetitionSport } from '../../../competition/sport';
 import { PlaceSportPerformance } from '../../sportPerformance';
 import { GamePhase } from '../../../game/phase';
+import { PointsCalculation } from '../../../ranking/pointsCalculation';
 
 export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanceCalculator {
 
@@ -63,26 +64,34 @@ export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanc
         if (finalScore === undefined) {
             return 0;
         }
+        let points = 0;
+
         const againstQualifyConfig = game.getAgainstQualifyConfig();
-        if (againstQualifyConfig === undefined) {
-            return 0;
-        }
-        if (finalScore.getResult(side) === AgainstResult.Win) {
-            if (game.getFinalPhase() === GamePhase.RegularTime) {
-                return againstQualifyConfig.getWinPoints();
+        if (againstQualifyConfig.getPointsCalculation() === PointsCalculation.AgainstGamePoints
+            || againstQualifyConfig.getPointsCalculation() === PointsCalculation.Both) {
+
+            if (finalScore.getResult(side) === AgainstResult.Win) {
+                if (game.getFinalPhase() === GamePhase.RegularTime) {
+                    points += againstQualifyConfig.getWinPoints();
+                } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
+                    points += againstQualifyConfig.getWinPointsExt();
+                }
+            } else if (finalScore.getResult(side) === AgainstResult.Draw) {
+                if (game.getFinalPhase() === GamePhase.RegularTime) {
+                    points += againstQualifyConfig.getDrawPoints();
+                } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
+                    points += againstQualifyConfig.getDrawPointsExt();
+                }
             } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
-                return againstQualifyConfig.getWinPointsExt();
+                points += againstQualifyConfig.getLosePointsExt();
             }
-        } else if (finalScore.getResult(side) === AgainstResult.Draw) {
-            if (game.getFinalPhase() === GamePhase.RegularTime) {
-                return againstQualifyConfig.getDrawPoints();
-            } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
-                return againstQualifyConfig.getDrawPointsExt();
-            }
-        } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
-            return againstQualifyConfig.getLosePointsExt();
         }
-        return 0;
+        if (againstQualifyConfig.getPointsCalculation() === PointsCalculation.Scores
+            || againstQualifyConfig.getPointsCalculation() === PointsCalculation.Both) {
+
+            points += finalScore.get(side);
+        }
+        return points;
     }
 
     private getNrOfUnits(finalScore: AgainstScoreHelper, side: AgainstSide, scoredReceived: number): number {

@@ -28,7 +28,7 @@ export class CompetitionSportMapper {
             return this.cache[json.id];
         }
         const sport = this.sportMapper.toObject(json.sport);
-        const competitionSport = new CompetitionSport(sport, competition, this.toVariant(json, sport));
+        const competitionSport = new CompetitionSport(sport, competition, json.defaultPointsCalculation, this.toVariant(json, sport));
         json.fields.map(jsonField => this.fieldMapper.toObject(jsonField, competitionSport));
         competitionSport.setId(json.id);
         this.cache[competitionSport.getId()] = competitionSport;
@@ -52,6 +52,7 @@ export class CompetitionSportMapper {
         let json: JsonCompetitionSport = {
             id: competitionSport.getId(),
             sport: this.sportMapper.toJson(competitionSport.getSport()),
+            defaultPointsCalculation: competitionSport.getDefaultPointsCalculation(),
             fields: competitionSport.getFields().map((field: Field) => this.fieldMapper.toJson(field)),
             gameMode: jsonVariant.gameMode,
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,

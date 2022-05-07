@@ -12,7 +12,8 @@ export class Sport extends Identifiable {
         protected name: string,
         protected team: boolean,
         protected defaultGameMode: GameMode,
-        protected defaultNrOfSidePlaces: number) {
+        protected defaultNrOfSidePlaces: number
+    ) {
         super();
     }
 
@@ -57,13 +58,6 @@ export class Sport extends Identifiable {
             return true;
         }
         return false;
-    }
-
-    getDefaultPointCalculation(): PointsCalculation {
-        if (this.getDefaultGameMode() === GameMode.Against) {
-            return PointsCalculation.AgainstGamePoints;
-        }
-        return PointsCalculation.Scores;
     }
 
     getDefaultWinPoints(): number {
