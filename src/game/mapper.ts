@@ -11,7 +11,7 @@ import { CompetitionSportMap, CompetitionSportMapper } from '../competition/spor
 import { ScoreMapper } from '../score/mapper';
 import { FieldMapper } from '../field/mapper';
 import { RefereeMapper } from '../referee/mapper';
-import { PlaceMap, PlaceMapper } from '../place/mapper';
+import { PlaceMap } from '../place/mapper';
 import { CompetitionSport } from '../competition/sport';
 import { Place } from '../place';
 import { AgainstVariant } from '../sport/variant/against';
@@ -26,7 +26,6 @@ export class GameMapper {
         private gamePlaceMapper: GamePlaceMapper,
         private fieldMapper: FieldMapper,
         private refereeMapper: RefereeMapper,
-        private placeMapper: PlaceMapper,
         private scoreMapper: ScoreMapper,
         private competitionSportMapper: CompetitionSportMapper
     ) { }
@@ -46,6 +45,8 @@ export class GameMapper {
     toNewAgainst(json: JsonAgainstGame, poule: Poule, competitionSport: CompetitionSport): AgainstGame {
         const game = new AgainstGame(poule, json.batchNr, new Date(json.startDateTime), competitionSport, json.gameRoundNumber);
         this.toNewHelper(json, game);
+        game.setHomeExtraPoints(json.homeExtraPoints);
+        game.setAwayExtraPoints(json.awayExtraPoints);
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
         json.places.map(jsonGamePlace => this.gamePlaceMapper.toAgainstObject(jsonGamePlace, game));
         return game;
@@ -106,6 +107,8 @@ export class GameMapper {
             game.getScores().pop();
         }
         json.scores.map(jsonScore => this.scoreMapper.toAgainstObject(jsonScore, game));
+        game.setHomeExtraPoints(json.homeExtraPoints);
+        game.setAwayExtraPoints(json.awayExtraPoints);
         this.toExistingHelper(json, game);
         return game;
     }
@@ -135,7 +138,9 @@ export class GameMapper {
             refereeStructureLocation: refereePlace ? refereePlace.getStructureLocation() : undefined,
             startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score)),
-            gameRoundNumber: game.getGameRoundNumber()
+            gameRoundNumber: game.getGameRoundNumber(),
+            homeExtraPoints: game.getHomeExtraPoints(),
+            awayExtraPoints: game.getAwayExtraPoints()
         };
     }
 

@@ -18,7 +18,7 @@ export class PlaceMapper {
             place = new Place(poule, json.placeNr);
         }
         place.setId(json.id);
-        place.setPenaltyPoints(json.penaltyPoints);
+        place.setExtraPoints(json.extraPoints);
         if (json.qualifiedPlace) {
             place.setQualifiedPlace(
                 poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(this.toLocation(json.qualifiedPlace))
@@ -37,7 +37,7 @@ export class PlaceMapper {
             id: place.getId(),
             pouleNr: place.getPouleNr(),
             placeNr: place.getPlaceNr(),
-            penaltyPoints: place.getPenaltyPoints(),
+            extraPoints: place.getExtraPoints(),
             qualifiedPlace: qualifiedPlace ? this.toJson(qualifiedPlace) : undefined
         };
     }

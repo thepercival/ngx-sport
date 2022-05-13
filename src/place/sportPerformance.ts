@@ -3,10 +3,10 @@ import { Place } from "../place";
 import { PlacePerformance } from "./performance";
 
 export class PlaceSportPerformance extends PlacePerformance {
-    constructor(place: Place, private competitionSport: CompetitionSport, penaltyPoints?: number) {
+    constructor(place: Place, private competitionSport: CompetitionSport, extraPoints?: number) {
         super(place);
-        if (penaltyPoints !== undefined) {
-            this.addPoints(-penaltyPoints);
+        if (extraPoints !== undefined) {
+            this.addPoints(extraPoints);
         }
     }
 

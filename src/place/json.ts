@@ -3,6 +3,6 @@ import { JsonPlaceLocation } from "./location/json";
 export interface JsonPlace extends JsonPlaceLocation {
     id: number;
     name?: string;
-    penaltyPoints: number;
+    extraPoints: number;
     qualifiedPlace: JsonPlace | undefined;
 }

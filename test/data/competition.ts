@@ -72,9 +72,6 @@ export const jsonBaseCompetition: JsonCompetition = {
     againstRuleSet: AgainstRuleSet.DiffFirst
 };
 
-export const jsonCompetitionScoresOnly = jsonBaseCompetition;
-jsonCompetitionScoresOnly.sports[0].defaultPointsCalculation = PointsCalculation.Scores;
-
 export const jsonMultiSportsCompetition: JsonCompetition = {
     id: 0,
     league: {

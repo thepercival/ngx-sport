@@ -27,7 +27,7 @@ export abstract class PlaceSportPerformanceCalculator {
 
     protected createPerformances(places: Place[]): PlaceSportPerformance[] {
         return places.map((place: Place): PlaceSportPerformance => {
-            return new PlaceSportPerformance(place, this.competitionSport, place.getPenaltyPoints());
+            return new PlaceSportPerformance(place, this.competitionSport, place.getExtraPoints());
         });
     }
 

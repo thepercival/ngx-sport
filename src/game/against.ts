@@ -6,11 +6,12 @@ import { Poule } from '../poule';
 import { AgainstGamePlace } from './place/against';
 import { AgainstScore } from '../score/against';
 import { AgainstSide } from '../against/side';
-import { CompetitorMap } from '../competitor/map';
 import { GameState } from './state';
 
 export class AgainstGame extends Game {
     protected scores: AgainstScore[] = [];
+    protected homeExtraPoints: number = 0;
+    protected awayExtraPoints: number = 0;
 
     constructor(poule: Poule, batchNr: number, protected startDateTime: Date, competitionSport: CompetitionSport, protected gameRoundNumber: number) {
         super(poule, batchNr, startDateTime, competitionSport);
@@ -69,5 +70,21 @@ export class AgainstGame extends Game {
             return 0;
         }
         return this.scores[this.scores.length - 1].getPhase();
+    }
+
+    public getHomeExtraPoints(): number {
+        return this.homeExtraPoints;
+    }
+
+    public setHomeExtraPoints(homeExtraPoints: number): void {
+        this.homeExtraPoints = homeExtraPoints;
+    }
+
+    public getAwayExtraPoints(): number {
+        return this.awayExtraPoints;
+    }
+
+    public setAwayExtraPoints(awayExtraPoints: number): void {
+        this.awayExtraPoints = awayExtraPoints;
     }
 }

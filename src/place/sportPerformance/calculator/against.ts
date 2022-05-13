@@ -85,6 +85,7 @@ export class PlaceAgainstSportPerformanceCalculator extends PlaceSportPerformanc
             } else if (game.getFinalPhase() === GamePhase.ExtraTime) {
                 points += againstQualifyConfig.getLosePointsExt();
             }
+            points += (side === AgainstSide.Home ? game.getHomeExtraPoints() : game.getAwayExtraPoints());
         }
         if (againstQualifyConfig.getPointsCalculation() === PointsCalculation.Scores
             || againstQualifyConfig.getPointsCalculation() === PointsCalculation.Both) {

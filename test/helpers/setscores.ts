@@ -2,7 +2,7 @@ import { AgainstGame, AgainstScore, AgainstSide, Poule, GameState } from "../../
 import { GamePhase } from "../../src/game/phase";
 
 export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number
-    , state?: number) {
+    , state?: number, homeExtraPoints?: number, awayExtraPoints?: number) {
     const homePlace = poule.getPlace(homePlaceNr);
     const awayPlace = poule.getPlace(awayPlaceNr);
     if (!homePlace || !awayPlace) {
@@ -24,4 +24,6 @@ export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPla
     foundGame.getScores().push(new AgainstScore(foundGame, newHomeGoals, newAwayGoals, GamePhase.RegularTime));
 
     foundGame.setState(state ? state : GameState.Finished);
+    foundGame.setHomeExtraPoints(homeExtraPoints ?? 0);
+    foundGame.setAwayExtraPoints(awayExtraPoints ?? 0);
 }

@@ -59,7 +59,6 @@ export function getGameMapper(): GameMapper {
         new GamePlaceMapper(getScoreMapper(), new PlaceMapper()),
         getFieldMapper(),
         getRefereeMapper(),
-        new PlaceMapper(),
         getScoreMapper(),
         getCompetitionSportMapper());
 }

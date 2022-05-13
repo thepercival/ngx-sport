@@ -7,4 +7,6 @@ export interface JsonAgainstGame extends JsonGame {
     gameRoundNumber: number;
     places: JsonAgainstGamePlace[];
     scores: JsonAgainstScore[];
+    homeExtraPoints: number;
+    awayExtraPoints: number;
 }

@@ -1,4 +1,4 @@
-import { AgainstSide, CustomSport, GameMode, JsonAgainstGame, GameState, PointsCalculation } from "../../../public-api";
+import { AgainstSide, GameMode, JsonAgainstGame, GameState, PointsCalculation } from "../../../public-api";
 import { jsonVoetbal } from "../competition";
 
 
@@ -20,12 +20,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -40,7 +40,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -59,12 +61,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -79,7 +81,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -98,12 +102,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 5, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 5, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -118,7 +122,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -137,12 +143,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -157,7 +163,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -176,12 +184,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -196,7 +204,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -215,12 +225,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 5, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 5, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -235,7 +245,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -254,12 +266,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -274,7 +286,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -293,12 +307,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 5, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 5, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -313,7 +327,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -332,12 +348,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -352,7 +368,9 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     },
     {
         id: 0,
@@ -371,12 +389,12 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 5, pouleNr: 1, id: 0, penaltyPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 5, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -391,6 +409,8 @@ export const jsonGames5Places: JsonAgainstGame[] = [
         startDateTime: '2021-06-11T11:00:00.000000Z',
         referee: undefined,
         refereeStructureLocation: undefined,
-        scores: []
+        scores: [],
+        homeExtraPoints: 0,
+        awayExtraPoints: 0
     }
 ];

@@ -7,7 +7,7 @@ import { QualifyTarget } from './qualify/target';
 export class Place extends PlaceLocation {
     protected id: number = 0;
     protected structureNumber: number = 0;
-    protected penaltyPoints = 0;
+    protected extraPoints = 0;
     protected qualifiedPlace: Place | undefined;
 
     constructor(protected poule: Poule, number?: number) {
@@ -50,12 +50,12 @@ export class Place extends PlaceLocation {
         return this.getRound().getHorizontalPoule(qualifyTarget, this.getHorizontalNumber(qualifyTarget));
     }
 
-    getPenaltyPoints(): number {
-        return this.penaltyPoints;
+    getExtraPoints(): number {
+        return this.extraPoints;
     }
 
-    setPenaltyPoints(penaltyPoints: number) {
-        this.penaltyPoints = penaltyPoints;
+    setExtraPoints(extraPoints: number) {
+        this.extraPoints = extraPoints;
     }
 
     getQualifiedPlace(): Place | undefined {
