@@ -17,6 +17,7 @@ import { SingleQualifyRule } from '../qualify/rule/single';
 import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreator';
 import { PlaceRanges } from './placeRanges';
 import { QualifyGroupNrOfPlacesMap, RemovalValidator } from './removalValidator';
+import { Category } from '../category';
 
 @Injectable({
     providedIn: 'root'
@@ -40,22 +41,43 @@ export class StructureEditor {
         this.placeRanges = placeRanges;
     }
 
-    create(competition: Competition, pouleStructure: number[], jsonPlanningConfig?: JsonPlanningConfig | undefined): Structure {
-        const balancedPouleStructure = new BalancedPouleStructure(...pouleStructure);
-        // begin editing
+    create(
+        competition: Competition,
+        pouleStructure: number[],
+        categoryName?: string | undefined,
+        jsonPlanningConfig?: JsonPlanningConfig | undefined): Structure {
+
         const firstRoundNumber = new RoundNumber(competition);
         this.planningConfigMapper.toObject(jsonPlanningConfig, firstRoundNumber);
 
+        const category = this.addCategory(
+            categoryName ?? Category.DefaultName, 1, firstRoundNumber,
+            new BalancedPouleStructure(...pouleStructure)
+        );
+        return new Structure([category], firstRoundNumber);
+    }
+
+    public addCategory(
+        name: string,
+        number: number,
+        firstRoundNumber: RoundNumber,
+        pouleStructure: BalancedPouleStructure): Category {
+
+        // begin editing
+        const competition = firstRoundNumber.getCompetition();
+
         const rootRound = new Round(firstRoundNumber, undefined);
-        this.fillRound(rootRound, balancedPouleStructure);
-        const structure = new Structure(firstRoundNumber, rootRound);
+        const category = new Category(competition, name, number, rootRound);
+
+        this.fillRound(rootRound, pouleStructure);
+        const structure = new Structure([category], firstRoundNumber);
         competition.getSports().forEach(competitionSport => {
             this.competitionSportService.addToStructure(competitionSport, structure);
         });
         // end editing
         this.horPouleCreator.create(rootRound);
         this.rulesCreator.create(rootRound);
-        return structure;
+        return category;
     }
 
     addChildRound(parentRound: Round, qualifyTarget: QualifyTarget, pouleStructure: number[]): Round {

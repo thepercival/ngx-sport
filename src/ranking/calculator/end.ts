@@ -1,19 +1,19 @@
 
 import { HorizontalPoule } from '../../poule/horizontal';
 import { Round } from '../../qualify/group';
-import { Structure } from '../../structure';
 import { EndRankingItem } from '../item/end';
 import { Place } from '../../place';
 import { RoundRankingCalculator } from './round';
 import { QualifyTarget } from '../../qualify/target';
 import { SingleQualifyRule } from '../../qualify/rule/single';
 import { GameState } from '../../game/state';
+import { Category } from '../../category';
 
 export class EndRankingCalculator {
 
     private currentRank: number = 1;
 
-    constructor(private structure: Structure) {
+    constructor(private category: Category) {
     }
 
     getItems(): EndRankingItem[] {
@@ -33,7 +33,7 @@ export class EndRankingCalculator {
             });
             return items;
         };
-        const items = getItems(this.structure.getRootRound());
+        const items = getItems(this.category.getRootRound());
         return items.sort((itemA: EndRankingItem, itemB: EndRankingItem): number => {
             return itemA.getUniqueRank() - itemB.getUniqueRank();
         });

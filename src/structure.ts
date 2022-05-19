@@ -1,3 +1,4 @@
+import { Category } from './category';
 import { GameOrder } from './game/order';
 import { Poule } from './poule';
 import { QualifyGroup, Round } from './qualify/group';
@@ -7,9 +8,19 @@ import { RoundNumber } from './round/number';
 
 export class Structure {
     constructor(
-        protected firstRoundNumber: RoundNumber,
-        protected rootRound: Round
+        protected categories: Category[],
+        protected firstRoundNumber: RoundNumber
     ) {
+    }
+
+    getCategories(): Category[] {
+        return this.categories;
+    }
+
+    getRootRounds(): Round[] {
+        return this.categories.map((category: Category): Round => {
+            return category.getRootRound();
+        });
     }
 
     getFirstRoundNumber(): RoundNumber {
@@ -27,9 +38,7 @@ export class Structure {
         return getLastRoundNumber(this.getFirstRoundNumber());
     }
 
-    getRootRound(): Round {
-        return this.rootRound;
-    }
+
 
     getRoundNumbers(): RoundNumber[] {
         const roundNumbers: RoundNumber[] = [];

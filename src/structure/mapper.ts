@@ -15,6 +15,9 @@ import { Poule } from '../poule';
 import { JsonRound } from '../round/json';
 import { JsonQualifyGroup } from '../qualify/group/json';
 import { Round } from '../qualify/group';
+import { CategoryMapper } from '../category/mapper';
+import { Category } from '../category';
+import { JsonCategory } from '../category/json';
 
 @Injectable({
     providedIn: 'root'
@@ -26,20 +29,22 @@ export class StructureMapper {
     constructor(
         private competitionSportMapper: CompetitionSportMapper,
         private roundNumberMapper: RoundNumberMapper,
-        private roundMapper: RoundMapper,
+        private categoryMapper: CategoryMapper,
         private planningMapper: PlanningMapper) { }
 
     toObject(json: JsonStructure, competition: Competition): Structure {
         const firstRoundNumber = this.roundNumberMapper.toObject(json.firstRoundNumber, competition);
-        const rootRound = this.roundMapper.toObject(json.rootRound, new Round(firstRoundNumber, undefined));
-        const structure = new Structure(firstRoundNumber, rootRound);
+        const categories = json.categories.map((jsonCategory: JsonCategory): Category => {
+            return this.categoryMapper.toObject(jsonCategory, firstRoundNumber);
+        });
+        const structure = new Structure(categories, firstRoundNumber);
 
         this.planningToObject(json, firstRoundNumber, this.competitionSportMapper.getMap(competition))
         return structure;
     }
 
     planningToObject(json: JsonStructure, startRoundNumber: RoundNumber, sportMap: CompetitionSportMap): void {
-        this.initMaps(json.rootRound, startRoundNumber, startRoundNumber.getCompetition());
+        this.initMaps(json.categories, startRoundNumber, startRoundNumber.getCompetition());
         this.planningMapper.setPlaceMap(this.placeMap);
         this.planningToRoundNumber(startRoundNumber, sportMap);
     }
@@ -55,15 +60,18 @@ export class StructureMapper {
 
     toJson(structure: Structure): JsonStructure {
         return {
-            firstRoundNumber: this.roundNumberMapper.toJson(structure.getFirstRoundNumber()),
-            rootRound: this.roundMapper.toJson(structure.getRootRound())
+            categories: structure.getCategories().map((category: Category): JsonCategory => {
+                return this.categoryMapper.toJson(category);
+            }),
+            firstRoundNumber: this.roundNumberMapper.toJson(structure.getFirstRoundNumber())
         };
     }
 
-    protected initMaps(jsonRootRound: JsonRound, firstRoundNumber: RoundNumber, competition: Competition): void {
+    protected initMaps(jsonCategories: JsonCategory[], firstRoundNumber: RoundNumber, competition: Competition): void {
         this.poulesMap = {};
         this.placeMap = {};
-        this.initJsonPoulesMap([jsonRootRound], firstRoundNumber);
+        const jsonRootRounds = jsonCategories.map((jsonCategory: JsonCategory): JsonRound => jsonCategory.rootRound);
+        this.initJsonPoulesMap(jsonRootRounds, firstRoundNumber);
         this.initPlaceMap(firstRoundNumber);
     }
 

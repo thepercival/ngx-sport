@@ -12,6 +12,7 @@ import { AgainstH2h } from '../../sport/variant/against/h2h';
 import { AllInOneGame } from '../../sport/variant/allInOneGame';
 import { Single } from '../../sport/variant/single';
 import { GameAmountConfig } from '../../planning/gameAmountConfig';
+import { Round } from '../../qualify/group';
 
 @Injectable({
     providedIn: 'root'
@@ -114,14 +115,19 @@ export class CompetitionSportService {
         const variant = competitionSport.getVariant();
         const amount = (variant instanceof AgainstH2h) ? variant.getNrOfH2H() : variant.getNrOfGamesPerPlace();
         new GameAmountConfig(competitionSport, structure.getFirstRoundNumber(), amount);
-        this.scoreConfigService.createDefault(competitionSport, structure.getRootRound());
-        this.againstQualifyConfigService.createDefault(competitionSport, structure.getRootRound());
+        structure.getRootRounds().forEach((rootRound: Round) => {
+            this.scoreConfigService.createDefault(competitionSport, rootRound);
+            this.againstQualifyConfigService.createDefault(competitionSport, rootRound);
+        });
     }
 
     removeFromStructure(competitionSport: CompetitionSport, structure: Structure) {
         this.gameAmountConfigService.removeFromRoundNumber(competitionSport, structure.getFirstRoundNumber());
-        this.scoreConfigService.removeFromRound(competitionSport, structure.getRootRound());
-        this.againstQualifyConfigService.removeFromRound(competitionSport, structure.getRootRound());
+        structure.getRootRounds().forEach((rootRound: Round) => {
+            this.scoreConfigService.removeFromRound(competitionSport, rootRound);
+            this.againstQualifyConfigService.removeFromRound(competitionSport, rootRound);
+        });
+
     }
 
     // isDefault(sportConfig: SportConfig): boolean {

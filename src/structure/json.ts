@@ -1,7 +1,7 @@
 import { JsonRoundNumber } from "../round/number/json";
-import { JsonRound } from "../round/json";
+import { JsonCategory } from "../category/json";
 
 export interface JsonStructure {
+    categories: JsonCategory[];
     firstRoundNumber: JsonRoundNumber;
-    rootRound: JsonRound;
 }
