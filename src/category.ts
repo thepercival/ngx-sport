@@ -19,8 +19,16 @@ export class Category extends Identifiable {
         return this.name;
     }
 
+    setName(name: string): void {
+        this.name = name;
+    }
+
     getNumber(): number {
         return this.number;
+    }
+
+    setNumber(number: number): void {
+        this.number = number;
     }
 
     getRootRound(): Round {

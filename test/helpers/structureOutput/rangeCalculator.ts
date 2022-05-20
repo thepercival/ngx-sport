@@ -38,7 +38,7 @@ export class RangeCalculator {
             }
             roundNumber = roundNumber.getNext();
         }
-        return maxWidth;
+        return maxWidth + ((structure.getCategories().length - 1) * RangeCalculator.PADDING);
     }
 
     public getRoundNumberHeight(roundNumber: RoundNumber): number {

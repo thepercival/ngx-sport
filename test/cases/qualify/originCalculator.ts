@@ -14,7 +14,7 @@ describe('QualifyOriginCalculator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [2, 2, 2, 2, 2, 2, 2, 2], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
 
@@ -29,7 +29,7 @@ describe('QualifyOriginCalculator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [2, 2, 2, 2, 2, 2, 2, 2], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
 
@@ -54,7 +54,7 @@ describe('QualifyOriginCalculator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2]);
 
@@ -76,7 +76,7 @@ describe('QualifyOriginCalculator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4, 4]);
 

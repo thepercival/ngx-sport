@@ -36,7 +36,7 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2]);
         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2, 2]);
@@ -66,7 +66,7 @@ describe('NameService', () => {
             const firstRoundNumber = structure.getFirstRoundNumber();
             const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
             const nameService = new NameService(competitorMap);
-            const rootRound = structure.getRootRound();
+            const rootRound = structure.getSingleCategory().getRootRound();
 
             structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
             expect(nameService.getRoundName(rootRound)).to.equal('&frac12; finale');
@@ -81,7 +81,7 @@ describe('NameService', () => {
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
             const competitorMap2 = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber2));
             const nameService2 = new NameService(competitorMap2);
-            const rootRound2 = structure2.getRootRound();
+            const rootRound2 = structure2.getSingleCategory().getRootRound();
 
             expect(nameService2.getRoundName(rootRound2)).to.equal('1<sup>e</sup> ronde');
 
@@ -100,7 +100,7 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // root needs ranking, depth 2
         {
@@ -132,7 +132,7 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
@@ -172,7 +172,7 @@ describe('NameService', () => {
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
@@ -208,7 +208,8 @@ describe('NameService', () => {
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        nameService.enableConsoleOutput();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
@@ -232,12 +233,12 @@ describe('NameService', () => {
             }
 
             const winnersLastPlace = winnersRound.getPoule(1).getPlace(2);
-            expect(nameService.getPlaceFromName(winnersLastPlace, false, false)).to.equal('1<sup>e</sup>2');
-            expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('1<sup>e</sup> van 2<sup>e</sup> plekken');
+            expect(nameService.getPlaceFromName(winnersLastPlace, false, false)).to.equal('1e2');
+            expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('1e van 2e plekken');
 
             const winnersFirstPlace = winnersRound.getPoule(1).getPlace(1);
             expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('A1');
-            expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('1<sup>e</sup> poule A');
+            expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('1e poule A');
 
 
             const winnersWinnersRound = structureEditor.addChildRound(winnersRound, QualifyTarget.Winners, [2]);
@@ -248,7 +249,7 @@ describe('NameService', () => {
                 expect(doubleWinnersFirstPlace).to.not.equal(undefined);
                 if (doubleWinnersFirstPlace) {
                     expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, false)).to.equal('D1');
-                    expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, true)).to.equal('1<sup>e</sup> pl. wed. D');
+                    expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, true)).to.equal('1e pl. wed. D');
                 }
             }
 
@@ -260,7 +261,7 @@ describe('NameService', () => {
                 return;
             }
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false)).to.equal('D2');
-            expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false, true)).to.equal('2<sup>e</sup> pl. wed. D');
+            expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false, true)).to.equal('2e pl. wed. D');
         }
     });
 
@@ -271,7 +272,7 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
@@ -301,76 +302,29 @@ describe('NameService', () => {
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        nameService.enableConsoleOutput();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
             const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2]);
             const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3, 2]);
 
+            // (new StructureOutput()).toConsole(structure, console);
+
             const winnersSecondPlaceFirstPoule = winnersRound.getPoule(1).getPlace(2); // 1e2
-            expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, false)).to.equal('1<sup>e</sup>2');
-            expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, true)).to.equal('1<sup>e</sup> van 2<sup>e</sup> plekken');
+            expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, false)).to.equal('1e2');
+            expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, true)).to.equal('1e van 2e plekken');
 
             const losersFirstPlaceFirstPoule = losersRound.getPoule(1).getPlace(1); // 3e3
-            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('3<sup>e</sup>3');
-            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, true)).to.equal('3<sup>e</sup> van 2<sup>e</sup> pl. van onderen');
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('3e3');
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, true)).to.equal('3e van 2e pl. van onderen');
 
             const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2); // 2e3
-            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('2<sup>e</sup>3');
-            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('2<sup>e</sup> van 2<sup>e</sup> pl. van onderen');
+            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('2e3');
+            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('2e van 2e pl. van onderen');
         }
     });
-
-    // it('horizontalpoule name', () => {
-
-    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-    //     const structureEditor = getStructureEditor();
-    //     const jsonPlanningConfig = createPlanningConfigNoTime();
-    //     const structure = structureEditor.create(competition, [4, 4, 4], createPlanningConfigNoTime());
-    //     const firstRoundNumber = structure.getFirstRoundNumber();
-    //     const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-    //     const nameService = new NameService(competitorMap);
-    //     const rootRound = structure.getRootRound();
-
-    //     // basics
-    //     {
-    //         const firstWinnersHorPoule = rootRound.getHorizontalPoules(QualifyTarget.Winners)[0];
-    //         expect(nameService.getHorizontalPouleName(firstWinnersHorPoule)).to.equal('nummers 1');
-
-    //         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
-    //         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
-
-    //         const firstWinnersHorPoule2 = rootRound.getHorizontalPoules(QualifyTarget.Winners)[0];
-    //         expect(nameService.getHorizontalPouleName(firstWinnersHorPoule2)).to.equal('2 beste nummers 1');
-
-    //         const firstLosersHorPoule = rootRound.getHorizontalPoules(QualifyTarget.Losers)[0];
-    //         expect(nameService.getHorizontalPouleName(firstLosersHorPoule)).to.equal('2 slechtste nummers laatste');
-
-    //         structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 2);
-    //         structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 2);
-
-    //         const firstWinnersHorPoule3 = rootRound.getHorizontalPoules(QualifyTarget.Winners)[0];
-    //         expect(nameService.getHorizontalPouleName(firstWinnersHorPoule3)).to.equal('nummers 1');
-
-    //         const firstLosersHorPoule3 = rootRound.getHorizontalPoules(QualifyTarget.Losers)[0];
-    //         expect(nameService.getHorizontalPouleName(firstLosersHorPoule3)).to.equal('nummers laatste');
-
-    //         const secondWinnersHorPoule = rootRound.getHorizontalPoules(QualifyTarget.Winners)[1];
-    //         expect(nameService.getHorizontalPouleName(secondWinnersHorPoule)).to.equal('beste nummer 2');
-
-    //         const secondLosersHorPoule = rootRound.getHorizontalPoules(QualifyTarget.Losers)[1];
-    //         expect(nameService.getHorizontalPouleName(secondLosersHorPoule)).to.equal('slechtste 1 na laatst');
-
-    //         structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1);
-    //         const secondWinnersHorPoule2 = rootRound.getHorizontalPoules(QualifyTarget.Winners)[1];
-    //         expect(nameService.getHorizontalPouleName(secondWinnersHorPoule2)).to.equal('2 beste nummers 2');
-
-    //         structureEditor.addQualifiers(rootRound, QualifyTarget.Losers, 1);
-    //         const secondLosersHorPoule2 = rootRound.getHorizontalPoules(QualifyTarget.Losers)[1];
-    //         expect(nameService.getHorizontalPouleName(secondLosersHorPoule2)).to.equal('2 slechtste nummers 1 na laatst');
-    //     }
-    // });
 
     it('referee name', () => {
 
@@ -381,7 +335,7 @@ describe('NameService', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
         const nameService = new NameService(competitorMap);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
         {
@@ -411,26 +365,5 @@ describe('NameService', () => {
             expect(nameService.getRefereeName(game, true)).to.equal('tc 1.1');
         }
     });
-
-    // it('rule descriptions', () => {
-    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-
-    //     const structureEditor = getStructureEditor();
-    //     const jsonPlanningConfig = createPlanningConfigNoTime();
-    //     const structure = structureEditor.create(competition, jsonPlanningConfig, [3]);
-    //     const rootRound: Round = structure.getRootRound();
-
-    //     const rankingService = new RoundRankingCalculator();
-    //     const ruleDescriptions = rankingService.getRuleDescriptions();
-    //     expect(ruleDescriptions.length).to.equal(5);
-
-    //     const rankingService2 = new RoundRankingCalculator(jsonPlanningConfig.gameMode, RankingRuleSet.EC);
-    //     const ruleDescriptions2 = rankingService2.getRuleDescriptions();
-    //     expect(ruleDescriptions2.length).to.equal(5);
-
-    //     const rankingService3 = new RoundRankingCalculator(jsonPlanningConfig.gameMode, 0);
-    //     expect(() => rankingService3.getRuleDescriptions()).to.throw(Error);
-    // });
-
 
 });

@@ -26,7 +26,7 @@ describe('QualifyService', () => {
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
@@ -108,7 +108,7 @@ describe('QualifyService', () => {
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -188,7 +188,7 @@ describe('QualifyService', () => {
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [4]);
@@ -344,7 +344,7 @@ describe('QualifyService', () => {
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRoundOne = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
 
@@ -404,7 +404,7 @@ describe('QualifyService', () => {
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);

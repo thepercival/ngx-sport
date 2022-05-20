@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget } from '../../../public-api';
+import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget, Structure } from '../../../public-api';
 import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
@@ -14,7 +14,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
@@ -39,7 +39,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
@@ -69,7 +69,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
@@ -101,7 +101,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
@@ -122,7 +122,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 2], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         structureEditor.addPouleToRootRound(rootRound);
@@ -138,7 +138,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
@@ -161,7 +161,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const secondPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -185,7 +185,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const lastPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
         const secondLastPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
@@ -209,7 +209,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5, 5], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4, 3]);
 
@@ -238,7 +238,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [6, 6, 6, 6], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4, 4, 3, 3]);
 
@@ -267,7 +267,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         expect(function () {
             structureEditor.removePouleFromRootRound(rootRound);
@@ -279,7 +279,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [5, 5]);
         expect(function () {
@@ -292,7 +292,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
@@ -308,7 +308,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3, 3, 3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3, 3]);
         const secondPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3, 3]);
@@ -333,7 +333,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const secondPlacesRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
@@ -363,7 +363,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor(placeRanges);
         const structure = structureEditor.create(competition, [3, 2], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         expect(function () {
             structureEditor.incrementNrOfPoules(rootRound);
@@ -375,7 +375,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5, 5], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3, 3]);
 
@@ -393,7 +393,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         expect(function () {
             structureEditor.decrementNrOfPoules(rootRound);
@@ -405,7 +405,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 2], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.decrementNrOfPoules(rootRound);
         // (new StructureOutput()).toConsole(structure, console);
@@ -420,7 +420,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
@@ -444,7 +444,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor(placeRanges);
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
         // (new StructureOutput()).toConsole(structure, console);
@@ -459,7 +459,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 2);
         // (new StructureOutput()).toConsole(structure, console);
@@ -474,7 +474,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const quarterFinals = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2]);
         const semiFinals = structureEditor.addChildRound(quarterFinals, QualifyTarget.Winners, [2, 2]);
@@ -512,7 +512,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);
@@ -536,7 +536,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [6], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSix = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
 
@@ -561,7 +561,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3, 3, 3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSix = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [6, 6]);
 
@@ -585,7 +585,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [8], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const nextRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const qualifyGroup = nextRound.getParentQualifyGroup();
@@ -605,7 +605,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3]);
@@ -634,7 +634,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const nextRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
         // (new StructureOutput()).toConsole(structure, console);
@@ -658,7 +658,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -690,7 +690,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5, 5], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -714,7 +714,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5, 5], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -738,7 +738,7 @@ describe('StructureEditor', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5, 5], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const firstSecond = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const thirdFourth = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -765,7 +765,7 @@ describe('StructureEditor', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
         expect(structure.allPoulesHaveGames()).to.equal(false);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
         expect(structure.allPoulesHaveGames()).to.equal(false);
@@ -773,5 +773,21 @@ describe('StructureEditor', () => {
         // expect(structure.hasPlanning()).to.equal(false);
     });
 
+    it('addCategory', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
+        const firstRoundNumber = structure.getFirstRoundNumber();
+
+        expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
+
+        const category = structureEditor.addCategory('j78', 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
+        structure.getCategories().push(category);
+        // (new StructureOutput()).toConsole(structure, console);
+        expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
+        expect(category.getRootRound().getAgainstQualifyConfigs().length).to.equal(1);
+        expect(category.getRootRound().getScoreConfigs().length).to.equal(1);
+    });
 
 });

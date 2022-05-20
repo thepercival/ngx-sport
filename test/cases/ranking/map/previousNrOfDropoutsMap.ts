@@ -18,7 +18,7 @@ describe('PreviousNrOfDropoutsMap', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [7, 7], createPlanningConfigNoTime());
-        const rootRound: Round = structure.getRootRound();
+        const rootRound: Round = structure.getSingleCategory().getRootRound();
 
         const winnersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [5]);
         const losersChildRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [5]);
@@ -47,7 +47,7 @@ describe('PreviousNrOfDropoutsMap', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, createPlanningConfigNoTime(), [4, 4, 4, 4]);
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
         const firstRoundNumber = structure.getFirstRoundNumber();
 
         expect(rootRound.getNumber()).to.equal(firstRoundNumber);

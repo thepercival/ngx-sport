@@ -17,7 +17,8 @@ describe('EndRankingCalculator', () => {
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -29,7 +30,7 @@ describe('EndRankingCalculator', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingCalculator(structure);
+        const rankingService = new EndRankingCalculator(defaultCat);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -54,7 +55,8 @@ describe('EndRankingCalculator', () => {
         const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
         teamCompetitors.pop();
         const competitorMap = new CompetitorMap(teamCompetitors);
-        const rootRound = structure.getRootRound();
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -67,7 +69,7 @@ describe('EndRankingCalculator', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingCalculator(structure);
+        const rankingService = new EndRankingCalculator(defaultCat);
         const items = rankingService.getItems();
 
         const endRankingItem = items[2];
@@ -87,7 +89,8 @@ describe('EndRankingCalculator', () => {
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -100,7 +103,7 @@ describe('EndRankingCalculator', () => {
         setAgainstScoreSingle(pouleOne, 1, 3, 3, 1);
         // setAgainstScoreSingle(pouleOne, 2, 3, 3, 2);
 
-        const rankingService = new EndRankingCalculator(structure);
+        const rankingService = new EndRankingCalculator(defaultCat);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {
@@ -115,7 +118,8 @@ describe('EndRankingCalculator', () => {
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
@@ -159,7 +163,7 @@ describe('EndRankingCalculator', () => {
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 
-        const rankingService = new EndRankingCalculator(structure);
+        const rankingService = new EndRankingCalculator(defaultCat);
         const items = rankingService.getItems();
 
         for (let rank = 1; rank <= items.length; rank++) {

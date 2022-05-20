@@ -1,4 +1,4 @@
-import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper } from "../../public-api";
+import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper, CategoryMapper } from "../../public-api";
 import { GameAmountConfigMapper } from "../../src/planning/gameAmountConfig/mapper";
 import { PouleMapper } from "../../src/poule/mapper";
 import { AgainstQualifyConfigMapper } from "../../src/qualify/againstConfig/mapper";
@@ -71,7 +71,7 @@ export function getStructureMapper(): StructureMapper {
     return new StructureMapper(
         getCompetitionSportMapper(),
         getRoundNumberMapper(),
-        getRoundMapper(),
+        new CategoryMapper(getRoundMapper()),
         getPlanningMapper()
     );
 }

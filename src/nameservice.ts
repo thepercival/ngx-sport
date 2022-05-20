@@ -22,8 +22,13 @@ import { PlaceLocation } from './place/location';
 export class NameService {
     private previousNrOfDropoutsMap: PreviousNrOfDropoutsMap | undefined;
     private pouleStructureNumberMap: PouleStructureNumberMap | undefined;
+    private htmlOutput: boolean = true;
 
     constructor(private competitorMap?: CompetitorMap) {
+    }
+
+    enableConsoleOutput(): void {
+        this.htmlOutput = false;
     }
 
     getCompetitorMap(): CompetitorMap | undefined {
@@ -43,7 +48,7 @@ export class NameService {
         if (this.roundsHaveSameName(roundNumber) && roundNumber.getRounds().length > 0) {
             return this.getRoundName(roundNumber.getRounds()[0], true);
         }
-        return this.getOrdinalAsHtml(roundNumber.getNumber()) + ' ronde';
+        return this.getOrdinalOutput(roundNumber.getNumber()) + ' ronde';
     }
 
     getRoundNumbersName(startRoundNumber: RoundNumber): string {
@@ -58,7 +63,7 @@ export class NameService {
 
     getRoundName(round: Round, sameName: boolean = false): string {
         if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {
-            return this.getOrdinalAsHtml(round.getNumberAsValue()) + ' ronde';
+            return this.getOrdinalOutput(round.getNumberAsValue()) + ' ronde';
         }
 
         const nrOfRoundsToGo = this.getMaxDepth(round);
@@ -67,7 +72,7 @@ export class NameService {
         }
         if (round.getNrOfPlaces() === 2 && sameName === false) {
             const rank = this.getPreviousNrOfDropoutsMap(round).get(round) + 1;
-            return this.getOrdinalAsHtml(rank) + ' / ' + this.getOrdinalAsHtml(rank + 1) + ' pl';
+            return this.getOrdinalOutput(rank) + ' / ' + this.getOrdinalOutput(rank + 1) + ' pl';
         }
         return 'finale';
     }
@@ -109,6 +114,10 @@ export class NameService {
     }
 
     getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
+        return this.getPlaceFromNameHelper(place, competitorName, longName ?? false);
+    }
+
+    protected getPlaceFromNameHelper(place: Place, competitorName: boolean, longName: boolean): string {
         competitorName = competitorName ? (this.competitorMap !== undefined) : false;
         const startLocation: PlaceLocation | undefined = place.getStartLocation();
         if (competitorName && this.competitorMap && startLocation) {
@@ -136,12 +145,12 @@ export class NameService {
 
         const poule = fromPlace.getPoule();
         const pouleName = this.getPouleName(poule, longName);
-        const ordinal = this.getOrdinalAsHtml(rank) + (!poule.needsRanking() ? ' pl.' : '');
+        const ordinal = this.getOrdinalOutput(rank) + (!poule.needsRanking() ? ' pl.' : '');
         return longName ? ordinal + ' ' + pouleName : pouleName + rank;
     }
 
     getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName?: boolean): string {
-        return gamePlaces.map(gamePlace => this.getPlaceFromName(gamePlace.getPlace(), competitorName, longName)).join(' & ');
+        return gamePlaces.map(gamePlace => this.getPlaceFromNameHelper(gamePlace.getPlace(), competitorName, longName)).join(' & ');
     }
 
     public getQualifyRuleName(rule: SingleQualifyRule | MultipleQualifyRule): string {
@@ -152,7 +161,7 @@ export class NameService {
         const fromHorPoule = rule.getFromHorizontalPoule();
         const fromNumber = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
 
-        let name = this.getOrdinalAsHtml(fromNumber);
+        let name = this.getOrdinalOutput(fromNumber);
         if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
             return name + ' pl. van onderen';
         }
@@ -176,14 +185,14 @@ export class NameService {
             toPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - rule.getToPlaceNumber(place));
         }
 
-        const ordinal = this.getOrdinalAsHtml(toPlaceNumber);
+        const ordinal = this.getOrdinalOutput(toPlaceNumber);
         if (!longName) {
             return ordinal + fromNumber;
         }
 
         const firstpart = ordinal + ' van';
 
-        let name = firstpart + ' ' + this.getOrdinalAsHtml(fromNumber);
+        let name = firstpart + ' ' + this.getOrdinalOutput(fromNumber);
         if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
             name += ' pl. van onderen';
         } else {
@@ -191,37 +200,6 @@ export class NameService {
         }
         return name;
     }
-
-    /**
-     * "nummers 2" voor winners complete
-     * "3 beste nummers 2" voor winners incomplete
-     *
-     * "nummers 2 na laast" voor losers complete
-     * "3 slechtste nummers 2 na laast" voor losers incomplete
-     *
-     * @param horizontalPoule
-     */
-    // getHorizontalPouleName(horizontalPoule: HorizontalPoule): string {
-    //     const qualifyRule = horizontalPoule.getQualifyRule();
-    //     if (qualifyRule === undefined) {
-    //         return 'nummers ' + horizontalPoule.getNumber();
-    //     }
-    //     const nrOfToPlaces = qualifyRule.getNrOfToPlaces();
-
-    //     if (qualifyRule.getQualifyTarget() === QualifyTarget.Winners) {
-    //         const nameWinners = 'nummer' + (nrOfToPlaces > 1 ? 's ' : ' ') + horizontalPoule.getNumber();
-    //         if (qualifyRule instanceof MultipleQualifyRule) {
-    //             return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'beste ' + nameWinners;
-    //         }
-    //         return nameWinners;
-    //     }
-    //     let name = (nrOfToPlaces > 1 ? 'nummers ' : '');
-    //     name += horizontalPoule.getNumber() > 1 ? ((horizontalPoule.getNumber() - 1) + ' na laatst') : 'laatste';
-    //     if (qualifyRule instanceof MultipleQualifyRule) {
-    //         return (nrOfToPlaces > 1 ? (nrOfToPlaces + ' ') : '') + 'slechtste ' + name;
-    //     }
-    //     return name;
-    // }
 
     getRefereeName(game: Game, longName?: boolean): string | undefined {
         const referee = game.getReferee();
@@ -348,8 +326,8 @@ export class NameService {
         return '<span style="font-size: 80%"><sup>1</sup>&frasl;<sub>' + number + '</sub></span>';
     }
 
-    private getOrdinalAsHtml(number: number): string {
-        return number + '<sup>e</sup>';
+    private getOrdinalOutput(number: number): string {
+        return number + (this.htmlOutput ? '<sup>e</sup>' : 'e');
     }
 
     private getMaxDepth(round: Round): number {

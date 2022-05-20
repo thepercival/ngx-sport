@@ -1,4 +1,4 @@
-import { AnsiColor, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
+import { AnsiColor, Category, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
 import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
 import { SingleQualifyRule } from "../../../src/qualify/rule/single";
@@ -15,31 +15,35 @@ export class DrawHelper {
 
     public constructor(protected drawer: GridDrawer) {
         this.nameService = new NameService();
+        this.nameService.enableConsoleOutput();
         this.rangeCalculator = new RangeCalculator();
     }
 
     public drawStructure(structure: Structure, origin: Coordinate): Coordinate {
         const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(structure.getFirstRoundNumber());
-        let roundCoordinate = this.getRoundStartCoordinate(origin, structure.getFirstRoundNumber(), structure);
-        const rounds = [structure.getRootRound()];
-        rounds.forEach((round: Round) => {
-            roundCoordinate = this.drawRound(round, roundCoordinate, roundNumberHeight);
+        let categoryCoord = this.getCategoryStartCoordinate(origin, structure.getFirstRoundNumber(), structure);
+        structure.getCategories().forEach((category: Category) => {
+            categoryCoord = this.drawCategory(category, categoryCoord, roundNumberHeight);
         });
-        return roundCoordinate;
+        return categoryCoord;
     }
 
-    protected getRoundStartCoordinate(origin: Coordinate, roundNumber: RoundNumber, structure: Structure): Coordinate {
+    protected getCategoryStartCoordinate(origin: Coordinate, roundNumber: RoundNumber, structure: Structure): Coordinate {
         const structureWidth = this.rangeCalculator.getStructureWidth(structure);
         const roundNumberWidth = this.rangeCalculator.getRoundNumberWidth(roundNumber);
         const delta = Math.floor((structureWidth - roundNumberWidth) / 2);
         return origin.addX(delta);
     }
 
-    public drawRound(round: Round, origin: Coordinate, roundNumberHeight: number): Coordinate {
+    public drawCategory(category: Category, origin: Coordinate, roundNumberHeight: number): Coordinate {
+        const newCoord = this.drawRound(category.getRootRound(), origin, roundNumberHeight, category.getName());
+        return newCoord.addX(RangeCalculator.PADDING);
+    }
+
+    public drawRound(round: Round, origin: Coordinate, roundNumberHeight: number, catName?: string): Coordinate {
         this.drawRoundBorder(round, origin, roundNumberHeight);
-        if (round.isRoot()) {
+        if (catName) {
             const width = this.rangeCalculator.getRoundWidth(round);
-            let catName = 'Cat "?"';
             catName = catName.substring(0, width - 4);
             const startCoord = origin.addX(Math.round((width - catName.length) / 2));
             this.drawer.drawToRight(startCoord, catName, AnsiColor.Cyan);
@@ -61,11 +65,6 @@ export class DrawHelper {
         }
         const roundWidth = this.rangeCalculator.getRoundWidth(round);
         return origin.addX(roundWidth + RangeCalculator.PADDING);
-
-
-        //        batchColor = this->useColors() ? (batchNr % 10) : -1;
-        //        retVal = 'batch ' . (batchNr < 10 ? ' ' : '') . batchNr;
-        //        return this->outputColor(batchColor, retVal);
     }
 
     protected getPoulesStartCoordinate(origin: Coordinate, round: Round): Coordinate {

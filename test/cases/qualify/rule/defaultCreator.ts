@@ -16,7 +16,7 @@ describe('DefaultQualifyRuleCreator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2]);
 
@@ -44,7 +44,7 @@ describe('DefaultQualifyRuleCreator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2, 2, 2, 2, 2]);
 
@@ -73,7 +73,7 @@ describe('DefaultQualifyRuleCreator', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2, 2, 2, 2, 2, 2]);
 
@@ -139,7 +139,7 @@ describe('DefaultQualifyRuleCreator', () => {
 
             const structureEditor = getStructureEditor();
             const structure = structureEditor.create(competition, [8, 8, 8, 8, 8], createPlanningConfigNoTime());
-            const rootRound = structure.getRootRound();
+            const rootRound = structure.getSingleCategory().getRootRound();
 
             const secondRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [6, 6, 6, 6, 6]);
             const thirdRound = structureEditor.addChildRound(secondRound, QualifyTarget.Winners, [4, 4, 4, 4, 4]);

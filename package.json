@@ -76,7 +76,7 @@
     "semantic-release": "semantic-release",
     "copy-to-fct": "rm -rf ../fctoernooi/node_modules/ngx-sport && cp -r dist/ ../fctoernooi/node_modules/ && mv ../fctoernooi/node_modules/dist/ ../fctoernooi/node_modules/ngx-sport/ && cp -r dist/fesm2020 ../fctoernooi/node_modules/ngx-sport",
     "copy-to-sup": "rm -rf ../superelf/node_modules/ngx-sport && cp -r dist/ ../superelf/node_modules/ && mv ../superelf/node_modules/dist/ ../superelf/node_modules/ngx-sport/ && cp -r dist/fesm2020 ../superelf/node_modules/ngx-sport",
-    "test": "mocha --loader=ts-node/esm 'test/cases/ranking/calculator/*.{ts,js}'",
+    "test": "mocha --loader=ts-node/esm 'test/cases/**/*.{ts,js}'",
     "coverage": "nyc npm run test",
     "profile": "ngc -p tsconfig-profile.json",
     "help": "nyc help"

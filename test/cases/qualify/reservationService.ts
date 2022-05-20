@@ -17,7 +17,7 @@ describe('QualifyReservationService', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
-        const rootRound: Round = structure.getRootRound();
+        const rootRound: Round = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
         structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
@@ -58,7 +58,7 @@ describe('QualifyReservationService', () => {
 
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3, 3], createPlanningConfigNoTime());
-        const rootRound: Round = structure.getRootRound();
+        const rootRound: Round = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2, 2]);
         // (new StructureOutput()).toConsole(structure, console);
@@ -144,7 +144,7 @@ describe('QualifyReservationService', () => {
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const rootRound = structure.getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
 

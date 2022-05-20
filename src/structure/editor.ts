@@ -18,6 +18,7 @@ import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreato
 import { PlaceRanges } from './placeRanges';
 import { QualifyGroupNrOfPlacesMap, RemovalValidator } from './removalValidator';
 import { Category } from '../category';
+import { CompetitionSport } from '../competition/sport';
 
 @Injectable({
     providedIn: 'root'
@@ -44,20 +45,48 @@ export class StructureEditor {
     create(
         competition: Competition,
         pouleStructure: number[],
-        categoryName?: string | undefined,
-        jsonPlanningConfig?: JsonPlanningConfig | undefined): Structure {
+        jsonPlanningConfig?: JsonPlanningConfig | undefined,
+        categoryName?: string | undefined,): Structure {
 
         const firstRoundNumber = new RoundNumber(competition);
         this.planningConfigMapper.toObject(jsonPlanningConfig, firstRoundNumber);
 
-        const category = this.addCategory(
+        const category = this.addCategoryHelper(
             categoryName ?? Category.DefaultName, 1, firstRoundNumber,
             new BalancedPouleStructure(...pouleStructure)
         );
+
+        const structure = new Structure([category], firstRoundNumber);
+        competition.getSports().forEach(competitionSport => {
+            this.competitionSportService.addToStructure(competitionSport, structure);
+        });
+
+        const rootRound = category.getRootRound();
+        this.horPouleCreator.create(rootRound);
+        this.rulesCreator.create(rootRound);
+
         return new Structure([category], firstRoundNumber);
     }
 
     public addCategory(
+        name: string,
+        number: number,
+        firstRoundNumber: RoundNumber,
+        pouleStructure: BalancedPouleStructure): Category {
+
+        // begin editing
+        const category = this.addCategoryHelper(name, number, firstRoundNumber, pouleStructure);
+        firstRoundNumber.getCompetitionSports().forEach((competitionSport: CompetitionSport) => {
+            this.competitionSportService.addToCategory(competitionSport, category);
+        });
+        // end editing
+        const rootRound = category.getRootRound();
+        this.horPouleCreator.create(rootRound);
+        this.rulesCreator.create(rootRound);
+        return category;
+    }
+
+    public addCategoryHelper(
         name: string,
         number: number,
         firstRoundNumber: RoundNumber,
@@ -70,13 +99,6 @@ export class StructureEditor {
         const category = new Category(competition, name, number, rootRound);
 
         this.fillRound(rootRound, pouleStructure);
-        const structure = new Structure([category], firstRoundNumber);
-        competition.getSports().forEach(competitionSport => {
-            this.competitionSportService.addToStructure(competitionSport, structure);
-        });
-        // end editing
-        this.horPouleCreator.create(rootRound);
-        this.rulesCreator.create(rootRound);
         return category;
     }
 

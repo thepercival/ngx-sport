@@ -17,6 +17,13 @@ export class Structure {
         return this.categories;
     }
 
+    getSingleCategory(): Category {
+        if (this.categories.length !== 1) {
+            throw Error('there should be one category');
+        }
+        return this.categories[0];
+    }
+
     getRootRounds(): Round[] {
         return this.categories.map((category: Category): Round => {
             return category.getRootRound();
