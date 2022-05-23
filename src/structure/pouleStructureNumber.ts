@@ -24,9 +24,10 @@ export class PouleStructureNumberMap {
             // for each cat
             rounds.sort((roundA: Round, roundB: Round) => {
                 if (roundA.getCategory().getNumber() === roundB.getCategory().getNumber()) {
-                    return roundA.getCategory().getNumber() < roundB.getCategory().getNumber() ? 1 : -1;
+                    return roundRankService.getRank(roundA) > roundRankService.getRank(roundB) ? 1 : -1;
                 }
-                return roundRankService.getRank(roundA) > roundRankService.getRank(roundB) ? 1 : -1;
+                return roundA.getCategory().getNumber() > roundB.getCategory().getNumber() ? 1 : -1;
+
             });
             rounds.forEach((round: Round) => {
                 round.getPoules().forEach((poule: Poule) => map[poule.getStructureLocation()] = pouleNr++);
