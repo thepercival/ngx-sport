@@ -10,7 +10,7 @@ export class Category extends Identifiable {
         protected competition: Competition,
         protected name: string,
         private number: number,
-        private rootRound: Round) {
+        private rootRound: Round | undefined) {
         super();
 
     }
@@ -32,6 +32,14 @@ export class Category extends Identifiable {
     }
 
     getRootRound(): Round {
+        if (this.rootRound === undefined) {
+            throw new Error('rootRound can not be empty');
+
+        }
         return this.rootRound;
+    }
+
+    setRootRound(round: Round): void {
+        this.rootRound = round;
     }
 }

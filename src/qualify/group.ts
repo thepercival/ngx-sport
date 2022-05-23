@@ -13,9 +13,10 @@ import { TogetherGame } from '../game/together';
 import { SingleQualifyRule } from './rule/single';
 import { MultipleQualifyRule } from './rule/multiple';
 import { QualifyTarget } from './target';
-import { StructurePathNode } from '../structure/path';
+import { QualifyPathNode } from './pathNode';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { GameState } from '../game/state';
+import { Category } from '../category';
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
@@ -31,7 +32,7 @@ export class QualifyGroup extends Identifiable {
         super();
         this.number = number ? number : this.parentRound.getQualifyGroups(this.getTarget()).length + 1;
         this.parentRound.getQualifyGroups(this.getTarget()).splice(this.number - 1, 0, this);
-        this.childRound = new Round(nextRoundNumber, this);
+        this.childRound = new Round(parentRound.getCategory(), nextRoundNumber, this);
     }
 
     getParentRound(): Round {
@@ -150,18 +151,22 @@ export class Round extends Identifiable {
     protected winnersQualifyGroups: QualifyGroup[] = [];
     protected losersHorizontalPoules: HorizontalPoule[] = [];
     protected winnersHorizontalPoules: HorizontalPoule[] = [];
-    protected structurePathNode: StructurePathNode;
+    protected qualifyPathNode: QualifyPathNode;
     protected scoreConfigs: ScoreConfig[] = [];
     protected againstQualifyConfigs: AgainstQualifyConfig[] = [];
 
-    constructor(protected number: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
+    constructor(protected category: Category, protected number: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
         super();
         this.number.getRounds().push(this);
-        this.structurePathNode = this.constructStructurePathNode();
+        this.qualifyPathNode = this.constructQualifyPathNode();
     }
 
     getCompetition(): Competition {
         return this.getNumber().getCompetition();
+    }
+
+    getCategory(): Category {
+        return this.category;
     }
 
     getParent(): Round | undefined {
@@ -463,18 +468,19 @@ export class Round extends Identifiable {
     //     return getStructurePathNode(this.rootRound)
     // }
 
-    getStructurePathNode(): StructurePathNode {
-        return this.structurePathNode;
-    }
 
-    protected constructStructurePathNode(): StructurePathNode {
+    protected constructQualifyPathNode(): QualifyPathNode {
         if (this.parentQualifyGroup === undefined) {
-            return new StructurePathNode(undefined, 1);
+            return new QualifyPathNode(undefined, 1);
         }
-        return new StructurePathNode(
+        return new QualifyPathNode(
             this.parentQualifyGroup.getTarget(),
             this.parentQualifyGroup.getNumber(),
-            this.parentQualifyGroup.getParentRound().getStructurePathNode());
+            this.parentQualifyGroup.getParentRound().getPathNode());
+    }
+
+    getPathNode(): QualifyPathNode {
+        return this.qualifyPathNode;
     }
 
     createPouleStructure(): BalancedPouleStructure {

@@ -16,9 +16,9 @@ export class CategoryMapper {
     ) { }
 
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
-        const existingRound = new Round(firstRoundNumber, undefined)
-        const round = this.roundMapper.toObject(json.rootRound, existingRound);
-        const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number, round);
+        const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number, undefined);
+        const rootRound = new Round(category, firstRoundNumber, undefined)
+        this.roundMapper.toObject(json.rootRound, rootRound);
         return category;
     }
 

@@ -1,17 +1,16 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
-import { jsonBaseCompetition } from '../../../data/competition';
+import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
+import { jsonBaseCompetition } from '../../data/competition';
 
-import { createGames } from '../../../helpers/gamescreator';
-import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
-import { PouleStructure, QualifyTarget, Round } from '../../../../public-api';
-import { PreviousNrOfDropoutsMap } from '../../../../src/ranking/map/previousNrOfDropouts';
-import { StructureOutput } from '../../../helpers/structureOutput';
+import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
+import { QualifyTarget, Round } from '../../../public-api';
+import { StructureOutput } from '../../helpers/structureOutput';
+import { RoundRankCalculator } from '../../../src/qualify/roundRankCalculator';
 
 
-describe('PreviousNrOfDropoutsMap', () => {
+describe('Previous', () => {
 
     it('simple [7,7] => W[5],L[5] => W[2],L[2],W[2],L[2] ', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
@@ -28,16 +27,16 @@ describe('PreviousNrOfDropoutsMap', () => {
         const round10and11 = structureEditor.addChildRound(losersChildRound, QualifyTarget.Winners, [2]);
         const round13and14 = structureEditor.addChildRound(losersChildRound, QualifyTarget.Losers, [2]);
 
-        const previousDropoutsMap = new PreviousNrOfDropoutsMap(rootRound);
-        expect(previousDropoutsMap.get(round1and2)).to.equal(0);
-        expect(previousDropoutsMap.get(round4and5)).to.equal(3);
-        expect(previousDropoutsMap.get(round10and11)).to.equal(9);
-        expect(previousDropoutsMap.get(round13and14)).to.equal(12);
+        const rankCalculator = new RoundRankCalculator(rootRound.getCategory());
+        expect(rankCalculator.getRank(round1and2)).to.equal(0);
+        expect(rankCalculator.getRank(round4and5)).to.equal(3);
+        expect(rankCalculator.getRank(round10and11)).to.equal(9);
+        expect(rankCalculator.getRank(round13and14)).to.equal(12);
 
-        expect(previousDropoutsMap.get(winnersChildRound)).to.equal(2);
-        expect(previousDropoutsMap.get(losersChildRound)).to.equal(11);
+        expect(rankCalculator.getRank(winnersChildRound)).to.equal(2);
+        expect(rankCalculator.getRank(losersChildRound)).to.equal(11);
 
-        expect(previousDropoutsMap.get(rootRound)).to.equal(5);
+        expect(rankCalculator.getRank(rootRound)).to.equal(5);
 
         // (new StructureOutput()).toConsole(structure, console);
     });

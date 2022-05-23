@@ -95,8 +95,9 @@ export class StructureEditor {
         // begin editing
         const competition = firstRoundNumber.getCompetition();
 
-        const rootRound = new Round(firstRoundNumber, undefined);
-        const category = new Category(competition, name, number, rootRound);
+        const category = new Category(competition, name, number, undefined);
+        const rootRound = new Round(category, firstRoundNumber, undefined);
+        category.setRootRound(rootRound);
 
         this.fillRound(rootRound, pouleStructure);
         return category;

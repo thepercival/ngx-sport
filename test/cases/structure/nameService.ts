@@ -1,32 +1,16 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getCompetitionMapper, getStructureEditor } from '../helpers/singletonCreator';
-import { jsonBaseCompetition } from '../data/competition';
+import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
+import { jsonBaseCompetition } from '../../data/competition';
 
-import { createGames } from '../helpers/gamescreator';
-import { createTeamCompetitors } from '../helpers/teamcompetitorscreator';
-import { NameService, CompetitorMap, Referee, PouleStructure, QualifyTarget } from '../../public-api';
-import { createPlanningConfigNoTime } from '../helpers/planningConfigCreator';
-import { StructureOutput } from '../helpers/structureOutput';
+import { createGames } from '../../helpers/gamescreator';
+import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
+import { CompetitorMap, Referee, PouleStructure, QualifyTarget, StructureNameService } from '../../../public-api';
+import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
+import { StructureOutput } from '../../helpers/structureOutput';
 
-describe('NameService', () => {
-
-    it('winnerslosers description', () => {
-
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, [3, 3, 2], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
-
-        expect(nameService.getQualifyTargetDescription(QualifyTarget.Winners)).to.equal('winnaar');
-        expect(nameService.getQualifyTargetDescription(QualifyTarget.Losers)).to.equal('verliezer');
-        expect(nameService.getQualifyTargetDescription(QualifyTarget.Winners, true)).to.equal('winnaars');
-        expect(nameService.getQualifyTargetDescription(QualifyTarget.Losers, true)).to.equal('verliezers');
-        expect(nameService.getQualifyTargetDescription(QualifyTarget.Dropouts)).to.equal('');
-    });
+describe('StructureNameService', () => {
 
     it('roundnumber name', () => {
 
@@ -35,7 +19,7 @@ describe('NameService', () => {
         const structure = structureEditor.create(competition, [3, 3, 2], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         const rootRound = structure.getSingleCategory().getRootRound();
 
         structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2]);
@@ -65,7 +49,7 @@ describe('NameService', () => {
             const structure = structureEditor.create(competition, [2, 2], createPlanningConfigNoTime());
             const firstRoundNumber = structure.getFirstRoundNumber();
             const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-            const nameService = new NameService(competitorMap);
+            const nameService = new StructureNameService(structure, competitorMap);
             const rootRound = structure.getSingleCategory().getRootRound();
 
             structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -80,7 +64,7 @@ describe('NameService', () => {
             const structure2 = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
             const firstRoundNumber2 = structure2.getFirstRoundNumber();
             const competitorMap2 = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber2));
-            const nameService2 = new NameService(competitorMap2);
+            const nameService2 = new StructureNameService(structure2, competitorMap2);
             const rootRound2 = structure2.getSingleCategory().getRootRound();
 
             expect(nameService2.getRoundName(rootRound2)).to.equal('1<sup>e</sup> ronde');
@@ -99,7 +83,7 @@ describe('NameService', () => {
         const structure = structureEditor.create(competition, [2, 2, 2, 2, 2, 2, 2, 2], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         const rootRound = structure.getSingleCategory().getRootRound();
 
         // root needs ranking, depth 2
@@ -131,7 +115,7 @@ describe('NameService', () => {
         const structure = structureEditor.create(competition, pouleStructure, createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
@@ -171,7 +155,7 @@ describe('NameService', () => {
             return
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
@@ -207,7 +191,7 @@ describe('NameService', () => {
             return
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         nameService.enableConsoleOutput();
         const rootRound = structure.getSingleCategory().getRootRound();
 
@@ -271,7 +255,7 @@ describe('NameService', () => {
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
         const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         const rootRound = structure.getSingleCategory().getRootRound();
 
         // basics
@@ -301,7 +285,7 @@ describe('NameService', () => {
             return
         }
         const competitorMap = new CompetitorMap([firstTeamCompetitor]);
-        const nameService = new NameService(competitorMap);
+        const nameService = new StructureNameService(structure, competitorMap);
         nameService.enableConsoleOutput();
         const rootRound = structure.getSingleCategory().getRootRound();
 
@@ -323,46 +307,6 @@ describe('NameService', () => {
             const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2); // 2e3
             expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('2e3');
             expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('2e van 2e pl. van onderen');
-        }
-    });
-
-    it('referee name', () => {
-
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
-        const structureEditor = getStructureEditor();
-        const jsonPlanningConfig = createPlanningConfigNoTime();
-        const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
-        const nameService = new NameService(competitorMap);
-        const rootRound = structure.getSingleCategory().getRootRound();
-
-        // basics
-        {
-            const firstPlace = rootRound.getFirstPlace(QualifyTarget.Winners);
-            expect(firstPlace).to.not.equal(undefined);
-            if (!firstPlace) {
-                return;
-            }
-
-            createGames(structure.getFirstRoundNumber());
-            const game = firstPlace.getPoule().getGames()[0];
-            expect(nameService.getRefereeName(game)).to.equal('');
-
-            const referee = new Referee(competition, 'CDK');
-            referee.setName('Co Du');
-            game.setReferee(referee);
-
-            expect(nameService.getRefereeName(game)).to.equal('CDK');
-            expect(nameService.getRefereeName(game, false)).to.equal('CDK');
-            expect(nameService.getRefereeName(game, true)).to.equal('Co Du');
-
-            game.setReferee(undefined);
-            game.setRefereePlace(firstPlace);
-
-            expect(nameService.getRefereeName(game)).to.equal('tc 1.1');
-            expect(nameService.getRefereeName(game, false)).to.equal('tc 1.1');
-            expect(nameService.getRefereeName(game, true)).to.equal('tc 1.1');
         }
     });
 

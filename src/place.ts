@@ -32,7 +32,7 @@ export class Place extends PlaceLocation {
     }
 
     getRoundNodeName(): string {
-        return this.getRound().getStructurePathNode().pathToString();
+        return this.getRound().getPathNode().pathToString();
     }
 
     getStructureLocation(): string {

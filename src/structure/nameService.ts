@@ -1,30 +1,27 @@
-import { Game } from './game';
-import { GamePlace } from './game/place';
-import { Poule } from './poule';
-import { HorizontalPoule } from './poule/horizontal';
-import { Place } from './place';
-import { QualifyGroup, Round } from './qualify/group';
-import { MultipleQualifyRule } from './qualify/rule/multiple';
-import { SingleQualifyRule } from './qualify/rule/single';
-import { RoundNumber } from './round/number';
-import { GameMode } from './planning/gameMode';
-import { PointsCalculation } from './ranking/pointsCalculation';
-import { FootballLine } from './sport/football';
-import { RankingRule } from './ranking/rule';
-import { RankingRuleGetter } from './ranking/rule/getter';
-import { CompetitorMap } from './competitor/map';
-import { AgainstRuleSet } from './ranking/againstRuleSet';
-import { QualifyTarget } from './qualify/target';
-import { PreviousNrOfDropoutsMap } from './ranking/map/previousNrOfDropouts';
-import { PouleStructureNumberMap } from './ranking/map/pouleStructureNumber';
-import { PlaceLocation } from './place/location';
+import { Category } from "../category";
+import { CompetitorMap } from "../competitor/map";
+import { Game } from "../game";
+import { GamePlace } from "../game/place";
+import { Place } from "../place";
+import { PlaceLocation } from "../place/location";
+import { Poule } from "../poule";
+import { Round } from "../qualify/group";
+import { RoundRankCalculator, RoundRankCalculatorMap, RoundRankService } from "../qualify/roundRankCalculator";
+import { MultipleQualifyRule } from "../qualify/rule/multiple";
+import { SingleQualifyRule } from "../qualify/rule/single";
+import { QualifyTarget } from "../qualify/target";
+import { PouleStructureNumberMap } from "./pouleStructureNumber";
+import { RoundNumber } from "../round/number";
+import { Structure } from "../structure";
 
-export class NameService {
-    private previousNrOfDropoutsMap: PreviousNrOfDropoutsMap | undefined;
+
+export class StructureNameService {
+    private roundRankService: RoundRankService;
     private pouleStructureNumberMap: PouleStructureNumberMap | undefined;
     private htmlOutput: boolean = true;
 
-    constructor(private competitorMap?: CompetitorMap) {
+    constructor(structure: Structure, private competitorMap?: CompetitorMap) {
+        this.roundRankService = new RoundRankService();
     }
 
     enableConsoleOutput(): void {
@@ -71,7 +68,7 @@ export class NameService {
             return this.getHtmlFractalNumber(Math.pow(2, nrOfRoundsToGo)) + ' finale';
         }
         if (round.getNrOfPlaces() === 2 && sameName === false) {
-            const rank = this.getPreviousNrOfDropoutsMap(round).get(round) + 1;
+            const rank = this.roundRankService.getRank(round) + 1;
             return this.getOrdinalOutput(rank) + ' / ' + this.getOrdinalOutput(rank + 1) + ' pl';
         }
         return 'finale';
@@ -201,83 +198,6 @@ export class NameService {
         return name;
     }
 
-    getRefereeName(game: Game, longName?: boolean): string | undefined {
-        const referee = game.getReferee();
-        if (referee) {
-            return longName ? referee.getName() : referee.getInitials();
-        }
-        const refereePlace = game.getRefereePlace();
-        if (refereePlace) {
-            return this.getPlaceName(refereePlace, true, longName);
-        }
-        return '';
-    }
-
-    getFormationLineName(line: FootballLine): string {
-        if (line === FootballLine.GoalKepeer) {
-            return 'keeper';
-        } else if (line === FootballLine.Defense) {
-            return 'verdediging';
-        } else if (line === FootballLine.Midfield) {
-            return 'middenveld';
-        } else if (line === FootballLine.Forward) {
-            return 'aanval';
-        }
-        return 'alle linies';
-    }
-
-    getGameModeName(gameMode: GameMode): string {
-        switch (gameMode) {
-            case GameMode.Single:
-                return 'alleen';
-            case GameMode.Against:
-                return 'tegen elkaar';
-        }
-        return 'iedereen tegelijk tegen elkaar';
-    }
-
-    getPointsCalculationName(pointsCalculation: PointsCalculation): string {
-        switch (pointsCalculation) {
-            case PointsCalculation.AgainstGamePoints:
-                return 'alleen punten';
-            case PointsCalculation.Scores:
-                return 'alleen score';
-        }
-        return 'punten + score';
-    }
-
-    getNrOfGamePlacesName(nrOfGamePlaces: number): string {
-        switch (nrOfGamePlaces) {
-            case 0:
-                return 'alle deelnemers';
-            case 1:
-                return '1 deelnemer';
-        }
-        return nrOfGamePlaces + ' deelnemers';
-    }
-
-    getRulesName(againstRuleSet: AgainstRuleSet | undefined): string[] {
-        const rankingRuleGetter = new RankingRuleGetter();
-        return rankingRuleGetter.getRules(againstRuleSet, false).map((rule: RankingRule): string => {
-            switch (rule) {
-                case RankingRule.MostPoints:
-                    return 'meeste aantal punten';
-                case RankingRule.FewestGames:
-                    return 'minste aantal wedstrijden';
-                case RankingRule.BestUnitDifference:
-                    return 'beste saldo';
-                case RankingRule.MostUnitsScored:
-                    return 'meeste aantal eenheden voor';
-                case RankingRule.BestAmongEachOther:
-                    return 'beste onderling resultaat';
-                case RankingRule.BestSubUnitDifference:
-                    return 'beste subsaldo';
-                case RankingRule.MostSubUnitsScored:
-                    return 'meeste aantal subeenheden voor';
-            }
-        });
-    }
-
     protected childRoundsHaveEqualDepth(round: Round): boolean {
         if (round.getQualifyGroups().length === 1) {
             return true;
@@ -341,23 +261,10 @@ export class NameService {
         return biggestMaxDepth;
     }
 
-    resetStructure(): void {
-        this.previousNrOfDropoutsMap = undefined;
-        this.pouleStructureNumberMap = undefined;
-    }
-
-    private getPreviousNrOfDropoutsMap(round: Round): PreviousNrOfDropoutsMap {
-        if (this.previousNrOfDropoutsMap === undefined) {
-            this.previousNrOfDropoutsMap = new PreviousNrOfDropoutsMap(round.getRoot());
-        }
-        return this.previousNrOfDropoutsMap;
-    }
-
     private getPouleStructureNumberMap(round: Round): PouleStructureNumberMap {
         if (this.pouleStructureNumberMap === undefined) {
-            this.pouleStructureNumberMap = new PouleStructureNumberMap(round.getNumber().getFirst(), this.getPreviousNrOfDropoutsMap(round));
+            this.pouleStructureNumberMap = new PouleStructureNumberMap(round.getNumber().getFirst(), this.roundRankService);
         }
         return this.pouleStructureNumberMap;
     }
-
 }

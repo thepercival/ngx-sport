@@ -1,4 +1,4 @@
-import { AnsiColor, Category, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
+import { AnsiColor, Category, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure, StructureNameService } from "../../../public-api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
 import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
 import { SingleQualifyRule } from "../../../src/qualify/rule/single";
@@ -11,15 +11,30 @@ import { RangeCalculator } from "./rangeCalculator";
 export class DrawHelper {
 
     protected nameService: NameService;
+    protected structureNameService: StructureNameService | undefined;
     protected rangeCalculator: RangeCalculator;
 
     public constructor(protected drawer: GridDrawer) {
-        this.nameService = new NameService();
-        this.nameService.enableConsoleOutput();
         this.rangeCalculator = new RangeCalculator();
     }
 
+    private getStructureNameService(): StructureNameService {
+        const structureNameService = this.structureNameService;
+        if (structureNameService === undefined) {
+            throw new Error('structureNameService not set');
+        }
+        return structureNameService;
+
+    }
+
+    private initNameService(structure: Structure): void {
+        this.structureNameService = new StructureNameService(structure);
+        this.getStructureNameService().enableConsoleOutput();
+
+    }
+
     public drawStructure(structure: Structure, origin: Coordinate): Coordinate {
+        this.initNameService(structure);
         const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(structure.getFirstRoundNumber());
         let categoryCoord = this.getCategoryStartCoordinate(origin, structure.getFirstRoundNumber(), structure);
         structure.getCategories().forEach((category: Category) => {
@@ -35,12 +50,12 @@ export class DrawHelper {
         return origin.addX(delta);
     }
 
-    public drawCategory(category: Category, origin: Coordinate, roundNumberHeight: number): Coordinate {
+    protected drawCategory(category: Category, origin: Coordinate, roundNumberHeight: number): Coordinate {
         const newCoord = this.drawRound(category.getRootRound(), origin, roundNumberHeight, category.getName());
         return newCoord.addX(RangeCalculator.PADDING);
     }
 
-    public drawRound(round: Round, origin: Coordinate, roundNumberHeight: number, catName?: string): Coordinate {
+    protected drawRound(round: Round, origin: Coordinate, roundNumberHeight: number, catName?: string): Coordinate {
         this.drawRoundBorder(round, origin, roundNumberHeight);
         if (catName) {
             const width = this.rangeCalculator.getRoundWidth(round);
@@ -84,14 +99,14 @@ export class DrawHelper {
 
     protected drawPoule(poule: Poule, origin: Coordinate): Coordinate {
         const pouleWidth = this.rangeCalculator.getPouleWidth(poule);
-        const pouleName = this.nameService.getPouleName(poule, false);
+        const pouleName = this.structureNameService.getPouleName(poule, false);
         const nextPouleCoordrinate = this.drawer.drawCellToRight(origin, pouleName, pouleWidth, GridAlign.Center);
 
         this.drawer.drawLineToRight(origin.addY(1), pouleWidth);
 
         let placeCoordinate = origin.addY(2);
         poule.getPlaces().forEach((place: Place) => {
-            const placeName = this.nameService.getPlaceFromName(place, false);
+            const placeName = this.structureNameService.getPlaceFromName(place, false);
             this.drawer.drawCellToRight(placeCoordinate, placeName, pouleWidth, GridAlign.Center);
             placeCoordinate = placeCoordinate.incrementY();
         });

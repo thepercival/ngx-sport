@@ -1,14 +1,14 @@
-import { QualifyTarget } from "../qualify/target";
+import { QualifyTarget } from "./target";
 
-export class StructurePathNode {
-    // private next: StructurePathNode | undefined;
+export class QualifyPathNode {
+    // private next: QualifyPathNode | undefined;
 
-    constructor(private qualifyTarget: QualifyTarget | undefined, private qualifyGroupNumber: number, private previous?: StructurePathNode) {
+    constructor(private qualifyTarget: QualifyTarget | undefined, private qualifyGroupNumber: number, private previous?: QualifyPathNode) {
 
     }
 
-    createNext(qualifyTarget: QualifyTarget, qualifyGroupNumber: number): StructurePathNode {
-        const path = new StructurePathNode(qualifyTarget, qualifyGroupNumber, this);
+    createNext(qualifyTarget: QualifyTarget, qualifyGroupNumber: number): QualifyPathNode {
+        const path = new QualifyPathNode(qualifyTarget, qualifyGroupNumber, this);
         // this.next = path;
         return path;
     }

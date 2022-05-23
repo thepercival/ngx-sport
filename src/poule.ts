@@ -1,3 +1,4 @@
+import { Category } from './category';
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
@@ -19,7 +20,7 @@ export class Poule extends Identifiable {
         super();
         this.round.getPoules().push(this);
         this.number = number ? number : (round.getPoules().length);
-        this.structureLocation = round.getStructurePathNode().pathToString() + '.' + this.number;
+        this.structureLocation = round.getCategory().getNumber() + '.' + round.getPathNode().pathToString() + '.' + this.number;
     }
 
     getRound(): Round {
