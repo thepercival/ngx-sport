@@ -1,16 +1,14 @@
-import { Category } from "../category";
 import { CompetitorMap } from "../competitor/map";
-import { Game } from "../game";
 import { GamePlace } from "../game/place";
 import { Place } from "../place";
 import { PlaceLocation } from "../place/location";
 import { Poule } from "../poule";
 import { Round } from "../qualify/group";
-import { RoundRankCalculator, RoundRankCalculatorMap, RoundRankService } from "../qualify/roundRankCalculator";
+import { RoundRankService } from "../qualify/roundRankCalculator";
 import { MultipleQualifyRule } from "../qualify/rule/multiple";
 import { SingleQualifyRule } from "../qualify/rule/single";
 import { QualifyTarget } from "../qualify/target";
-import { PouleStructureNumberMap } from "./pouleStructureNumber";
+import { PouleStructureNumberMap } from "./pouleStructureNumberMap";
 import { RoundNumber } from "../round/number";
 import { Structure } from "../structure";
 
@@ -20,7 +18,7 @@ export class StructureNameService {
     private pouleStructureNumberMap: PouleStructureNumberMap | undefined;
     private htmlOutput: boolean = true;
 
-    constructor(structure: Structure, private competitorMap?: CompetitorMap) {
+    constructor(private competitorMap?: CompetitorMap) {
         this.roundRankService = new RoundRankService();
     }
 

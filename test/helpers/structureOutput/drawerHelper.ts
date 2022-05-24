@@ -27,14 +27,14 @@ export class DrawHelper {
 
     }
 
-    private initNameService(structure: Structure): void {
-        this.structureNameService = new StructureNameService(structure);
+    private initNameService(): void {
+        this.structureNameService = new StructureNameService();
         this.getStructureNameService().enableConsoleOutput();
 
     }
 
     public drawStructure(structure: Structure, origin: Coordinate): Coordinate {
-        this.initNameService(structure);
+        this.initNameService();
         const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(structure.getFirstRoundNumber());
         let categoryCoord = this.getCategoryStartCoordinate(origin, structure.getFirstRoundNumber(), structure);
         structure.getCategories().forEach((category: Category) => {
@@ -208,7 +208,7 @@ export class DrawHelper {
 
     protected drawQualifyGroups(round: Round, origin: Coordinate, nextRoundNumberHeight: number): void {
         let qualifyGroupCoordinate = this.getQualifyGroupsStartCoordinate(origin, round);
-        round.getQualifyGroups().forEach((qualifyGroup: QualifyGroup) => {
+        round.getQualifyGroupsLosersReversed().forEach((qualifyGroup: QualifyGroup) => {
             qualifyGroupCoordinate = this.drawQualifyGroup(qualifyGroup, qualifyGroupCoordinate, nextRoundNumberHeight);
         });
     }

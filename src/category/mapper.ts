@@ -18,6 +18,7 @@ export class CategoryMapper {
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
         const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number, undefined);
         const rootRound = new Round(category, firstRoundNumber, undefined)
+        category.setRootRound(rootRound);
         this.roundMapper.toObject(json.rootRound, rootRound);
         return category;
     }

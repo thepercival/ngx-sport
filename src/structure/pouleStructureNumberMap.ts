@@ -21,7 +21,6 @@ export class PouleStructureNumberMap {
         const setPouleStructureNumbers = (roundNumber: RoundNumber) => {
             const rounds = roundNumber.getRounds();
 
-            // for each cat
             rounds.sort((roundA: Round, roundB: Round) => {
                 if (roundA.getCategory().getNumber() === roundB.getCategory().getNumber()) {
                     return roundRankService.getRank(roundA) > roundRankService.getRank(roundB) ? 1 : -1;

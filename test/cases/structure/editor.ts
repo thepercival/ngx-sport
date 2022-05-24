@@ -779,15 +779,26 @@ describe('StructureEditor', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [4, 4], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-
+        const category1 = structure.getSingleCategory();
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
 
-        const category = structureEditor.addCategory('j78', 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
-        structure.getCategories().push(category);
-        // (new StructureOutput()).toConsole(structure, console);
+        const category2 = structureEditor.addCategory('j78', 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
+        structure.getCategories().push(category2);
+
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
-        expect(category.getRootRound().getAgainstQualifyConfigs().length).to.equal(1);
-        expect(category.getRootRound().getScoreConfigs().length).to.equal(1);
+        expect(category2.getRootRound().getAgainstQualifyConfigs().length).to.equal(1);
+        expect(category2.getRootRound().getScoreConfigs().length).to.equal(1);
+
+        structureEditor.addChildRound(category1.getRootRound(), QualifyTarget.Winners, [2]);
+        structureEditor.addChildRound(category1.getRootRound(), QualifyTarget.Winners, [2]);
+
+        const lastPlaceRound = structureEditor.addChildRound(category2.getRootRound(), QualifyTarget.Losers, [3]);
+        structureEditor.addChildRound(category2.getRootRound(), QualifyTarget.Losers, [2]);
+
+        const lastPlaceChildRound = structureEditor.addChildRound(lastPlaceRound, QualifyTarget.Losers, [2]);
+        (new StructureOutput()).toConsole(structure, console);
+
+        expect(lastPlaceChildRound.getPoule(1).getStructureLocation()).to.equal('2.1L1L1.1');
     });
 
 });
