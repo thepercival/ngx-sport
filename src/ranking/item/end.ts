@@ -1,7 +1,7 @@
-import { PlaceLocation } from '../../place/location';
+import { StartLocation } from '../../competitor/startLocation';
 
 export class EndRankingItem {
-    constructor(private uniqueRank: number, private rank: number, private placeLocation?: PlaceLocation) {
+    constructor(private uniqueRank: number, private rank: number, private startLocation?: StartLocation | undefined) {
     }
 
     getUniqueRank(): number {
@@ -12,7 +12,7 @@ export class EndRankingItem {
         return this.rank;
     }
 
-    getStartPlaceLocation(): PlaceLocation | undefined {
-        return this.placeLocation;
+    getStartLocation(): StartLocation | undefined {
+        return this.startLocation;
     }
 }

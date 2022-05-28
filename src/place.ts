@@ -1,3 +1,4 @@
+import { StartLocation } from './competitor/startLocation';
 import { PlaceLocation } from './place/location';
 import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
@@ -66,13 +67,13 @@ export class Place extends PlaceLocation {
         this.qualifiedPlace = place;
     }
 
-    getStartLocation(): PlaceLocation | undefined {
-        if (this.qualifiedPlace === undefined) {
-            if (this.getRound().isRoot()) {
-                return this;
-            }
-            return undefined;
+    getStartLocation(): StartLocation | undefined {
+        if (this.qualifiedPlace !== undefined) {
+            return this.qualifiedPlace.getStartLocation();
         }
-        return this.qualifiedPlace.getStartLocation();
+        if (this.getRound().isRoot()) {
+            return new StartLocation(this.getRound().getCategory().getNumber(), this.getPouleNr(), this.getPlaceNr());
+        }
+        return undefined;
     }
 }

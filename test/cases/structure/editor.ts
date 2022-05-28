@@ -796,7 +796,7 @@ describe('StructureEditor', () => {
         structureEditor.addChildRound(category2.getRootRound(), QualifyTarget.Losers, [2]);
 
         const lastPlaceChildRound = structureEditor.addChildRound(lastPlaceRound, QualifyTarget.Losers, [2]);
-        (new StructureOutput()).toConsole(structure, console);
+        // (new StructureOutput()).toConsole(structure, console);
 
         expect(lastPlaceChildRound.getPoule(1).getStructureLocation()).to.equal('2.1L1L1.1');
     });

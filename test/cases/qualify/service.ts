@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import {
-    CompetitorMap,
     PouleStructure,
     QualifyGroup,
     QualifyService,
     QualifyTarget,
+    StartLocationMap,
     StructureEditor,
 } from '../../../public-api';
 import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
@@ -25,7 +25,7 @@ describe('QualifyService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const startLocationMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
@@ -62,8 +62,8 @@ describe('QualifyService', () => {
         if (winnersPlace1) {
             const winnersLocation1 = winnersPlace1.getStartLocation();
             if (winnersLocation1) {
-                expect(competitorMap.getCompetitor(winnersLocation1)).to.not.equal(undefined);
-                expect(competitorMap.getCompetitor(winnersLocation1)?.getName()).to.equal('tc 1.1');
+                expect(startLocationMap.getCompetitor(winnersLocation1)).to.not.equal(undefined);
+                expect(startLocationMap.getCompetitor(winnersLocation1)?.getName()).to.equal('tc 1.1');
             }
         }
         const winnersPlace2 = winnersPoule.getPlace(2);
@@ -71,8 +71,8 @@ describe('QualifyService', () => {
         if (winnersPlace2) {
             const winnersLocation2 = winnersPlace2.getStartLocation();
             if (winnersLocation2) {
-                expect(competitorMap.getCompetitor(winnersLocation2)).to.not.equal(undefined);
-                expect(competitorMap.getCompetitor(winnersLocation2)?.getName()).to.equal('tc 1.2');
+                expect(startLocationMap.getCompetitor(winnersLocation2)).to.not.equal(undefined);
+                expect(startLocationMap.getCompetitor(winnersLocation2)?.getName()).to.equal('tc 1.2');
             }
         }
 
@@ -86,8 +86,8 @@ describe('QualifyService', () => {
         if (losersPlace1) {
             const losersLocation1 = losersPlace1.getStartLocation();
             if (losersLocation1) {
-                expect(competitorMap.getCompetitor(losersLocation1)).to.not.equal(undefined);
-                expect(competitorMap.getCompetitor(losersLocation1)?.getName()).to.equal('tc 1.4');
+                expect(startLocationMap.getCompetitor(losersLocation1)).to.not.equal(undefined);
+                expect(startLocationMap.getCompetitor(losersLocation1)?.getName()).to.equal('tc 1.4');
             }
         }
         const losersPlace2 = loserssPoule.getPlace(2);
@@ -95,8 +95,8 @@ describe('QualifyService', () => {
         if (losersPlace2) {
             const losersLocation2 = losersPlace2.getStartLocation();
             if (losersLocation2) {
-                expect(competitorMap.getCompetitor(losersLocation2)).to.not.equal(undefined);
-                expect(competitorMap.getCompetitor(losersLocation2)?.getName()).to.equal('tc 1.5');
+                expect(startLocationMap.getCompetitor(losersLocation2)).to.not.equal(undefined);
+                expect(startLocationMap.getCompetitor(losersLocation2)?.getName()).to.equal('tc 1.5');
             }
         }
 
@@ -107,7 +107,7 @@ describe('QualifyService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const pouleOne = rootRound.getPoule(1);
@@ -187,7 +187,7 @@ describe('QualifyService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
@@ -343,7 +343,7 @@ describe('QualifyService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRoundOne = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
@@ -403,7 +403,7 @@ describe('QualifyService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3]);

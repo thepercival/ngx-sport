@@ -1,21 +1,13 @@
 import { Competition } from './competition';
-import { PlaceLocation } from './place/location';
+import { StartLocation } from './competitor/startLocation';
+import { Identifiable } from './identifiable';
 
-export class CompetitorBase extends PlaceLocation {
-    protected id: string | number = 0;
+export class CompetitorBase extends Identifiable {
     protected registered: boolean = false;
     protected info: string | undefined;
 
-    constructor(protected competition: Competition, pouleNr: number, placeNr: number) {
-        super(pouleNr, placeNr);
-    }
-
-    getId(): string | number {
-        return this.id;
-    }
-
-    setId(id: string | number): void {
-        this.id = id;
+    constructor(protected competition: Competition, protected startLocation: StartLocation) {
+        super();
     }
 
     getRegistered(): boolean {
@@ -38,20 +30,17 @@ export class CompetitorBase extends PlaceLocation {
         return this.competition;
     }
 
-    setPouleNr(pouleNr: number) {
-        this.pouleNr = pouleNr;
-    }
-
-    setPlaceNr(placeNr: number) {
-        this.placeNr = placeNr;
+    getStartLocation(): StartLocation {
+        return this.startLocation;
     }
 }
 
 
-export interface Competitor extends PlaceLocation {
+export interface Competitor {
     getId(): string | number;
     getName(): string;
     getRegistered(): boolean;
     getInfo(): string | undefined;
     getCompetition(): Competition;
+    getStartLocation(): StartLocation;
 }

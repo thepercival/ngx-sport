@@ -10,9 +10,9 @@ import { AgainstGamePlace } from './game/place/against';
 import { TogetherGamePlace } from './game/place/together';
 import { Competition } from './competition';
 import { PlanningConfig } from './planning/config';
-import { CompetitorMap } from './competitor/map';
 import { GamePlace } from './game/place';
 import { GameState } from './game/state';
+import { StartLocationMap } from './competitor/startLocation/map';
 
 export abstract class Game extends Identifiable {
     protected field: Field | undefined;
@@ -98,13 +98,13 @@ export abstract class Game extends Identifiable {
         return this.places;
     }
 
-    public hasCompetitor(competitorMap: CompetitorMap): boolean {
+    public hasCompetitor(startLocationMap: StartLocationMap): boolean {
         return this.getPlaces().some((gamePlace: GamePlace): boolean => {
             const startLocation = gamePlace.getPlace().getStartLocation();
             if (startLocation === undefined) {
                 return false;
             }
-            return competitorMap.getCompetitor(startLocation) !== undefined;
+            return startLocationMap.getCompetitor(startLocation) !== undefined;
         });
     }
 }

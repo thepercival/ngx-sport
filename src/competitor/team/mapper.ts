@@ -5,6 +5,7 @@ import { TeamCompetitor } from '../team';
 import { JsonCompetitor } from '../json';
 import { TeamMapper } from '../../team/mapper';
 import { JsonTeamCompetitor } from './json';
+import { StartLocation } from '../startLocation';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,8 @@ export class TeamCompetitorMapper {
     constructor(private teamMapper: TeamMapper) { }
 
     toObject(json: JsonTeamCompetitor, competition: Competition): TeamCompetitor {
-
-        const competitor = new TeamCompetitor(competition, json.pouleNr, json.placeNr,
+        const startLocation = new StartLocation(json.categoryNr, json.pouleNr, json.placeNr);
+        const competitor = new TeamCompetitor(competition, startLocation,
             this.teamMapper.toObject(json.team, competition.getAssociation())
         );
         competitor.setId(json.id);
@@ -31,10 +32,11 @@ export class TeamCompetitorMapper {
         return {
             id: teamCompetitor.getId(),
             name: teamCompetitor.getName(),
+            categoryNr: teamCompetitor.getStartLocation().getCategoryNr(),
             registered: teamCompetitor.getRegistered(),
             info: teamCompetitor.getInfo(),
-            pouleNr: teamCompetitor.getPouleNr(),
-            placeNr: teamCompetitor.getPlaceNr(),
+            pouleNr: teamCompetitor.getStartLocation().getPouleNr(),
+            placeNr: teamCompetitor.getStartLocation().getPlaceNr(),
             team: this.teamMapper.toJson(teamCompetitor.getTeam())
         };
     }

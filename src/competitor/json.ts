@@ -1,8 +1,9 @@
-import { JsonPlaceLocation } from '../place/location/json';
+import { JsonStartLocation } from "./startLocation/json";
 
-export interface JsonCompetitor extends JsonPlaceLocation {
+export interface JsonCompetitor extends JsonStartLocation {
     name: string;
     id: string | number;
+    categoryNr: number;
     registered?: boolean;
     info?: string;
 }

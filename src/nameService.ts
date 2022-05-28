@@ -3,10 +3,8 @@ import { PointsCalculation } from './ranking/pointsCalculation';
 import { FootballLine } from './sport/football';
 import { RankingRule } from './ranking/rule';
 import { RankingRuleGetter } from './ranking/rule/getter';
-import { CompetitorMap } from './competitor/map';
 import { AgainstRuleSet } from './ranking/againstRuleSet';
 import { QualifyTarget } from './qualify/target';
-import { Game } from './game';
 
 export class NameService {
 

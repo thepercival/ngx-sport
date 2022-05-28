@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../../data/competition';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { CompetitorMap, QualifyReservationService, QualifyService, QualifyTarget, Round } from '../../../public-api';
+import { QualifyReservationService, QualifyService, QualifyTarget, Round, StartLocationMap } from '../../../public-api';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
 
@@ -143,26 +143,14 @@ describe('QualifyReservationService', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const startLocationMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
 
         const pouleOne = rootRound.getPoule(1);
-        expect(pouleOne).to.not.equal(undefined);
-        if (!pouleOne) {
-            return;
-        }
         const pouleTwo = rootRound.getPoule(2);
-        expect(pouleTwo).to.not.equal(undefined);
-        if (!pouleTwo) {
-            return;
-        }
         const pouleThree = rootRound.getPoule(3);
-        expect(pouleThree).to.not.equal(undefined);
-        if (!pouleThree) {
-            return;
-        }
 
         createGames(structure.getFirstRoundNumber());
 
@@ -178,16 +166,8 @@ describe('QualifyReservationService', () => {
 
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
-        const winnersPoule = winnersRound.getPoule(1);
-        expect(winnersPoule).to.not.equal(undefined);
-        if (!winnersPoule) {
-            return;
-        }
-        const winnersPlace = winnersPoule.getPlace(4);
-        expect(winnersPlace).to.not.equal(undefined);
-        if (!winnersPlace) {
-            return;
-        }
-        expect(competitorMap.getCompetitor(winnersPlace)).to.equal(undefined);
+        const winnersPlace = winnersRound.getPoule(1).getPlace(4);
+        // (new StructureOutput()).toConsole(structure, console);
+        expect(winnersPlace.getQualifiedPlace()).to.equal(undefined);
     });
 });

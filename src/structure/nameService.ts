@@ -1,7 +1,5 @@
-import { CompetitorMap } from "../competitor/map";
 import { GamePlace } from "../game/place";
 import { Place } from "../place";
-import { PlaceLocation } from "../place/location";
 import { Poule } from "../poule";
 import { Round } from "../qualify/group";
 import { RoundRankService } from "../qualify/roundRankCalculator";
@@ -10,7 +8,8 @@ import { SingleQualifyRule } from "../qualify/rule/single";
 import { QualifyTarget } from "../qualify/target";
 import { PouleStructureNumberMap } from "./pouleStructureNumberMap";
 import { RoundNumber } from "../round/number";
-import { Structure } from "../structure";
+import { StartLocationMap } from "../competitor/startLocation/map";
+import { StartLocation } from "../competitor/startLocation";
 
 
 export class StructureNameService {
@@ -18,7 +17,7 @@ export class StructureNameService {
     private pouleStructureNumberMap: PouleStructureNumberMap | undefined;
     private htmlOutput: boolean = true;
 
-    constructor(private competitorMap?: CompetitorMap) {
+    constructor(private startLocationMap?: StartLocationMap) {
         this.roundRankService = new RoundRankService();
     }
 
@@ -26,8 +25,8 @@ export class StructureNameService {
         this.htmlOutput = false;
     }
 
-    getCompetitorMap(): CompetitorMap | undefined {
-        return this.competitorMap;
+    getStartLocationMap(): StartLocationMap | undefined {
+        return this.startLocationMap;
     }
 
     getQualifyTargetDescription(qualifyTarget: QualifyTarget, multiple: boolean = false): string {
@@ -92,10 +91,10 @@ export class StructureNameService {
     }
 
     getPlaceName(place: Place, p_competitorName?: boolean, longName?: boolean): string {
-        let competitorName = p_competitorName && this.competitorMap;
-        const startLocation: PlaceLocation | undefined = place.getStartLocation();
-        if (competitorName && this.competitorMap && startLocation) {
-            const competitor = this.competitorMap.getCompetitor(startLocation);
+        let competitorName = p_competitorName && this.startLocationMap;
+        const startLocation: StartLocation | undefined = place.getStartLocation();
+        if (competitorName && this.startLocationMap && startLocation) {
+            const competitor = this.startLocationMap.getCompetitor(startLocation);
             if (competitor !== undefined) {
                 return competitor.getName();
             }
@@ -113,10 +112,10 @@ export class StructureNameService {
     }
 
     protected getPlaceFromNameHelper(place: Place, competitorName: boolean, longName: boolean): string {
-        competitorName = competitorName ? (this.competitorMap !== undefined) : false;
-        const startLocation: PlaceLocation | undefined = place.getStartLocation();
-        if (competitorName && this.competitorMap && startLocation) {
-            const particpant = this.competitorMap.getCompetitor(startLocation);
+        competitorName = competitorName ? (this.startLocationMap !== undefined) : false;
+        const startLocation: StartLocation | undefined = place.getStartLocation();
+        if (competitorName && this.startLocationMap && startLocation) {
+            const particpant = this.startLocationMap.getCompetitor(startLocation);
             if (particpant !== undefined) {
                 return particpant.getName();
             }

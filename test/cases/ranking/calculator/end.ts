@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { CompetitorMap, EndRankingCalculator, QualifyService, QualifyTarget } from '../../../../public-api';
+import { EndRankingCalculator, QualifyService, QualifyTarget, StartLocationMap } from '../../../../public-api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
@@ -16,7 +16,7 @@ describe('EndRankingCalculator', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -35,7 +35,7 @@ describe('EndRankingCalculator', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            const placeLocation = endRankingItem.getStartPlaceLocation();
+            const placeLocation = endRankingItem.getStartLocation();
             expect(placeLocation).to.not.equal(undefined);
             if (!placeLocation) {
                 continue;
@@ -54,7 +54,7 @@ describe('EndRankingCalculator', () => {
         const firstRoundNumber = structure.getFirstRoundNumber();
         const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
         teamCompetitors.pop();
-        const competitorMap = new CompetitorMap(teamCompetitors);
+        const competitorMap = new StartLocationMap(teamCompetitors);
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -73,7 +73,7 @@ describe('EndRankingCalculator', () => {
         const items = rankingService.getItems();
 
         const endRankingItem = items[2];
-        const placeLocation = endRankingItem.getStartPlaceLocation();
+        const placeLocation = endRankingItem.getStartLocation();
         expect(placeLocation).to.not.equal(undefined);
         if (!placeLocation) {
             return;
@@ -88,7 +88,7 @@ describe('EndRankingCalculator', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -108,7 +108,7 @@ describe('EndRankingCalculator', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            expect(endRankingItem.getStartPlaceLocation()).to.equal(undefined);
+            expect(endRankingItem.getStartLocation()).to.equal(undefined);
         }
     });
 
@@ -117,7 +117,7 @@ describe('EndRankingCalculator', () => {
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
         const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new CompetitorMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -168,7 +168,7 @@ describe('EndRankingCalculator', () => {
 
         for (let rank = 1; rank <= items.length; rank++) {
             const endRankingItem = items[rank - 1];
-            const placeLocation = endRankingItem.getStartPlaceLocation();
+            const placeLocation = endRankingItem.getStartLocation();
             expect(placeLocation).to.not.equal(undefined);
             if (!placeLocation) {
                 continue;
