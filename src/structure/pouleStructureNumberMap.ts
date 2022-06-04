@@ -6,20 +6,21 @@ import { RoundNumber } from "../round/number";
 export class PouleStructureNumberMap {
     protected map: InnerPouleStructureNumberMap = {};
 
-    constructor(roundNumber: RoundNumber, roundRankService: RoundRankService) {
-        this.map = this.constructMap(roundNumber, roundRankService);
+    constructor(firstRoundNumber: RoundNumber, roundRankService: RoundRankService) {
+        this.map = this.constructMap(firstRoundNumber, roundRankService);
     }
 
     get(poule: Poule): number {
         return this.map[poule.getStructureLocation()];
     }
 
-    private constructMap(startRoundNumber: RoundNumber, roundRankService: RoundRankService): InnerPouleStructureNumberMap {
+    private constructMap(firstRoundNumber: RoundNumber, roundRankService: RoundRankService): InnerPouleStructureNumberMap {
+        // sla de ronden op per rondenummer en dan op volgorde van 12 + 8
         const map: InnerPouleStructureNumberMap = {};
 
         let pouleNr = 1;
         const setPouleStructureNumbers = (roundNumber: RoundNumber) => {
-            const rounds = roundNumber.getRounds();
+            const rounds = roundNumber.getRounds(undefined);
 
             rounds.sort((roundA: Round, roundB: Round) => {
                 if (roundA.getCategory().getNumber() === roundB.getCategory().getNumber()) {
@@ -36,7 +37,7 @@ export class PouleStructureNumberMap {
                 setPouleStructureNumbers(nextRoundNumber);
             }
         };
-        setPouleStructureNumbers(startRoundNumber);
+        setPouleStructureNumbers(firstRoundNumber);
         return map;
     }
 }

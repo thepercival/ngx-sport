@@ -16,7 +16,7 @@ export class RoundNumberMapper {
     ) { }
 
     toObject(json: JsonRoundNumber, competition: Competition, previousRoundNumber?: RoundNumber): RoundNumber {
-        const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition) : previousRoundNumber.createNext();
+        const roundNumber = previousRoundNumber === undefined ? new RoundNumber(competition, undefined) : previousRoundNumber.createNext();
         roundNumber.setId(json.id);
 
         if (json.planningConfig !== undefined) {

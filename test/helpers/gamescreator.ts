@@ -24,7 +24,7 @@ export function createGames(roundNumber: RoundNumber) {
     };
 
     const fillPlaceMap = (roundNumber: RoundNumber, placeMap: PlaceMap) => {
-        roundNumber.getRounds().forEach((round: Round) => {
+        roundNumber.getRounds(undefined).forEach((round: Round) => {
             round.getPoules().forEach((poule: Poule) => {
                 poule.getPlaces().forEach((place: Place) => {
                     placeMap[place.getStructureLocation()] = place;
@@ -45,7 +45,7 @@ export function createGames(roundNumber: RoundNumber) {
     gameMapper.setPlaceMap(placeMap);
     const sportMap: CompetitionSportMap = competitionSportMapper.getMap(roundNumber.getCompetition());
     const multiSports = roundNumber.getCompetition().hasMultipleSports();
-    roundNumber.getPoules().forEach((poule: Poule) => {
+    roundNumber.getPoules(undefined).forEach((poule: Poule) => {
         getJson(poule, multiSports).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
             const competitionSport = sportMap[jsonGame.competitionSport.id];
             return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);

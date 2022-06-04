@@ -28,11 +28,11 @@ export class RoundMapper {
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round, undefined));
 
-        const nextRoundNumber = round.getNumber().getNext();
-        if (nextRoundNumber) {
+        const nextStructureCell = round.getStructureCell().getNext();
+        if (nextStructureCell) {
             const qualifyGroupMapper = new QualifyGroupMapper(this);
             json.qualifyGroups.forEach((jsonQualifyGroup) => {
-                qualifyGroupMapper.toObject(jsonQualifyGroup, round, nextRoundNumber);
+                qualifyGroupMapper.toObject(jsonQualifyGroup, round, nextStructureCell);
             });
         }
 

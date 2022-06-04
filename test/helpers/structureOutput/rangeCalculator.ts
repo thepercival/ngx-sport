@@ -52,7 +52,7 @@ export class RangeCalculator {
     }
 
     public getRoundNumberWidth(roundNumber: RoundNumber): number {
-        const rounds = roundNumber.getRounds();
+        const rounds = roundNumber.getRounds(undefined);
         let width = 0;
         rounds.forEach((round: Round) => {
             width += this.getRoundWidth(round) + RangeCalculator.PADDING;

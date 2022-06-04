@@ -22,7 +22,7 @@ export class PlanningMapper {
     }
 
     toObject(jsonPoules: JsonPoule[], roundNumber: RoundNumber, sportMap: CompetitionSportMap): boolean {
-        const poules = roundNumber.getPoules();
+        const poules = roundNumber.getPoules(undefined);
         const complete = jsonPoules.every((jsonPoule: JsonPoule) => {
             const poule = poules.find((poule: Poule): boolean => {
                 return poule.getId() === jsonPoule.id;

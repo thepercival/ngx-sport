@@ -15,8 +15,7 @@ describe('EndRankingCalculator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -51,8 +50,7 @@ describe('EndRankingCalculator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const teamCompetitors = createTeamCompetitors(competition, firstRoundNumber);
+        const teamCompetitors = createTeamCompetitors(competition, structure.getRootRounds());
         teamCompetitors.pop();
         const competitorMap = new StartLocationMap(teamCompetitors);
         const defaultCat = structure.getSingleCategory();
@@ -87,8 +85,7 @@ describe('EndRankingCalculator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        // const competitorMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 
@@ -116,8 +113,7 @@ describe('EndRankingCalculator', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [5], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const competitorMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
         const defaultCat = structure.getSingleCategory();
         const rootRound = defaultCat.getRootRound();
 

@@ -13,7 +13,7 @@ export class RoundRankService {
         return roundRankCalculator.getRank(round);
     }
 
-    private getRoundRankCalculator(category: Category): RoundRankCalculator {
+    public getRoundRankCalculator(category: Category): RoundRankCalculator {
         if (this.roundRankCalculatorMap[category.getNumber()] === undefined) {
             this.roundRankCalculatorMap[category.getNumber()] = new RoundRankCalculator(category);
         }

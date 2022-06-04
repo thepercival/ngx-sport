@@ -19,6 +19,7 @@ import { PlaceRanges } from './placeRanges';
 import { QualifyGroupNrOfPlacesMap, RemovalValidator } from './removalValidator';
 import { Category } from '../category';
 import { CompetitionSport } from '../competition/sport';
+import { StructureCell } from './cell';
 
 @Injectable({
     providedIn: 'root'
@@ -48,7 +49,7 @@ export class StructureEditor {
         jsonPlanningConfig?: JsonPlanningConfig | undefined,
         categoryName?: string | undefined,): Structure {
 
-        const firstRoundNumber = new RoundNumber(competition);
+        const firstRoundNumber = new RoundNumber(competition, undefined);
         this.planningConfigMapper.toObject(jsonPlanningConfig, firstRoundNumber);
 
         const category = this.addCategoryHelper(
@@ -96,7 +97,8 @@ export class StructureEditor {
         const competition = firstRoundNumber.getCompetition();
 
         const category = new Category(competition, name, number, undefined);
-        const rootRound = new Round(category, firstRoundNumber, undefined);
+        const structureCell = new StructureCell(category, firstRoundNumber, undefined);
+        const rootRound = new Round(category, structureCell, undefined);
         category.setRootRound(rootRound);
 
         this.fillRound(rootRound, pouleStructure);
@@ -121,11 +123,11 @@ export class StructureEditor {
     }
 
     private addChildRoundHelper(parentRound: Round, qualifyTarget: QualifyTarget, pouleStructure: BalancedPouleStructure): QualifyGroup {
-        let nextRoundNumber = parentRound.getNumber().getNext();
-        if (!nextRoundNumber) {
-            nextRoundNumber = parentRound.getNumber().createNext();
+        let nextStructureCell = parentRound.getStructureCell().getNext();
+        if (nextStructureCell === undefined) {
+            nextStructureCell = parentRound.getStructureCell().createNext();
         }
-        const qualifyGroup = new QualifyGroup(parentRound, qualifyTarget, nextRoundNumber);
+        const qualifyGroup = new QualifyGroup(parentRound, qualifyTarget, nextStructureCell);
         this.fillRound(qualifyGroup.getChildRound(), pouleStructure);
         return qualifyGroup;
     }
@@ -429,7 +431,7 @@ export class StructureEditor {
         const newQualifyGroup = new QualifyGroup(
             parentRound,
             qualifyGroup.getTarget(),
-            childRound.getNumber(),
+            childRound.getStructureCell(),
             qualifyGroup.getNumber() + 1
         );
         this.renumber(parentRound, qualifyGroup.getTarget());

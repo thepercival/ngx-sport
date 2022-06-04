@@ -32,9 +32,9 @@ export class TeamCompetitorMapper {
         return {
             id: teamCompetitor.getId(),
             name: teamCompetitor.getName(),
-            categoryNr: teamCompetitor.getStartLocation().getCategoryNr(),
             registered: teamCompetitor.getRegistered(),
             info: teamCompetitor.getInfo(),
+            categoryNr: teamCompetitor.getStartLocation().getCategoryNr(),
             pouleNr: teamCompetitor.getStartLocation().getPouleNr(),
             placeNr: teamCompetitor.getStartLocation().getPlaceNr(),
             team: this.teamMapper.toJson(teamCompetitor.getTeam())

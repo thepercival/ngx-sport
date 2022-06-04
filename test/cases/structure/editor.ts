@@ -759,19 +759,19 @@ describe('StructureEditor', () => {
     });
 
 
-    it('allPoulesHaveGames', () => {
-        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+    // it('allPoulesHaveGames', () => {
+    //     const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const structureEditor = getStructureEditor();
-        const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
-        expect(structure.allPoulesHaveGames()).to.equal(false);
-        const rootRound = structure.getSingleCategory().getRootRound();
-        structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
-        structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
-        expect(structure.allPoulesHaveGames()).to.equal(false);
-        // structure.getFirstRoundNumber().setHasPlanning(true);
-        // expect(structure.hasPlanning()).to.equal(false);
-    });
+    //     const structureEditor = getStructureEditor();
+    //     const structure = structureEditor.create(competition, [4, 4, 4, 4], createPlanningConfigNoTime());
+    //     expect(structure.allPoulesHaveGames()).to.equal(false);
+    //     const rootRound = structure.getSingleCategory().getRootRound();
+    //     structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2]);
+    //     structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+    //     expect(structure.allPoulesHaveGames()).to.equal(false);
+    //     // structure.getFirstRoundNumber().setHasPlanning(true);
+    //     // expect(structure.hasPlanning()).to.equal(false);
+    // });
 
     it('addCategory', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);

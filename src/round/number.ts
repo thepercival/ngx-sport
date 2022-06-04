@@ -1,29 +1,27 @@
 import { Competition } from '../competition';
-import { Place } from '../place';
 import { PlanningConfig } from '../planning/config';
 import { Poule } from '../poule';
-import { PouleStructure } from '../poule/structure';
 import { Round } from '../qualify/group';
 import { GameAmountConfig } from '../planning/gameAmountConfig';
 import { CompetitionSport } from '../competition/sport';
-import { AgainstGame } from '../game/against';
-import { TogetherGame } from '../game/together';
 import { GameOrder } from '../game/order';
-import { GameState } from '../game/state';
+import { CategoryMap } from '../category/map';
+import { StructureCell } from '../structure/cell';
+import { PouleStructure } from '../poule/structure';
+import { Category } from '../category';
+import { GameGetter } from '../game/getter';
 
 export class RoundNumber {
     protected id: number = 0;
-    protected competition: Competition;
+    // protected competition: Competition;
+    protected structureCells: StructureCell[] = [];
     protected number: number;
     protected next: RoundNumber | undefined;
-    protected rounds: Round[] = [];
     protected planningConfig: PlanningConfig | undefined;
     protected gameAmountConfigs: GameAmountConfig[] = [];
 
-    constructor(competition: Competition, protected previous?: RoundNumber) {
-        this.competition = competition;
+    constructor(private competition: Competition, protected previous: RoundNumber | undefined) {
         this.number = this.previous === undefined ? 1 : this.previous.getNumber() + 1;
-        this.competition = competition;
     }
 
     getId(): number {
@@ -32,6 +30,31 @@ export class RoundNumber {
 
     setId(id: number): void {
         this.id = id;
+    }
+
+    getFirst(): RoundNumber {
+        const previous = this.getPrevious();
+        return previous ? previous.getFirst() : this;
+    }
+
+    isFirst(): boolean {
+        return (this.getPrevious() === undefined);
+    }
+
+    hasPrevious(): boolean {
+        return this.previous !== undefined;
+    }
+
+    getPrevious(): RoundNumber | undefined {
+        return this.previous;
+    }
+
+    detachFromPrevious(): void {
+        if (this.previous === undefined) {
+            return;
+        }
+        this.previous.removeNext();
+        this.previous = undefined;
     }
 
     hasNext(): boolean {
@@ -51,24 +74,8 @@ export class RoundNumber {
         this.next = undefined;
     }
 
-    hasPrevious(): boolean {
-        return this.previous !== undefined;
-    }
-
-    getPrevious(): RoundNumber | undefined {
-        return this.previous;
-    }
-
     removeNext() {
         this.next = undefined;
-    }
-
-    detachFromPrevious(): void {
-        if (this.previous === undefined) {
-            return;
-        }
-        this.previous.removeNext();
-        this.previous = undefined;
     }
 
     getCompetition(): Competition {
@@ -79,22 +86,34 @@ export class RoundNumber {
         return this.number;
     }
 
-    getFirst(): RoundNumber {
-        const previous = this.getPrevious();
-        return previous ? previous.getFirst() : this;
+    getStructureCells(categoryMap?: CategoryMap): StructureCell[] {
+        if (categoryMap === undefined) {
+            return this.structureCells;
+        }
+        return this.structureCells.filter((structureCell: StructureCell) => categoryMap.has(structureCell.getCategory().getNumber()));
     }
 
-    isFirst(): boolean {
-        return (this.getPrevious() === undefined);
+    getStructureCell(category: Category): StructureCell {
+        const structureCell = this.getStructureCells().find((structureCell: StructureCell): boolean => {
+            return structureCell.getCategory() === category;
+        });
+        if (structureCell === undefined) {
+            throw new Error('de structuurcel kan niet gevonden worden');
+        }
+        return structureCell;
     }
 
-    getRounds(): Round[] {
-        return this.rounds;
+    getRounds(categoryMap: CategoryMap | undefined): Round[] {
+        let rounds: Round[] = [];
+        this.getStructureCells(categoryMap).forEach((structureCell: StructureCell) => {
+            rounds = rounds.concat(structureCell.getRounds());
+        });
+        return rounds;
     }
 
-    getPoules(): Poule[] {
+    getPoules(categoryMap: CategoryMap): Poule[] {
         let poules: Poule[] = [];
-        this.getRounds().forEach(round => {
+        this.getRounds(categoryMap).forEach(round => {
             poules = poules.concat(round.getPoules());
         });
         return poules;
@@ -102,7 +121,7 @@ export class RoundNumber {
 
     createPouleStructure(): PouleStructure {
         const pouleStructure = new PouleStructure();
-        this.getPoules().forEach(poule => pouleStructure.push(poule.getPlaces().length));
+        this.getPoules(undefined).forEach(poule => pouleStructure.push(poule.getPlaces().length));
         pouleStructure.sort((a: number, b: number) => { return b - a; });
         return pouleStructure;
     }
@@ -119,91 +138,25 @@ export class RoundNumber {
         return previous.getValidPlanningConfig();
     }
 
-    getGames(order: GameOrder): (AgainstGame | TogetherGame)[] {
-        let games: (AgainstGame | TogetherGame)[] = [];
-        this.getPoules().forEach(poule => {
-            games = games.concat(poule.getGames());
-        });
+    // getPlaces(): Place[] {
+    //     let places: Place[] = [];
+    //     this.getPoules().forEach(poule => {
+    //         places = places.concat(poule.getPlaces());
+    //     });
+    //     return places;
+    // }
 
-        const baseSort = (g1: TogetherGame | AgainstGame, g2: TogetherGame | AgainstGame): number => {
-            const field1 = g1.getField();
-            const field2 = g2.getField();
-            if (field1 === undefined || field2 === undefined) {
-                return 0;
-            }
-            const retVal = field1.getPriority() - field2.getPriority();
-            return this.isFirst() ? retVal : -retVal;
-        };
-
-        if (order === GameOrder.ByBatch) {
-            games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
-                if (g1.getBatchNr() === g2.getBatchNr()) {
-                    return baseSort(g1, g2);
-                }
-                return g1.getBatchNr() - g2.getBatchNr();
-            });
-        } else {
-            if (order === GameOrder.ByDate) {
-                games.sort((g1: AgainstGame | TogetherGame, g2: AgainstGame | TogetherGame) => {
-                    const date1 = g1.getStartDateTime()?.getTime() ?? 0;
-                    const date2 = g2.getStartDateTime()?.getTime() ?? 0;
-                    if (date1 === date2) {
-                        return baseSort(g1, g2);
-                    }
-                    return date1 - date2;
-                });
-            }
-        }
-        return games;
-    }
-
-    allPoulesHaveGames(): boolean {
-        return this.getRounds().every((round: Round) => {
-            return round.getPoules().every((poule: Poule) => {
-                return poule.getNrOfGames() > 0;
-            });
-        });
-    }
-
-    getNrOfGames(): number {
-        let nrOfGames = 0;
-        this.getRounds().forEach(round => {
-            nrOfGames += round.getNrOfGames();
-        });
-        return nrOfGames;
-    }
-
-    getPlaces(): Place[] {
-        let places: Place[] = [];
-        this.getPoules().forEach(poule => {
-            places = places.concat(poule.getPlaces());
-        });
-        return places;
-    }
-
-    getNrOfPlaces(): number {
-        let nrOfPlaces = 0;
-        this.getPoules().forEach(poule => {
-            nrOfPlaces += poule.getPlaces().length;
-        });
-        return nrOfPlaces;
-    }
-
-    needsRanking(): boolean {
-        return this.getRounds().some(round => round.needsRanking());
-    }
-
-    getGamesState(): GameState {
-        if (this.getRounds().every(round => round.getGamesState() === GameState.Finished)) {
-            return GameState.Finished;
-        } else if (this.getRounds().some(round => round.getGamesState() !== GameState.Created)) {
-            return GameState.InProgress;
-        }
-        return GameState.Created;
-    }
+    // getGamesState(): GameState {
+    //     if (this.getRounds().every(round => round.getGamesState() === GameState.Finished)) {
+    //         return GameState.Finished;
+    //     } else if (this.getRounds().some(round => round.getGamesState() !== GameState.Created)) {
+    //         return GameState.InProgress;
+    //     }
+    //     return GameState.Created;
+    // }
 
     hasBegun(): boolean {
-        return this.getRounds().some(round => round.hasBegun());
+        return this.getStructureCells().some(structureCell => structureCell.hasBegun());
     }
 
     getCompetitionSports(): CompetitionSport[] {
@@ -230,10 +183,6 @@ export class RoundNumber {
         this.gameAmountConfigs.push(gameAmountConfig);
     }
 
-    getValidGameAmountConfigs(): GameAmountConfig[] {
-        return this.getCompetitionSports().map(competitionSport => this.getValidGameAmountConfig(competitionSport));
-    }
-
     getValidGameAmountConfig(competitionSport: CompetitionSport): GameAmountConfig {
         const gameAmountConfig = this.getGameAmountConfig(competitionSport);
         if (gameAmountConfig !== undefined) {
@@ -246,13 +195,15 @@ export class RoundNumber {
         return previous.getValidGameAmountConfig(competitionSport);
     }
 
+    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, TODO CDK
     getFirstStartDateTime(): Date {
-        const games = this.getGames(GameOrder.ByDate);
+        const games = (new GameGetter()).getGames(GameOrder.ByDate, this);
         return games[0].getStartDateTime();
     }
 
+    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, TODO CDK
     getLastStartDateTime(): Date {
-        const games = this.getGames(GameOrder.ByDate);
+        const games = (new GameGetter()).getGames(GameOrder.ByDate, this);
         return games[games.length - 1].getStartDateTime();
     }
 

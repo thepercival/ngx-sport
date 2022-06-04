@@ -5,6 +5,7 @@ import { RoundMapper } from '../round/mapper';
 import { RoundNumber } from '../round/number';
 import { Round } from '../qualify/group';
 import { JsonCategory } from './json';
+import { StructureCell } from '../structure/cell';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,8 @@ export class CategoryMapper {
 
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
         const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number, undefined);
-        const rootRound = new Round(category, firstRoundNumber, undefined)
+        const structureCell = new StructureCell(category, firstRoundNumber, undefined);
+        const rootRound = new Round(category, structureCell, undefined)
         category.setRootRound(rootRound);
         category.setId(json.id);
         this.roundMapper.toObject(json.rootRound, rootRound);

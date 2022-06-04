@@ -1,4 +1,3 @@
-import { Category } from './category';
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
@@ -14,13 +13,12 @@ export class Poule extends Identifiable {
     protected places: Place[] = [];
     protected againstGames: AgainstGame[] = [];
     protected togetherGames: TogetherGame[] = [];
-    protected structureLocation: string;
+    protected categoryLocation: string | undefined;
 
     constructor(protected round: Round, number?: number) {
         super();
         this.round.getPoules().push(this);
         this.number = number ? number : (round.getPoules().length);
-        this.structureLocation = round.getCategory().getNumber() + '.' + round.getPathNode().pathToString() + '.' + this.number;
     }
 
     getRound(): Round {
@@ -76,8 +74,15 @@ export class Poule extends Identifiable {
         return this.getAgainstGames().length + this.getTogetherGames().length;
     }
 
+    getCategoryLocation(): string {
+        if (this.categoryLocation === undefined) {
+            this.categoryLocation = this.round.getPathNode().pathToString() + '.' + this.number;
+        }
+        return this.categoryLocation;
+    }
+
     getStructureLocation(): string {
-        return this.structureLocation;
+        return this.round.getCategory().getNumber() + '.' + this.getCategoryLocation();
     }
 
     // getTogetherGamePlaces(place?: Place): TogetherGamePlace[] {

@@ -17,6 +17,7 @@ import { QualifyPathNode } from './pathNode';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { GameState } from '../game/state';
 import { Category } from '../category';
+import { StructureCell } from '../structure/cell';
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
@@ -28,11 +29,11 @@ export class QualifyGroup extends Identifiable {
     protected firstSingleRule: SingleQualifyRule | undefined;
     protected multipleRule: MultipleQualifyRule | undefined;
 
-    constructor(protected parentRound: Round, protected target: QualifyTarget, nextRoundNumber: RoundNumber, number?: number) {
+    constructor(protected parentRound: Round, protected target: QualifyTarget, nextStructureCell: StructureCell, number?: number) {
         super();
         this.number = number ? number : this.parentRound.getQualifyGroups(this.getTarget()).length + 1;
         this.parentRound.getQualifyGroups(this.getTarget()).splice(this.number - 1, 0, this);
-        this.childRound = new Round(parentRound.getCategory(), nextRoundNumber, this);
+        this.childRound = new Round(parentRound.getCategory(), nextStructureCell, this);
     }
 
     getParentRound(): Round {
@@ -155,9 +156,9 @@ export class Round extends Identifiable {
     protected scoreConfigs: ScoreConfig[] = [];
     protected againstQualifyConfigs: AgainstQualifyConfig[] = [];
 
-    constructor(protected category: Category, protected number: RoundNumber, protected parentQualifyGroup: QualifyGroup | undefined) {
+    constructor(protected category: Category, protected structureCell: StructureCell, protected parentQualifyGroup: QualifyGroup | undefined) {
         super();
-        this.number.getRounds().push(this);
+        this.structureCell.getRounds().push(this);
         this.qualifyPathNode = this.constructQualifyPathNode();
     }
 
@@ -177,12 +178,16 @@ export class Round extends Identifiable {
         return this.parentQualifyGroup;
     }
 
+    getStructureCell(): StructureCell {
+        return this.structureCell;
+    }
+
     getNumber(): RoundNumber {
-        return this.number;
+        return this.structureCell.getRoundNumber();
     }
 
     getNumberAsValue(): number {
-        return this.number.getNumber();
+        return this.getNumber().getNumber();
     }
 
     getNrOfDropoutPlaces(): number {
@@ -489,13 +494,13 @@ export class Round extends Identifiable {
     }
 
     detach() {
-        const rounds = this.getNumber().getRounds();
+        const rounds = this.getStructureCell().getRounds();
         const idx = rounds.indexOf(this);
         if (idx > -1) {
             rounds.splice(idx, 1);
         }
         if (rounds.length === 0) {
-            this.getNumber().detach();
+            this.getStructureCell().detach();
         }
         this.parentQualifyGroup = undefined;
     }

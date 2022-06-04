@@ -39,14 +39,14 @@ export class StructureMapper {
         });
         const structure = new Structure(categories, firstRoundNumber);
 
-        this.planningToObject(json, firstRoundNumber, this.competitionSportMapper.getMap(competition))
+        this.planningToObject(json, structure, competition, this.competitionSportMapper.getMap(competition))
         return structure;
     }
 
-    planningToObject(json: JsonStructure, startRoundNumber: RoundNumber, sportMap: CompetitionSportMap): void {
-        this.initMaps(json.categories, startRoundNumber, startRoundNumber.getCompetition());
+    planningToObject(json: JsonStructure, structure: Structure, competition: Competition, sportMap: CompetitionSportMap): void {
+        this.initMaps(json.categories, structure.getRootRounds());
         this.planningMapper.setPlaceMap(this.placeMap);
-        this.planningToRoundNumber(startRoundNumber, sportMap);
+        this.planningToRoundNumber(structure.getFirstRoundNumber(), sportMap);
     }
 
     protected planningToRoundNumber(roundNumber: RoundNumber, sportMap: CompetitionSportMap): void {
@@ -67,46 +67,39 @@ export class StructureMapper {
         };
     }
 
-    protected initMaps(jsonCategories: JsonCategory[], firstRoundNumber: RoundNumber, competition: Competition): void {
+    protected initMaps(jsonCategories: JsonCategory[], rootRounds: Round[]): void {
         this.poulesMap = {};
         this.placeMap = {};
         const jsonRootRounds = jsonCategories.map((jsonCategory: JsonCategory): JsonRound => jsonCategory.rootRound);
-        this.initJsonPoulesMap(jsonRootRounds, firstRoundNumber);
-        this.initPlaceMap(firstRoundNumber);
+        this.initJsonPoulesMap(jsonRootRounds, 1);
+        this.initPlaceMap(rootRounds);
     }
 
-    protected initJsonPoulesMap(jsonRounds: JsonRound[], roundNumber: RoundNumber): void {
-        const nextRoundNumber = roundNumber.getNext();
-        if (this.poulesMap[roundNumber.getNumber()] === undefined) {
-            this.poulesMap[roundNumber.getNumber()] = [];
+    protected initJsonPoulesMap(jsonRounds: JsonRound[], roundNumberAsValue: number): void {
+        if (this.poulesMap[roundNumberAsValue] === undefined) {
+            this.poulesMap[roundNumberAsValue] = [];
         }
         jsonRounds.forEach((jsonRound: JsonRound) => {
             jsonRound.poules.forEach((jsonPoule: JsonPoule) => {
-                this.poulesMap[roundNumber.getNumber()].push(jsonPoule);
+                this.poulesMap[roundNumberAsValue].push(jsonPoule);
 
             });
-            if (nextRoundNumber === undefined) {
-                return;
-            }
             const jsonChildRounds = jsonRound.qualifyGroups.map((jsonQualifyGroup: JsonQualifyGroup): JsonRound => {
                 return jsonQualifyGroup.childRound;
             });
-            this.initJsonPoulesMap(jsonChildRounds, nextRoundNumber);
+            this.initJsonPoulesMap(jsonChildRounds, roundNumberAsValue + 1);
         });
     }
 
-    protected initPlaceMap(roundNumber: RoundNumber): void {
-        roundNumber.getRounds().forEach((round: Round) => {
+    protected initPlaceMap(rounds: Round[]): void {
+        rounds.forEach((round: Round) => {
             round.getPoules().forEach((poule: Poule) => {
                 poule.getPlaces().forEach((place: Place) => {
                     this.placeMap[place.getStructureLocation()] = place;
                 });
             });
+            this.initPlaceMap(round.getChildren());
         });
-        const nextRoundNumber = roundNumber.getNext();
-        if (nextRoundNumber) {
-            this.initPlaceMap(nextRoundNumber);
-        }
     }
 }
 

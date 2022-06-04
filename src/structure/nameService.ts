@@ -10,6 +10,9 @@ import { PouleStructureNumberMap } from "./pouleStructureNumberMap";
 import { RoundNumber } from "../round/number";
 import { StartLocationMap } from "../competitor/startLocation/map";
 import { StartLocation } from "../competitor/startLocation";
+import { CategoryMap } from "../category/map";
+import { Category } from "../category";
+import { StructureCell } from "./cell";
 
 
 export class StructureNameService {
@@ -34,26 +37,33 @@ export class StructureNameService {
         return ((multiple && (descr !== '')) ? descr + 's' : descr);
     }
 
+    getRoundNumberName(roundNumber: RoundNumber): string {
+        // const structureCell = new StructureCell(category, roundNumber);
+        const structureCellsSameName = this.getStructureCellsSameName(roundNumber);
+        return structureCellsSameName !== undefined ? structureCellsSameName : this.getOrdinalOutput(roundNumber.getNumber()) + ' ronde';
+    }
+
     /**
     *   als allemaal dezelfde naam dan geef die naam
     *   als verschillende namen geef dan xde ronde met tooltip van de namen
     */
-    getRoundNumberName(roundNumber: RoundNumber): string {
-        if (this.roundsHaveSameName(roundNumber) && roundNumber.getRounds().length > 0) {
-            return this.getRoundName(roundNumber.getRounds()[0], true);
-        }
-        return this.getOrdinalOutput(roundNumber.getNumber()) + ' ronde';
+    getStructureCellName(structureCell: StructureCell): string {
+        // const structureCell = new StructureCell(category, roundNumber);
+        const roundsSameName = this.getRoundsSameName(structureCell);
+        return roundsSameName !== undefined ? roundsSameName : this.getOrdinalOutput(structureCell.getRoundNumber().getNumber()) + ' ronde';
     }
 
-    getRoundNumbersName(startRoundNumber: RoundNumber): string {
-        if (startRoundNumber.getNumber() === 1) {
-            return 'alle ronden';
-        }
-        if (startRoundNumber.hasNext()) {
-            return 'vanaf de ' + this.getRoundNumberName(startRoundNumber);
-        }
-        return 'alleen de ' + this.getRoundNumberName(startRoundNumber);
-    }
+
+
+    // getRoundNumbersName(startRoundNumber: RoundNumber): string {
+    //     if (startRoundNumber.getNumber() === 1) {
+    //         return 'alle ronden';
+    //     }
+    //     if (startRoundNumber.hasNext()) {
+    //         return 'vanaf de ' + this.getRoundNumberName(startRoundNumber);
+    //     }
+    //     return 'alleen de ' + this.getRoundNumberName(startRoundNumber);
+    // }
 
     getRoundName(round: Round, sameName: boolean = false): string {
         if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {
@@ -86,7 +96,7 @@ export class StructureNameService {
         return pouleName;
     }
 
-    getPouleLetter(structureNumber: number): string {
+    protected getPouleLetter(structureNumber: number): string {
         return (String.fromCharCode('A'.charCodeAt(0) + structureNumber - 1));
     }
 
@@ -209,19 +219,36 @@ export class StructureNameService {
         });
     }
 
-    private roundsHaveSameName(roundNumber: RoundNumber): boolean {
-        let roundNameAll: string;
-        return roundNumber.getRounds().every((round) => {
+    private getStructureCellsSameName(roundNumber: RoundNumber): string | undefined {
+        let structureCellAll: string | undefined;
+        roundNumber.getStructureCells().every((structureCell: StructureCell) => {
+            const name = this.getStructureCellName(structureCell);
+            if (structureCellAll === undefined) {
+                structureCellAll = name;
+            }
+            if (structureCellAll !== name) {
+                structureCellAll = undefined;
+                return false;
+            }
+            return true;
+        });
+        return structureCellAll;
+    }
+
+    private getRoundsSameName(structureCell: StructureCell): string | undefined {
+        let roundNameAll: string | undefined;
+        structureCell.getRounds().every((round) => {
             const roundName = this.getRoundName(round, true);
             if (roundNameAll === undefined) {
                 roundNameAll = roundName;
-                return true;
             }
-            if (roundNameAll === roundName) {
-                return true;
+            if (roundNameAll !== roundName) {
+                roundNameAll = undefined;
+                return false;
             }
-            return false;
+            return true;
         });
+        return roundNameAll;
     }
 
     private roundAndParentsNeedsRanking(round: Round): boolean {

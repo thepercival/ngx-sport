@@ -142,8 +142,7 @@ describe('QualifyReservationService', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
         const structureEditor = getStructureEditor();
         const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const startLocationMap = new StartLocationMap(createTeamCompetitors(competition, firstRoundNumber));
+        const startLocationMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
         const rootRound = structure.getSingleCategory().getRootRound();
 
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);

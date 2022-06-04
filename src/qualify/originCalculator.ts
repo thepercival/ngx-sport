@@ -17,7 +17,7 @@ export class QualifyOriginCalculator {
         const possibleOrigins = this.getPossibleOrigins(poule2);
         possibleOrigins.unshift(poule2);
         return possibleOrigins.filter((originPoule: Poule): boolean => {
-            return possibleOriginsMap.has(originPoule.getStructureLocation());
+            return possibleOriginsMap.has(originPoule.getCategoryLocation());
         }).length;
     }
 
@@ -49,7 +49,7 @@ export class QualifyOriginCalculator {
 
     protected addPossibleOrigin(poule: Poule, origins: Poule[] | OriginMap) {
         if (origins instanceof OriginMap) {
-            origins.set(poule.getStructureLocation(), poule);
+            origins.set(poule.getCategoryLocation(), poule);
         } else {
             if (origins.indexOf(poule) < 0) {
                 origins.push(poule);
@@ -58,7 +58,7 @@ export class QualifyOriginCalculator {
     }
 
     protected getPossiblePreviousPoules(poule: Poule): Poule[] {
-        const strucureLocation = poule.getStructureLocation();
+        // const strucureLocation = poule.getCategoryLocation();
         // if (this.possiblePreviousPoulesMap[strucureLocation] !== undefined) {
         //     return this.possiblePreviousPoulesMap[strucureLocation];
         // }
