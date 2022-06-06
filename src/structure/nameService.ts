@@ -38,7 +38,6 @@ export class StructureNameService {
     }
 
     getRoundNumberName(roundNumber: RoundNumber): string {
-        // const structureCell = new StructureCell(category, roundNumber);
         const structureCellsSameName = this.getStructureCellsSameName(roundNumber);
         return structureCellsSameName !== undefined ? structureCellsSameName : this.getOrdinalOutput(roundNumber.getNumber()) + ' ronde';
     }
@@ -48,22 +47,9 @@ export class StructureNameService {
     *   als verschillende namen geef dan xde ronde met tooltip van de namen
     */
     getStructureCellName(structureCell: StructureCell): string {
-        // const structureCell = new StructureCell(category, roundNumber);
         const roundsSameName = this.getRoundsSameName(structureCell);
         return roundsSameName !== undefined ? roundsSameName : this.getOrdinalOutput(structureCell.getRoundNumber().getNumber()) + ' ronde';
     }
-
-
-
-    // getRoundNumbersName(startRoundNumber: RoundNumber): string {
-    //     if (startRoundNumber.getNumber() === 1) {
-    //         return 'alle ronden';
-    //     }
-    //     if (startRoundNumber.hasNext()) {
-    //         return 'vanaf de ' + this.getRoundNumberName(startRoundNumber);
-    //     }
-    //     return 'alleen de ' + this.getRoundNumberName(startRoundNumber);
-    // }
 
     getRoundName(round: Round, sameName: boolean = false): string {
         if (this.roundAndParentsNeedsRanking(round) || !this.childRoundsHaveEqualDepth(round)) {

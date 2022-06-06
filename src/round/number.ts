@@ -13,7 +13,6 @@ import { GameGetter } from '../game/getter';
 
 export class RoundNumber {
     protected id: number = 0;
-    // protected competition: Competition;
     protected structureCells: StructureCell[] = [];
     protected number: number;
     protected next: RoundNumber | undefined;
@@ -138,23 +137,6 @@ export class RoundNumber {
         return previous.getValidPlanningConfig();
     }
 
-    // getPlaces(): Place[] {
-    //     let places: Place[] = [];
-    //     this.getPoules().forEach(poule => {
-    //         places = places.concat(poule.getPlaces());
-    //     });
-    //     return places;
-    // }
-
-    // getGamesState(): GameState {
-    //     if (this.getRounds().every(round => round.getGamesState() === GameState.Finished)) {
-    //         return GameState.Finished;
-    //     } else if (this.getRounds().some(round => round.getGamesState() !== GameState.Created)) {
-    //         return GameState.InProgress;
-    //     }
-    //     return GameState.Created;
-    // }
-
     hasBegun(): boolean {
         return this.getStructureCells().some(structureCell => structureCell.hasBegun());
     }
@@ -195,13 +177,13 @@ export class RoundNumber {
         return previous.getValidGameAmountConfig(competitionSport);
     }
 
-    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, TODO CDK
+    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, @TODO CDK
     getFirstStartDateTime(): Date {
         const games = (new GameGetter()).getGames(GameOrder.ByDate, this);
         return games[0].getStartDateTime();
     }
 
-    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, TODO CDK
+    // SHOW BE GOTTEN FROM STORAGE IN FUTURE, @TODO CDK
     getLastStartDateTime(): Date {
         const games = (new GameGetter()).getGames(GameOrder.ByDate, this);
         return games[games.length - 1].getStartDateTime();
