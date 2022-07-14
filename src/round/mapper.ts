@@ -7,6 +7,7 @@ import { JsonRound } from './json';
 import { Round } from '../qualify/group';
 import { QualifyRuleCreator } from '../qualify/rule/creator';
 import { HorizontalPouleCreator } from '../poule/horizontal/creator';
+import { StructureCell } from '../structure/cell';
 
 @Injectable({
     providedIn: 'root'
@@ -28,8 +29,11 @@ export class RoundMapper {
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round, undefined));
 
-        const nextStructureCell = round.getStructureCell().getNext();
-        if (nextStructureCell) {
+        if (json.qualifyGroups.length > 0) {
+            const nextStructureCell = round.getStructureCell().getNext();
+            if (nextStructureCell === undefined) {
+                throw new Error('structurecell does not exists');
+            }
             const qualifyGroupMapper = new QualifyGroupMapper(this);
             json.qualifyGroups.forEach((jsonQualifyGroup) => {
                 qualifyGroupMapper.toObject(jsonQualifyGroup, round, nextStructureCell);

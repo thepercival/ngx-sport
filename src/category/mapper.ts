@@ -6,6 +6,7 @@ import { RoundNumber } from '../round/number';
 import { Round } from '../qualify/group';
 import { JsonCategory } from './json';
 import { StructureCell } from '../structure/cell';
+import { StructureCellMapper } from '../structure/cell/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -13,14 +14,16 @@ import { StructureCell } from '../structure/cell';
 export class CategoryMapper {
 
     constructor(
+        private structureCellMapper: StructureCellMapper,
         private roundMapper: RoundMapper
     ) { }
 
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
-        const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number, undefined);
-        const structureCell = new StructureCell(category, firstRoundNumber, undefined);
-        const rootRound = new Round(category, structureCell, undefined)
-        category.setRootRound(rootRound);
+        const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number);
+
+        this.structureCellMapper.toObject(json.firstStructureCell, category, firstRoundNumber);
+
+        const rootRound = new Round(category.getFirstStructureCell(), undefined)
         category.setId(json.id);
         this.roundMapper.toObject(json.rootRound, rootRound);
         return category;
@@ -31,6 +34,7 @@ export class CategoryMapper {
             id: category.getId(),
             name: category.getName(),
             number: category.getNumber(),
+            firstStructureCell: this.structureCellMapper.toJson(category.getFirstStructureCell()),
             rootRound: this.roundMapper.toJson(category.getRootRound())
         };
     }

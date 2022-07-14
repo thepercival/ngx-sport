@@ -10,10 +10,11 @@ import { StructureCell } from '../structure/cell';
 import { PouleStructure } from '../poule/structure';
 import { Category } from '../category';
 import { GameGetter } from '../game/getter';
+import { GameState } from '../game/state';
 
 export class RoundNumber {
     protected id: number = 0;
-    protected structureCells: StructureCell[] = [];
+    protected structureCellMap: Map<number, StructureCell> = new Map();
     protected number: number;
     protected next: RoundNumber | undefined;
     protected planningConfig: PlanningConfig | undefined;
@@ -86,20 +87,30 @@ export class RoundNumber {
     }
 
     getStructureCells(categoryMap?: CategoryMap): StructureCell[] {
+        const structureCells = this.convertStructureCellMapToArray();
         if (categoryMap === undefined) {
-            return this.structureCells;
+            return structureCells;
         }
-        return this.structureCells.filter((structureCell: StructureCell) => categoryMap.has(structureCell.getCategory().getNumber()));
+        return structureCells.filter((cell: StructureCell) => categoryMap.has(cell.getCategory().getNumber()));
+    }
+
+    private convertStructureCellMapToArray(): StructureCell[] {
+        return Array.from(this.structureCellMap.values());
     }
 
     getStructureCell(category: Category): StructureCell {
-        const structureCell = this.getStructureCells().find((structureCell: StructureCell): boolean => {
-            return structureCell.getCategory() === category;
-        });
-        if (structureCell === undefined) {
+        if (!this.structureCellMap.has(category.getNumber())) {
             throw new Error('de structuurcel kan niet gevonden worden');
         }
-        return structureCell;
+        return this.structureCellMap.get(category.getNumber());
+    }
+
+    setStructureCell(structureCell: StructureCell): void {
+        this.structureCellMap.set(structureCell.getCategory().getNumber(), structureCell);
+    }
+
+    clearStructureCell(category: Category): void {
+        this.structureCellMap.delete(category.getNumber());
     }
 
     getRounds(categoryMap: CategoryMap | undefined): Round[] {
@@ -139,6 +150,10 @@ export class RoundNumber {
 
     hasBegun(): boolean {
         return this.getStructureCells().some(structureCell => structureCell.hasBegun());
+    }
+
+    hasFinished(): boolean {
+        return this.getStructureCells().every(structureCell => structureCell.getGamesState() === GameState.Finished);
     }
 
     getCompetitionSports(): CompetitionSport[] {
@@ -187,6 +202,11 @@ export class RoundNumber {
     getLastStartDateTime(): Date {
         const games = (new GameGetter()).getGames(GameOrder.ByDate, this);
         return games[games.length - 1].getStartDateTime();
+    }
+
+    getEndDateTime(): Date {
+        const nrOfMinutesToAdd = this.getValidPlanningConfig().getMaxNrOfMinutesPerGame();
+        return new Date(this.getLastStartDateTime().getTime() + (nrOfMinutesToAdd * 60000));
     }
 
     detach() {

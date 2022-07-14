@@ -7,7 +7,7 @@ import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
 import { JsonPlanningConfig } from '../planning/config/json';
 import { CompetitionSportService } from '../competition/sport/service';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { QualifyTarget } from '../qualify/target';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { PlanningConfigMapper } from '../planning/config/mapper';
@@ -96,10 +96,9 @@ export class StructureEditor {
         // begin editing
         const competition = firstRoundNumber.getCompetition();
 
-        const category = new Category(competition, name, number, undefined);
-        const structureCell = new StructureCell(category, firstRoundNumber, undefined);
-        const rootRound = new Round(category, structureCell, undefined);
-        category.setRootRound(rootRound);
+        const category = new Category(competition, name, number);
+        const structureCell = new StructureCell(category, firstRoundNumber);
+        const rootRound = new Round(structureCell, undefined);
 
         this.fillRound(rootRound, pouleStructure);
         return category;

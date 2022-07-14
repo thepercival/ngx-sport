@@ -1,4 +1,3 @@
-import { StructureCell } from '../public-api';
 import { Category } from './category';
 import { StartLocation } from './competitor/startLocation';
 import { Place } from './place';

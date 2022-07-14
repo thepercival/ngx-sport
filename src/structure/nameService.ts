@@ -10,8 +10,6 @@ import { PouleStructureNumberMap } from "./pouleStructureNumberMap";
 import { RoundNumber } from "../round/number";
 import { StartLocationMap } from "../competitor/startLocation/map";
 import { StartLocation } from "../competitor/startLocation";
-import { CategoryMap } from "../category/map";
-import { Category } from "../category";
 import { StructureCell } from "./cell";
 
 

@@ -12,10 +12,7 @@ export class GameGetter {
     }
 
     getGames(order: GameOrder, roundNumber: RoundNumber, categoryMap?: CategoryMap): (AgainstGame | TogetherGame)[] {
-        let structureCells = roundNumber.getStructureCells();
-        if (categoryMap) {
-            structureCells = structureCells.filter(structureCell => categoryMap.has(structureCell.getCategory().getNumber()));
-        }
+        let structureCells = roundNumber.getStructureCells(categoryMap);
         let games: (AgainstGame | TogetherGame)[] = [];
         structureCells.forEach((structureCell: StructureCell) => {
             structureCell.getPoules().forEach((poule: Poule) => games = games.concat(poule.getGames()));

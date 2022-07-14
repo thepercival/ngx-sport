@@ -6,13 +6,13 @@ import { RoundNumber } from "../round/number";
 
 export class StructureCell {
     private rounds: Round[] = [];
-    protected next: StructureCell | undefined;
+    // protected next: StructureCell | undefined;
 
     constructor(
         private category: Category,
-        private roundNumber: RoundNumber,
-        protected previous: StructureCell | undefined) {
-        roundNumber.getStructureCells().push(this);
+        private roundNumber: RoundNumber) {
+        category.getStructureCells().push(this);
+        roundNumber.setStructureCell(this);
     }
 
     getCategory(): Category {
@@ -35,12 +35,21 @@ export class StructureCell {
         return poules;
     }
 
-    hasNext(): boolean {
-        return this.next !== undefined;
-    }
+    // hasNext(): boolean {
+    //     return this.next !== undefined;
+    // }
 
     getNext(): StructureCell | undefined {
-        return this.next;
+        const nextRoundNumber = this.roundNumber.getNext();
+        if (nextRoundNumber === undefined) {
+            return undefined;
+        }
+        try {
+            return nextRoundNumber.getStructureCell(this.getCategory());
+        } catch (e) {
+        }
+        return undefined;
+
     }
 
     createNext(): StructureCell {
@@ -48,65 +57,65 @@ export class StructureCell {
         if (nextRoundNumber === undefined) {
             nextRoundNumber = this.roundNumber.createNext();
         }
-        this.next = new StructureCell(this.category, nextRoundNumber, this);
-        return this.next;
+        return new StructureCell(this.category, nextRoundNumber);
     }
 
-    detachFromNext() {
-        this.next = undefined;
-    }
+    // detachFromNext() {
+    //     this.next = undefined;
+    // }
 
-    getFirst(): StructureCell {
-        const previous = this.getPrevious();
-        return previous ? previous.getFirst() : this;
-    }
+    // getFirst(): StructureCell {
+    //     const previous = this.getPrevious();
+    //     return previous ? previous.getFirst() : this;
+    // }
 
-    isFirst(): boolean {
-        return (this.getPrevious() === undefined);
-    }
+    // isFirst(): boolean {
+    //     return (this.getPrevious() === undefined);
+    // }
 
-    hasPrevious(): boolean {
-        return this.previous !== undefined;
-    }
+    // hasPrevious(): boolean {
+    //     return this.previous !== undefined;
+    // }
 
-    getPrevious(): StructureCell | undefined {
-        return this.previous;
-    }
+    // getPrevious(): StructureCell | undefined {
+    //     return this.previous;
+    // }
 
     getLast(): StructureCell {
         const next = this.getNext();
         return next ? next.getNext() : this;
     }
 
-    removeNext() {
-        this.next = undefined;
-    }
+    // removeNext() {
+    //     this.next = undefined;
+    // }
 
-    detachFromPrevious(): void {
-        if (this.previous === undefined) {
-            return;
-        }
-        this.previous.removeNext();
-        this.previous = undefined;
-    }
+    // detachFromPrevious(): void {
+    //     if (this.previous === undefined) {
+    //         return;
+    //     }
+    //     this.previous.removeNext();
+    //     this.previous = undefined;
+    // }
 
     detach() {
-        const structureCells = this.getRoundNumber().getStructureCells();
-        const idx = structureCells.indexOf(this);
-        if (idx > -1) {
-            structureCells.splice(idx, 1);
-        }
-        if (structureCells.length === 0) {
-            this.getRoundNumber().detach();
+
+        const nextRoundNumber = this.getRoundNumber().getNext();
+        if (nextRoundNumber !== undefined) {
+            try {
+                const next = this.getCategory().getStructureCell(nextRoundNumber);
+                next.detach();
+            }
+            catch (e) {
+            }
         }
 
-        const next = this.getNext();
-        if (next !== undefined) {
-            next.detach();
-            this.detachFromNext();
+        this.getRoundNumber().clearStructureCell(this.getCategory());
+        if (this.getRoundNumber().getStructureCells().length === 0) {
+            this.getRoundNumber().detach();
         }
-        this.detachFromPrevious();
     }
+
 
     getGamesState(): GameState {
         if (this.getRounds().every(round => round.getGamesState() === GameState.Finished)) {
@@ -125,3 +134,6 @@ export class StructureCell {
         return this.getRounds().some(round => round.needsRanking());
     }
 }
+
+
+// export class StructureCellMap extends Map<number, Category> { };

@@ -33,7 +33,7 @@ export class QualifyGroup extends Identifiable {
         super();
         this.number = number ? number : this.parentRound.getQualifyGroups(this.getTarget()).length + 1;
         this.parentRound.getQualifyGroups(this.getTarget()).splice(this.number - 1, 0, this);
-        this.childRound = new Round(parentRound.getCategory(), nextStructureCell, this);
+        this.childRound = new Round(nextStructureCell, this);
     }
 
     getParentRound(): Round {
@@ -156,7 +156,7 @@ export class Round extends Identifiable {
     protected scoreConfigs: ScoreConfig[] = [];
     protected againstQualifyConfigs: AgainstQualifyConfig[] = [];
 
-    constructor(protected category: Category, protected structureCell: StructureCell, protected parentQualifyGroup: QualifyGroup | undefined) {
+    constructor(protected structureCell: StructureCell, protected parentQualifyGroup: QualifyGroup | undefined) {
         super();
         this.structureCell.getRounds().push(this);
         this.qualifyPathNode = this.constructQualifyPathNode();
@@ -167,7 +167,7 @@ export class Round extends Identifiable {
     }
 
     getCategory(): Category {
-        return this.category;
+        return this.getStructureCell().getCategory();
     }
 
     getParent(): Round | undefined {
@@ -325,6 +325,10 @@ export class Round extends Identifiable {
     }
 
     hasBegun(): boolean {
+        return this.getGamesState() > GameState.Created;
+    }
+
+    hasFinished(): boolean {
         return this.getGamesState() > GameState.Created;
     }
 

@@ -5,6 +5,7 @@ import { PlanningConfigMapper } from '../../planning/config/mapper';
 import { RoundNumber } from '../number';
 import { JsonRoundNumber } from './json';
 import { GameAmountConfigMapper } from '../../planning/gameAmountConfig/mapper';
+import { StructureCell } from '../../structure/cell';
 
 @Injectable({
     providedIn: 'root'

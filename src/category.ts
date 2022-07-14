@@ -1,16 +1,18 @@
 import { Identifiable } from './identifiable';
 import { Competition } from './competition';
 import { Round } from './qualify/group';
+import { StructureCell } from './structure/cell';
+import { RoundNumber } from './round/number';
 
 export class Category extends Identifiable {
 
     public static readonly DefaultName = 'standaard';
+    protected structureCells: StructureCell[] = [];
 
     constructor(
         protected competition: Competition,
         protected name: string,
-        private number: number,
-        private rootRound: Round | undefined) {
+        private number: number) {
         super();
 
     }
@@ -31,15 +33,35 @@ export class Category extends Identifiable {
         this.number = number;
     }
 
-    getRootRound(): Round {
-        if (this.rootRound === undefined) {
-            throw new Error('rootRound can not be empty');
-
-        }
-        return this.rootRound;
+    getStructureCells(): StructureCell[] {
+        return this.structureCells;
     }
 
-    setRootRound(round: Round): void {
-        this.rootRound = round;
+    getFirstStructureCell(): StructureCell {
+        return this.getStructureCellByValue(1);
+    }
+
+    getStructureCell(roundNumber: RoundNumber): StructureCell {
+        return this.getStructureCellByValue(roundNumber.getNumber());
+    }
+
+    protected getStructureCellByValue(roundNumber: number): StructureCell {
+        const structureCell = this.getStructureCells().find((structureCell: StructureCell): boolean => {
+            return structureCell.getRoundNumber().getNumber() === roundNumber;
+        });
+        if (structureCell === undefined) {
+            throw new Error('de structuurcel kan niet gevonden worden');
+        }
+        return structureCell;
+    }
+
+    getRootRound(): Round {
+        const structureCell = this.getStructureCellByValue(1);
+        const rounds = structureCell.getRounds();
+        if (rounds.length !== 1) {
+            throw new Error('there must be 1 rootRound');
+
+        }
+        return rounds[0];
     }
 }

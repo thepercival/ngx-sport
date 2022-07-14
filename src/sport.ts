@@ -1,6 +1,5 @@
 import { Identifiable } from "./identifiable";
 import { GameMode } from "./planning/gameMode";
-import { PointsCalculation } from "./ranking/pointsCalculation";
 import { CustomSport } from "./sport/custom";
 
 export class Sport extends Identifiable {
