@@ -3,6 +3,7 @@ import { GameAmountConfigMapper } from "../../src/planning/gameAmountConfig/mapp
 import { PouleMapper } from "../../src/poule/mapper";
 import { AgainstQualifyConfigMapper } from "../../src/qualify/againstConfig/mapper";
 import { ScoreConfigMapper } from "../../src/score/config/mapper";
+import { StructureCellMapper } from "../../src/structure/cell/mapper";
 
 export function getStructureEditor(placeRanges?: PlaceRanges): StructureEditor {
     const structureEditor = new StructureEditor(getCompetitionSportService(), new PlanningConfigMapper());
@@ -71,7 +72,7 @@ export function getStructureMapper(): StructureMapper {
     return new StructureMapper(
         getCompetitionSportMapper(),
         getRoundNumberMapper(),
-        new CategoryMapper(getRoundMapper()),
+        new CategoryMapper(new StructureCellMapper(), getRoundMapper()),
         getPlanningMapper()
     );
 }
