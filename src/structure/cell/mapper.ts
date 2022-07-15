@@ -23,7 +23,10 @@ export class StructureCellMapper {
         return cell;
     }
 
-    toJson(cell: StructureCell): JsonStructureCell {
+    toJson(cell: StructureCell | undefined): JsonStructureCell {
+        if (cell === undefined) {
+            return undefined;
+        }
         return {
             next: this.toJson(cell.getNext())
         };
