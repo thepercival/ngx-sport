@@ -21,8 +21,8 @@ export class NameService {
     }
 
 
-    getFormationLineName(line: FootballLine): string {
-        if (line === FootballLine.GoalKepeer) {
+    getFormationLineName(line: FootballLine | undefined): string {
+        if (line === FootballLine.GoalKeeper) {
             return 'keeper';
         } else if (line === FootballLine.Defense) {
             return 'verdediging';
