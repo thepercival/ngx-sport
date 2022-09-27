@@ -3,19 +3,25 @@ export class StartLocation {
         protected categoryNr: number, protected pouleNr: number, protected placeNr: number
     ) { }
 
-    getCategoryNr(): number {
+    public getCategoryNr(): number {
         return this.categoryNr;
     }
 
-    getPouleNr(): number {
+    public getPouleNr(): number {
         return this.pouleNr;
     }
 
-    getPlaceNr(): number {
+    public getPlaceNr(): number {
         return this.placeNr;
     }
 
-    getStartId(): string {
+    public getStartId(): string {
         return this.getCategoryNr() + '.' + this.getPouleNr() + '.' + this.getPlaceNr();
+    }
+
+    public equals(startLocation: StartLocation): boolean {
+        return startLocation.getCategoryNr() === this.getCategoryNr()
+            && startLocation.getPouleNr() === this.getPouleNr()
+            && startLocation.getPlaceNr() === this.getPlaceNr();
     }
 }

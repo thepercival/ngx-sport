@@ -1,3 +1,4 @@
+import { StartLocation } from '../public-api';
 import { Competition } from './competition';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
@@ -126,5 +127,11 @@ export class Poule extends Identifiable {
         if (poules.length === 0) {
             round.getParentQualifyGroup()?.detach();
         }
+    }
+
+    public getPlaceByStartLocation(startLocation: StartLocation): Place | undefined {
+        return this.getPlaces().find((place: Place): boolean => {
+            return place.getStartLocation()?.equals(startLocation);
+        });
     }
 }

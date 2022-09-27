@@ -18,6 +18,7 @@ import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { GameState } from '../game/state';
 import { Category } from '../category';
 import { StructureCell } from '../structure/cell';
+import { StartLocation } from '../competitor/startLocation';
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
@@ -507,6 +508,12 @@ export class Round extends Identifiable {
             this.getStructureCell().detach();
         }
         this.parentQualifyGroup = undefined;
+    }
+
+    public hasQualified(startLocation: StartLocation): boolean {
+        return this.getPoules().some((poule: Poule): boolean => {
+            return poule.getPlaceByStartLocation(startLocation) !== undefined;
+        });
     }
 }
 
