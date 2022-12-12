@@ -25,6 +25,7 @@ export class PlanningConfigMapper {
                 0,
                 0,
                 0,
+                false,
                 SelfReferee.Disabled
             );
         }
@@ -38,6 +39,7 @@ export class PlanningConfigMapper {
             json.minutesPerGameExt,
             json.minutesBetweenGames,
             json.minutesAfter,
+            json.perPoule,
             json.selfReferee);
     }
 
@@ -52,6 +54,7 @@ export class PlanningConfigMapper {
             minutesPerGameExt: config.getMinutesPerGameExt(),
             minutesBetweenGames: config.getMinutesBetweenGames(),
             minutesAfter: config.getMinutesAfter(),
+            perPoule: config.getPerPoule(),
             selfReferee: config.getSelfReferee()
         };
     }

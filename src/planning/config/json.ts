@@ -12,5 +12,6 @@ export interface JsonPlanningConfig extends JsonIdentifiable {
     minutesPerGameExt: number;
     minutesBetweenGames: number;
     minutesAfter: number;
+    perPoule: boolean;
     selfReferee: SelfReferee;
 }

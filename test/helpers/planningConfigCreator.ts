@@ -13,6 +13,7 @@ export function createPlanningConfigNoTime(): JsonPlanningConfig {
         minutesPerGameExt: 0,
         minutesBetweenGames: 0,
         minutesAfter: 0,
+        perPoule: false,
         selfReferee: SelfReferee.Disabled
     }
 }
