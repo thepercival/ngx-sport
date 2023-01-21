@@ -54,7 +54,7 @@
   ],
   "license": "ISC",
   "main": "./bundles/ngx-sport.umd.js",
-  "module": "./esm202/ngx-sport.js",
+  "module": "./esm2020/ngx-sport.js",
   "es2020": "./esm2020/ngx-sport.js",
   "typings": "./ngx-sport.d.ts",
   "maintainers": [
