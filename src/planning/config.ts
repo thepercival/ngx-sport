@@ -68,7 +68,7 @@ export class PlanningConfig extends Identifiable {
     }
 
     getMaxNrOfMinutesPerGame(): number {
-        return this.getMinutesPerGame() + this.getMinutesPerGameExt();
+        return this.getMinutesPerGame() + (this.extension ? this.getMinutesPerGameExt() : 0);
     }
 
     getRoundNumber(): RoundNumber {

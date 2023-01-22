@@ -205,7 +205,7 @@ export class RoundNumber {
     }
 
     getEndDateTime(): Date {
-        const nrOfMinutesToAdd = this.getValidPlanningConfig().getMaxNrOfMinutesPerGame();
+        const nrOfMinutesToAdd = this.getValidPlanningConfig().getMinutesPerGame();
         return new Date(this.getLastStartDateTime().getTime() + (nrOfMinutesToAdd * 60000));
     }
 
