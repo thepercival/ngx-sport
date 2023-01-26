@@ -24,6 +24,6 @@ export class FormationLine {
     }
 
     equals(formationLine: FormationLine): boolean {
-        return this.getNumber() === formationLine.getNumber() && this.getNrOfPersons() === this.getNrOfPersons();
+        return this.getNumber() === formationLine.getNumber() && this.getNrOfPersons() === formationLine.getNrOfPersons();
     } 
 }
