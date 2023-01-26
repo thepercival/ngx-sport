@@ -1,13 +1,10 @@
-import { Formation } from "../formation";
 import { FootballLine } from "../sport/football";
 
 export class FormationLine {
     constructor(
-        protected formation: Formation,
-        protected number: FootballLine,
-        protected nrOfPersons: number
-    ) {
-        this.formation.getLines().push(this);
+        protected readonly number: FootballLine,
+        protected readonly nrOfPersons: number
+    ) {        
     }
 
     getNumber(): FootballLine {
@@ -25,4 +22,8 @@ export class FormationLine {
         }
         return numbers;
     }
+
+    equals(formationLine: FormationLine): boolean {
+        return this.getNumber() === formationLine.getNumber() && this.getNrOfPersons() === this.getNrOfPersons();
+    } 
 }

@@ -10,8 +10,10 @@ import { JsonFormationLine } from './line/json';
 })
 export class FormationMapper {
     toObject(json: JsonFormation): Formation {
-        const formation = new Formation();
-        json.lines.forEach((jsonLine: JsonFormationLine) => new FormationLine(formation, jsonLine.number, jsonLine.nrOfPersons));
+        const formation = new Formation(
+            json.lines.map((jsonLine: JsonFormationLine) => new FormationLine(jsonLine.number, jsonLine.nrOfPersons))
+        );
+        
         return formation;
     }
 
