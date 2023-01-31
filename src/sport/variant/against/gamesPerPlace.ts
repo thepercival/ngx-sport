@@ -1,4 +1,5 @@
 
+import { AgainstSide } from "../../../against/side";
 import { Sport } from "../../../sport";
 import { AgainstVariant } from "../against";
 
@@ -7,7 +8,21 @@ export class AgainstGpp extends AgainstVariant {
         super(sport, nrOfHomePlaces, nrOfAwayPlaces);
     }
 
-    getNrOfGamesPerPlace(): number {
+    public getNrOfGamesPerPlace(): number {
         return this.nrOfGamesPerPlace;
+    }
+
+    public getGamePlacesId(): string {
+        return this.getNrOfHomePlaces() + '-' + this.getNrOfAwayPlaces();
+    }
+
+    public getNrOfAgainstCombinationsPerGame(side?: AgainstSide|undefined): number {
+        if( side === AgainstSide.Home) {
+            return this.getNrOfAwayPlaces();
+        } else if( side === AgainstSide.Away) {
+            return this.getNrOfHomePlaces();
+        }
+        return this.getNrOfHomePlaces() * this.getNrOfAwayPlaces();
+
     }
 }

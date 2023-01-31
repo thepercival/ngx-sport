@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget, Structure } from '../../../public-api';
+import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget } from '../../../public-api';
 import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';

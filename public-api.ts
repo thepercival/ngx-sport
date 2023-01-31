@@ -153,6 +153,7 @@ export * from './src/sport/variant/against/gamesPerPlace';
 export * from './src/sport/variant/allInOneGame';
 export * from './src/sport/variant/json';
 export * from './src/sport/variant/withFields';
+export * from './src/sport/variant/withPoule/equallyAssignCalculator';
 export * from './src/structure';
 export * from './src/structure/cell';
 export * from './src/structure/editor';
