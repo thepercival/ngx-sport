@@ -6,6 +6,11 @@ import { PointsCalculation } from "../../ranking/pointsCalculation";
 
 export interface JsonCompetitionSport extends JsonIdentifiable, JsonPersistSportVariant {
     defaultPointsCalculation: PointsCalculation;
+    defaultWinPoints: number,
+    defaultDrawPoints: number,
+    defaultWinPointsExt: number,
+    defaultDrawPointsExt: number,
+    defaultLosePointsExt: number,
     sport: JsonSport;
     fields: JsonField[];
 }

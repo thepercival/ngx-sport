@@ -3,9 +3,9 @@ import { CompetitionSport } from '../../competition/sport';
 import { AgainstGame } from '../../game/against';
 import { TogetherGamePlace } from '../../game/place/together';
 import { Round } from '../../qualify/group';
-import { CustomSport } from '../../sport/custom';
 import { AgainstScoreHelper } from '../againstHelper';
 import { ScoreConfig } from '../config';
+import { ScoreDirection } from '../direction';
 
 @Injectable({
     providedIn: 'root'
@@ -41,9 +41,9 @@ export class ScoreConfigService {
 
     createDefault(competitionSport: CompetitionSport, round: Round): ScoreConfig {
         const scoreConfig = new ScoreConfig(competitionSport, round, undefined);
-        if (competitionSport.getSport().hasNextDefaultScoreConfig()) {
+        if (competitionSport.hasNextDefaultScoreConfig()) {
             const subScoreConfig = new ScoreConfig(competitionSport, round, scoreConfig);
-            subScoreConfig.setDirection(ScoreConfig.UPWARDS);
+            subScoreConfig.setDirection(ScoreDirection.Upwards);
             subScoreConfig.setMaximum(0);
             subScoreConfig.setEnabled(false);
         }
@@ -51,7 +51,7 @@ export class ScoreConfigService {
     }
 
     isDefault(scoreConfig: ScoreConfig): boolean {
-        if (scoreConfig.getDirection() !== ScoreConfig.UPWARDS
+        if (scoreConfig.getDirection() !== ScoreDirection.Upwards
             || scoreConfig.getMaximum() !== 0
         ) {
             return false;

@@ -2,13 +2,12 @@ import { Round } from '../qualify/group';
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
 import { Sport } from '../sport';
+import { ScoreDirection } from './direction';
 
 export class ScoreConfig extends Identifiable {
-    static readonly UPWARDS = 1;
-    static readonly DOWNWARDS = 2;
 
     protected previous: ScoreConfig | undefined;
-    protected direction: number = ScoreConfig.UPWARDS;
+    protected direction: number = ScoreDirection.Upwards;
     protected maximum: number = 0;
     protected enabled: boolean = true;
     protected next: ScoreConfig | undefined;

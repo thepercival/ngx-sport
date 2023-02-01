@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { CompetitionSport } from '../../competition/sport';
 import { AgainstQualifyConfig } from '../againstConfig';
-import { Sport } from '../../sport';
 import { Round } from '../group';
-import { PointsCalculation } from '../../ranking/pointsCalculation';
-import { CustomSport } from '../../sport/custom';
-import { AgainstVariant } from '../../sport/variant/against';
 
 @Injectable({
     providedIn: 'root'
@@ -17,29 +13,15 @@ export class AgainstQualifyConfigService {
         private againstQualifyConfigMapper: AgainstQualifyConfigMapper*/) {
     }
 
-    // createDefaultJson(competitionSport: CompetitionSport): JsonAgainstQualifyConfig {
-    //     const sport = competitionSport.getSport();
-    //     return {
-    //         id: 0,
-    //         competitionSport: this.competitionSportMapper.toJson(competitionSport),
-    //         winPoints: this.getDefaultWinPoints(sport),
-    //         drawPoints: this.getDefaultDrawPoints(sport),
-    //         winPointsExt: this.getDefaultWinPointsExt(sport),
-    //         drawPointsExt: this.getDefaultDrawPointsExt(sport),
-    //         losePointsExt: this.getDefaultLosePointsExt(sport),
-    //         pointsCalculation: PointsCalculationType.AgainstGamePoints
-    //     };
-    // }
-
     createDefault(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
         const sport = competitionSport.getSport();
         const config = new AgainstQualifyConfig(competitionSport, round,
             competitionSport.getDefaultPointsCalculation(),
-            sport.getDefaultWinPoints(),
-            sport.getDefaultDrawPoints(),
-            sport.getDefaultWinPointsExt(),
-            sport.getDefaultDrawPointsExt(),
-            sport.getDefaultLosePointsExt()
+            competitionSport.getDefaultWinPoints(),
+            competitionSport.getDefaultDrawPoints(),
+            competitionSport.getDefaultWinPointsExt(),
+            competitionSport.getDefaultDrawPointsExt(),
+            competitionSport.getDefaultLosePointsExt()
         );
         return config;
     }

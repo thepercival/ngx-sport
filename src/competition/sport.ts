@@ -10,9 +10,17 @@ import { PointsCalculation } from '../ranking/pointsCalculation';
 
 export class CompetitionSport extends Identifiable {
     protected fields: Field[] = [];
+    protected hasNextDefaultScoreConfigX: boolean = true;
 
-    constructor(protected sport: Sport, protected competition: Competition,
+    constructor(
+        protected sport: Sport, 
+        protected competition: Competition,
         protected defaultPointsCalculation: PointsCalculation,
+        protected defaultWinPoints: number,
+        protected defaultDrawPoints: number,
+        protected defaultWinPointsExt: number,
+        protected defaultDrawPointsExt: number,
+        protected defaultLosePointsExt: number,
         protected variant: Single | AgainstH2h | AgainstGpp | AllInOneGame) {
         super();
         this.competition.getSports().push(this);
@@ -28,6 +36,31 @@ export class CompetitionSport extends Identifiable {
 
     getDefaultPointsCalculation(): PointsCalculation {
         return this.defaultPointsCalculation;
+    }
+
+    getDefaultWinPoints(): number {
+        return this.defaultWinPoints;
+    }
+
+    getDefaultDrawPoints(): number {
+        return this.defaultDrawPoints;
+    }
+
+    getDefaultWinPointsExt(): number {
+        return this.defaultWinPointsExt;
+    }
+
+    getDefaultDrawPointsExt(): number {
+        return this.defaultDrawPointsExt;
+    }
+
+    getDefaultLosePointsExt(): number {
+        return this.defaultLosePointsExt;
+    }
+
+
+    hasNextDefaultScoreConfig(): boolean {
+        return this.hasNextDefaultScoreConfigX;
     }
 
     getFields(): Field[] {
