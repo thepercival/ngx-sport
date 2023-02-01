@@ -1,10 +1,10 @@
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
 import { RoundNumber } from '../round/number';
-import { Single } from 'src/sport/variant/single';
-import { AgainstH2h } from 'src/sport/variant/against/h2h';
-import { AgainstGpp } from 'src/sport/variant/against/gamesPerPlace';
-import { AllInOneGame } from 'src/sport/variant/allInOneGame';
+import { Single } from '../sport/variant/single';
+import { AgainstH2h } from '../sport/variant/against/h2h';
+import { AgainstGpp } from '../sport/variant/against/gamesPerPlace';
+import { AllInOneGame } from '../sport/variant/allInOneGame';
 
 export class GameAmountConfig extends Identifiable {
     constructor(
