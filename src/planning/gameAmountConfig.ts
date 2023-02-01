@@ -1,36 +1,18 @@
 import { Identifiable } from '../identifiable';
 import { CompetitionSport } from '../competition/sport';
 import { RoundNumber } from '../round/number';
+import { Single } from 'src/sport/variant/single';
+import { AgainstH2h } from 'src/sport/variant/against/h2h';
+import { AgainstGpp } from 'src/sport/variant/against/gamesPerPlace';
+import { AllInOneGame } from 'src/sport/variant/allInOneGame';
 
 export class GameAmountConfig extends Identifiable {
-    // protected sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant;
-
     constructor(
         protected competitionSport: CompetitionSport,
         protected roundNumber: RoundNumber,
         protected amount: number) {
         super();
         roundNumber.getGameAmountConfigs().push(this);
-        /*
-        if (amount === undefined) {
-            amount = 1;
-        }
-        if (nrOfGamesPerPlace === undefined) {
-            nrOfGamesPerPlace = 0;
-        }
-        const sourceVariant = this.competitionSport.getVariant();
-        if (sourceVariant instanceof AgainstSportVariant) {
-            this.sportVariant = new AgainstSportVariant(
-                this.competitionSport.getSport(),
-                sourceVariant.getNrOfHomePlaces(),
-                sourceVariant.getNrOfAwayPlaces(),
-                amount,
-                nrOfGamesPerPlace);
-        } else if (sourceVariant instanceof SingleSportVariant) {
-            this.sportVariant = new SingleSportVariant(this.competitionSport.getSport(), sourceVariant.getNrOfGamePlaces(), amount);
-        } else {
-            this.sportVariant = new AllInOneGameSportVariant(this.competitionSport.getSport(), amount);
-        }*/
     }
 
     getAmount(): number {
@@ -43,6 +25,19 @@ export class GameAmountConfig extends Identifiable {
 
     getCompetitionSport(): CompetitionSport {
         return this.competitionSport;
+    }
+
+    public createVariant(): Single|AgainstH2h|AgainstGpp|AllInOneGame
+    {
+        const sportVariant = this.competitionSport.getVariant();
+        if (sportVariant instanceof Single) {
+            return new Single(this.competitionSport.getSport(), sportVariant.getNrOfGamePlaces(), this.amount);
+        } else if (sportVariant instanceof AllInOneGame) {
+            return new AllInOneGame(this.competitionSport.getSport(), this.amount);
+        } else if (sportVariant instanceof AgainstH2h) {
+            return new AgainstH2h(this.competitionSport.getSport(),sportVariant.getNrOfHomePlaces(), sportVariant.getNrOfAwayPlaces(), this.amount);
+        } 
+        return new AgainstGpp(this.competitionSport.getSport(),sportVariant.getNrOfHomePlaces(), sportVariant.getNrOfAwayPlaces(), this.amount);
     }
 
     getRoundNumber(): RoundNumber {

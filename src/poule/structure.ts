@@ -52,15 +52,4 @@ export class PouleStructure extends Array<number> {
             return sportVariant.getNrOfGamePlaces() < this.getSmallestPoule();
         });
     }
-
-    // public getNrOfPoulesByNrOfPlaces(): array {
-    //     nrOfPoulesByNrOfPlaces = [];
-    //     foreach(this.toArray() as pouleNrOfPlaces) {
-    //         if (array_key_exists(pouleNrOfPlaces, nrOfPoulesByNrOfPlaces) === false) {
-    //             nrOfPoulesByNrOfPlaces[pouleNrOfPlaces] = 0;
-    //         }
-    //         nrOfPoulesByNrOfPlaces[pouleNrOfPlaces]++;
-    //     }
-    //     return nrOfPoulesByNrOfPlaces;
-    // }
 }
