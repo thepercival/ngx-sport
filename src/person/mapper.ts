@@ -27,10 +27,7 @@ export class PersonMapper {
             this.cache.set(+person.getId(), person);
         } else {
             person = cachedPerson;
-        }
-        if (json.players) {
-            json.players.forEach(jsonPlayer => this.playerMapper.toObject(jsonPlayer, association, person));
-        }
+        }       
         return person;
     }
 
