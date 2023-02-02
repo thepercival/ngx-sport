@@ -4,7 +4,7 @@ import { Team } from './team';
 import { Player } from './team/player';
 
 export class Person extends Identifiable {
-    // protected players: Player[] = [];
+    protected players: Player[] = [];
 
     constructor(protected firstName: string, protected nameInsertion: string | undefined, protected lastName: string) {
         super();
@@ -37,5 +37,15 @@ export class Person extends Identifiable {
             name += this.lastName;
         }
         return name;
+    }
+
+    public getPlayers(): Player[] {
+        return this.players;
+    }
+
+    public getPlayer(team: Team, date?: Date|undefined): Player|undefined {
+        return this.players.find((player: Player): boolean => {
+            return player.getTeam() === team && player.isIn(date);
+        });
     }
 }
