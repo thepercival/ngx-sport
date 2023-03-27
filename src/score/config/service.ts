@@ -3,9 +3,11 @@ import { CompetitionSport } from '../../competition/sport';
 import { AgainstGame } from '../../game/against';
 import { TogetherGamePlace } from '../../game/place/together';
 import { Round } from '../../qualify/group';
+import { AgainstScore } from '../against';
 import { AgainstScoreHelper } from '../againstHelper';
 import { ScoreConfig } from '../config';
 import { ScoreDirection } from '../direction';
+import { TogetherScore } from '../together';
 
 @Injectable({
     providedIn: 'root'
@@ -84,25 +86,28 @@ export class ScoreConfigService {
         if (useSubScore === undefined) {
             useSubScore = game.getScoreConfig()?.useSubScore();
         }
-        if (useSubScore) {
-            let home = 0;
-            let away = 0;
-            game.getScores().forEach(score => {
-                if (score.getHome() > score.getAway()) {
-                    home++;
-                } else if (score.getHome() < score.getAway()) {
-                    away++;
-                }
-            });
-            return new AgainstScoreHelper(home, away);
+        if (useSubScore === false) {
+            return new AgainstScoreHelper(game.getScores()[0].getHome(), game.getScores()[0].getAway());
         }
-        return new AgainstScoreHelper(game.getScores()[0].getHome(), game.getScores()[0].getAway());
+        let home = 0;
+        let away = 0;
+        game.getScores().forEach(score => {
+            if (score.getHome() > score.getAway()) {
+                home++;
+            } else if (score.getHome() < score.getAway()) {
+                away++;
+            } else {
+                home += 0.5;
+                away += 0.5;
+            }
+        });
+        return new AgainstScoreHelper(home, away);        
     }
 
     getFinalAgainstSubScore(game: AgainstGame): AgainstScoreHelper {
         let home = 0;
         let away = 0;
-        game.getScores().forEach(score => {
+        game.getScores().forEach((score: AgainstScore) => {
             home += score.getHome();
             away += score.getAway();
         });
@@ -118,7 +123,7 @@ export class ScoreConfigService {
             useSubScore = gamePlace.getGame().getScoreConfig()?.useSubScore();
         }
         if (useSubScore) {
-            gamePlace.getScores().forEach(scoreIt => {
+            gamePlace.getScores().forEach((scoreIt: TogetherScore) => {
                 score += scoreIt.getScore();
             });
             return score;
