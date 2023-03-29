@@ -15,6 +15,9 @@ import { PlaceMap } from '../place/mapper';
 import { CompetitionSport } from '../competition/sport';
 import { Place } from '../place';
 import { AgainstVariant } from '../sport/variant/against';
+import { JsonTogetherGamePlace } from './place/together/json';
+import { JsonTogetherScore } from 'src/score/together/json';
+import { TogetherGamePlace } from './place/together';
 
 @Injectable({
     providedIn: 'root'
@@ -91,15 +94,24 @@ export class GameMapper {
     }
 
     toExistingTogether(json: JsonTogetherGame, game: TogetherGame): TogetherGame {
-        // while (game.getPlaces().length > 0) {
-        //     game.getPlaces().pop();
-        // }
-        // json.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
-        //     const place = game.getPoule().getPlace(jsonGamePlace.place.placeNr);
-        //     this.gamePlaceMapper.toTogetherObject(jsonGamePlace, game);
-        // });
+        json.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
+            const gamePlace = this.getGamePlaceById(game.getTogetherPlaces(), jsonGamePlace.id);
+            if( gamePlace === undefined) {
+                return;
+            }
+            while (gamePlace.getScores().length > 0) {
+                gamePlace.getScores().pop();
+            }
+            jsonGamePlace.scores.forEach((jsonScore: JsonTogetherScore) => {
+                this.scoreMapper.toTogetherObject(jsonScore, gamePlace);
+            });
+        });
         this.toExistingHelper(json, game);
         return game;
+    }
+
+    private getGamePlaceById(gamePlaces: TogetherGamePlace[], id: string|number): TogetherGamePlace|undefined {
+        return gamePlaces.find(gamePlace => gamePlace.getId() === id);
     }
 
     toExistingAgainst(json: JsonAgainstGame, game: AgainstGame): AgainstGame {
