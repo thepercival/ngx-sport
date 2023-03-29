@@ -83,7 +83,7 @@ export class StructureCell {
 
     getLast(): StructureCell {
         const next = this.getNext();
-        return next ? next.getNext() : this;
+        return next !== undefined ? next.getLast() : this;
     }
 
     // removeNext() {
