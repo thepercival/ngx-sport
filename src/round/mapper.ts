@@ -13,16 +13,13 @@ import { StructureCell } from '../structure/cell';
     providedIn: 'root'
 })
 export class RoundMapper {
-    private qualifyRuleCreator: QualifyRuleCreator;
-    private horizontalPouleCreator: HorizontalPouleCreator;
 
     constructor(
         private pouleMapper: PouleMapper,
         private scoreConfigMapper: ScoreConfigMapper,
         private againstQualifyConfigMapper: AgainstQualifyConfigMapper,
     ) {
-        this.qualifyRuleCreator = new QualifyRuleCreator();
-        this.horizontalPouleCreator = new HorizontalPouleCreator();
+        
     }
 
     toObject(json: JsonRound, round: Round): Round {
@@ -50,12 +47,7 @@ export class RoundMapper {
                 this.againstQualifyConfigMapper.toObject(jsonAgainstQualifyConfigs, round);
             });
         }
-
-
-        this.qualifyRuleCreator.remove(round);
-        this.horizontalPouleCreator.remove(round);
-        this.horizontalPouleCreator.create(round);
-        this.qualifyRuleCreator.create(round);
+        
 
         return round;
     }
