@@ -16,14 +16,14 @@ import { HorizontalPouleCreator } from '../poule/horizontal/creator';
 export class CategoryMapper {
 
     private qualifyRuleCreator: QualifyRuleCreator;
-    private horizontalPouleCreator: HorizontalPouleCreator;
+    
 
     constructor(
         private structureCellMapper: StructureCellMapper,
         private roundMapper: RoundMapper
     ) { 
         this.qualifyRuleCreator = new QualifyRuleCreator();
-        this.horizontalPouleCreator = new HorizontalPouleCreator();
+        
     }
 
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
@@ -35,18 +35,16 @@ export class CategoryMapper {
         category.setId(json.id);
         this.roundMapper.toObject(json.rootRound, rootRound);
 
-        this.addHorizontalPoulesAndQualifyRules(rootRound);        
+        this.addQualifyRules(rootRound);        
 
         return category;
     }
 
-    addHorizontalPoulesAndQualifyRules(round: Round) {
-        this.qualifyRuleCreator.remove(round);
-        this.horizontalPouleCreator.remove(round);
-        this.horizontalPouleCreator.create(round);
+    addQualifyRules(round: Round) {
+        this.qualifyRuleCreator.remove(round);    
         this.qualifyRuleCreator.create(round);
         round.getChildren().forEach((childRound: Round) => {
-            this.addHorizontalPoulesAndQualifyRules(childRound);
+            this.addQualifyRules(childRound);
         });
     }
 

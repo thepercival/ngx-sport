@@ -5,26 +5,28 @@ import { PouleMapper } from '../poule/mapper';
 import { QualifyGroupMapper } from '../qualify/group/mapper';
 import { JsonRound } from './json';
 import { Round } from '../qualify/group';
-import { QualifyRuleCreator } from '../qualify/rule/creator';
 import { HorizontalPouleCreator } from '../poule/horizontal/creator';
-import { StructureCell } from '../structure/cell';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoundMapper {
+    private horizontalPouleCreator: HorizontalPouleCreator;
 
     constructor(
         private pouleMapper: PouleMapper,
         private scoreConfigMapper: ScoreConfigMapper,
         private againstQualifyConfigMapper: AgainstQualifyConfigMapper,
     ) {
-        
+        this.horizontalPouleCreator = new HorizontalPouleCreator(); 
     }
 
     toObject(json: JsonRound, round: Round): Round {
         round.setId(json.id);
         json.poules.map(jsonPoule => this.pouleMapper.toObject(jsonPoule, round, undefined));
+
+        this.horizontalPouleCreator.remove(round);
+        this.horizontalPouleCreator.create(round);
 
         if (json.qualifyGroups.length > 0) {
             const nextStructureCell = round.getStructureCell().getNext();
