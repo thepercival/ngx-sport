@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             "type": "node",
             "request": "launch",
@@ -13,11 +14,10 @@
             "runtimeArgs": [
                 "--loader",
                 "ts-node/esm",
-                "--trace-warnings"
+                "--trace-warnings",
             ],
             "args": [
-                "${workspaceFolder}/test/cases/ranking/calculator/round.ts"
-                // "${workspaceFolder}/test/out/helloworld.{ts,js}"
+                "${workspaceFolder}/test/out/test/cases/qualify/rule/defaultCreator.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }

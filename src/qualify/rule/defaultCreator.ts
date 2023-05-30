@@ -3,10 +3,8 @@ import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { FromPoulePicker } from "../fromPoulePicker";
 import { QualifyGroup, Round } from "../group";
-import { QualifyOriginCalculator } from "../originCalculator";
 import { QualifyPlaceMapping } from "../placeMapping";
 import { PossibleFromMap } from "../possibleFromMap";
-import { QualifyTarget } from "../target";
 import { MultipleQualifyRule } from "./multiple";
 import { SingleQualifyRule } from "./single";
 

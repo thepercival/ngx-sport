@@ -1,5 +1,5 @@
 import { Place } from '../place';
-import { QualifyGroup, Round } from '../qualify/group';
+import { Round } from '../qualify/group';
 import { MultipleQualifyRule } from '../qualify/rule/multiple';
 import { SingleQualifyRule } from '../qualify/rule/single';
 import { QualifyTarget } from '../qualify/target';

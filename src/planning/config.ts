@@ -18,6 +18,7 @@ export class PlanningConfig extends Identifiable {
         protected minutesAfter: number,
         protected perPoule: boolean,
         protected selfReferee: SelfReferee,
+        protected nrOfSimSelfRefs: number,
         ) {
         super();
         this.roundNumber.setPlanningConfig(this);
@@ -65,6 +66,10 @@ export class PlanningConfig extends Identifiable {
 
     selfRefereeEnabled(): boolean {
         return this.selfReferee !== SelfReferee.Disabled;
+    }
+
+    getNrOfSimSelfRefs(): number{
+        return this.nrOfSimSelfRefs;
     }
 
     getMaxNrOfMinutesPerGame(): number {

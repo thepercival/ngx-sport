@@ -14,4 +14,5 @@ export interface JsonPlanningConfig extends JsonIdentifiable {
     minutesAfter: number;
     perPoule: boolean;
     selfReferee: SelfReferee;
+    nrOfSimSelfRefs: number;
 }

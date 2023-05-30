@@ -1,4 +1,10 @@
-import { GameMode, JsonCompetition, AgainstRuleSet, PointsCalculation, JsonSport } from "../../public-api";
+
+import { JsonCompetition } from "../../src/competition/json";
+import { GameMode } from "../../src/planning/gameMode";
+import { AgainstRuleSet } from "../../src/ranking/againstRuleSet";
+import { PointsCalculation } from "../../src/ranking/pointsCalculation";
+import { JsonSport } from "../../src/sport/json";
+
 
 export const jsonVoetbal: JsonSport = {
     id: 0,

@@ -1,5 +1,5 @@
-import { StartLocation } from '../public-api';
 import { Competition } from './competition';
+import { StartLocation } from './competitor/startLocation';
 import { Game } from './game';
 import { AgainstGame } from './game/against';
 import { GameState } from './game/state';

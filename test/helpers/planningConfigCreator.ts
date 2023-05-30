@@ -1,6 +1,7 @@
-import { JsonPlanningConfig, SelfReferee } from '../../public-api';
+import { JsonPlanningConfig } from '../../src/planning/config/json';
 import { PlanningEditMode } from '../../src/planning/editMode';
 import { GamePlaceStrategy } from '../../src/planning/strategy';
+import { SelfReferee } from '../../src/referee/self';
 
 export function createPlanningConfigNoTime(): JsonPlanningConfig {
     return {
@@ -14,6 +15,7 @@ export function createPlanningConfigNoTime(): JsonPlanningConfig {
         minutesBetweenGames: 0,
         minutesAfter: 0,
         perPoule: false,
-        selfReferee: SelfReferee.Disabled
+        selfReferee: SelfReferee.Disabled,
+        nrOfSimSelfRefs: 0
     }
 }
