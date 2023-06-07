@@ -6,7 +6,6 @@ import { RoundNumber } from '../round/number';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
 import { JsonPlanningConfig } from '../planning/config/json';
-import { CompetitionSportService } from '../competition/sport/service';
 import { Injectable } from '@angular/core';
 import { QualifyTarget } from '../qualify/target';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
@@ -20,6 +19,8 @@ import { QualifyGroupNrOfPlacesMap, RemovalValidator } from './removalValidator'
 import { Category } from '../category';
 import { CompetitionSport } from '../competition/sport';
 import { StructureCell } from './cell';
+import { CompetitionSportEditor } from '../competition/sport/editor';
+import { CompetitionSportGetter } from '../competition/sport/getter';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +32,7 @@ export class StructureEditor {
     private placeRanges: PlaceRanges | undefined;
 
     constructor(
-        private competitionSportService: CompetitionSportService,
+        private competitionSportEditor: CompetitionSportEditor,
         private planningConfigMapper: PlanningConfigMapper/*,
         @Inject('placeRanges') private placeRanges: PlaceRanges*/) {
         this.horPouleCreator = new HorizontalPouleCreator();
@@ -59,7 +60,7 @@ export class StructureEditor {
 
         const structure = new Structure([category], firstRoundNumber);
         competition.getSports().forEach(competitionSport => {
-            this.competitionSportService.addToStructure(competitionSport, structure);
+            this.competitionSportEditor.addToStructure(competitionSport, structure);
         });
 
         const rootRound = category.getRootRound();
@@ -78,7 +79,7 @@ export class StructureEditor {
         // begin editing
         const category = this.addCategoryHelper(name, number, firstRoundNumber, pouleStructure);
         firstRoundNumber.getCompetitionSports().forEach((competitionSport: CompetitionSport) => {
-            this.competitionSportService.addToCategory(competitionSport, category);
+            this.competitionSportEditor.addToCategory(competitionSport, category);
         });
         // end editing
         const rootRound = category.getRootRound();
@@ -280,8 +281,10 @@ export class StructureEditor {
         let qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);
         const addChildRound = qualifyGroup === undefined;
         if (addChildRound) {
-            const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
-        
+            let minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min;
+            if( minNrOfPlacesPerPoule === undefined) {
+               minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(sportVariants);
+            }
             if (nrOfToPlacesToAdd < minNrOfPlacesPerPoule) {
                 throw new Error('er moeten minimaal ' + minNrOfPlacesPerPoule + ' deelnemers naar de volgende ronde, vanwege het aantal deelnemers per wedstrijd');
             }
@@ -298,7 +301,7 @@ export class StructureEditor {
                 childRound.addPlace();
             }
             // end editing
-            
+
             this.horPouleCreator.create(parentRound, childRound);
             this.rulesCreator.create(parentRound, childRound);
         } else {
@@ -511,7 +514,7 @@ export class StructureEditor {
         if (this.placeRanges) {
             this.placeRanges.validate(nrOfPlaces, nrOfPoules);
         }
-        const m = this.competitionSportService.getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        const m = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(competition.getSportVariants());
         if (nrOfPlaces < m) {
             throw new Error('het minimaal aantal deelnemers is ' + m);
         }

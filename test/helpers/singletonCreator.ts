@@ -1,4 +1,4 @@
-import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, CompetitionSportService, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper, CategoryMapper } from "../../public-api";
+import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper, CategoryMapper, CompetitionSportEditor } from "../../public-api";
 import { GameAmountConfigMapper } from "../../src/planning/gameAmountConfig/mapper";
 import { PouleMapper } from "../../src/poule/mapper";
 import { AgainstQualifyConfigMapper } from "../../src/qualify/againstConfig/mapper";
@@ -6,15 +6,15 @@ import { ScoreConfigMapper } from "../../src/score/config/mapper";
 import { StructureCellMapper } from "../../src/structure/cell/mapper";
 
 export function getStructureEditor(placeRanges?: PlaceRanges): StructureEditor {
-    const structureEditor = new StructureEditor(getCompetitionSportService(), new PlanningConfigMapper());
+    const structureEditor = new StructureEditor(getCompetitionSportEditor(), new PlanningConfigMapper());
     if (placeRanges) {
         structureEditor.setPlaceRanges(placeRanges);
     }
     return structureEditor;
 }
 
-export function getCompetitionSportService(): CompetitionSportService {
-    return new CompetitionSportService(
+export function getCompetitionSportEditor(): CompetitionSportEditor {
+    return new CompetitionSportEditor(
         new ScoreConfigService(),
         new GameAmountConfigService(),
         new AgainstQualifyConfigService()

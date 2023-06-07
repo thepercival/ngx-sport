@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget } from '../../../public-api';
-import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
+import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget, CompetitionSportGetter } from '../../../public-api';
+import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
@@ -352,7 +352,7 @@ describe('StructureEditor', () => {
     it('incrementNrOfPoules too little placesperpoule', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(competition.getSportVariants());
         const maxNrOfPlacesPerPoule = 2;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 100;
@@ -432,7 +432,7 @@ describe('StructureEditor', () => {
     it('addQualifiers out of range', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(competition.getSportVariants());
         const maxNrOfPlacesPerPoule = 4;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 6;

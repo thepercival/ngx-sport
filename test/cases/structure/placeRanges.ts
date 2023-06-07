@@ -4,8 +4,7 @@ import { PlaceRanges } from '../../../src/structure/placeRanges';
 import { Sport } from '../../../src/sport';
 import { GameMode } from '../../../src/planning/gameMode';
 import { BalancedPouleStructure } from '../../../src/poule/structure/balanced';
-import { AgainstH2h, AllInOneGame, PointsCalculation, Single } from '../../../public-api';
-import { getCompetitionSportService } from '../../helpers/singletonCreator';
+import { AgainstH2h, AllInOneGame, CompetitionSportGetter, Single } from '../../../public-api';
 import { AgainstGpp } from '../../../src/sport/variant/against/gamesPerPlace';
 
 describe('PlaceRanges', () => {
@@ -15,7 +14,7 @@ describe('PlaceRanges', () => {
         const nrOfGamePlaces = 3;
         const singleSportVariant = new Single(dummySport, nrOfGamePlaces, 3);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 3;
@@ -34,7 +33,7 @@ describe('PlaceRanges', () => {
         const nrOfGamePlaces = 3;
         const singleSportVariant = new Single(dummySport, nrOfGamePlaces, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([singleSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([singleSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 2;
@@ -54,7 +53,7 @@ describe('PlaceRanges', () => {
         const nrOfSidePlaces = 1;
         const againstSportVariant = new AgainstH2h(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 4;
@@ -74,7 +73,7 @@ describe('PlaceRanges', () => {
         const nrOfSidePlaces = 2;
         const againstSportVariant = new AgainstGpp(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 3;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -93,7 +92,7 @@ describe('PlaceRanges', () => {
         const nrOfSidePlaces = 2;
         const againstSportVariant = new AgainstGpp(dummySport, nrOfSidePlaces, nrOfSidePlaces, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([againstSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([againstSportVariant]);
         const maxNrOfPlacesPerPoule = 4;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -111,7 +110,7 @@ describe('PlaceRanges', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 2;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -129,7 +128,7 @@ describe('PlaceRanges', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 1;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -147,7 +146,7 @@ describe('PlaceRanges', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -166,7 +165,7 @@ describe('PlaceRanges', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;
@@ -185,7 +184,7 @@ describe('PlaceRanges', () => {
         const dummySport = new Sport('dummy', false, GameMode.Against, 1);
         const allInOneGameSportVariant = new AllInOneGame(dummySport, 1);
 
-        const minNrOfPlacesPerPoule = getCompetitionSportService().getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule([allInOneGameSportVariant]);
         const maxNrOfPlacesPerPoule = 5;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
         const maxNrOfPlacesPerRound = 10;

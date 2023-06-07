@@ -19,6 +19,8 @@ import { GameState } from '../game/state';
 import { Category } from '../category';
 import { StructureCell } from '../structure/cell';
 import { StartLocation } from '../competitor/startLocation';
+import { CompetitionSportGetter } from '../competition/sport/getter';
+
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
     static readonly QUALIFYORDER_RANK = 2;
@@ -428,11 +430,16 @@ export class Round extends Identifiable {
         const poule = this.getPoule(pouleNr);
 
         const poulePlaces = poule.getPlaces();
-        const removedPoulePlaces = poulePlaces.splice(poulePlaces.length - 1, 1);
+        const nrOfPoulePlaces = poulePlaces.length; 
+        
+        const removedPoulePlaces = poulePlaces.splice(nrOfPoulePlaces - 1, 1);
 
-        if (poulePlaces.length === 1) {
+        const sportVariants = poule.getCompetition().getSportVariants();
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(sportVariants);
+        
+        if (poulePlaces.length < minNrOfPlacesPerPoule) {
             this.removePoule();
-            return 2;
+            return nrOfPoulePlaces;
         }
         return removedPoulePlaces.length;
     }
