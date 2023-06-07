@@ -289,6 +289,7 @@ export class StructureEditor {
             this.placeRanges?.validateStructure(newStructure);
             this.horPouleCreator.remove(parentRound);
             this.rulesCreator.remove(parentRound);
+
             // begin editing
             qualifyGroup = this.addChildRoundHelper(parentRound, qualifyTarget, newStructure);
             nrOfToPlacesToAdd -= minNrOfPlacesPerPoule;
@@ -297,6 +298,7 @@ export class StructureEditor {
                 childRound.addPlace();
             }
             // end editing
+            
             this.horPouleCreator.create(parentRound, childRound);
             this.rulesCreator.create(parentRound, childRound);
         } else {
