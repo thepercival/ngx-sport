@@ -147,7 +147,7 @@ export class StructureEditor {
     addPlaceToRootRound(rootRound: Round): Place {
         const newNrOfPlaces = rootRound.getNrOfPlaces() + 1;
         const nrOfPoules = rootRound.getPoules().length;
-        this.validate(newNrOfPlaces, nrOfPoules);
+        this.validate(rootRound.getCompetition(), newNrOfPlaces, nrOfPoules);
 
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
@@ -165,7 +165,7 @@ export class StructureEditor {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');
         }
         const newNrOfPlaces = rootRound.getNrOfPlaces() - 1;
-        this.validate(newNrOfPlaces, rootRound.getPoules().length);
+        this.validate(rootRound.getCompetition(), newNrOfPlaces, rootRound.getPoules().length);
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
         // begin editing
@@ -178,7 +178,7 @@ export class StructureEditor {
     public addPouleToRootRound(rootRound: Round): Poule {
         const lastPoule = rootRound.getFirstPoule();
         const newNrOfPlaces = rootRound.getNrOfPlaces() + lastPoule.getPlaces().length;
-        this.validate(newNrOfPlaces, rootRound.getPoules().length + 1);
+        this.validate(rootRound.getCompetition(), newNrOfPlaces, rootRound.getPoules().length + 1);
 
         this.horPouleCreator.remove(rootRound);
         this.rulesCreator.remove(rootRound);
@@ -236,7 +236,7 @@ export class StructureEditor {
     }
 
     public incrementNrOfPoules(round: Round) {
-        this.validate(round.getNrOfPlaces(), round.getPoules().length + 1);
+        this.validate(round.getCompetition(), round.getNrOfPlaces(), round.getPoules().length + 1);
 
         this.horPouleCreator.remove(round);
         this.rulesCreator.remove(round);
@@ -276,10 +276,12 @@ export class StructureEditor {
             throw new Error('er mogen maximaal ' + (nrOfPlaces - nrOfToPlaces) + ' deelnemers naar de volgende ronde');
         }
 
+        const sportVariants = parentRound.getCompetition().getSportVariants();
         let qualifyGroup = parentRound.getBorderQualifyGroup(qualifyTarget);
         const addChildRound = qualifyGroup === undefined;
-        const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? PlaceRanges.MinNrOfPlacesPerPoule;
         if (addChildRound) {
+            const minNrOfPlacesPerPoule = this.placeRanges?.getPlacesPerPouleSmall().min ?? this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
+        
             if (nrOfToPlacesToAdd < minNrOfPlacesPerPoule) {
                 throw new Error('er moeten minimaal ' + minNrOfPlacesPerPoule + ' deelnemers naar de volgende ronde, vanwege het aantal deelnemers per wedstrijd');
             }
@@ -299,7 +301,8 @@ export class StructureEditor {
             this.rulesCreator.create(parentRound, childRound);
         } else {
             const childRound = qualifyGroup.getChildRound();
-            this.validate(childRound.getNrOfPlaces() + nrOfToPlacesToAdd, childRound.getPoules().length);
+            this.validate(childRound.getCompetition(), 
+            childRound.getNrOfPlaces() + nrOfToPlacesToAdd, childRound.getPoules().length);
             this.horPouleCreator.remove(childRound);
             this.rulesCreator.remove(parentRound, childRound);
             // begin editing
@@ -502,12 +505,13 @@ export class StructureEditor {
         });
     }
 
-    validate(nrOfPlaces: number, nrOfPoules: number) {
+    validate(competition: Competition, nrOfPlaces: number, nrOfPoules: number) {
         if (this.placeRanges) {
             this.placeRanges.validate(nrOfPlaces, nrOfPoules);
         }
-        if (nrOfPlaces < PlaceRanges.MinNrOfPlacesPerPoule) {
-            throw new Error('het minimaal aantal deelnemers is ' + PlaceRanges.MinNrOfPlacesPerPoule);
+        const m = this.competitionSportService.getMinNrOfPlacesPerPoule(competition.getSportVariants());
+        if (nrOfPlaces < m) {
+            throw new Error('het minimaal aantal deelnemers is ' + m);
         }
     }
 
