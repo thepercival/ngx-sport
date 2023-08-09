@@ -33,37 +33,37 @@ export class DrawHelper {
 
     }
 
-    public drawStructure(structure: Structure, origin: Coordinate): Coordinate {
+    public drawStructure(structure: Structure, coordinate: Coordinate): void {
         this.initNameService();
-        const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(structure.getFirstRoundNumber());
-        let categoryCoord = this.getCategoryStartCoordinate(origin, structure.getFirstRoundNumber(), structure);
+        // const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(structure.getFirstRoundNumber());
+        // console.log('start coordinate: (' + coordinate.getX() + ',' + coordinate.getY() + ')');
         structure.getCategories().forEach((category: Category) => {
-            categoryCoord = this.drawCategory(category, categoryCoord, roundNumberHeight);
+            coordinate = this.drawCategory(category, coordinate).addX(RangeCalculator.PADDING);
+            // console.log('new coordinate: (' + coordinate.getX() + ',' + coordinate.getY() + ')');
         });
-        return categoryCoord;
     }
 
-    protected getCategoryStartCoordinate(origin: Coordinate, roundNumber: RoundNumber, structure: Structure): Coordinate {
-        const structureWidth = this.rangeCalculator.getStructureWidth(structure);
-        const roundNumberWidth = this.rangeCalculator.getRoundNumberWidth(roundNumber);
-        const delta = Math.floor((structureWidth - roundNumberWidth) / 2);
-        return origin.addX(delta);
+    protected drawCategory(category: Category, coordinate: Coordinate): Coordinate {
+
+        const title = this.rangeCalculator.getCategoryTitle(category);
+        const width = this.rangeCalculator.getCategoryWidth(category);
+        const height = this.rangeCalculator.getCategoryHeight(category);
+        // console.log('start: (' + coordinate.getX() + ',' + coordinate.getY() + '), width: ' + width + ', height: ' + height);
+        this.drawer.drawRectangle(coordinate, new Coordinate(width, height), AnsiColor.Cyan);
+
+        const middle = width / 2;
+        const titleHalfLength = title.length / 2;
+        const startCoord = coordinate.addX(middle - titleHalfLength);
+        this.drawer.drawToRight(startCoord, title, AnsiColor.Cyan);
+
+        this.drawRound(category.getRootRound(), coordinate.add(1, 1));
+        return new Coordinate(coordinate.addX(width).getX(), coordinate.getY());
     }
 
-    protected drawCategory(category: Category, origin: Coordinate, roundNumberHeight: number): Coordinate {
-        const newCoord = this.drawRound(category.getRootRound(), origin, roundNumberHeight, category.getName());
-        return newCoord.addX(RangeCalculator.PADDING);
-    }
-
-    protected drawRound(round: Round, origin: Coordinate, roundNumberHeight: number, catName?: string): Coordinate {
+    protected drawRound(round: Round, origin: Coordinate): void {
+        const roundNumberHeight = this.rangeCalculator.getRoundNumberHeight(round.getStructureCell().getRoundNumber());
         this.drawRoundBorder(round, origin, roundNumberHeight);
-        if (catName) {
-            const width = this.rangeCalculator.getRoundWidth(round);
-            catName = catName.substring(0, width - 4);
-            const startCoord = origin.addX(Math.round((width - catName.length) / 2));
-            this.drawer.drawToRight(startCoord, catName, AnsiColor.Cyan);
-        }
-
+        
         let pouleCoordinate = this.getPoulesStartCoordinate(origin, round);
         round.getPoules().forEach((poule: Poule) => {
             pouleCoordinate = this.drawPoule(poule, pouleCoordinate);
@@ -75,11 +75,11 @@ export class DrawHelper {
 
         const nextRoundNumber = round.getNumber().getNext();
         if (nextRoundNumber !== undefined) {
-            const nextRoundNumberHeight = this.rangeCalculator.getRoundNumberHeight(nextRoundNumber);
-            this.drawQualifyGroups(round, origin.addY(roundNumberHeight), nextRoundNumberHeight);
+            // const rRoundNumberHeight = this.rangeCalculator.getRoundNumberHeight(round.getNumber());
+            this.drawQualifyGroups(round, origin.addY(roundNumberHeight));
         }
-        const roundWidth = this.rangeCalculator.getRoundWidth(round);
-        return origin.addX(roundWidth + RangeCalculator.PADDING);
+        // const roundWidth = this.rangeCalculator.getRoundWidth(round);
+        // return origin.addX(roundWidth + RangeCalculator.PADDING);
     }
 
     protected getPoulesStartCoordinate(origin: Coordinate, round: Round): Coordinate {
@@ -206,10 +206,10 @@ export class DrawHelper {
         return (qualifyRule instanceof MultipleQualifyRule) ? 'M' : 'S';
     }
 
-    protected drawQualifyGroups(round: Round, origin: Coordinate, nextRoundNumberHeight: number): void {
+    protected drawQualifyGroups(round: Round, origin: Coordinate): void {
         let qualifyGroupCoordinate = this.getQualifyGroupsStartCoordinate(origin, round);
         round.getQualifyGroupsLosersReversed().forEach((qualifyGroup: QualifyGroup) => {
-            qualifyGroupCoordinate = this.drawQualifyGroup(qualifyGroup, qualifyGroupCoordinate, nextRoundNumberHeight);
+            qualifyGroupCoordinate = this.drawQualifyGroup(qualifyGroup, qualifyGroupCoordinate);
         });
     }
 
@@ -220,7 +220,7 @@ export class DrawHelper {
         return origin.addX(delta);
     }
 
-    protected drawQualifyGroup(qualifyGroup: QualifyGroup, origin: Coordinate, nextRoundNumberHeight: number): Coordinate {
+    protected drawQualifyGroup(qualifyGroup: QualifyGroup, origin: Coordinate): Coordinate {
         const roundWidth = this.rangeCalculator.getRoundWidth(qualifyGroup.getChildRound());
 
         let selfCoordinate = origin;
@@ -232,7 +232,7 @@ export class DrawHelper {
         this.drawer.drawCellToRight(selfCoordinate.incrementY(), '|', roundWidth, GridAlign.Center);
 
         const childRoundCoordinate = origin.addY(RangeCalculator.QUALIFYGROUPHEIGHT);
-        this.drawRound(qualifyGroup.getChildRound(), childRoundCoordinate, nextRoundNumberHeight);
+        this.drawRound(qualifyGroup.getChildRound(), childRoundCoordinate);
 
         return origin.addX(roundWidth + RangeCalculator.PADDING);
     }

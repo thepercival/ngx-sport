@@ -1,4 +1,4 @@
-import { NameService, Poule, QualifyGroup, Round, RoundNumber, Structure } from "../../../public-api";
+import { Category, NameService, Poule, QualifyGroup, Round, RoundNumber, Structure, StructureCell } from "../../../public-api";
 import { QualifyTarget } from "../../../src/qualify/target";
 
 export class RangeCalculator {
@@ -16,30 +16,73 @@ export class RangeCalculator {
     }
 
     public getStructureHeight(structure: Structure): number {
-        let height = 0;
-        let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
-        while (roundNumber !== undefined) {
-            height += this.getRoundNumberHeight(roundNumber);
-            roundNumber = roundNumber.getNext();
-            if (roundNumber !== undefined) {
-                height += RangeCalculator.QUALIFYGROUPHEIGHT;
+        let maxHeight = 0;
+        structure.getCategories().forEach((category: Category) => {
+            const height = this.getCategoryHeight(category);
+            if (height > maxHeight) {
+                maxHeight = height;
             }
+        });
+        return maxHeight;
+    }
+
+    public getCategoryHeight(category: Category): number {
+        const structureCell = category.getFirstStructureCell();
+        let height = RangeCalculator.BORDER;
+        height += this.getRoundNumberHeight(structureCell.getRoundNumber());
+
+        let nextStructureCell = structureCell.getNext();
+        while (nextStructureCell !== undefined) {
+            height += this.getQualifyGroupsHeight();
+            height += this.getRoundNumberHeight(nextStructureCell.getRoundNumber());
+            nextStructureCell = nextStructureCell.getNext();
         }
-        return height;
+        return height + RangeCalculator.BORDER;
+    }
+
+    public getQualifyGroupsHeight(): number {
+        return 3;
     }
 
     public getStructureWidth(structure: Structure): number {
-        let maxWidth = 0;
-        let roundNumber: RoundNumber | undefined = structure.getFirstRoundNumber();
-        while (roundNumber !== undefined) {
-            const width = this.getRoundNumberWidth(roundNumber);
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-            roundNumber = roundNumber.getNext();
-        }
-        return maxWidth + ((structure.getCategories().length - 1) * RangeCalculator.PADDING);
+        let width = 0;
+        structure.getCategories().forEach(( category: Category) => {
+            width += this.getCategoryWidth(category) + RangeCalculator.PADDING;
+        });
+        return width - RangeCalculator.PADDING;
     }
+
+    public getCategoryTitle(category: Category): string {
+        return category.getName();
+    }
+
+    public getCategoryWidth(category: Category): number {
+        let structureCell = category.getFirstStructureCell();
+        let maxWidth = this.getStructureCellWidth(structureCell);
+        let nextStructureCell = structureCell.getNext();
+        while (nextStructureCell !== undefined) {
+            const currentWidth = this.getStructureCellWidth(nextStructureCell);
+            if (currentWidth > maxWidth) {
+                maxWidth = currentWidth;
+            }
+            nextStructureCell = nextStructureCell.getNext();
+        }
+
+        const titleWidth = this.getCategoryTitle(category).length;
+        if( titleWidth > maxWidth ) {
+            maxWidth = titleWidth;
+        }
+        return RangeCalculator.BORDER + maxWidth + RangeCalculator.BORDER;
+    }
+
+    public getStructureCellWidth(structureCell: StructureCell): number {
+        let width = 0;
+        structureCell.getRounds().forEach((round: Round) => {
+            width += this.getRoundWidth(round) + RangeCalculator.PADDING;
+        });
+        return width - RangeCalculator.PADDING;
+    }
+
 
     public getRoundNumberHeight(roundNumber: RoundNumber): number {
         const biggestPoule = roundNumber.createPouleStructure().getBiggestPoule();
@@ -51,14 +94,14 @@ export class RangeCalculator {
         return height;
     }
 
-    public getRoundNumberWidth(roundNumber: RoundNumber): number {
-        const rounds = roundNumber.getRounds(undefined);
-        let width = 0;
-        rounds.forEach((round: Round) => {
-            width += this.getRoundWidth(round) + RangeCalculator.PADDING;
-        });
-        return width - RangeCalculator.PADDING;
-    }
+    // public getRoundNumberWidth(roundNumber: RoundNumber): number {
+    //     const rounds = roundNumber.getRounds(undefined);
+    //     let width = 0;
+    //     rounds.forEach((round: Round) => {
+    //         width += this.getRoundWidth(round) + RangeCalculator.PADDING;
+    //     });
+    //     return width - RangeCalculator.PADDING;
+    // }
 
     public getRoundWidth(round: Round): number {
         const widthAllPoules = RangeCalculator.BORDER + RangeCalculator.PADDING

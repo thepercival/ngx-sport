@@ -730,6 +730,7 @@ describe('StructureEditor', () => {
             return;
         }
         structureEditor.mergeQualifyGroups(thirdFourthQualifyGroup, fifthSixthQualifyGroup);
+        // (new StructureOutput()).toConsole(structure, console);
         expect(thirdFourth.getNrOfPlaces()).to.equal(4);
     });
 

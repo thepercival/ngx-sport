@@ -22,7 +22,7 @@ export class GridDrawer {
         return coordinate.decrementX();
     }
 
-    public drawLineToRight(coordinate: Coordinate, length: number, value: string = '-', color?: AnsiColor | undefined): Coordinate {
+    public drawLineToRight(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '-'): Coordinate {
         return this.drawToRight(coordinate, this.initString(length, value), color);
     }
 
@@ -38,11 +38,11 @@ export class GridDrawer {
     }
 
 
-    public drawLineToLeft(coordinate: Coordinate, length: number, value: string = '-', color?: AnsiColor | undefined): Coordinate {
+    public drawLineToLeft(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '-'): Coordinate {
         return this.drawToLeft(coordinate, this.initString(length, value), color);
     }
 
-    public drawLineVertToOrigin(coordinate: Coordinate, length: number, value: string = '|', color?: AnsiColor | undefined): Coordinate {
+    public drawLineVertToOrigin(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '|'): Coordinate {
         return this.drawVertToOrigin(coordinate, this.initString(length, value), color);
     }
 
@@ -57,7 +57,7 @@ export class GridDrawer {
         return coordinate.incrementY();
     }
 
-    public drawLineVertAwayFromOrigin(coordinate: Coordinate, length: number, value: string = '|', color?: AnsiColor | undefined): Coordinate {
+    public drawLineVertAwayFromOrigin(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '|'): Coordinate {
         return this.drawVertAwayFromOrigin(coordinate, this.initString(length, value), color);
     }
 
@@ -91,11 +91,11 @@ export class GridDrawer {
         return this.drawToRight(coordinate, text, color);
     }
 
-    drawRectangle(origin: Coordinate, size: Coordinate): void {
-        const topRight = this.drawLineToRight(origin, size.getX());
-        const bottomRight = this.drawLineVertAwayFromOrigin(topRight, size.getY());
-        const bottomLeft = this.drawLineToLeft(bottomRight.decrementX(), size.getX() - 1);
-        this.drawLineVertToOrigin(bottomLeft, size.getY());
+    drawRectangle(origin: Coordinate, size: Coordinate, color?: AnsiColor | undefined): void {
+        const topRight = this.drawLineToRight(origin, size.getX(), color);
+        const bottomRight = this.drawLineVertAwayFromOrigin(topRight, size.getY(), color);
+        const bottomLeft = this.drawLineToLeft(bottomRight.decrementX(), size.getX() - 1, color);
+        this.drawLineVertToOrigin(bottomLeft, size.getY(), color);
     }
 
 

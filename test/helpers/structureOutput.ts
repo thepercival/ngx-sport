@@ -19,6 +19,7 @@ export class StructureOutput {
         const width = this.rangeCalculator.getStructureWidth(structure);
         const height = this.rangeCalculator.getStructureHeight(structure);
         const grid = new Grid(height, width);
+        // console.log('grid: (' + width +',' + height +')');
 
         // fill
         const drawer = new GridDrawer(grid);
