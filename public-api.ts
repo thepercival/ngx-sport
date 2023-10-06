@@ -92,6 +92,7 @@ export * from './src/planning/gameAmountConfig/service';
 export * from './src/planning/gameAmountConfig/json';
 export * from './src/planning/gameMode';
 export * from './src/poule';
+export * from './src/poule/against';
 export * from './src/poule/horizontal';
 export * from './src/poule/json';
 export * from './src/poule/mapper';
