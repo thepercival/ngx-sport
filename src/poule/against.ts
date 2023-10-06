@@ -28,6 +28,7 @@ export class AgainstPoule {
             }
         }
     }
+    
 
     public getCompetitor(side: AgainstSide): Competitor | undefined {
         return side === AgainstSide.Home ? this.homeCompetitor : this.awayCompetitor;
