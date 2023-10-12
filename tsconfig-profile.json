@@ -4,7 +4,7 @@
         "outDir": "./test/out",
         "sourceMap": true,
         "declaration": false,
-        "module": "commonjs",
+        "module": "CommonJS",
         "target": "es5",
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,

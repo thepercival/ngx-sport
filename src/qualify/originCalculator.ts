@@ -1,6 +1,6 @@
 import { Place } from "../place";
 import { Poule } from "../poule";
-import { SingleQualifyRule } from "./rule/single";
+import { HorizontalSingleQualifyRule } from "./rule/horizontal/single";
 
 /**
  * kunnen aangeven uit welke poules een bepaalde plek afkomstig is 
@@ -65,7 +65,7 @@ export class QualifyOriginCalculator {
 
         let possiblePreviousPoules: Poule[] = [];
         const parentQualifyGroup = poule.getRound().getParentQualifyGroup();
-        if (parentQualifyGroup !== undefined && parentQualifyGroup.getMultipleRule() !== undefined) {
+        if (parentQualifyGroup !== undefined && parentQualifyGroup.getHorizontalMultipleRule() !== undefined) {
             possiblePreviousPoules = parentQualifyGroup.getParentRound().getPoules();
         } else {
             poule.getPlaces().forEach((place: Place) => {
@@ -82,8 +82,8 @@ export class QualifyOriginCalculator {
             return [];
         }
         try {
-            const rule = parentQualifyGroup.getRule(place);
-            if (rule instanceof SingleQualifyRule) {
+            const rule = parentQualifyGroup.getRuleByToPlace(place);
+            if (rule instanceof HorizontalSingleQualifyRule) {
                 return [rule.getFromPlace(place).getPoule()];
             }
             return parentQualifyGroup.getParentRound().getPoules();

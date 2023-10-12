@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, GameState, Poule, Cumulative, PointsCalculation } from '../../../../public-api';
+import { AgainstRuleSet, QualifyTarget, Round, RoundRankingCalculator, RoundRankingItem, GameState, Poule, Cumulative, PointsCalculation, QualifyDistribution } from '../../../../public-api';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 import { createGames } from '../../../helpers/gamescreator';
@@ -235,7 +235,7 @@ describe('RoundRankingCalculator', () => {
         const defaultCat = structure.getSingleCategory();
         const rootRound: Round = defaultCat.getRootRound();
 
-        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3, QualifyDistribution.HorizontalSnake);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -279,7 +279,7 @@ describe('RoundRankingCalculator', () => {
         const defaultCat = structure.getSingleCategory();
         const rootRound: Round = defaultCat.getRootRound();
 
-        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 3, QualifyDistribution.HorizontalSnake);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);

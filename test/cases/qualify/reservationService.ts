@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../../data/competition';
 import { setAgainstScoreSingle } from '../../helpers/setscores';
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { QualifyReservationService, QualifyService, QualifyTarget, Round, StartLocationMap } from '../../../public-api';
+import { QualifyDistribution, QualifyReservationService, QualifyService, QualifyTarget, Round, StartLocationMap } from '../../../public-api';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
 

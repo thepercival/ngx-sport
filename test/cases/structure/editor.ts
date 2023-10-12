@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, SingleQualifyRule, QualifyTarget, CompetitionSportGetter } from '../../../public-api';
-import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
+import { BalancedPouleStructure, QualifyTarget, QualifyDistribution, HorizontalSingleQualifyRule } from '../../../public-api';
+import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
 import { PlaceRanges } from '../../../src/structure/placeRanges';
+import { VerticalSingleQualifyRule } from '../../../src/qualify/rule/vertical/single';
+import { VerticalMultipleQualifyRule } from '../../../src/qualify/rule/vertical/multiple';
 
 describe('StructureEditor', () => {
 
@@ -222,15 +224,15 @@ describe('StructureEditor', () => {
 
         structureEditor.incrementNrOfPoules(winnersRound);
 
-        // (new StructureOutput()).toConsole(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         const firstQualifyGroup = winnersRound.getQualifyGroups()[0];
         expect(firstQualifyGroup).to.not.be.undefined;
-        expect(firstQualifyGroup.getNrOfToPlaces()).to.equal(3);
+        expect(firstQualifyGroup.getRulesNrOfToPlaces()).to.equal(3);
 
         const lastQualifyGroup = winnersRound.getQualifyGroups()[winnersRound.getQualifyGroups().length - 1];
         expect(lastQualifyGroup).to.not.be.undefined;
-        expect(lastQualifyGroup.getNrOfToPlaces()).to.equal(3);
+        expect(lastQualifyGroup.getRulesNrOfToPlaces()).to.equal(3);
     });
 
     it('addQualifierWithThirdRoundsNoCrossFinals', () => {
@@ -248,19 +250,44 @@ describe('StructureEditor', () => {
         // (new StructureOutput()).toConsole(structure, console);
         // console.log('');
 
-        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1, 3);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1, QualifyDistribution.HorizontalSnake, 3);
 
         // (new StructureOutput()).toConsole(structure, console);
 
         const firstQualifyGroup = winnersRound.getQualifyGroups()[0];
         expect(firstQualifyGroup).to.not.be.undefined;
-        expect(firstQualifyGroup.getNrOfToPlaces()).to.equal(5);
+        expect(firstQualifyGroup.getRulesNrOfToPlaces()).to.equal(5);
 
         const lastQualifyGroup = winnersRound.getQualifyGroups()[winnersRound.getQualifyGroups().length - 1];
         expect(lastQualifyGroup).to.not.be.undefined;
-        expect(lastQualifyGroup.getNrOfToPlaces()).to.equal(5);
+        expect(lastQualifyGroup.getRulesNrOfToPlaces()).to.equal(5);
     });
 
+
+    it('vertical distribution', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4,4,4], createPlanningConfigNoTime());
+        const rootRound = structure.getSingleCategory().getRootRound();
+
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4, 4, 4], QualifyDistribution.Vertical);
+
+        //(new StructureOutput()).toConsole(structure, console);
+
+        const ruleOne = winnersRound.getParentQualifyGroup()?.getFirstVerticalRule();
+        expect(ruleOne).to.instanceOf(VerticalSingleQualifyRule);
+        expect(ruleOne.getNrOfToPlaces()).to.equal(3);
+        const ruleTwo = ruleOne.getNext();
+        expect(ruleTwo).to.instanceOf(VerticalMultipleQualifyRule);
+        expect(ruleTwo.getNrOfToPlaces()).to.equal(3);
+        const ruleThree = ruleTwo.getNext();
+        expect(ruleThree).to.instanceOf(VerticalMultipleQualifyRule);
+        expect(ruleThree.getNrOfToPlaces()).to.equal(3);
+        const ruleFour = ruleThree.getNext();
+        expect(ruleFour).to.instanceOf(VerticalSingleQualifyRule);
+        expect(ruleFour.getNrOfToPlaces()).to.equal(3);
+    });
 
     it('removePouleFromRootRound 4', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
@@ -424,7 +451,7 @@ describe('StructureEditor', () => {
 
         // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
-            structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1);
+            structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1, QualifyDistribution.HorizontalSnake);
         }).to.throw();
         // (new StructureOutput()).toConsole(structure, console);
     });
@@ -446,10 +473,11 @@ describe('StructureEditor', () => {
         const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
         const rootRound = structure.getSingleCategory().getRootRound();
 
-        structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
+        const childRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4]);
         // (new StructureOutput()).toConsole(structure, console);
         expect(function () {
-            structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1);
+            const distribution = childRound.getParentQualifyGroup().getDistribution() ?? QualifyDistribution.HorizontalSnake;
+            structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 1, distribution);
         }).to.throw();
         // (new StructureOutput()).toConsole(structure, console);
     });
@@ -461,7 +489,7 @@ describe('StructureEditor', () => {
         const structure = structureEditor.create(competition, [4], createPlanningConfigNoTime());
         const rootRound = structure.getSingleCategory().getRootRound();
 
-        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 2);
+        structureEditor.addQualifiers(rootRound, QualifyTarget.Winners, 2, QualifyDistribution.HorizontalSnake);
         // (new StructureOutput()).toConsole(structure, console);
 
         const winnersChildRound = rootRound.getChild(QualifyTarget.Winners, 1);
@@ -545,7 +573,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
+        const firstSingleQualifyRule = qualifyGroup.getFirstHorSingleRule();
         expect(firstSingleQualifyRule).to.not.equal(undefined);
         if (firstSingleQualifyRule === undefined) {
             return;
@@ -570,7 +598,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
+        const firstSingleQualifyRule = qualifyGroup.getFirstHorSingleRule();
         expect(firstSingleQualifyRule).to.not.equal(undefined);
         if (firstSingleQualifyRule === undefined) {
             return;
@@ -593,7 +621,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
+        let singleRule: HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstHorSingleRule();
         while (singleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(false);
             singleRule = singleRule.getNext();
@@ -619,11 +647,11 @@ describe('StructureEditor', () => {
             return;
         }
 
-        let firstWinnersSingleRule: SingleQualifyRule | undefined = winnersQualifyGroup.getFirstSingleRule();
+        let firstWinnersSingleRule: HorizontalSingleQualifyRule | undefined = winnersQualifyGroup.getFirstHorSingleRule();
         if (firstWinnersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstWinnersSingleRule)).to.equal(false);
         }
-        let firstLosersSingleRule: SingleQualifyRule | undefined = losersQualifyGroup.getFirstSingleRule();
+        let firstLosersSingleRule: HorizontalSingleQualifyRule | undefined = losersQualifyGroup.getFirstHorSingleRule();
         if (firstLosersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstLosersSingleRule)).to.equal(false);
         }
@@ -645,7 +673,7 @@ describe('StructureEditor', () => {
             return;
         }
 
-        let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
+        let singleRule: HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstHorSingleRule();
         expect(singleRule).to.not.equal(undefined);
         if (singleRule === undefined) {
             return;

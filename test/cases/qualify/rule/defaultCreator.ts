@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { BalancedPouleStructure, Place, Poule, QualifyTarget } from '../../../../public-api';
 import { QualifyOriginCalculator } from '../../../../src/qualify/originCalculator';
 import { QualifyRuleCreator } from '../../../../src/qualify/rule/creator';
-import { DefaultQualifyRuleCreator } from '../../../../src/qualify/rule/defaultCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';

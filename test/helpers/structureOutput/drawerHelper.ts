@@ -1,7 +1,7 @@
-import { AnsiColor, Category, NameService, Place, Poule, QualifyGroup, Round, RoundNumber, Structure, StructureNameService } from "../../../public-api";
+import { AnsiColor, Category, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, NameService, Place, Poule, QualifyDistribution, QualifyGroup, Round, RoundNumber, Structure, StructureNameService } from "../../../public-api";
 import { HorizontalPoule } from "../../../src/poule/horizontal";
-import { MultipleQualifyRule } from "../../../src/qualify/rule/multiple";
-import { SingleQualifyRule } from "../../../src/qualify/rule/single";
+import { VerticalMultipleQualifyRule } from "../../../src/qualify/rule/vertical/multiple";
+import { VerticalSingleQualifyRule } from "../../../src/qualify/rule/vertical/single";
 import { QualifyTarget } from "../../../src/qualify/target";
 import { GridAlign } from "../grid/align";
 import { Coordinate } from "../grid/coordinate";
@@ -161,49 +161,80 @@ export class DrawHelper {
         // winners
         round.getQualifyGroups(QualifyTarget.Winners).forEach((qualifyGroup: QualifyGroup) => {
             const winnersColor = this.getQualifyGroupColor(qualifyGroup);
-            let singleRule = qualifyGroup.getFirstSingleRule();
-            while (singleRule !== undefined) {
-                currentCoordinate = this.drawer.drawVertAwayFromOrigin(
-                    currentCoordinate, this.getQualifyRuleString(singleRule), winnersColor
-                ).incrementY();
-                singleRule = singleRule.getNext();
+            if( qualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {
+                let singleRule = qualifyGroup.getFirstHorSingleRule();
+                while (singleRule !== undefined) {
+                    currentCoordinate = this.drawer.drawVertAwayFromOrigin(
+                        currentCoordinate, this.getQualifyRuleString(singleRule), winnersColor
+                    ).incrementY();
+                    singleRule = singleRule.getNext();
+                }
+                const multipleRule = qualifyGroup.getHorizontalMultipleRule();
+                if (multipleRule !== undefined) {
+                    winnersMultipleRuleCoordinate = currentCoordinate;
+                    this.drawer.drawVertAwayFromOrigin(
+                        currentCoordinate, this.getQualifyRuleString(multipleRule), winnersColor
+                    )
+                }
+            } else {                
+                let verticalRule = qualifyGroup.getFirstVerticalRule();
+                while (verticalRule !== undefined) {
+                    currentCoordinate = this.drawer.drawVertAwayFromOrigin(
+                        currentCoordinate, this.getQualifyRuleString(verticalRule), winnersColor
+                    ).incrementY();
+                    verticalRule = verticalRule.getNext();
+                }                
             }
-            const multipleRule = qualifyGroup.getMultipleRule();
-            if (multipleRule !== undefined) {
-                winnersMultipleRuleCoordinate = currentCoordinate;
-                this.drawer.drawVertAwayFromOrigin(
-                    currentCoordinate, this.getQualifyRuleString(multipleRule), winnersColor
-                )
-            }
+            
         });
         currentCoordinate = seperator.addY(round.getFirstPoule().getPlaces().length);
 
         // losers
         round.getQualifyGroups(QualifyTarget.Losers).forEach((qualifyGroup: QualifyGroup) => {
             const losersColor = this.getQualifyGroupColor(qualifyGroup);
-            let singleRule = qualifyGroup.getFirstSingleRule();
-            while (singleRule !== undefined) {
-                currentCoordinate = this.drawer.drawVertToOrigin(
-                    currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
-                ).decrementY();
-                singleRule = singleRule.getNext();
-            }
-            const multipleRule = qualifyGroup.getMultipleRule();
-            if (multipleRule !== undefined) {
-                let color = losersColor;
-                if (winnersMultipleRuleCoordinate !== undefined
-                    && winnersMultipleRuleCoordinate.getX() === currentCoordinate.getX()) {
-                    color = AnsiColor.Magenta;
+            if( qualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {                
+                let singleRule = qualifyGroup.getFirstHorSingleRule();
+                while (singleRule !== undefined) {
+                    currentCoordinate = this.drawer.drawVertToOrigin(
+                        currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
+                    ).decrementY();
+                    singleRule = singleRule.getNext();
                 }
-                this.drawer.drawVertAwayFromOrigin(
-                    currentCoordinate, this.getQualifyRuleString(multipleRule), color
-                );
+                const multipleRule = qualifyGroup.getHorizontalMultipleRule();
+                if (multipleRule !== undefined) {
+                    let color = losersColor;
+                    if (winnersMultipleRuleCoordinate !== undefined
+                        && winnersMultipleRuleCoordinate.getX() === currentCoordinate.getX()) {
+                        color = AnsiColor.Magenta;
+                    }
+                    this.drawer.drawVertAwayFromOrigin(
+                        currentCoordinate, this.getQualifyRuleString(multipleRule), color
+                    );
+                }
+            } else {
+                let verticalRule = qualifyGroup.getFirstVerticalRule();
+                while (verticalRule !== undefined) {
+                    currentCoordinate = this.drawer.drawVertToOrigin(
+                        currentCoordinate, this.getQualifyRuleString(verticalRule), losersColor
+                    ).decrementY();
+                    verticalRule = verticalRule.getNext();
+                }
             }
         });
     }
 
-    protected getQualifyRuleString(qualifyRule: MultipleQualifyRule | SingleQualifyRule): string {
-        return (qualifyRule instanceof MultipleQualifyRule) ? 'M' : 'S';
+    protected getQualifyRuleString(qualifyRule: HorizontalMultipleQualifyRule | HorizontalSingleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule): string {
+        let descr = '';
+        if( qualifyRule instanceof HorizontalMultipleQualifyRule || qualifyRule instanceof VerticalMultipleQualifyRule ) {
+            descr = 'M';
+        } else {
+            descr = 'S';
+        }
+        return descr;
+    }
+
+    protected getDistribution(distribution: QualifyDistribution): string {
+        return distribution == QualifyDistribution.HorizontalSnake ? ' (HS)' : ' (V)';
     }
 
     protected drawQualifyGroups(round: Round, origin: Coordinate): void {
@@ -226,7 +257,8 @@ export class DrawHelper {
         let selfCoordinate = origin;
         this.drawer.drawCellToRight(selfCoordinate, '|', roundWidth, GridAlign.Center);
         selfCoordinate = selfCoordinate.incrementY();
-        const qualifyGroupName = qualifyGroup.getTarget() + qualifyGroup.getNumber();
+        const distribution = qualifyGroup.getDistribution() === QualifyDistribution.Vertical ? 'V' : 'HS';
+        const qualifyGroupName = qualifyGroup.getTarget() + qualifyGroup.getNumber() + ' (' +  distribution + ')';
         const color = this.getQualifyGroupColor(qualifyGroup);
         this.drawer.drawCellToRight(selfCoordinate, qualifyGroupName, roundWidth, GridAlign.Center, color);
         this.drawer.drawCellToRight(selfCoordinate.incrementY(), '|', roundWidth, GridAlign.Center);

@@ -1,8 +1,8 @@
-import { HorizontalPoule } from '../poule/horizontal';
-import { QualifyGroup, Round } from './group';
-import { QualifyTarget } from './target';
+import { HorizontalPoule } from "../poule/horizontal";
+import { Round } from "./group";
+import { QualifyTarget } from "./target";
 
-export abstract class QualifyRule {
+export class QualifyRule {
     constructor(protected fromHorizontalPoule: HorizontalPoule) {
     }
 
@@ -15,7 +15,7 @@ export abstract class QualifyRule {
     }
 
     getNumber(): number {
-        return this.getFromHorizontalPoule().getNumber();
+        return this.fromHorizontalPoule.getNumber();
     }
 
     getFromRound(): Round {
@@ -23,7 +23,6 @@ export abstract class QualifyRule {
     }
 
     getFromPlaceNumber(): number {
-        return this.getFromHorizontalPoule().getPlaceNumber();
+        return this.fromHorizontalPoule.getPlaceNumber();
     }
 }
-

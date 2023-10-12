@@ -16,7 +16,7 @@ import { CompetitionSport } from '../competition/sport';
 import { Place } from '../place';
 import { AgainstVariant } from '../sport/variant/against';
 import { JsonTogetherGamePlace } from './place/together/json';
-import { JsonTogetherScore } from 'src/score/together/json';
+import { JsonTogetherScore } from '../score/together/json';
 import { TogetherGamePlace } from './place/together';
 
 @Injectable({

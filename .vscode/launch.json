@@ -17,7 +17,7 @@
                 "--trace-warnings",
             ],
             "args": [
-                "${workspaceFolder}/test/out/test/cases/qualify/rule/defaultCreator.js"
+                "${workspaceFolder}/test/out/test/cases/structure/editor.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }

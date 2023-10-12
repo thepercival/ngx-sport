@@ -12,13 +12,14 @@ import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { PlanningConfigMapper } from '../planning/config/mapper';
 import { HorizontalPouleCreator } from '../poule/horizontal/creator';
 import { QualifyRuleCreator } from '../qualify/rule/creator';
-import { SingleQualifyRule } from '../qualify/rule/single';
 import { BalancedPouleStructureCreator } from '../poule/structure/balancedCreator';
 import { PlaceRanges } from './placeRanges';
 import { QualifyGroupNrOfPlacesMap, RemovalValidator } from './removalValidator';
 import { Category } from '../category';
 import { CompetitionSport } from '../competition/sport';
 import { StructureCell } from './cell';
+import { QualifyDistribution } from '../qualify/distribution';
+import { HorizontalSingleQualifyRule } from '../qualify/rule/horizontal/single';
 import { CompetitionSportEditor } from '../competition/sport/editor';
 import { CompetitionSportGetter } from '../competition/sport/getter';
 
@@ -105,7 +106,11 @@ export class StructureEditor {
         return category;
     }
 
-    addChildRound(parentRound: Round, qualifyTarget: QualifyTarget, pouleStructure: number[]): Round {
+    addChildRound(
+        parentRound: Round, 
+        qualifyTarget: QualifyTarget, 
+        pouleStructure: number[],
+        distribution: QualifyDistribution = QualifyDistribution.HorizontalSnake): Round {
         const balancedPouleStructure = new BalancedPouleStructure(...pouleStructure);
         this.placeRanges?.validateStructure(balancedPouleStructure);
         this.rulesCreator.remove(parentRound);
@@ -114,7 +119,8 @@ export class StructureEditor {
         const qualifyGroup = this.addChildRoundHelper(
             parentRound,
             qualifyTarget,
-            balancedPouleStructure
+            balancedPouleStructure,
+            distribution
         );
         // end editing
         this.horPouleCreator.create(qualifyGroup.getChildRound());
@@ -122,12 +128,17 @@ export class StructureEditor {
         return qualifyGroup.getChildRound();
     }
 
-    private addChildRoundHelper(parentRound: Round, qualifyTarget: QualifyTarget, pouleStructure: BalancedPouleStructure): QualifyGroup {
+    private addChildRoundHelper(
+        parentRound: Round, 
+        qualifyTarget: QualifyTarget, 
+        pouleStructure: BalancedPouleStructure,
+        distribution: QualifyDistribution): QualifyGroup {
         let nextStructureCell = parentRound.getStructureCell().getNext();
         if (nextStructureCell === undefined) {
             nextStructureCell = parentRound.getStructureCell().createNext();
         }
-        const qualifyGroup = new QualifyGroup(parentRound, qualifyTarget, nextStructureCell);
+        const qualifyGroup = new QualifyGroup(parentRound, false, qualifyTarget, nextStructureCell);
+        qualifyGroup.setDistribution(distribution);
         this.fillRound(qualifyGroup.getChildRound(), pouleStructure);
         return qualifyGroup;
     }
@@ -270,7 +281,7 @@ export class StructureEditor {
         this.rulesCreator.create(round.getParent(), round);
     }
 
-    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number, maxNrOfPoulePlaces?: number) {
+    addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number, distribution: QualifyDistribution, maxNrOfPoulePlaces?: number) {
         const nrOfPlaces = parentRound.getNrOfPlaces();
         const nrOfToPlaces = parentRound.getNrOfPlacesChildren();
         if ((nrOfToPlaces + nrOfToPlacesToAdd) > nrOfPlaces) {
@@ -294,7 +305,7 @@ export class StructureEditor {
             this.rulesCreator.remove(parentRound);
 
             // begin editing
-            qualifyGroup = this.addChildRoundHelper(parentRound, qualifyTarget, newStructure);
+            qualifyGroup = this.addChildRoundHelper(parentRound, qualifyTarget, newStructure, distribution);
             nrOfToPlacesToAdd -= minNrOfPlacesPerPoule;
             const childRound = qualifyGroup.getChildRound();
             while (nrOfToPlacesToAdd-- > 0) {
@@ -371,12 +382,12 @@ export class StructureEditor {
         });
     }
 
-    protected getNrOfQualifiersPrevious(singleRule: SingleQualifyRule): number {
-        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+    protected getNrOfQualifiersPrevious(horSingleRule: HorizontalSingleQualifyRule): number {
+        return horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
     }
 
-    protected getNrOfQualifiersNext(singleRule: SingleQualifyRule): number {
-        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+    protected getNrOfQualifiersNext(horSingleRule: HorizontalSingleQualifyRule): number {
+        return horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
     }
 
     protected getRoot(round: Round): Round {
@@ -389,23 +400,23 @@ export class StructureEditor {
         return creator.create(nrOfPlaces, nrOfPoules);
     }
 
-    isQualifyGroupSplittableAt(singleRule: SingleQualifyRule): boolean {
-        const next = singleRule.getNext();
+    isQualifyGroupSplittableAt(horSingleRule: HorizontalSingleQualifyRule): boolean {
+        const next = horSingleRule.getNext();
         if (next === undefined) {
             return false;
         }
-        return this.getNrOfQualifiersPrevious(singleRule) >= this.getMinPlacesPerPouleSmall()
+        return this.getNrOfQualifiersPrevious(horSingleRule) >= this.getMinPlacesPerPouleSmall()
             && this.getNrOfQualifiersNext(next) >= this.getMinPlacesPerPouleSmall();
     }
 
     // horizontalPoule is split-points, from which qualifyGroup
-    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: SingleQualifyRule) {
+    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, horSingleRule: HorizontalSingleQualifyRule) {
         const parentRound = qualifyGroup.getParentRound();
         if (parentRound === undefined) {
             return;
         }
-        const nrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
-        const borderSideNrOfToPlaces = singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        const nrOfToPlaces = horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+        const borderSideNrOfToPlaces = horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
         if (nrOfToPlaces < this.getMinPlacesPerPouleSmall() || borderSideNrOfToPlaces < this.getMinPlacesPerPouleSmall()) {
             throw new Error('de kwalificatiegroep is niet splitsbaar');
         }
@@ -437,10 +448,12 @@ export class StructureEditor {
 
         const newQualifyGroup = new QualifyGroup(
             parentRound,
+            false,
             qualifyGroup.getTarget(),
             childRound.getStructureCell(),
             qualifyGroup.getNumber() + 1
         );
+        newQualifyGroup.setDistribution(qualifyGroup.getDistribution());
         this.renumber(parentRound, qualifyGroup.getTarget());
         return newQualifyGroup;
     }

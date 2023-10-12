@@ -1,7 +1,9 @@
 import { Place } from '../place';
 import { Round } from '../qualify/group';
-import { MultipleQualifyRule } from '../qualify/rule/multiple';
-import { SingleQualifyRule } from '../qualify/rule/single';
+import { HorizontalMultipleQualifyRule } from '../qualify/rule/horizontal/multiple';
+import { HorizontalSingleQualifyRule } from '../qualify/rule/horizontal/single';
+import { VerticalMultipleQualifyRule } from '../qualify/rule/vertical/multiple';
+import { VerticalSingleQualifyRule } from '../qualify/rule/vertical/single';
 import { QualifyTarget } from '../qualify/target';
 
 /**
@@ -17,7 +19,7 @@ import { QualifyTarget } from '../qualify/target';
  **/
 export class HorizontalPoule {
     protected number: number
-    protected qualifyRule: MultipleQualifyRule | SingleQualifyRule | undefined;
+    protected qualifyRule: HorizontalMultipleQualifyRule | HorizontalSingleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule | undefined;
 
     constructor(
         protected round: Round,
@@ -52,7 +54,7 @@ export class HorizontalPoule {
         return this.qualifyRule?.getGroup();
     }*/
 
-    setQualifyRule(qualifyRule: MultipleQualifyRule | SingleQualifyRule | undefined) {
+    setQualifyRuleNew(qualifyRule: HorizontalMultipleQualifyRule | HorizontalSingleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule | undefined) {
         this.qualifyRule = qualifyRule;
     }
 
@@ -64,7 +66,7 @@ export class HorizontalPoule {
         this.qualifyRule = multipleRule;
     }*/
 
-    getQualifyRule(): SingleQualifyRule | MultipleQualifyRule | undefined {
+    getQualifyRuleNew(): HorizontalMultipleQualifyRule | HorizontalSingleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule | undefined {
         return this.qualifyRule;
     }
 

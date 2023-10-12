@@ -10,8 +10,6 @@ import { AgainstQualifyConfig } from './againstConfig';
 import { Identifiable } from '../identifiable';
 import { AgainstGame } from '../game/against';
 import { TogetherGame } from '../game/together';
-import { SingleQualifyRule } from './rule/single';
-import { MultipleQualifyRule } from './rule/multiple';
 import { QualifyTarget } from './target';
 import { QualifyPathNode } from './pathNode';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
@@ -19,6 +17,13 @@ import { GameState } from '../game/state';
 import { Category } from '../category';
 import { StructureCell } from '../structure/cell';
 import { StartLocation } from '../competitor/startLocation';
+import { QualifyDistribution } from './distribution';
+import { VerticalQualifyRule } from './rule/vertical';
+import { VerticalMultipleQualifyRule } from './rule/vertical/multiple';
+import { VerticalSingleQualifyRule } from './rule/vertical/single';
+import { HorizontalSingleQualifyRule } from './rule/horizontal/single';
+import { HorizontalMultipleQualifyRule } from './rule/horizontal/multiple';
+
 import { CompetitionSportGetter } from '../competition/sport/getter';
 
 export class QualifyGroup extends Identifiable {
@@ -29,10 +34,12 @@ export class QualifyGroup extends Identifiable {
 
     protected number: number
     protected childRound: Round;
-    protected firstSingleRule: SingleQualifyRule | undefined;
-    protected multipleRule: MultipleQualifyRule | undefined;
+    protected distribution: QualifyDistribution = QualifyDistribution.HorizontalSnake;
+    protected firstHorSingleRule: HorizontalSingleQualifyRule | undefined;
+    protected horMultipleRule: HorizontalMultipleQualifyRule | undefined;
+    protected firstVertRule: VerticalSingleQualifyRule | VerticalMultipleQualifyRule | undefined;
 
-    constructor(protected parentRound: Round, protected target: QualifyTarget, nextStructureCell: StructureCell, number?: number) {
+    constructor(protected parentRound: Round, protected b: boolean, protected target: QualifyTarget, nextStructureCell: StructureCell, number?: number) {
         super();
         this.number = number ? number : this.parentRound.getQualifyGroups(this.getTarget()).length + 1;
         this.parentRound.getQualifyGroups(this.getTarget()).splice(this.number - 1, 0, this);
@@ -59,36 +66,61 @@ export class QualifyGroup extends Identifiable {
         return this.childRound;
     }
 
-    getFirstSingleRule(): SingleQualifyRule | undefined {
-        return this.firstSingleRule;
+    getDistribution(): QualifyDistribution {
+        return this.distribution;
     }
 
-    setFirstSingleRule(singleRule: SingleQualifyRule | undefined): void {
-        this.firstSingleRule = singleRule;
+    setDistribution(distribution: QualifyDistribution): void {
+        this.distribution = distribution;
     }
 
-    getMultipleRule(): MultipleQualifyRule | undefined {
-        return this.multipleRule;
+    getFirstHorSingleRule(): HorizontalSingleQualifyRule | undefined {
+        return this.firstHorSingleRule;
     }
 
-    setMultipleRule(multipleRule: MultipleQualifyRule | undefined): void {
-        this.multipleRule = multipleRule;
+    setFirstHorSingleRule(horSingleRule: HorizontalSingleQualifyRule | undefined): void {
+        this.firstHorSingleRule = horSingleRule;
     }
 
-    getNrOfSingleRules(): number {
-        return this.getFirstSingleRule()?.getLast().getNumber() ?? 0;
+    getHorizontalMultipleRule(): HorizontalMultipleQualifyRule | undefined {
+        return this.horMultipleRule;
     }
 
-    getNrOfToPlaces(): number {
+    setHorizontalMultipleRule(horMultipleRule: HorizontalMultipleQualifyRule | undefined): void {
+        this.horMultipleRule = horMultipleRule;
+    }
+
+    getNrOfHorSingleRules(): number {
+        return this.getFirstHorSingleRule()?.getLast().getNumber() ?? 0;
+    }
+
+    getFirstVerticalRule(): VerticalSingleQualifyRule | VerticalMultipleQualifyRule | undefined {
+        return this.firstVertRule;
+    }
+
+    setFirstVerticalRule(firstVertRule: VerticalSingleQualifyRule | VerticalMultipleQualifyRule | undefined): void {
+        this.firstVertRule = firstVertRule;
+    }
+
+    getRulesNrOfToPlaces(): number {
         let nrOfToPlaces = 0;
-        const firstSingleRule = this.getFirstSingleRule();
-        if (firstSingleRule !== undefined) {
-            nrOfToPlaces = firstSingleRule.getNrOfToPlaces() + firstSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        if( this.distribution === QualifyDistribution.HorizontalSnake) {
+            const firstHorSingleRule = this.getFirstHorSingleRule();
+            if (firstHorSingleRule !== undefined) {
+                nrOfToPlaces = firstHorSingleRule.getNrOfToPlaces() + firstHorSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+            }
+            const horMultipleRule = this.getHorizontalMultipleRule();
+            if (horMultipleRule !== undefined) {
+                nrOfToPlaces += horMultipleRule.getNrOfToPlaces();
+            }
+        } else {
+            let vertRule = this.getFirstVerticalRule();
+            while( vertRule !== undefined) {
+                nrOfToPlaces++;
+                vertRule = vertRule.getNext();
+            }
         }
-        const multipleRule = this.getMultipleRule();
-        if (multipleRule !== undefined) {
-            nrOfToPlaces += multipleRule.getNrOfToPlaces();
-        }
+        
         return nrOfToPlaces;
     }
 
@@ -96,26 +128,42 @@ export class QualifyGroup extends Identifiable {
         return this.getParentRound().getQualifyGroup(this.getTarget(), this.getNumber() + 1);
     }
 
-    getRule(toPlace: Place): SingleQualifyRule | MultipleQualifyRule {
-        let singleRule = this.firstSingleRule;
+    getRuleByToPlace(toPlace: Place): HorizontalSingleQualifyRule | HorizontalMultipleQualifyRule | VerticalSingleQualifyRule | VerticalMultipleQualifyRule {
+        if( this.distribution === QualifyDistribution.Vertical) {
+            let verticalRule = this.firstVertRule;
+            while (verticalRule !== undefined) {
+                try {
+                    if(verticalRule.hasToPlace(toPlace)) {
+                        return verticalRule;
+                    } 
+                } catch (e) { }                
+                verticalRule = verticalRule.getNext();
+            }
+            if (verticalRule === undefined) {
+                throw Error('de verticale kwalificatieregel kan niet gevonden worden');
+            }
+        }
+        let singleRule = this.firstHorSingleRule;
         while (singleRule !== undefined) {
             try {
-                if (singleRule.getFromPlace(toPlace) !== undefined) {
+                if (singleRule.hasToPlace(toPlace)) {
                     return singleRule;
                 }
             } catch (e) { }
             singleRule = singleRule.getNext();
         }
-        const multipleRule = this.getMultipleRule();
+        const multipleRule = this.getHorizontalMultipleRule();
         if (multipleRule === undefined || !multipleRule.hasToPlace(toPlace)) {
-            throw Error('de kwalificatieregel kan niet gevonden worden');
+            throw Error('de horizontale multiple kwalificatieregel kan niet gevonden worden');
         }
         return multipleRule;
     }
 
     getFromPlace(toPlace: Place): Place | undefined {
-        let singleRule = this.getRule(toPlace);
-        if (singleRule instanceof SingleQualifyRule) {
+        let singleRule = this.getRuleByToPlace(toPlace);
+        if (singleRule instanceof HorizontalSingleQualifyRule) {
+            return singleRule.getFromPlace(toPlace);
+        } else if (singleRule instanceof VerticalSingleQualifyRule) {
             return singleRule.getFromPlace(toPlace);
         }
         return undefined;
@@ -134,13 +182,13 @@ export class QualifyGroup extends Identifiable {
     }
 
     detachRules() {
-        if (this.multipleRule !== undefined) {
-            this.multipleRule.detach();
-            this.multipleRule = undefined;
+        if (this.horMultipleRule !== undefined) {
+            this.horMultipleRule.detach();
+            this.horMultipleRule = undefined;
         }
-        if (this.firstSingleRule !== undefined) {
-            this.firstSingleRule.detach();
-            this.firstSingleRule = undefined;
+        if (this.firstHorSingleRule !== undefined) {
+            this.firstHorSingleRule.detach();
+            this.firstHorSingleRule = undefined;
         }
     }
 }

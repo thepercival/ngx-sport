@@ -5,9 +5,11 @@ import { EndRankingItem } from '../item/end';
 import { Place } from '../../place';
 import { RoundRankingCalculator } from './round';
 import { QualifyTarget } from '../../qualify/target';
-import { SingleQualifyRule } from '../../qualify/rule/single';
+import { HorizontalSingleQualifyRule } from '../../qualify/rule/horizontal/single';
 import { GameState } from '../../game/state';
 import { Category } from '../../category';
+import { VerticalSingleQualifyRule } from '../../qualify/rule/vertical/single';
+import { VerticalMultipleQualifyRule } from '../../qualify/rule/vertical/multiple';
 
 export class EndRankingCalculator {
 
@@ -78,13 +80,18 @@ export class EndRankingCalculator {
     }
 
     getNrOfDropouts(horizontalPoule: HorizontalPoule): number {
-        const qualifyRule = horizontalPoule.getQualifyRule();
+        const qualifyRule = horizontalPoule.getQualifyRuleNew();
         if (qualifyRule === undefined) {
             return 0;
         }
-        if (qualifyRule instanceof SingleQualifyRule) {
+        if (qualifyRule instanceof HorizontalSingleQualifyRule) {
             return qualifyRule.getMappings().length;
-        }
+        } else if (qualifyRule instanceof VerticalSingleQualifyRule) {
+            throw new Error('calculate nr of dropouts'); // @TODO CDK
+        } else if (qualifyRule instanceof VerticalMultipleQualifyRule) {
+            throw new Error('calculate nr of dropouts'); // @TODO CDK
+        } 
+        // HorizontalMultipleQualifyRule
         return qualifyRule.getFromHorizontalPoule().getPlaces().length;
     }
 }

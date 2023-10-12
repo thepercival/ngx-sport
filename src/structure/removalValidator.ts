@@ -1,6 +1,7 @@
 import { Place } from "../place";
 import { Poule } from "../poule";
 import { BalancedMinimumPouleStructure } from "../poule/structure/balancedMinimum";
+import { QualifyDistribution } from "../qualify/distribution";
 import { QualifyGroup, Round } from "../qualify/group";
 import { QualifyTarget } from "../qualify/target";
 
@@ -71,13 +72,19 @@ export class RemovalValidator {
         placesToRemove.forEach((placeIt: Place) => {
             const horPoule = placeIt.getHorizontalPoule(childQualifyGroup.getTarget());
 
-            let singleQualifyRule = childQualifyGroup.getFirstSingleRule();
-            while (singleQualifyRule) {
-                if (singleQualifyRule.getFromHorizontalPoule() === horPoule) {
-                    nrOfPlaces++;
+            if( childQualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {
+                let singleQualifyRule = childQualifyGroup.getFirstHorSingleRule();
+                while (singleQualifyRule) {
+                    if (singleQualifyRule.getFromHorizontalPoule() === horPoule) {
+                        nrOfPlaces++;
+                    }
+                    singleQualifyRule = singleQualifyRule.getNext();
                 }
-                singleQualifyRule = singleQualifyRule.getNext();
+            } else {
+                throw new Error('getQualifyGroupNrOfPlacesToRemove'); // @TODO CDK            
             }
+
+            
         });
         return nrOfPlaces;
     }

@@ -24,12 +24,12 @@ export class PossibleFromMap {
     }
 
     protected addGroup(group: QualifyGroup): void {
-        let singleRule = group.getFirstSingleRule();
+        let singleRule = group.getFirstHorSingleRule();
         while (singleRule !== undefined) {
             singleRule.getMappings().forEach((mapping: QualifyPlaceMapping) => this.addPlaceMapping(mapping));
             singleRule = singleRule.getNext();
         }
-        const multipRule = group.getMultipleRule();
+        const multipRule = group.getHorizontalMultipleRule();
         if (multipRule === undefined) {
             return;
         }
