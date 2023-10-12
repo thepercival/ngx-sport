@@ -76,13 +76,13 @@ export class EndRankingCalculator {
         const rankingCalculator = new RoundRankingCalculator();
         const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
         // console.log('rankingPlaces length ' + rankingPlaces.length);
-        rankingPlaces.splice(0, this.getHorizontalPouleNrOfDropouts(horizontalPoule));
+        rankingPlaces.splice(0, this.getHorizontalPouleNrOfQualifiers(horizontalPoule));
         return rankingPlaces.map((place: Place) => {
             return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
         });
     }
 
-    getHorizontalPouleNrOfDropouts(horizontalPoule: HorizontalPoule): number {
+    getHorizontalPouleNrOfQualifiers(horizontalPoule: HorizontalPoule): number {
         const qualifyRule = horizontalPoule.getQualifyRuleNew();
         if (qualifyRule === undefined) {
             return 0;
@@ -90,7 +90,7 @@ export class EndRankingCalculator {
         if (qualifyRule instanceof HorizontalSingleQualifyRule || qualifyRule instanceof VerticalSingleQualifyRule) {
             return qualifyRule.getMappings().length;
         } // else if (qualifyRule instanceof HorizontalMultipleQualifyRule) {
-        return qualifyRule.getFromHorizontalPoule().getPlaces().length; 
+        return qualifyRule.getNrOfToPlaces(); 
         // } 
         // throw new Error('non-horizontalQualifyRule not supported');
     }

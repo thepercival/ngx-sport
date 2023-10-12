@@ -96,7 +96,10 @@ export class QualifyService {
             const rankingPlaceLocation = reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankingPlaceLocations);
             toPlace.setQualifiedPlace(round.getPlace(rankingPlaceLocation));
             changedPlaces.push(toPlace);
-            rankingPlaceLocations.splice(rankingPlaceLocations.indexOf(rankingPlaceLocation), 1);
+            const index = rankingPlaceLocations.indexOf(rankingPlaceLocation);
+            if (index >= 0 ) {
+                rankingPlaceLocations.splice(index, 1);
+            }
         });
         return changedPlaces;
     }

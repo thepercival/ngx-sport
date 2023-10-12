@@ -299,6 +299,7 @@ describe('EndRankingCalculator', () => {
                 expect(startLocation.getPouleNr()).to.equal(2);
                 expect(startLocation.getPlaceNr()).to.equal(2);
             }
+
             else if( rank === 6) {
                 expect(startLocation.getPouleNr()).to.equal(1); // 2
                 expect(startLocation.getPlaceNr()).to.equal(2); // 1
@@ -306,6 +307,7 @@ describe('EndRankingCalculator', () => {
             else if( rank === 7) {
                 expect(startLocation.getPouleNr()).to.equal(1); // 3
                 expect(startLocation.getPlaceNr()).to.equal(3); // 3
+                
             }
             else if( rank === 8) {
                 expect(startLocation.getPouleNr()).to.equal(3);

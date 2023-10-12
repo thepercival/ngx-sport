@@ -23,11 +23,6 @@ export class QualifyReservationService {
         return this.reservations.find(reservationIt => reservationIt.toPouleNr === toPouleNumber);
     }
 
-    /**
-     * @param toPouleNumber
-     * @param fromRound
-     * @param fromPlaceLocations
-     */
     getFreeAndLeastAvailabe(toPouleNumber: number, fromRound: Round, fromPlaceLocations: PlaceLocation[]): PlaceLocation {
         let retPlaceLocation: PlaceLocation | undefined;
         let leastNrOfPoulesAvailable: number | undefined;

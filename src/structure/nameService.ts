@@ -123,20 +123,13 @@ export class StructureNameService {
         } catch (e) { }
         if (fromQualifyRule === undefined) {
             return this.getPlaceName(place, false, longName);
-        } else if (fromQualifyRule instanceof VerticalSingleQualifyRule) {            
+        } else if (fromQualifyRule instanceof HorizontalSingleQualifyRule) {            
             return this.getPlaceNameFrom(fromQualifyRule.getFromPlace(place), longName);
-        } else if (fromQualifyRule instanceof VerticalMultipleQualifyRule) {
-            const balanced = place.getRound().createPouleStructure().isBalanced();
-            const absolute = !longName || fromQualifyRule.getQualifyTarget() === QualifyTarget.Winners || balanced;            
-            return this.getMultipleQualifyRuleName(fromQualifyRule, place, longName, absolute);
-        } else if (fromQualifyRule instanceof HorizontalMultipleQualifyRule) {
-            const balanced = place.getRound().createPouleStructure().isBalanced();
-            const absolute = !longName || fromQualifyRule.getQualifyTarget() === QualifyTarget.Winners || balanced;            
-            return this.getMultipleQualifyRuleName(fromQualifyRule, place, longName, absolute);
-            
-        }
-        // HorizontalSingleQualifyRule
-        return this.getPlaceNameFrom(fromQualifyRule.getFromPlace(place), longName);
+        } 
+        const balanced = place.getRound().createPouleStructure().isBalanced();
+        const absolute = !longName || fromQualifyRule.getQualifyTarget() === QualifyTarget.Winners || balanced;            
+        return this.getRankedQualifyRuleName(fromQualifyRule, place, longName, absolute);
+        
     }
 
     getPlaceNameFrom(fromPlace: Place, longName: boolean): string {
@@ -167,8 +160,8 @@ export class StructureNameService {
         return name + ' plekken';
     }
 
-    public getMultipleQualifyRuleName(
-        rule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule,
+    public getRankedQualifyRuleName(
+        rule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule,
         place: Place,
         longName: boolean,
         absolute: boolean
@@ -178,31 +171,52 @@ export class StructureNameService {
         const fromRank = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
         
         let nrOfToPlaces;
-        let toPlaceNumberBase;
-        if( rule instanceof VerticalMultipleQualifyRule ) {
-            nrOfToPlaces = rule.getFromHorizontalPoule().getNumber();
-            toPlaceNumberBase = rule.getToPlaceNumber(place); // rule.getFromPlace(place).getPouleNr();
+        if (rule instanceof VerticalSingleQualifyRule) {
+            nrOfToPlaces = rule.getNrOfToPlaces();
         } else {
             nrOfToPlaces = rule.getNrOfToPlaces();
-            toPlaceNumberBase = rule.getToPlaceNumber(place)
         }
 
-        let parentPlaceNumber;
-        if( rule instanceof VerticalMultipleQualifyRule ) {
-            if (rule.getQualifyTarget() === QualifyTarget.Winners) {
-                parentPlaceNumber = toPlaceNumberBase;
-            } else {
-                parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
-            }
+        let toPlaceNumber
+        if (rule instanceof VerticalSingleQualifyRule) {
+            toPlaceNumber = rule.getToPlaceNumber(place);
         } else {
-            if (rule.getQualifyTarget() === QualifyTarget.Winners) {
-                parentPlaceNumber = toPlaceNumberBase;
-            } else {
-                parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
-            }
+            toPlaceNumber = rule.getToPlaceNumber(place);
         }
 
-        const ordinal = this.getOrdinalOutput(parentPlaceNumber);
+        if (rule.getQualifyTarget() === QualifyTarget.Winners) {
+            toPlaceNumber = rule.getToPlaceNumber(place);
+        } else {
+            toPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumber);
+        }
+
+
+
+
+        // if( rule instanceof VerticalMultipleQualifyRule ) {
+        //     nrOfToPlaces = rule.getFromHorizontalPoule().getNumber();
+        //     toPlaceNumberBase = rule.getToPlaceNumber(place); // rule.getFromPlace(place).getPouleNr();
+        // } else {
+        //     nrOfToPlaces = rule.getNrOfToPlaces();
+        //     toPlaceNumberBase = rule.getToPlaceNumber(place)
+        // }
+
+        // let parentPlaceNumber;
+        // if( rule instanceof VerticalMultipleQualifyRule ) {
+        //     if (rule.getQualifyTarget() === QualifyTarget.Winners) {
+        //         parentPlaceNumber = toPlaceNumberBase;
+        //     } else {
+        //         parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
+        //     }
+        // } else {
+        //     if (rule.getQualifyTarget() === QualifyTarget.Winners) {
+        //         parentPlaceNumber = toPlaceNumberBase;
+        //     } else {
+        //         parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
+        //     }
+        // }
+
+        const ordinal = this.getOrdinalOutput(toPlaceNumber);
         if (!longName) {
             return ordinal + fromRank;
         }

@@ -56,6 +56,18 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
         return mapping.getFromPlace();
     }
 
+    public getToPlaceNumber(place: Place): number {
+        let rank = 0;
+        this.getMappings().every((mapping: QualifyPlaceMapping) => {
+            rank++;
+            if (mapping.getToPlace() === place) {
+                return false;
+            }
+            return true;
+        });
+        return rank;
+    }
+
     hasToPlace(toPlace: Place): boolean {
         try {
             this.getFromPlace(toPlace);
