@@ -1,4 +1,5 @@
 import { Poule } from "../poule";
+import { QualifyDistribution } from "./distribution";
 import { QualifyGroup, Round } from "./group";
 import { QualifyPlaceMapping } from "./placeMapping";
 
@@ -24,12 +25,13 @@ export class PossibleFromMap {
     }
 
     protected addGroup(group: QualifyGroup): void {
-        let singleRule = group.getFirstHorSingleRule();
+        
+        let singleRule = group.getFirstSingleRule();
         while (singleRule !== undefined) {
             singleRule.getMappings().forEach((mapping: QualifyPlaceMapping) => this.addPlaceMapping(mapping));
             singleRule = singleRule.getNext();
         }
-        const multipRule = group.getHorizontalMultipleRule();
+        const multipRule = group.getMultipleRule();
         if (multipRule === undefined) {
             return;
         }
@@ -38,6 +40,7 @@ export class PossibleFromMap {
         group.getChildRound().getPoules().forEach((childPoule: Poule) => {
             this.map[childPoule.getNumber()] = parentPoules;
         });
+        
     }
 
     public createParent(): PossibleFromMap | undefined {

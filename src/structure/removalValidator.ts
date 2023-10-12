@@ -73,7 +73,7 @@ export class RemovalValidator {
             const horPoule = placeIt.getHorizontalPoule(childQualifyGroup.getTarget());
 
             if( childQualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {
-                let singleQualifyRule = childQualifyGroup.getFirstHorSingleRule();
+                let singleQualifyRule = childQualifyGroup.getFirstSingleRule();
                 while (singleQualifyRule) {
                     if (singleQualifyRule.getFromHorizontalPoule() === horPoule) {
                         nrOfPlaces++;

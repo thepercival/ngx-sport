@@ -8,7 +8,7 @@ export class QualifyGroupMapper {
     constructor(private roundMapper: RoundMapper) { }
 
     toObject(json: JsonQualifyGroup, round: Round, nextStructureCell: StructureCell): QualifyGroup {
-        const qualifyGroup = new QualifyGroup(round, false, json.target, nextStructureCell, json.number);
+        const qualifyGroup = new QualifyGroup(round, json.target, nextStructureCell, json.number);
         qualifyGroup.setId(json.id);
         qualifyGroup.setDistribution(json.distribution);
         this.roundMapper.toObject(json.childRound, qualifyGroup.getChildRound());

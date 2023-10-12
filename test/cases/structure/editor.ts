@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, QualifyTarget, QualifyDistribution, HorizontalSingleQualifyRule } from '../../../public-api';
-import { getCompetitionMapper, getCompetitionSportService, getStructureEditor } from '../../helpers/singletonCreator';
+import { BalancedPouleStructure, QualifyTarget, QualifyDistribution, HorizontalSingleQualifyRule, CompetitionSportGetter } from '../../../public-api';
+import { getCompetitionMapper, getStructureEditor } from '../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../data/competition';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
@@ -275,14 +275,14 @@ describe('StructureEditor', () => {
 
         //(new StructureOutput()).toConsole(structure, console);
 
-        const ruleOne = winnersRound.getParentQualifyGroup()?.getFirstVerticalRule();
+        const ruleOne = winnersRound.getParentQualifyGroup()?.getFirstSingleRule();
         expect(ruleOne).to.instanceOf(VerticalSingleQualifyRule);
         expect(ruleOne.getNrOfToPlaces()).to.equal(3);
         const ruleTwo = ruleOne.getNext();
-        expect(ruleTwo).to.instanceOf(VerticalMultipleQualifyRule);
+        expect(ruleTwo).to.instanceOf(VerticalSingleQualifyRule);
         expect(ruleTwo.getNrOfToPlaces()).to.equal(3);
         const ruleThree = ruleTwo.getNext();
-        expect(ruleThree).to.instanceOf(VerticalMultipleQualifyRule);
+        expect(ruleThree).to.instanceOf(VerticalSingleQualifyRule);
         expect(ruleThree.getNrOfToPlaces()).to.equal(3);
         const ruleFour = ruleThree.getNext();
         expect(ruleFour).to.instanceOf(VerticalSingleQualifyRule);
@@ -573,7 +573,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        const firstSingleQualifyRule = qualifyGroup.getFirstHorSingleRule();
+        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
         expect(firstSingleQualifyRule).to.not.equal(undefined);
         if (firstSingleQualifyRule === undefined) {
             return;
@@ -598,7 +598,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        const firstSingleQualifyRule = qualifyGroup.getFirstHorSingleRule();
+        const firstSingleQualifyRule = qualifyGroup.getFirstSingleRule();
         expect(firstSingleQualifyRule).to.not.equal(undefined);
         if (firstSingleQualifyRule === undefined) {
             return;
@@ -621,7 +621,7 @@ describe('StructureEditor', () => {
         if (qualifyGroup === undefined) {
             return;
         }
-        let singleRule: HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstHorSingleRule();
+        let singleRule: VerticalSingleQualifyRule | HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         while (singleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(singleRule)).to.equal(false);
             singleRule = singleRule.getNext();
@@ -647,11 +647,11 @@ describe('StructureEditor', () => {
             return;
         }
 
-        let firstWinnersSingleRule: HorizontalSingleQualifyRule | undefined = winnersQualifyGroup.getFirstHorSingleRule();
+        let firstWinnersSingleRule: VerticalSingleQualifyRule | HorizontalSingleQualifyRule | undefined = winnersQualifyGroup.getFirstSingleRule();
         if (firstWinnersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstWinnersSingleRule)).to.equal(false);
         }
-        let firstLosersSingleRule: HorizontalSingleQualifyRule | undefined = losersQualifyGroup.getFirstHorSingleRule();
+        let firstLosersSingleRule: VerticalSingleQualifyRule | HorizontalSingleQualifyRule | undefined = losersQualifyGroup.getFirstSingleRule();
         if (firstLosersSingleRule !== undefined) {
             expect(structureEditor.isQualifyGroupSplittableAt(firstLosersSingleRule)).to.equal(false);
         }
@@ -673,7 +673,7 @@ describe('StructureEditor', () => {
             return;
         }
 
-        let singleRule: HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstHorSingleRule();
+        let singleRule: VerticalSingleQualifyRule | HorizontalSingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         expect(singleRule).to.not.equal(undefined);
         if (singleRule === undefined) {
             return;

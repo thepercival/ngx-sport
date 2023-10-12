@@ -65,7 +65,7 @@ export class QualifyOriginCalculator {
 
         let possiblePreviousPoules: Poule[] = [];
         const parentQualifyGroup = poule.getRound().getParentQualifyGroup();
-        if (parentQualifyGroup !== undefined && parentQualifyGroup.getHorizontalMultipleRule() !== undefined) {
+        if (parentQualifyGroup !== undefined && parentQualifyGroup.getMultipleRule() !== undefined) {
             possiblePreviousPoules = parentQualifyGroup.getParentRound().getPoules();
         } else {
             poule.getPlaces().forEach((place: Place) => {

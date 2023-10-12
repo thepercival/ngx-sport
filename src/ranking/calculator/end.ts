@@ -10,6 +10,7 @@ import { GameState } from '../../game/state';
 import { Category } from '../../category';
 import { VerticalSingleQualifyRule } from '../../qualify/rule/vertical/single';
 import { VerticalMultipleQualifyRule } from '../../qualify/rule/vertical/multiple';
+import { HorizontalMultipleQualifyRule } from '../../qualify/rule/horizontal/multiple';
 
 export class EndRankingCalculator {
 
@@ -52,11 +53,12 @@ export class EndRankingCalculator {
 
     protected getDropouts(round: Round): EndRankingItem[] {
         let dropouts: EndRankingItem[] = [];
-        let nrOfDropouts = round.getNrOfDropoutPlaces();
+        let nrOfDropouts = round.getNrOfDropoutPlaces(); // 12 => 10 = 2 nrOfDropouts
         while (dropouts.length < nrOfDropouts) {
             [QualifyTarget.Winners, QualifyTarget.Losers].every((qualifyTarget: QualifyTarget) => {
                 round.getHorizontalPoules(qualifyTarget).every((horPoule: HorizontalPoule) => {
                     const horPouleDropouts = this.getHorizontalPouleDropouts(horPoule);
+                    // console.log('horPouleDropouts length ' + horPouleDropouts.length);
                     let horPouleDropout = horPouleDropouts.pop();
                     while (dropouts.length < nrOfDropouts && horPouleDropout !== undefined) {
                         dropouts.push(horPouleDropout);
@@ -73,25 +75,47 @@ export class EndRankingCalculator {
     protected getHorizontalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
         const rankingCalculator = new RoundRankingCalculator();
         const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
-        rankingPlaces.splice(0, this.getNrOfDropouts(horizontalPoule));
+        // console.log('rankingPlaces length ' + rankingPlaces.length);
+        rankingPlaces.splice(0, this.getHorizontalPouleNrOfDropouts(horizontalPoule));
         return rankingPlaces.map((place: Place) => {
             return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
         });
     }
 
-    getNrOfDropouts(horizontalPoule: HorizontalPoule): number {
+    getHorizontalPouleNrOfDropouts(horizontalPoule: HorizontalPoule): number {
         const qualifyRule = horizontalPoule.getQualifyRuleNew();
         if (qualifyRule === undefined) {
             return 0;
         }
-        if (qualifyRule instanceof HorizontalSingleQualifyRule) {
+        if (qualifyRule instanceof HorizontalSingleQualifyRule || qualifyRule instanceof VerticalSingleQualifyRule) {
             return qualifyRule.getMappings().length;
-        } else if (qualifyRule instanceof VerticalSingleQualifyRule) {
-            throw new Error('calculate nr of dropouts'); // @TODO CDK
-        } else if (qualifyRule instanceof VerticalMultipleQualifyRule) {
-            throw new Error('calculate nr of dropouts'); // @TODO CDK
-        } 
-        // HorizontalMultipleQualifyRule
-        return qualifyRule.getFromHorizontalPoule().getPlaces().length;
+        } // else if (qualifyRule instanceof HorizontalMultipleQualifyRule) {
+        return qualifyRule.getFromHorizontalPoule().getPlaces().length; 
+        // } 
+        // throw new Error('non-horizontalQualifyRule not supported');
     }
+
+    // protected getVerticalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
+    //     const rankingCalculator = new RoundRankingCalculator();
+    //     const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
+    //     rankingPlaces.splice(0, this.getHorizontalNrOfDropouts(horizontalPoule));
+    //     return rankingPlaces.map((place: Place) => {
+    //         return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
+    //     });
+    // }
+
+    // getVerticalNrOfDropouts(horizontalPoule: HorizontalPoule): number {
+    //     const qualifyRule = horizontalPoule.getQualifyRuleNew();
+    //     if (qualifyRule === undefined) {
+    //         return 0;
+    //     }
+        
+    //     if (qualifyRule instanceof VerticalSingleQualifyRule) {
+    //         throw new Error('calculate nr of dropouts'); // @TODO CDK
+    //     } else if (qualifyRule instanceof VerticalMultipleQualifyRule) {
+    //         throw new Error('calculate nr of dropouts'); // @TODO CDK
+    //     }
+    //     throw new Error('non-verticalQualifyRule not supported');
+    // }
+
 }

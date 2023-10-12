@@ -64,13 +64,13 @@ export class AgainstPoule {
         return sportRankingItem.getUniqueRank() < opposite.getUniqueRank();
     }
 
-    private getSportRankingItem(poolCompetitor: Competitor | undefined): SportRoundRankingItem | undefined {
-        if (poolCompetitor === undefined) {
+    private getSportRankingItem(competitor: Competitor | undefined): SportRoundRankingItem | undefined {
+        if (competitor === undefined) {
             return undefined;
         }
         return this.sportRankingItems.find((sportRankingItem: SportRoundRankingItem): boolean => {
             const startLocation = sportRankingItem.getPerformance().getPlace().getStartLocation();
-            return startLocation !== undefined && poolCompetitor.getStartLocation().equals(startLocation);
+            return startLocation !== undefined && competitor.getStartLocation().equals(startLocation);
         });
     }
 }

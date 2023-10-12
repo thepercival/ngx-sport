@@ -6,6 +6,7 @@ import { Poule } from "../../poule";
 import { HorizontalPoule } from "../../poule/horizontal";
 import { HorizontalMultipleQualifyRule } from "../../qualify/rule/horizontal/multiple";
 import { VerticalMultipleQualifyRule } from "../../qualify/rule/vertical/multiple";
+import { VerticalSingleQualifyRule } from "../../qualify/rule/vertical/single";
 import { AgainstVariant } from "../../sport/variant/against";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
@@ -42,14 +43,14 @@ export class RoundRankingCalculator {
         );
     }
 
-    getPlacesForMultipleRule(multipleRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule): Place[] {
+    getPlacesForMultipleRule(multipleRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule): Place[] {
         return this.getItemsForHorizontalPoule(multipleRule.getFromHorizontalPoule()).map((rankingItem: RoundRankingItem) => {
             return rankingItem.getPlace();
         });
     }
 
-    getPlaceLocationsForMultipleRule(multipleRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule): PlaceLocation[] {
-        return this.getPlacesForMultipleRule(multipleRule)
+    getPlaceLocationsForRankedRule(rankedRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule): PlaceLocation[] {
+        return this.getPlacesForMultipleRule(rankedRule)
     }
 
     getPlacesForHorizontalPoule(horizontalPoule: HorizontalPoule): Place[] {

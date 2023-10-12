@@ -22,6 +22,7 @@ import { QualifyDistribution } from '../qualify/distribution';
 import { HorizontalSingleQualifyRule } from '../qualify/rule/horizontal/single';
 import { CompetitionSportEditor } from '../competition/sport/editor';
 import { CompetitionSportGetter } from '../competition/sport/getter';
+import { VerticalSingleQualifyRule } from '../qualify/rule/vertical/single';
 
 @Injectable({
     providedIn: 'root'
@@ -137,7 +138,7 @@ export class StructureEditor {
         if (nextStructureCell === undefined) {
             nextStructureCell = parentRound.getStructureCell().createNext();
         }
-        const qualifyGroup = new QualifyGroup(parentRound, false, qualifyTarget, nextStructureCell);
+        const qualifyGroup = new QualifyGroup(parentRound, qualifyTarget, nextStructureCell);
         qualifyGroup.setDistribution(distribution);
         this.fillRound(qualifyGroup.getChildRound(), pouleStructure);
         return qualifyGroup;
@@ -382,12 +383,12 @@ export class StructureEditor {
         });
     }
 
-    protected getNrOfQualifiersPrevious(horSingleRule: HorizontalSingleQualifyRule): number {
-        return horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+    protected getNrOfQualifiersPrevious(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule): number {
+        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
     }
 
-    protected getNrOfQualifiersNext(horSingleRule: HorizontalSingleQualifyRule): number {
-        return horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+    protected getNrOfQualifiersNext(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule): number {
+        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
     }
 
     protected getRoot(round: Round): Round {
@@ -400,23 +401,23 @@ export class StructureEditor {
         return creator.create(nrOfPlaces, nrOfPoules);
     }
 
-    isQualifyGroupSplittableAt(horSingleRule: HorizontalSingleQualifyRule): boolean {
-        const next = horSingleRule.getNext();
+    isQualifyGroupSplittableAt(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule): boolean {
+        const next = singleRule.getNext();
         if (next === undefined) {
             return false;
         }
-        return this.getNrOfQualifiersPrevious(horSingleRule) >= this.getMinPlacesPerPouleSmall()
+        return this.getNrOfQualifiersPrevious(singleRule) >= this.getMinPlacesPerPouleSmall()
             && this.getNrOfQualifiersNext(next) >= this.getMinPlacesPerPouleSmall();
     }
 
     // horizontalPoule is split-points, from which qualifyGroup
-    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, horSingleRule: HorizontalSingleQualifyRule) {
+    splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) {
         const parentRound = qualifyGroup.getParentRound();
         if (parentRound === undefined) {
             return;
         }
-        const nrOfToPlaces = horSingleRule.getNrOfToPlaces() + horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
-        const borderSideNrOfToPlaces = horSingleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        const nrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+        const borderSideNrOfToPlaces = singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
         if (nrOfToPlaces < this.getMinPlacesPerPouleSmall() || borderSideNrOfToPlaces < this.getMinPlacesPerPouleSmall()) {
             throw new Error('de kwalificatiegroep is niet splitsbaar');
         }
@@ -448,7 +449,6 @@ export class StructureEditor {
 
         const newQualifyGroup = new QualifyGroup(
             parentRound,
-            false,
             qualifyGroup.getTarget(),
             childRound.getStructureCell(),
             qualifyGroup.getNumber() + 1

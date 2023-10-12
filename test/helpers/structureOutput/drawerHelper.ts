@@ -162,30 +162,21 @@ export class DrawHelper {
         round.getQualifyGroups(QualifyTarget.Winners).forEach((qualifyGroup: QualifyGroup) => {
             const winnersColor = this.getQualifyGroupColor(qualifyGroup);
             if( qualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {
-                let singleRule = qualifyGroup.getFirstHorSingleRule();
+                let singleRule = qualifyGroup.getFirstSingleRule();
                 while (singleRule !== undefined) {
                     currentCoordinate = this.drawer.drawVertAwayFromOrigin(
                         currentCoordinate, this.getQualifyRuleString(singleRule), winnersColor
                     ).incrementY();
                     singleRule = singleRule.getNext();
                 }
-                const multipleRule = qualifyGroup.getHorizontalMultipleRule();
+                const multipleRule = qualifyGroup.getMultipleRule();
                 if (multipleRule !== undefined) {
                     winnersMultipleRuleCoordinate = currentCoordinate;
                     this.drawer.drawVertAwayFromOrigin(
                         currentCoordinate, this.getQualifyRuleString(multipleRule), winnersColor
                     )
                 }
-            } else {                
-                let verticalRule = qualifyGroup.getFirstVerticalRule();
-                while (verticalRule !== undefined) {
-                    currentCoordinate = this.drawer.drawVertAwayFromOrigin(
-                        currentCoordinate, this.getQualifyRuleString(verticalRule), winnersColor
-                    ).incrementY();
-                    verticalRule = verticalRule.getNext();
-                }                
-            }
-            
+            }            
         });
         currentCoordinate = seperator.addY(round.getFirstPoule().getPlaces().length);
 
@@ -193,14 +184,14 @@ export class DrawHelper {
         round.getQualifyGroups(QualifyTarget.Losers).forEach((qualifyGroup: QualifyGroup) => {
             const losersColor = this.getQualifyGroupColor(qualifyGroup);
             if( qualifyGroup.getDistribution() === QualifyDistribution.HorizontalSnake) {                
-                let singleRule = qualifyGroup.getFirstHorSingleRule();
+                let singleRule = qualifyGroup.getFirstSingleRule();
                 while (singleRule !== undefined) {
                     currentCoordinate = this.drawer.drawVertToOrigin(
                         currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
                     ).decrementY();
                     singleRule = singleRule.getNext();
                 }
-                const multipleRule = qualifyGroup.getHorizontalMultipleRule();
+                const multipleRule = qualifyGroup.getMultipleRule();
                 if (multipleRule !== undefined) {
                     let color = losersColor;
                     if (winnersMultipleRuleCoordinate !== undefined
@@ -210,14 +201,6 @@ export class DrawHelper {
                     this.drawer.drawVertAwayFromOrigin(
                         currentCoordinate, this.getQualifyRuleString(multipleRule), color
                     );
-                }
-            } else {
-                let verticalRule = qualifyGroup.getFirstVerticalRule();
-                while (verticalRule !== undefined) {
-                    currentCoordinate = this.drawer.drawVertToOrigin(
-                        currentCoordinate, this.getQualifyRuleString(verticalRule), losersColor
-                    ).decrementY();
-                    verticalRule = verticalRule.getNext();
                 }
             }
         });
@@ -257,8 +240,8 @@ export class DrawHelper {
         let selfCoordinate = origin;
         this.drawer.drawCellToRight(selfCoordinate, '|', roundWidth, GridAlign.Center);
         selfCoordinate = selfCoordinate.incrementY();
-        const distribution = qualifyGroup.getDistribution() === QualifyDistribution.Vertical ? 'V' : 'HS';
-        const qualifyGroupName = qualifyGroup.getTarget() + qualifyGroup.getNumber() + ' (' +  distribution + ')';
+        const distributionDescr = this.getDistribution(qualifyGroup.getDistribution());
+        const qualifyGroupName = qualifyGroup.getTarget() + qualifyGroup.getNumber() + distributionDescr;
         const color = this.getQualifyGroupColor(qualifyGroup);
         this.drawer.drawCellToRight(selfCoordinate, qualifyGroupName, roundWidth, GridAlign.Center, color);
         this.drawer.drawCellToRight(selfCoordinate.incrementY(), '|', roundWidth, GridAlign.Center);
