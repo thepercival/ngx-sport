@@ -140,16 +140,16 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
         this.setPrevious(undefined);
     }
 
-    // getGroup(): QualifyGroup {
-    //     const target = this.getQualifyTarget();
-    //     const firstSingleRule = this.getFirst()
-    //     const qualifGroup = this.getFromRound().getQualifyGroups(target).find((qualifyGroup: QualifyGroup) => {
-    //         return firstSingleRule === qualifyGroup.getFirstSingleRule();
-    //     });
-    //     if (qualifGroup === undefined) {
-    //         throw Error('voor de single-kwalificatieregel kan geen groep worden gevonden');
-    //     }
-    //     return qualifGroup;
-    // }
+    getGroup(): QualifyGroup {
+        const target = this.getQualifyTarget();
+        const firstSingleRule = this.getFirst()
+        const qualifGroup = this.getFromRound().getQualifyGroups(target).find((qualifyGroup: QualifyGroup) => {
+            return firstSingleRule === qualifyGroup.getFirstSingleRule();
+        });
+        if (qualifGroup === undefined) {
+            throw Error('voor de single-kwalificatieregel kan geen groep worden gevonden');
+        }
+        return qualifGroup;
+    }
 }
 

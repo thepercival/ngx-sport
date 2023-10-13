@@ -82,15 +82,15 @@ export class VerticalMultipleQualifyRule extends VerticalQualifyRule {
         
     }
 
-    // getGroup(): QualifyGroup {
-    //     const target = this.getQualifyTarget();
-    //     const qualifGroup = this.getFromRound().getQualifyGroups(target).find((qualifyGroup: QualifyGroup) => {
-    //         return this === qualifyGroup.getMultipleRule();
-    //     });
-    //     if (qualifGroup === undefined) {
-    //         throw Error('voor de multiple-kwalificatieregel kan geen groep worden gevonden');
-    //     }
-    //     return qualifGroup;
-    // }
+    getGroup(): QualifyGroup {
+        const target = this.getQualifyTarget();
+        const qualifGroup = this.getFromRound().getQualifyGroups(target).find((qualifyGroup: QualifyGroup) => {
+            return this === qualifyGroup.getMultipleRule();
+        });
+        if (qualifGroup === undefined) {
+            throw Error('voor de multiple-kwalificatieregel kan geen groep worden gevonden');
+        }
+        return qualifGroup;
+    }
 }
 
