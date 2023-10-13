@@ -53,32 +53,74 @@ export class EndRankingCalculator {
 
     protected getDropouts(round: Round): EndRankingItem[] {
         let dropouts: EndRankingItem[] = [];
-        let nrOfDropouts = round.getNrOfDropoutPlaces(); // 12 => 10 = 2 nrOfDropouts
-        while (dropouts.length < nrOfDropouts) {
-            [QualifyTarget.Winners, QualifyTarget.Losers].every((qualifyTarget: QualifyTarget) => {
-                round.getHorizontalPoules(qualifyTarget).every((horPoule: HorizontalPoule) => {
-                    const horPouleDropouts = this.getHorizontalPouleDropouts(horPoule);
-                    // console.log('horPouleDropouts length ' + horPouleDropouts.length);
-                    let horPouleDropout = horPouleDropouts.pop();
-                    while (dropouts.length < nrOfDropouts && horPouleDropout !== undefined) {
-                        dropouts.push(horPouleDropout);
-                        horPouleDropout = horPouleDropouts.pop();
-                    }
-                    return dropouts.length < nrOfDropouts;
-                });
-                return dropouts.length < nrOfDropouts;
+        const nrOfDropouts = round.getNrOfDropoutPlaces();
+        while (nrOfDropouts.amount > 0) {
+            // foreach ([QualifyTarget::Winners, QualifyTarget::Losers] as $qualifyTarget) {
+            round.getHorizontalPoules(QualifyTarget.Winners).every(horPoule => {
+                const horPouleDropouts = this.getHorizontalPouleDropouts(horPoule, nrOfDropouts);
+                dropouts = dropouts.concat(horPouleDropouts);
+                return nrOfDropouts.amount > 0;
             });
         }
+
+        // while (dropouts.length < nrOfDropouts) {
+        //     [QualifyTarget.Winners, QualifyTarget.Losers].every((qualifyTarget: QualifyTarget) => {
+        //         round.getHorizontalPoules(qualifyTarget).every((horPoule: HorizontalPoule) => {
+        //             const horPouleDropouts = this.getHorizontalPouleDropouts(horPoule);
+                    
+                    
+        //             let horPouleDropout = horPouleDropouts.shift();
+        //             if (nrOfDropouts === 2 && horPoule.getNumber() === 3) {
+        //                 console.log('rank 7 = ' + horPouleDropout.getStartLocation().getStartId() );
+        //             }
+        //             while (dropouts.length < nrOfDropouts && horPouleDropout !== undefined) {
+        //                 dropouts.push(horPouleDropout);
+        //                 horPouleDropout = horPouleDropouts.shift();
+        //             }
+        //             return dropouts.length < nrOfDropouts;
+        //         });
+        //         return dropouts.length < nrOfDropouts;
+        //     });
+        // }
+        // console.log('nrOfDropouts ' + nrOfDropouts + ', nr rReturned ' + dropouts.length);        
         return dropouts;
     }
 
-    protected getHorizontalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
+    protected getHorizontalPouleDropouts(horizontalPoule: HorizontalPoule, nrOfDropouts: NrOfDropOuts): EndRankingItem[] {
+        let dropOutPlaces = [];
         const rankingCalculator = new RoundRankingCalculator();
-        const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
-        // console.log('rankingPlaces length ' + rankingPlaces.length);
-        rankingPlaces.splice(0, this.getHorizontalPouleNrOfQualifiers(horizontalPoule));
-        return rankingPlaces.map((place: Place) => {
-            return new EndRankingItem(this.currentRank, this.currentRank++, place.getStartLocation());
+        const rankedPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);
+        let nrOfQualifiers = this.getHorizontalPouleNrOfQualifiers(horizontalPoule);
+        rankedPlaces.splice(0, nrOfQualifiers);        
+        while (nrOfDropouts.amount > 0 && rankedPlaces.length > 0) {
+            dropOutPlaces.push( rankedPlaces.shift() );
+            nrOfDropouts.amount--;
+        }
+        
+        // console.log('hor. poule  ' + horizontalPoule.getNumber() + horizontalPoule.getQualifyTarget().toString() + ' r ' + horizontalPoule.getRound().getPathNode().pathToString() );                
+        // const nrOfDropouts = this.getHorizontalPouleNrOfDropouts(horizontalPoule);
+        
+        // let dropOutPlaces = rankedPlaces;
+        // if (horizontalPoule.getQualifyTarget() === QualifyTarget.Losers ) {
+        //     dropOutPlaces.reverse();            
+        // }
+        // dropOutPlaces.splice(0, rankedPlaces.length - nrOfDropouts);        
+        // if (horizontalPoule.getQualifyTarget() === QualifyTarget.Losers ) {
+        //     dropOutPlaces.reverse();
+        // }
+        
+        // if (nrOfDropouts < dropOutPlaces.length) {
+        //     dropOutPlaces.splice(0, nrOfQualifiers);        
+        //     dropOutPlaces = array_splice($dropOutPlaces, 0, $nrOfDropouts);
+        // }
+
+        // console.log('nr of ranking places : ' + rankingPlaces.length + ', nrOfQualifiers ' + nrOfQualifiers); 
+        // rankingPlaces.forEach((place: Place) => {
+        //     console.log('rankingplace : ' + place.getStartLocation().getStartId() + ', rank' + this.currentRank ); 
+        // });
+
+        return dropOutPlaces.map((dropOutPlace: Place) => {
+            return new EndRankingItem(this.currentRank, this.currentRank++, dropOutPlace.getStartLocation());
         });
     }
 
@@ -94,6 +136,15 @@ export class EndRankingCalculator {
         // } 
         // throw new Error('non-horizontalQualifyRule not supported');
     }
+
+    public getHorizontalPouleNrOfDropouts(horizontalPoule: HorizontalPoule): number {
+        const qualifyRule = horizontalPoule.getQualifyRuleNew();
+        if (qualifyRule === undefined) {
+            return horizontalPoule.getPlaces().length;
+        }
+        return qualifyRule.getNrOfDropouts();
+    }
+
 
     // protected getVerticalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
     //     const rankingCalculator = new RoundRankingCalculator();
@@ -118,4 +169,8 @@ export class EndRankingCalculator {
     //     throw new Error('non-verticalQualifyRule not supported');
     // }
 
+}
+
+export interface NrOfDropOuts {
+    amount: number;
 }

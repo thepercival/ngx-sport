@@ -187,7 +187,7 @@ describe('EndRankingCalculator', () => {
         const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [5], QualifyDistribution.Vertical);        
         const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [5], QualifyDistribution.Vertical);
 
-        (new StructureOutput()).toConsole(structure, console);
+        //(new StructureOutput()).toConsole(structure, console);
 
         const pouleOne = rootRound.getPoule(1);
         expect(pouleOne).to.not.equal(undefined);
@@ -271,67 +271,105 @@ describe('EndRankingCalculator', () => {
         const rankingService = new EndRankingCalculator(defaultCat);
         const items = rankingService.getItems();
 
-        for (let rank = 1; rank <= items.length; rank++) {
-            const endRankingItem = items[rank - 1];
-            
-            const startLocation = endRankingItem.getStartLocation();
-            expect(startLocation).to.not.equal(undefined);
-            if (!startLocation) {
-                continue;
-            }
+        // const qg = rootRound.getQualifyGroup(QualifyTarget.Losers, 1);
+        // let mRule = qg.getMultipleRule();
+        
+        
+        let rank1 = items.shift();
+        expect(rank1).to.not.equal(undefined);
+        expect(rank1.getUniqueRank()).to.equal(1);
+        let startLocation = rank1.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(3);
+        expect(startLocation.getPlaceNr()).to.equal(1);
+        
+        let rank2 = items.shift();
+        expect(rank2).to.not.equal(undefined);
+        expect(rank2.getUniqueRank()).to.equal(2);
+        startLocation = rank2.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(1);
 
-            if( rank === 1) {
-                expect(startLocation.getPouleNr()).to.equal(3);
-                expect(startLocation.getPlaceNr()).to.equal(1);
-            } else if( rank === 2) {
-                expect(startLocation.getPouleNr()).to.equal(2);
-                expect(startLocation.getPlaceNr()).to.equal(1);
-            }
-            else if( rank === 3) {
-                expect(startLocation.getPouleNr()).to.equal(1);
-                expect(startLocation.getPlaceNr()).to.equal(1);
-            }
-            else if( rank === 4) {
-                expect(startLocation.getPouleNr()).to.equal(3);
-                expect(startLocation.getPlaceNr()).to.equal(2);
-            }
-            else if( rank === 5) {
-                expect(startLocation.getPouleNr()).to.equal(2);
-                expect(startLocation.getPlaceNr()).to.equal(2);
-            }
+        let rank3 = items.shift();
+        expect(rank3).to.not.equal(undefined);
+        expect(rank3.getUniqueRank()).to.equal(3);
+        startLocation = rank3.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(1);
+    
+        let rank4 = items.shift();
+        expect(rank4).to.not.equal(undefined);
+        expect(rank4.getUniqueRank()).to.equal(4);
+        startLocation = rank4.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(3);
+        expect(startLocation.getPlaceNr()).to.equal(2);
 
-            else if( rank === 6) {
-                expect(startLocation.getPouleNr()).to.equal(1); // 2
-                expect(startLocation.getPlaceNr()).to.equal(2); // 1
-            }
-            else if( rank === 7) {
-                expect(startLocation.getPouleNr()).to.equal(1); // 3
-                expect(startLocation.getPlaceNr()).to.equal(3); // 3
-                
-            }
-            else if( rank === 8) {
-                expect(startLocation.getPouleNr()).to.equal(3);
-                expect(startLocation.getPlaceNr()).to.equal(3);
-            }
-            else if( rank === 9) {
-                expect(startLocation.getPouleNr()).to.equal(2);
-                expect(startLocation.getPlaceNr()).to.equal(3);
-            }
-            else if( rank === 10) {
-                expect(startLocation.getPouleNr()).to.equal(1);
-                expect(startLocation.getPlaceNr()).to.equal(4);
-            }
-            else if( rank === 11) {
-                expect(startLocation.getPouleNr()).to.equal(2);
-                expect(startLocation.getPlaceNr()).to.equal(4);
-            }
-            else if( rank === 12) {
-                expect(startLocation.getPouleNr()).to.equal(3);
-                expect(startLocation.getPlaceNr()).to.equal(4);
-            }
-            // placeLocation            
-            
-            
-        }
+        let rank5 = items.shift();
+        expect(rank5).to.not.equal(undefined);
+        expect(rank5.getUniqueRank()).to.equal(5);
+        startLocation = rank5.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(2);
+        
+        let rank6 = items.shift();
+        expect(rank6).to.not.equal(undefined);
+        expect(rank6.getUniqueRank()).to.equal(6);
+        startLocation = rank6.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(2);
+
+        let rank7 = items.shift();
+        expect(rank7).to.not.equal(undefined);
+        expect(rank7.getUniqueRank()).to.equal(7);
+        startLocation = rank7.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(3);
+        
+        let rank8 = items.shift();
+        expect(rank8).to.not.equal(undefined);
+        expect(rank8.getUniqueRank()).to.equal(8);
+        startLocation = rank8.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(3);
+        
+        let rank9 = items.shift();
+        expect(rank9).to.not.equal(undefined);
+        expect(rank9.getUniqueRank()).to.equal(9);
+        startLocation = rank9.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(3);
+        expect(startLocation.getPlaceNr()).to.equal(3);
+
+        let rank10 = items.shift();
+        expect(rank10).to.not.equal(undefined);
+        expect(rank10.getUniqueRank()).to.equal(10);
+        startLocation = rank10.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(4);
+
+        let rank11 = items.shift();
+        expect(rank11).to.not.equal(undefined);
+        expect(rank11.getUniqueRank()).to.equal(11);
+        startLocation = rank11.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(4);
+
+        let rank12 = items.shift();
+        expect(rank12).to.not.equal(undefined);
+        expect(rank12.getUniqueRank()).to.equal(12);
+        startLocation = rank12.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(3);
+        expect(startLocation.getPlaceNr()).to.equal(4);
+        
     });
 });

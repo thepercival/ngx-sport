@@ -24,6 +24,7 @@ import { HorizontalSingleQualifyRule } from './rule/horizontal/single';
 import { HorizontalMultipleQualifyRule } from './rule/horizontal/multiple';
 
 import { CompetitionSportGetter } from '../competition/sport/getter';
+import { NrOfDropOuts } from '../ranking/calculator/end';
 
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
@@ -213,8 +214,9 @@ export class Round extends Identifiable {
         return this.getNumber().getNumber();
     }
 
-    getNrOfDropoutPlaces(): number {
-        return this.getNrOfPlaces() - this.getNrOfPlacesChildren();
+    getNrOfDropoutPlaces(): NrOfDropOuts {
+        const nrOfDropOuts = this.getNrOfPlaces() - this.getNrOfPlacesChildren();
+        return { amount: nrOfDropOuts };
     }
 
     getQualifyGroups(qualifyTarget?: QualifyTarget): QualifyGroup[] {

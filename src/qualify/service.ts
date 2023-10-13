@@ -54,7 +54,8 @@ export class QualifyService {
             }
             const multipleRule = qualifyGroup.getMultipleRule();
             if (multipleRule !== undefined) {
-                changedPlaces = changedPlaces.concat(this.setQualifiersForRankedRuleAndReserve(multipleRule, reservationService));
+                const changedPlacesTmp = this.setQualifiersForRankedRuleAndReserve(multipleRule, reservationService);                
+                changedPlaces = changedPlaces.concat(changedPlacesTmp);
             }
            
             
@@ -85,20 +86,33 @@ export class QualifyService {
             return changedPlaces;
         }
         const round = rankedRule.getFromRound();
-        const rankingPlaceLocations: PlaceLocation[] =
+        const rankedPlaceLocations: PlaceLocation[] =
             this.roundRankingCalculator.getPlaceLocationsForRankedRule(rankedRule);
 
-        while (rankingPlaceLocations.length > toPlaces.length) {
-            rankedRule.getQualifyTarget() === QualifyTarget.Winners ? rankingPlaceLocations.pop() : rankingPlaceLocations.shift();
+        if (rankedRule.getQualifyTarget() === QualifyTarget.Losers ) {
+            rankedPlaceLocations.reverse();
         }
+
+        while (rankedPlaceLocations.length > toPlaces.length) {
+            rankedPlaceLocations.pop();
+        }
+
         toPlaces.forEach((toPlace: Place) => {
             const toPouleNumber = toPlace.getPoule().getNumber();
-            const rankingPlaceLocation = reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankingPlaceLocations);
+            const rankingPlaceLocation = reservationService.getFreeAndLeastAvailabe(toPouleNumber, round, rankedPlaceLocations);
             toPlace.setQualifiedPlace(round.getPlace(rankingPlaceLocation));
+
+            // if( rankedRule instanceof VerticalMultipleQualifyRule ) {
+            //     if (rankedRule.getQualifyTarget() === QualifyTarget.Losers) {
+            //         console.log('rankingPlaceLocation ', rankingPlaceLocation.getPouleNr() + '.' + rankingPlaceLocation.getPlaceNr());
+            //         console.log('toPlace ', toPlace.getPouleNr() + '.' + toPlace.getPlaceNr());
+            //     }
+            // }
+
             changedPlaces.push(toPlace);
-            const index = rankingPlaceLocations.indexOf(rankingPlaceLocation);
+            const index = rankedPlaceLocations.indexOf(rankingPlaceLocation);
             if (index >= 0 ) {
-                rankingPlaceLocations.splice(index, 1);
+                rankedPlaceLocations.splice(index, 1);
             }
         });
         return changedPlaces;

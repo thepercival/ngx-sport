@@ -295,13 +295,13 @@ describe('StructureNameService', () => {
             expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, false)).to.equal('1e2');
             expect(nameService.getPlaceFromName(winnersSecondPlaceFirstPoule, false, true)).to.equal('1e van 2e plekken');
 
-            const losersFirstPlaceFirstPoule = losersRound.getPoule(1).getPlace(1); // 3e3
-            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('3e3');
-            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, true)).to.equal('3e van 2e pl. van onderen');
+            const losersFirstPlaceFirstPoule = losersRound.getPoule(1).getPlace(1); // 2e3
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('2e3');
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, true)).to.equal('2e van 2e pl. van onderen');
 
-            const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2); // 2e3
-            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('2e3');
-            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('2e van 2e pl. van onderen');
+            const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2); // 3e3
+            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('3e3');
+            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('3e van 2e pl. van onderen');
         }
     });
 

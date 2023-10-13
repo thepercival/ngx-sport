@@ -15,7 +15,10 @@ export class VerticalQualifyRuleCreator {
     public createRules(fromRoundHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup) {
             
         const childRound = qualifyGroup.getChildRound();
-        const childPlaces = this.getRoundPlaces(childRound, qualifyGroup.getTarget());
+        let childPlaces = this.getRoundPlaces(childRound);
+        if (qualifyGroup.getTarget() === QualifyTarget.Losers) {
+            childPlaces.reverse();
+        }
         
         let previous: VerticalSingleQualifyRule | undefined;
         fromRoundHorPoules.forEach((fromHorPoule: HorizontalPoule) => {            
@@ -42,15 +45,11 @@ export class VerticalQualifyRuleCreator {
         // console.log(qualifyGroup.getFirstVerticalRule());
     }
 
-    protected getRoundPlaces(round: Round, target: QualifyTarget): Place[] {
-        let roundPlacesByPoule = this.getRoundPlacesByPoule(round, target);
+    protected getRoundPlaces(round: Round): Place[] {
+        let roundPlacesByPoule = this.getRoundPlacesByPoule(round, QualifyTarget.Winners);
         let roundPlaces: Place[] = [];
         roundPlacesByPoule.forEach((pouleRoundPlaces: Place[] ) => {
-            if (target === QualifyTarget.Losers) {
-                roundPlaces = roundPlaces.concat(pouleRoundPlaces)
-            } else {
-                roundPlaces = roundPlaces.concat(pouleRoundPlaces)
-            }
+            roundPlaces = roundPlaces.concat(pouleRoundPlaces)
         });
         return roundPlaces;
     }
@@ -58,7 +57,7 @@ export class VerticalQualifyRuleCreator {
     protected getRoundPlacesByPoule(round: Round, target: QualifyTarget): (Place[])[] {
         if ( target === QualifyTarget.Losers) {
             return round.getPoules().slice().reverse().map((poule: Poule): Place[] => {
-                return poule.getPlaces().slice().reverse();
+                return poule.getPlaces().slice();
             })    
         }
         return round.getPoules().map((poule: Poule): Place[] => {

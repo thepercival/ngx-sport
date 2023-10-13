@@ -17,7 +17,7 @@
                 "--trace-warnings",
             ],
             "args": [
-                "${workspaceFolder}/test/out/test/cases/structure/editor.js"
+                "${workspaceFolder}/test/out/test/cases/ranking/calculator/end.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }

@@ -20,8 +20,8 @@ export class VerticalMultipleQualifyRule extends VerticalQualifyRule {
         
     }
 
-    public getToPlaceNumber(place: Place): number {
-        const idx = this.toPlaces.indexOf(place);
+    public getToPlaceIndex(toPlace: Place): number {
+        const idx = this.toPlaces.indexOf(toPlace);
         return idx < 0 ? 0 : idx + 1;
     }
 
@@ -31,6 +31,10 @@ export class VerticalMultipleQualifyRule extends VerticalQualifyRule {
 
     getNrOfToPlaces(): number {
         return this.toPlaces.length;
+    }
+
+    public getNrOfDropouts(): number {
+        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
     }
 
     // getFromPlace(toPlace: Place): Place {

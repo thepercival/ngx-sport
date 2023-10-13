@@ -170,53 +170,14 @@ export class StructureNameService {
         
         const fromRank = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
         
-        let nrOfToPlaces;
-        if (rule instanceof VerticalSingleQualifyRule) {
-            nrOfToPlaces = rule.getNrOfToPlaces();
-        } else {
-            nrOfToPlaces = rule.getNrOfToPlaces();
+        let fromPlaceNr = rule.getToPlaceIndex(place);
+
+        if (rule.getQualifyTarget() === QualifyTarget.Losers) {
+            const total = rule.getNrOfToPlaces() + rule.getNrOfDropouts();
+            fromPlaceNr = (total + 1) - fromPlaceNr;
         }
 
-        let toPlaceNumber
-        if (rule instanceof VerticalSingleQualifyRule) {
-            toPlaceNumber = rule.getToPlaceNumber(place);
-        } else {
-            toPlaceNumber = rule.getToPlaceNumber(place);
-        }
-
-        if (rule.getQualifyTarget() === QualifyTarget.Winners) {
-            toPlaceNumber = rule.getToPlaceNumber(place);
-        } else {
-            toPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumber);
-        }
-
-
-
-
-        // if( rule instanceof VerticalMultipleQualifyRule ) {
-        //     nrOfToPlaces = rule.getFromHorizontalPoule().getNumber();
-        //     toPlaceNumberBase = rule.getToPlaceNumber(place); // rule.getFromPlace(place).getPouleNr();
-        // } else {
-        //     nrOfToPlaces = rule.getNrOfToPlaces();
-        //     toPlaceNumberBase = rule.getToPlaceNumber(place)
-        // }
-
-        // let parentPlaceNumber;
-        // if( rule instanceof VerticalMultipleQualifyRule ) {
-        //     if (rule.getQualifyTarget() === QualifyTarget.Winners) {
-        //         parentPlaceNumber = toPlaceNumberBase;
-        //     } else {
-        //         parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
-        //     }
-        // } else {
-        //     if (rule.getQualifyTarget() === QualifyTarget.Winners) {
-        //         parentPlaceNumber = toPlaceNumberBase;
-        //     } else {
-        //         parentPlaceNumber = fromHorPoule.getPlaces().length - (nrOfToPlaces - toPlaceNumberBase);
-        //     }
-        // }
-
-        const ordinal = this.getOrdinalOutput(toPlaceNumber);
+        const ordinal = this.getOrdinalOutput(fromPlaceNr);
         if (!longName) {
             return ordinal + fromRank;
         }

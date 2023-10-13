@@ -7,6 +7,7 @@ import { HorizontalPoule } from "../../poule/horizontal";
 import { HorizontalMultipleQualifyRule } from "../../qualify/rule/horizontal/multiple";
 import { VerticalMultipleQualifyRule } from "../../qualify/rule/vertical/multiple";
 import { VerticalSingleQualifyRule } from "../../qualify/rule/vertical/single";
+import { QualifyTarget } from "../../qualify/target";
 import { AgainstVariant } from "../../sport/variant/against";
 import { RoundRankingItem } from "../item/round";
 import { SportRoundRankingItem } from "../item/round/sport";
@@ -63,14 +64,24 @@ export class RoundRankingCalculator {
         const rankingItems: RoundRankingItem[] = [];
         horizontalPoule.getPlaces().forEach((place: Place) => {
             const pouleRankingItems: RoundRankingItem[] = this.getItemsForPoule(place.getPoule());
-            const pouleRankingItem = this.getItemByRank(pouleRankingItems, place.getPlaceNr());
+            const rank = place.getPlaceNr();
+            const pouleRankingItem = this.getItemByRank(pouleRankingItems, rank);
             if (pouleRankingItem === undefined) {
                 return;
             }
             rankingItems.push(pouleRankingItem);
         });
 
-        return this.rankItems(rankingItems);
+        const items = this.rankItems(rankingItems);
+        // if (horizontalPoule.getNumber() === 1 && horizontalPoule.getQualifyTarget() === QualifyTarget.Losers) {
+        //     items.forEach(item => {
+        //         if (item.getPlaceLocation() !== undefined) {
+        //             console.log('cumulativeRoundRankingItem ', item.getCumulativePerformance());
+        //         }
+        //     });            
+        // }
+        
+        return items;
     }
 
     getItemByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem | undefined {

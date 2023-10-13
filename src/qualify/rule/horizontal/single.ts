@@ -62,6 +62,10 @@ export class HorizontalSingleQualifyRule extends HorizontalQualifyRule {
         return this.placeMappings.length;
     }
 
+    public getNrOfDropouts(): number {
+        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
+    }
+
     getPrevious(): HorizontalSingleQualifyRule | undefined {
         return this.previous;
     }

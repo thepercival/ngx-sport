@@ -41,7 +41,7 @@ export class RoundRankCalculator {
                 setDropouts(qualifyGroup.getChildRound());
             });
             map[round.getPathNode().pathToString()] = nrOfDropoutPlaces;
-            nrOfDropoutPlaces += round.getNrOfDropoutPlaces();
+            nrOfDropoutPlaces += round.getNrOfDropoutPlaces().amount;
             round.getQualifyGroups(QualifyTarget.Losers).slice().reverse().forEach(qualifyGroup => {
                 setDropouts(qualifyGroup.getChildRound());
             });

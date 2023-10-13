@@ -56,11 +56,11 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
         return mapping.getFromPlace();
     }
 
-    public getToPlaceNumber(place: Place): number {
+    public getToPlaceIndex(toPlace: Place): number {
         let rank = 0;
         this.getMappings().every((mapping: QualifyPlaceMapping) => {
             rank++;
-            if (mapping.getToPlace() === place) {
+            if (mapping.getToPlace() === toPlace) {
                 return false;
             }
             return true;
@@ -79,6 +79,10 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
 
     getNrOfToPlaces(): number {
         return this.placeMappings.length;
+    }
+
+    public getNrOfDropouts(): number {
+        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
     }
 
     getFirst(): VerticalSingleQualifyRule | VerticalMultipleQualifyRule {

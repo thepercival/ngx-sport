@@ -174,7 +174,7 @@ export class StructureEditor {
     }
 
     removePlaceFromRootRound(rootRound: Round) {
-        if (rootRound.getNrOfDropoutPlaces() <= 0) {
+        if (rootRound.getNrOfDropoutPlaces().amount <= 0) {
             throw new Error('de deelnemer kan niet verwijderd worden, omdat alle deelnemer naar de volgende ronde gaan');
         }
         const newNrOfPlaces = rootRound.getNrOfPlaces() - 1;
@@ -486,7 +486,7 @@ export class StructureEditor {
         }
         this.horPouleCreator.create(round);
         const nrOfDropoutPlaces = round.getNrOfDropoutPlaces();
-        if (nrOfDropoutPlaces < 0 || (!canHaveZeroDropoutPlaces && round.getNrOfDropoutPlaces() === 0)) {
+        if (nrOfDropoutPlaces.amount < 0 || (!canHaveZeroDropoutPlaces && round.getNrOfDropoutPlaces().amount === 0)) {
             const losersBorderQualifyGroup = round.getBorderQualifyGroup(QualifyTarget.Losers);
             const childQualifyTarget = losersBorderQualifyGroup !== undefined ? QualifyTarget.Losers : QualifyTarget.Winners;
             this.removeQualifier(round, childQualifyTarget);
