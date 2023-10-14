@@ -442,6 +442,27 @@ describe('StructureEditor', () => {
         expect(rootRound.getLastPoule().getPlaces().length).to.equal(4);
     });
 
+    it('UpdateDistribution', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [4, 4, 4], createPlanningConfigNoTime());
+        const rootRound = structure.getSingleCategory().getRootRound(); 
+        
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [4, 4, 4]);
+
+        // (new StructureOutput()).toConsole(structure, console);
+
+        const parentQualifyGroup = winnersRound.getParentQualifyGroup();
+        expect(parentQualifyGroup).to.not.equal(undefined); 
+        
+        structureEditor.updateDistribution(parentQualifyGroup, QualifyDistribution.Vertical);
+
+        //(new StructureOutput()).toConsole(structure, console);
+
+        // expect(parentQualifyGroup.getFirstSingleRule()).to.equal(VerticalSingleQualifyRule.prototype); 
+    });
+
     it('addQualifiers new Round too little qualifiers', () => {
         const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
 

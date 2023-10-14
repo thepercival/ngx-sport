@@ -5,7 +5,7 @@ import { VerticalSingleQualifyRule } from "../../../src/qualify/rule/vertical/si
 import { QualifyTarget } from "../../../src/qualify/target";
 import { GridAlign } from "../grid/align";
 import { Coordinate } from "../grid/coordinate";
-import { GridDrawer } from "../grid/drawer";
+import { GridDrawer, HorizontalDirection } from "../grid/drawer";
 import { RangeCalculator } from "./rangeCalculator";
 
 export class DrawHelper {
@@ -51,9 +51,10 @@ export class DrawHelper {
         // console.log('start: (' + coordinate.getX() + ',' + coordinate.getY() + '), width: ' + width + ', height: ' + height);
         this.drawer.drawRectangle(coordinate, new Coordinate(width, height), AnsiColor.Cyan);
 
-        const middle = width / 2;
-        const titleHalfLength = title.length / 2;
+        const middle = Math.round( width / 2);
+        const titleHalfLength = Math.round(title.length / 2);
         const startCoord = coordinate.addX(middle - titleHalfLength);
+        // console.log(startCoord, title);
         this.drawer.drawToRight(startCoord, title, AnsiColor.Cyan);
 
         this.drawRound(category.getRootRound(), coordinate.add(1, 1));
@@ -127,25 +128,24 @@ export class DrawHelper {
         this.drawer.drawToRight(seperator, '- -');
 
         // winners
-        const horWinnersPoules = this.getHorPoulesAsString(round, QualifyTarget.Winners);
+        const horWinnersPoules = this.getHorPoulesAsArray(round, QualifyTarget.Winners, true);
         const horPoulesOrigin = seperator.incrementY();
-        this.drawer.drawVertAwayFromOrigin(horPoulesOrigin, horWinnersPoules);
+        this.drawer.drawVertArrayAwayFromOrigin(horPoulesOrigin, horWinnersPoules, undefined, HorizontalDirection.Right);
 
         // losers
-        const horLosersPoules = this.getHorPoulesAsString(round, QualifyTarget.Losers);
+        const horLosersPoules = this.getHorPoulesAsArray(round, QualifyTarget.Losers, true);
         const losersHorPoulesOrigin = horPoulesOrigin.add(
             RangeCalculator.PADDING + 1,
             round.getHorizontalPoules(QualifyTarget.Losers).length - 1);
-        this.drawer.drawVertToOrigin(losersHorPoulesOrigin, horLosersPoules);
+        this.drawer.drawVertArrayToOrigin(losersHorPoulesOrigin, horLosersPoules, undefined, HorizontalDirection.Right);
         return origin.incrementX();
     }
 
-    protected getHorPoulesAsString(round: Round, qualifyTarget: QualifyTarget): string {
-        let value = '';
-        round.getHorizontalPoules(qualifyTarget).forEach((horPoule: HorizontalPoule) => {
-            value += horPoule.getNumber();
+    protected getHorPoulesAsArray(round: Round, qualifyTarget: QualifyTarget, reversed: boolean): string[] {
+        return round.getHorizontalPoules(qualifyTarget).map((horPoule: HorizontalPoule): string => {
+            let value = '' + horPoule.getNumber();
+            return reversed ? value.split('').reverse().join('') : value;
         });
-        return value;
     }
 
     protected drawHorPouleQualifyTarget(qualifyTarget: Poule, origin: Coordinate): void {
@@ -156,14 +156,14 @@ export class DrawHelper {
 
     protected drawQualifyRules(round: Round, origin: Coordinate): void {
         const seperator = origin.incrementY();
-        let currentCoordinate = this.drawer.drawVertAwayFromOrigin(seperator, '-').incrementY();
+        let currentCoordinate = this.drawer.drawVertStringAwayFromOrigin(seperator, '-', ).incrementY();
         let winnersMultipleRuleCoordinate: Coordinate | undefined;
         // winners
         round.getQualifyGroups(QualifyTarget.Winners).forEach((qualifyGroup: QualifyGroup) => {
             const winnersColor = this.getQualifyGroupColor(qualifyGroup);            
             let singleRule = qualifyGroup.getFirstSingleRule();
             while (singleRule !== undefined) {
-                currentCoordinate = this.drawer.drawVertAwayFromOrigin(
+                currentCoordinate = this.drawer.drawVertStringAwayFromOrigin(
                     currentCoordinate, this.getQualifyRuleString(singleRule), winnersColor
                 ).incrementY();
                 singleRule = singleRule.getNext();
@@ -171,7 +171,7 @@ export class DrawHelper {
             const multipleRule = qualifyGroup.getMultipleRule();
             if (multipleRule !== undefined) {
                 winnersMultipleRuleCoordinate = currentCoordinate;
-                this.drawer.drawVertAwayFromOrigin(
+                this.drawer.drawVertStringAwayFromOrigin(
                     currentCoordinate, this.getQualifyRuleString(multipleRule), winnersColor
                 )
             }                    
@@ -183,7 +183,7 @@ export class DrawHelper {
             const losersColor = this.getQualifyGroupColor(qualifyGroup);                         
             let singleRule = qualifyGroup.getFirstSingleRule();
             while (singleRule !== undefined) {
-                currentCoordinate = this.drawer.drawVertToOrigin(
+                currentCoordinate = this.drawer.drawVertStringToOrigin(
                     currentCoordinate, this.getQualifyRuleString(singleRule), losersColor
                 ).decrementY();
                 singleRule = singleRule.getNext();
@@ -196,7 +196,7 @@ export class DrawHelper {
                     && winnersMultipleRuleCoordinate.getY() === currentCoordinate.getY()) {
                     color = AnsiColor.Magenta;
                 }
-                this.drawer.drawVertAwayFromOrigin(
+                this.drawer.drawVertStringAwayFromOrigin(
                     currentCoordinate, this.getQualifyRuleString(multipleRule), color
                 );
             }            

@@ -43,10 +43,28 @@ export class GridDrawer {
     }
 
     public drawLineVertToOrigin(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '|'): Coordinate {
-        return this.drawVertToOrigin(coordinate, this.initString(length, value), color);
+        return this.drawVertStringToOrigin(coordinate, this.initString(length, value), color);
     }
 
-    public drawVertToOrigin(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
+    public drawVertArrayToOrigin(
+        coordinate: Coordinate, values: string[],
+        color: AnsiColor | undefined, horizontalDirection: HorizontalDirection): Coordinate {
+
+        values.forEach((horizontalValue: string) => {
+            if (horizontalDirection == HorizontalDirection.Left) {
+                this.drawToLeft(coordinate, horizontalValue, color);
+            } else {
+                this.drawToRight(coordinate, horizontalValue, color);
+            }
+
+            coordinate = coordinate.decrementY();
+        });
+        return coordinate;
+
+
+    }
+
+    public drawVertStringToOrigin(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -58,10 +76,31 @@ export class GridDrawer {
     }
 
     public drawLineVertAwayFromOrigin(coordinate: Coordinate, length: number, color?: AnsiColor | undefined, value: string = '|'): Coordinate {
-        return this.drawVertAwayFromOrigin(coordinate, this.initString(length, value), color);
+       return this.drawVertStringAwayFromOrigin(coordinate, this.initString(length, value), color);
+       
     }
 
-    public drawVertAwayFromOrigin(coordinate: Coordinate, value: string, color?: AnsiColor | undefined): Coordinate {
+    public drawVertArrayAwayFromOrigin(
+        coordinate: Coordinate, values: string[], 
+        color: AnsiColor | undefined, horizontalDirection: HorizontalDirection): Coordinate {
+        
+        values.forEach((horizontalValue: string) => {
+            if (horizontalDirection == HorizontalDirection.Left ) {
+                this.drawToLeft(coordinate, horizontalValue, color);
+            } else {
+                this.drawToRight(coordinate, horizontalValue, color);
+            }
+
+            coordinate = coordinate.incrementY();
+        });
+        return coordinate;
+        
+    
+    }
+
+    public drawVertStringAwayFromOrigin(
+        coordinate: Coordinate, value: string, 
+        color?: AnsiColor | undefined): Coordinate {
         const valueAsArray: string[] = value.split('');
         let char: string | undefined = valueAsArray.shift();
         while (char !== undefined) {
@@ -118,4 +157,9 @@ export class GridDrawer {
 
         return this.grid.equalsGrid(grid);
     }
+}
+
+export enum HorizontalDirection {
+    Left = 1,
+    Right = 2
 }

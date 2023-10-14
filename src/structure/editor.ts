@@ -282,6 +282,21 @@ export class StructureEditor {
         this.rulesCreator.create(round.getParent(), round);
     }
 
+    updateDistribution(qualifyGroup: QualifyGroup, distribution: QualifyDistribution): void {
+
+        const parentRound = qualifyGroup.getParentRound();
+        this.horPouleCreator.remove(parentRound);
+        this.rulesCreator.remove(parentRound);
+
+        // begin editing
+        qualifyGroup.setDistribution(distribution);
+
+        // end editing
+        this.horPouleCreator.create(parentRound);
+        this.rulesCreator.create(parentRound, qualifyGroup.getChildRound());
+    }
+
+
     addQualifiers(parentRound: Round, qualifyTarget: QualifyTarget, nrOfToPlacesToAdd: number, distribution: QualifyDistribution, maxNrOfPoulePlaces?: number) {
         const nrOfPlaces = parentRound.getNrOfPlaces();
         const nrOfToPlaces = parentRound.getNrOfPlacesChildren();
