@@ -399,11 +399,11 @@ export class StructureEditor {
     }
 
     protected getNrOfQualifiersPrevious(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule): number {
-        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+        return singleRule.getNrOfMappings() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
     }
 
     protected getNrOfQualifiersNext(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule): number {
-        return singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+        return singleRule.getNrOfMappings() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
     }
 
     protected getRoot(round: Round): Round {
@@ -431,7 +431,7 @@ export class StructureEditor {
         if (parentRound === undefined) {
             return;
         }
-        const nrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
+        const nrOfToPlaces = singleRule.getNrOfMappings() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Winners);
         const borderSideNrOfToPlaces = singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
         if (nrOfToPlaces < this.getMinPlacesPerPouleSmall() || borderSideNrOfToPlaces < this.getMinPlacesPerPouleSmall()) {
             throw new Error('de kwalificatiegroep is niet splitsbaar');

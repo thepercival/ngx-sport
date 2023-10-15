@@ -1,11 +1,7 @@
 import { HorizontalPoule } from '../../../poule/horizontal';
 import { Place } from '../../../place';
 import { QualifyGroup } from '../../group';
-import { HorizontalQualifyRule } from '../horizontal';
-import { VerticalSingleQualifyRule } from './single';
 import { VerticalQualifyRule } from '../vertical';
-import { QualifyTarget } from '../../target';
-import { QualifyPlaceMapping } from '../../placeMapping';
 
 export class VerticalMultipleQualifyRule extends VerticalQualifyRule {
 
@@ -20,7 +16,7 @@ export class VerticalMultipleQualifyRule extends VerticalQualifyRule {
         
     }
 
-    public getToPlaceIndex(toPlace: Place): number {
+    public getRankByToPlace(toPlace: Place): number {
         const idx = this.toPlaces.indexOf(toPlace);
         return idx < 0 ? 0 : idx + 1;
     }

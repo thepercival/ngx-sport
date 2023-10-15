@@ -277,16 +277,16 @@ describe('StructureEditor', () => {
 
         const ruleOne = winnersRound.getParentQualifyGroup()?.getFirstSingleRule();
         expect(ruleOne).to.instanceOf(VerticalSingleQualifyRule);
-        expect(ruleOne.getNrOfToPlaces()).to.equal(3);
+        expect(ruleOne.getNrOfMappings()).to.equal(3);
         const ruleTwo = ruleOne.getNext();
         expect(ruleTwo).to.instanceOf(VerticalSingleQualifyRule);
-        expect(ruleTwo.getNrOfToPlaces()).to.equal(3);
+        expect(ruleTwo.getNrOfMappings()).to.equal(3);
         const ruleThree = ruleTwo.getNext();
         expect(ruleThree).to.instanceOf(VerticalSingleQualifyRule);
-        expect(ruleThree.getNrOfToPlaces()).to.equal(3);
+        expect(ruleThree.getNrOfMappings()).to.equal(3);
         const ruleFour = ruleThree.getNext();
         expect(ruleFour).to.instanceOf(VerticalSingleQualifyRule);
-        expect(ruleFour.getNrOfToPlaces()).to.equal(3);
+        expect(ruleFour.getNrOfMappings()).to.equal(3);
     });
 
     it('removePouleFromRootRound 4', () => {

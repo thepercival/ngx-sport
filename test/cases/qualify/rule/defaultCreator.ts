@@ -1,12 +1,10 @@
 import { assert, expect } from 'chai';
 import { describe, it } from 'mocha';
-import { BalancedPouleStructure, Place, Poule, QualifyTarget } from '../../../../public-api';
-import { QualifyOriginCalculator } from '../../../../src/qualify/originCalculator';
-import { QualifyRuleCreator } from '../../../../src/qualify/rule/creator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
 import { StructureOutput } from '../../../helpers/structureOutput';
+import { Place, Poule, QualifyTarget } from '../../../../public-api';
 
 describe('DefaultQualifyRuleCreator', () => {
 

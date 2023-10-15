@@ -1,5 +1,5 @@
 
-import { QualifyPlaceMapping } from "../../placeMapping";
+import { QualifyMappingByPlace } from "../../mapping/byPlace";
 import { HorizontalQualifyRule } from "../horizontal";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { QualifyGroup } from "../../group";
@@ -14,7 +14,7 @@ export class HorizontalSingleQualifyRule extends HorizontalQualifyRule {
     constructor(
         fromHorizontalPoule: HorizontalPoule,
         group: QualifyGroup,
-        private placeMappings: QualifyPlaceMapping[],
+        private byPlaceMappings: QualifyMappingByPlace[],
         private previous: HorizontalSingleQualifyRule | undefined) {
         super(fromHorizontalPoule/*, group*/);
         this.fromHorizontalPoule.setQualifyRuleNew(this);
@@ -25,46 +25,29 @@ export class HorizontalSingleQualifyRule extends HorizontalQualifyRule {
         }
     }
 
-    getMappings(): QualifyPlaceMapping[] {
-        return this.placeMappings;
+    getMappings(): QualifyMappingByPlace[] {
+        return this.byPlaceMappings;
     }
 
-    getToPlace(fromPlace: Place): Place {
-        const mapping = this.getMappings().find((placeMapping: QualifyPlaceMapping): boolean => {
-            return placeMapping.getFromPlace() === fromPlace;
+    getMappingByFromPlace(fromPlace: Place): QualifyMappingByPlace | undefined {
+        return this.getMappings().find((byPlaceMapping: QualifyMappingByPlace): boolean => {
+            return byPlaceMapping.getFromPlace() === fromPlace;
         });
-        if (mapping === undefined) {
-            throw Error('could not find toPlace');
-        }
-        return mapping.getToPlace();
     }
 
-    getFromPlace(toPlace: Place): Place {
-        const mapping = this.getMappings().find((placeMapping: QualifyPlaceMapping): boolean => {
-            return placeMapping.getToPlace() === toPlace;
+    getMappingByToPlace(toPlace: Place): QualifyMappingByPlace|undefined {
+        return this.getMappings().find((byPlaceMapping: QualifyMappingByPlace): boolean => {
+            return byPlaceMapping.getToPlace() === toPlace;
         });
-        if (mapping === undefined) {
-            throw Error('could not find fromPlace');
-        }
-        return mapping.getFromPlace();
-    }
-
-    hasToPlace(toPlace: Place): boolean {
-        try {
-            this.getFromPlace(toPlace);
-            return true;
-        } catch (error) {
-        }
-        return false;
     }
     
-    getNrOfToPlaces(): number {
-        return this.placeMappings.length;
+    getNrOfMappings(): number {
+        return this.byPlaceMappings.length;
     }
 
-    public getNrOfDropouts(): number {
-        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
-    }
+    // public getNrOfDropouts(): number {
+    //     return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
+    // }
 
     getPrevious(): HorizontalSingleQualifyRule | undefined {
         return this.previous;
@@ -108,7 +91,7 @@ export class HorizontalSingleQualifyRule extends HorizontalQualifyRule {
         if (neighBour === undefined) {
             return nrOfToPlacesTargetSide;
         }
-        return neighBour.getNrOfToPlaces() + neighBour.getNrOfToPlacesTargetSide(targetSide);
+        return neighBour.getNrOfMappings() + neighBour.getNrOfToPlacesTargetSide(targetSide);
     }
 
     detach() {

@@ -103,11 +103,12 @@ export class StructureNameService {
         return name + place.getPlaceNr();
     }
 
-    getPlaceFromName(place: Place, competitorName: boolean, longName?: boolean): string {
-        return this.getPlaceFromNameHelper(place, competitorName, longName ?? false);
+    getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName?: boolean): string {
+        return gamePlaces.map(gamePlace => this.getPlaceFromName(gamePlace.getPlace(), competitorName, longName)).join(' & ');
     }
 
-    protected getPlaceFromNameHelper(place: Place, competitorName: boolean, longName: boolean): string {
+    getPlaceFromName(place: Place, competitorName: boolean, longName: boolean = false): string {
+        
         competitorName = competitorName ? (this.startLocationMap !== undefined) : false;
         const startLocation: StartLocation | undefined = place.getStartLocation();
         if (competitorName && this.startLocationMap && startLocation) {
@@ -124,26 +125,43 @@ export class StructureNameService {
         if (fromQualifyRule === undefined) {
             return this.getPlaceName(place, false, longName);
         } else if (fromQualifyRule instanceof HorizontalSingleQualifyRule) {            
-            return this.getPlaceNameFrom(fromQualifyRule.getFromPlace(place), longName);
+
+            const mapping = fromQualifyRule.getMappingByToPlace(place);
+            if (mapping === undefined) {
+                throw Error('mapping not found');
+            }
+            const fromPlace = mapping.getFromPlace();
+            return this.getPlaceFromNameHelper(fromPlace.getPlaceNr(), fromPlace.getPoule(), longName);
         } 
         const balanced = place.getRound().createPouleStructure().isBalanced();
         const absolute = !longName || fromQualifyRule.getQualifyTarget() === QualifyTarget.Winners || balanced;            
-        return this.getRankedQualifyRuleName(fromQualifyRule, place, longName, absolute);
-        
+        return this.getRankedQualifyRuleName(fromQualifyRule, place, longName, absolute);        
     }
 
-    getPlaceNameFrom(fromPlace: Place, longName: boolean): string {
+    protected getPlaceFromNameHelper(rank: number, poule: Poule, longName: boolean = false): string {
+        const pouleName = this.getPouleName(poule, longName);
+
+        let rankOrdinal = this.getOrdinalOutput(rank);
+        if (!longName) {
+            return this.getOrdinalOutput(rank) + pouleName;
+        }
+        if (!poule.needsRanking()) {
+            rankOrdinal += ' pl.';
+        }
+        return rankOrdinal + ' ' + pouleName;
+    }
+
+
+    /*getPlaceNameFrom(fromPlace: Place, longName: boolean): string {
         const rank = fromPlace.getPlaceNr();
 
         const poule = fromPlace.getPoule();
         const pouleName = this.getPouleName(poule, longName);
         const ordinal = this.getOrdinalOutput(rank) + (!poule.needsRanking() ? ' pl.' : '');
         return longName ? ordinal + ' ' + pouleName : pouleName + rank;
-    }
+    }*/
 
-    getPlacesFromName(gamePlaces: GamePlace[], competitorName: boolean, longName?: boolean): string {
-        return gamePlaces.map(gamePlace => this.getPlaceFromNameHelper(gamePlace.getPlace(), competitorName, longName)).join(' & ');
-    }
+
 
     public getQualifyRuleName(rule: HorizontalSingleQualifyRule | HorizontalMultipleQualifyRule | VerticalSingleQualifyRule | VerticalMultipleQualifyRule): string {
 
@@ -162,29 +180,44 @@ export class StructureNameService {
 
     public getRankedQualifyRuleName(
         rule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule,
-        place: Place,
+        toPlace: Place,
         longName: boolean,
         absolute: boolean
     ): string {
         const fromHorPoule = rule.getFromHorizontalPoule();
         
-        const fromRank = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
+        // CONVERSION FROM HorPoule TO RANK
+        const fromRankContainer = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
         
-        let fromPlaceNr = rule.getToPlaceIndex(place);
+        let fromRank;
+        if (rule instanceof VerticalSingleQualifyRule) {
+            const byRankMapping = rule.getMappingByToPlace(toPlace);
+            if (byRankMapping === undefined) {
+                throw Error('no mapping found');
+            }
+            fromRank = byRankMapping.getFromRank();
+        } else {
+            fromRank = rule.getRankByToPlace(toPlace);
+        }
 
         if (rule.getQualifyTarget() === QualifyTarget.Losers) {
-            const total = rule.getNrOfToPlaces() + rule.getNrOfDropouts();
-            fromPlaceNr = (total + 1) - fromPlaceNr;
+            let total;
+            if (rule instanceof VerticalSingleQualifyRule) {
+                total = rule.getNrOfMappings();
+            } else {
+                total = rule.getNrOfToPlaces() + rule.getNrOfDropouts();
+            }
+            fromRank = (total + 1) - fromRank;
         }
 
-        const ordinal = this.getOrdinalOutput(fromPlaceNr);
+        const fromRankOrdinal = this.getOrdinalOutput(fromRank);
         if (!longName) {
-            return ordinal + fromRank;
+            return fromRankOrdinal + '' + fromRankContainer;
         }
 
-        const firstpart = ordinal + ' van';
+        const firstpart = fromRankOrdinal + ' van';
 
-        let name = firstpart + ' ' + this.getOrdinalOutput(fromRank);
+        let name = firstpart + ' ' + this.getOrdinalOutput(fromRankContainer);
         if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
             name += ' pl. van onderen';
         } else {

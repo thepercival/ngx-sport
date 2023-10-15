@@ -3,7 +3,7 @@ import { Poule } from "../../../poule";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { FromPoulePicker } from "../../fromPoulePicker";
 import { QualifyGroup, Round } from "../../group";
-import { QualifyPlaceMapping } from "../../placeMapping";
+import { QualifyMappingByPlace } from "../../mapping/byPlace";
 import { PossibleFromMap } from "../../possibleFromMap";
 import { HorizontalMultipleQualifyRule } from "../horizontal/multiple";
 import { HorizontalSingleQualifyRule } from "../horizontal/single";
@@ -61,7 +61,7 @@ export class HorizontalQualifyRuleCreator {
         let previousRule: HorizontalSingleQualifyRule | undefined;
         while (fromHorPoule !== undefined && childRoundPlaces.length >= fromHorPoule.getPlaces().length) {
             const toPlaces = childRoundPlaces.splice(0, fromHorPoule.getPlaces().length);
-            const placeMappings = this.createPlaceMappings(fromHorPoule, toPlaces);
+            const placeMappings = this.createByPlaceMappings(fromHorPoule, toPlaces);
             previousRule = new HorizontalSingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previousRule);
             fromHorPoule = fromHorPoules.shift();
         }
@@ -87,9 +87,9 @@ export class HorizontalQualifyRuleCreator {
         return places;
     }
 
-    createPlaceMappings(fromHorPoule: HorizontalPoule, childRoundPlaces: Place[]): QualifyPlaceMapping[] {
+    createByPlaceMappings(fromHorPoule: HorizontalPoule, childRoundPlaces: Place[]): QualifyMappingByPlace[] {
         const picker = new FromPoulePicker(this.possibleFromMap);
-        const mappings: QualifyPlaceMapping[] = [];
+        const mappings: QualifyMappingByPlace[] = [];
         const fromHorPoulePlaces = fromHorPoule.getPlaces().slice();
         let childRoundPlace: Place | undefined;
         while (childRoundPlace = childRoundPlaces.shift()) {
@@ -99,9 +99,9 @@ export class HorizontalQualifyRuleCreator {
                 childRoundPlaces.map((place: Place) => place.getPoule()));
 
             const bestFromPlace = this.removeBestHorizontalPlace(fromHorPoulePlaces, bestFromPoule);
-            const placeMapping = new QualifyPlaceMapping(bestFromPlace, childRoundPlace);
+            const placeMapping = new QualifyMappingByPlace(bestFromPlace, childRoundPlace);
             mappings.push(placeMapping);
-            this.possibleFromMap.addPlaceMapping(placeMapping);
+            this.possibleFromMap.addMapping(placeMapping);
         }
         return mappings;
     }

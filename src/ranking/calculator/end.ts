@@ -137,15 +137,6 @@ export class EndRankingCalculator {
         // throw new Error('non-horizontalQualifyRule not supported');
     }
 
-    public getHorizontalPouleNrOfDropouts(horizontalPoule: HorizontalPoule): number {
-        const qualifyRule = horizontalPoule.getQualifyRuleNew();
-        if (qualifyRule === undefined) {
-            return horizontalPoule.getPlaces().length;
-        }
-        return qualifyRule.getNrOfDropouts();
-    }
-
-
     // protected getVerticalPouleDropouts(horizontalPoule: HorizontalPoule): EndRankingItem[] {
     //     const rankingCalculator = new RoundRankingCalculator();
     //     const rankingPlaces: Place[] = rankingCalculator.getPlacesForHorizontalPoule(horizontalPoule);

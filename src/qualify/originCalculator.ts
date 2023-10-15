@@ -1,10 +1,11 @@
-import { Place } from "../place";
-import { Poule } from "../poule";
-import { HorizontalSingleQualifyRule } from "./rule/horizontal/single";
+// import { Place } from "../place";
+// import { Poule } from "../poule";
+// import { HorizontalSingleQualifyRule } from "./rule/horizontal/single";
 
 /**
  * kunnen aangeven uit welke poules een bepaalde plek afkomstig is 
  */
+/*
 export class QualifyOriginCalculator {
 
     // private possiblePreviousPoulesMap: PreviousPoulesMap = {};
@@ -97,4 +98,4 @@ class OriginMap extends Map<string, Poule> { }
 
 interface PreviousPoulesMap {
     [key: string]: Poule[];
-}
+}*/

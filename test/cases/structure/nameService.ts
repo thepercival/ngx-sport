@@ -218,7 +218,7 @@ describe('StructureNameService', () => {
             expect(nameService.getPlaceFromName(winnersLastPlace, false, true)).to.equal('1e van 2e plekken');
 
             const winnersFirstPlace = winnersRound.getPoule(1).getPlace(1);
-            expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('A1');
+            expect(nameService.getPlaceFromName(winnersFirstPlace, false, false)).to.equal('1eA');
             expect(nameService.getPlaceFromName(winnersFirstPlace, false, true)).to.equal('1e poule A');
 
 
@@ -229,7 +229,7 @@ describe('StructureNameService', () => {
                 const doubleWinnersFirstPlace = pouleTmp.getPlace(1);
                 expect(doubleWinnersFirstPlace).to.not.equal(undefined);
                 if (doubleWinnersFirstPlace) {
-                    expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, false)).to.equal('D1');
+                    expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, false)).to.equal('1eD');
                     expect(nameService.getPlaceFromName(doubleWinnersFirstPlace, false, true)).to.equal('1e pl. wed. D');
                 }
             }
@@ -241,7 +241,7 @@ describe('StructureNameService', () => {
             if (!winnersLosersFirstPlace) {
                 return;
             }
-            expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false)).to.equal('D2');
+            expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false)).to.equal('2eD');
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false, true)).to.equal('2e pl. wed. D');
         }
     });

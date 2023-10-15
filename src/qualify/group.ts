@@ -25,6 +25,7 @@ import { HorizontalMultipleQualifyRule } from './rule/horizontal/multiple';
 
 import { CompetitionSportGetter } from '../competition/sport/getter';
 import { NrOfDropOuts } from '../ranking/calculator/end';
+import { map } from 'rxjs';
 
 export class QualifyGroup extends Identifiable {
     static readonly QUALIFYORDER_CROSS = 1;
@@ -98,16 +99,13 @@ export class QualifyGroup extends Identifiable {
         
         let singleRule = this.getFirstSingleRule();
         while (singleRule !== undefined) {
-            nrOfToPlaces = singleRule.getNrOfToPlaces() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
+            nrOfToPlaces += singleRule.getNrOfMappings(); //() + singleRule.getNrOfToPlacesTargetSide(QualifyTarget.Losers);
             singleRule = singleRule.getNext();
         }
         const multipleRule = this.getMultipleRule();
         if (multipleRule !== undefined) {
             nrOfToPlaces += multipleRule.getNrOfToPlaces();
         }
-    
-        
-        
         return nrOfToPlaces;
     }
 
@@ -119,7 +117,7 @@ export class QualifyGroup extends Identifiable {
         
         let singleRule = this.firstSingleRule;
         while (singleRule !== undefined) {
-            if (singleRule.hasToPlace(toPlace)) {
+            if (singleRule.getMappingByToPlace(toPlace) !== undefined) {
                 return singleRule;
             }
             singleRule = singleRule.getNext();
@@ -134,9 +132,8 @@ export class QualifyGroup extends Identifiable {
     getFromPlace(toPlace: Place): Place | undefined {
         let singleRule = this.getRuleByToPlace(toPlace);
         if (singleRule instanceof HorizontalSingleQualifyRule) {
-            return singleRule.getFromPlace(toPlace);
-        } else if (singleRule instanceof VerticalSingleQualifyRule) {
-            return singleRule.getFromPlace(toPlace);
+            const mapping = singleRule.getMappingByToPlace(toPlace);
+            return mapping?.getFromPlace();
         }
         return undefined;
     }

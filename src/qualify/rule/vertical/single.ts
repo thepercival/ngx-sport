@@ -1,10 +1,10 @@
 import { QualifyGroup } from '../../group';
-import { QualifyPlaceMapping } from '../../placeMapping';
 import { Place } from '../../../place';
 import { VerticalQualifyRule } from '../vertical';
 import { VerticalMultipleQualifyRule } from './multiple';
 import { QualifyTarget } from '../../target';
 import { HorizontalPoule } from '../../../poule/horizontal';
+import { QualifyMappingByRank } from '../../mapping/byRank';
 
 export class VerticalSingleQualifyRule extends VerticalQualifyRule {
 
@@ -13,7 +13,7 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
     constructor(
         fromHorizontalPoule: HorizontalPoule,
         group: QualifyGroup,
-        private placeMappings: QualifyPlaceMapping[],
+        private byRankMappings: QualifyMappingByRank[],
         private previous: VerticalSingleQualifyRule | undefined) {
             
         super(fromHorizontalPoule);
@@ -26,64 +26,54 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
         }
     }
 
-    getMappings(): QualifyPlaceMapping[] {
-        return this.placeMappings;
+    getMappings(): QualifyMappingByRank[] {
+        return this.byRankMappings;
     }
 
     public getToPlaces(): Place[] {
-        return this.getMappings().map((placeMapping: QualifyPlaceMapping): Place => {
-            return placeMapping.getToPlace();
+        return this.getMappings().map((byRankMapping: QualifyMappingByRank): Place => {
+            return byRankMapping.getToPlace();
         });
     }
 
-    getToPlace(fromPlace: Place): Place {
-        const mapping = this.getMappings().find((placeMapping: QualifyPlaceMapping): boolean => {
-            return placeMapping.getFromPlace() === fromPlace;
+    getMappingByToPlace(toPlace: Place): QualifyMappingByRank | undefined {
+        return this.getMappings().find((byRankMapping: QualifyMappingByRank): boolean => {
+            return byRankMapping.getToPlace() === toPlace;
         });
-        if (mapping === undefined) {
-            throw Error('could not find toPlace');
-        }
-        return mapping.getToPlace();
     }
 
-    getFromPlace(toPlace: Place): Place {
-        const mapping = this.getMappings().find((placeMapping: QualifyPlaceMapping): boolean => {
-            return placeMapping.getToPlace() === toPlace;
-        });
-        if (mapping === undefined) {
-            throw Error('could not find fromPlace');
-        }
-        return mapping.getFromPlace();
+    getNrOfMappings(): number {
+        return this.byRankMappings.length;
     }
 
-    public getToPlaceIndex(toPlace: Place): number {
-        let rank = 0;
-        this.getMappings().every((mapping: QualifyPlaceMapping) => {
-            rank++;
-            if (mapping.getToPlace() === toPlace) {
-                return false;
-            }
-            return true;
-        });
-        return rank;
-    }
+    // public getToPlaceIndex(toPlace: Place): number {
+    //     let rank = 0;
+    //     this.getMappings().every((mapping: QualifyPlaceMapping) => {
+    //         rank++;
+    //         if (mapping.getToPlace() === toPlace) {
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+    //     return rank;
+    // }
 
-    hasToPlace(toPlace: Place): boolean {
-        try {
-            this.getFromPlace(toPlace);
-            return true;
-        } catch (error) {
-        }
-        return false;
-    }
+    // hasToPlace(toPlace: Place): boolean {
+    //     try {
+    //         this.getFromPlace(toPlace);
+    //         return true;
+    //     } catch (error) {
+    //     }
+    //     return false;
+    // }
 
-    getNrOfToPlaces(): number {
-        return this.placeMappings.length;
-    }
+    // getNrOfToPlaces(): number {
+    //     return this.placeMappings.length;
+    // }
 
-    public getNrOfDropouts(): number {
-        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
-    }
+    // public getNrOfDropouts(): number {
+    //     return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
+    // }
 
     getFirst(): VerticalSingleQualifyRule | VerticalMultipleQualifyRule {
         const previous = this.getPrevious();
@@ -127,7 +117,7 @@ export class VerticalSingleQualifyRule extends VerticalQualifyRule {
         if (neighBour === undefined) {
             return nrOfToPlacesTargetSide;
         }
-        return neighBour.getNrOfToPlaces() + neighBour.getNrOfToPlacesTargetSide(targetSide);
+        return neighBour.getNrOfMappings() + neighBour.getNrOfToPlacesTargetSide(targetSide);
     }
 
     detach() {

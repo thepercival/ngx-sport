@@ -2,7 +2,7 @@ import { Place } from "../../../place";
 import { Poule } from "../../../poule";
 import { HorizontalPoule } from "../../../poule/horizontal";
 import { QualifyGroup, Round } from "../../group";
-import { QualifyPlaceMapping } from "../../placeMapping";
+import { QualifyMappingByRank } from "../../mapping/byRank";
 import { QualifyTarget } from "../../target";
 import { VerticalMultipleQualifyRule } from "../vertical/multiple";
 import { VerticalSingleQualifyRule } from "../vertical/single";
@@ -26,7 +26,7 @@ export class VerticalQualifyRuleCreator {
             while ( fromHorPoulePlaces.length > 0 && childPlaces.length > 0) {
                 // SingleRule
                 if( fromHorPoulePlaces.length <= childPlaces.length) {                
-                    const placeMappings = this.fromPlacesToMappings(fromHorPoulePlaces, childPlaces);
+                    const placeMappings = this.fromPlacesToByRankMappings(fromHorPoulePlaces, childPlaces);
                     previous = new VerticalSingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previous );                    
                 } else {
                     const toPlaces = [];
@@ -65,7 +65,7 @@ export class VerticalQualifyRuleCreator {
         })
     }
 
-    protected fromPlacesToMappings(fromHorPoulePlaces: Place[], childPlaces: Place[]): QualifyPlaceMapping[] {
+    protected fromPlacesToByRankMappings(fromHorPoulePlaces: Place[], childPlaces: Place[]): QualifyMappingByRank[] {
         const mapping = [];
         let fromHorPoulePlace = fromHorPoulePlaces.shift();
         while (fromHorPoulePlace !== undefined) {
@@ -74,7 +74,7 @@ export class VerticalQualifyRuleCreator {
             if( childPoulePlace === undefined ) {
                 throw new Error('childPoulePlace should not be undefined');
             }
-            mapping.push( new QualifyPlaceMapping(fromHorPoulePlace, childPoulePlace ) );
+            mapping.push(new QualifyMappingByRank(fromHorPoulePlace.getPoule(), fromHorPoulePlace.getPlaceNr() , childPoulePlace ) );
             fromHorPoulePlace = fromHorPoulePlaces.shift();
         }
         return mapping;

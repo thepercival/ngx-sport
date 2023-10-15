@@ -25,7 +25,7 @@ export class HorizontalMultipleQualifyRule extends HorizontalQualifyRule {
         return this.toPlaces.indexOf(place) >= 0;
     }
 
-    public getToPlaceIndex(toPlace: Place): number {
+    public getRankByToPlace(toPlace: Place): number {
         const idx = this.toPlaces.indexOf(toPlace);
         return idx < 0 ? 0 : idx + 1;
     }

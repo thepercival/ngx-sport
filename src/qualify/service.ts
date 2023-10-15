@@ -6,7 +6,6 @@ import { QualifyGroup, Round } from './group';
 import { QualifyReservationService } from './reservationservice';
 import { RoundRankingCalculator } from '../ranking/calculator/round';
 import { QualifyTarget } from './target';
-import { QualifyPlaceMapping } from './placeMapping';
 import { RoundRankingItem } from '../ranking/item/round';
 import { GameState } from '../game/state';
 import { QualifyDistribution } from './distribution';
@@ -14,6 +13,8 @@ import { HorizontalSingleQualifyRule } from './rule/horizontal/single';
 import { HorizontalMultipleQualifyRule } from './rule/horizontal/multiple';
 import { VerticalSingleQualifyRule } from './rule/vertical/single';
 import { VerticalMultipleQualifyRule } from './rule/vertical/multiple';
+import { QualifyMappingByRank } from './mapping/byRank';
+import { QualifyMappingByPlace } from './mapping/byPlace';
 
 export class QualifyService {
     private roundRankingCalculator: RoundRankingCalculator;
@@ -27,8 +28,8 @@ export class QualifyService {
     setQualifiers(filterPoule?: Poule): Place[] {
         let changedPlaces: Place[] = [];
 
-        const setQualifiersForSingleRule = (singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule, reservationService: QualifyReservationService) => {
-            singleRule.getMappings().forEach((qualifyPlaceMapping: QualifyPlaceMapping) => {
+        const setQualifiersForSingleRule = (singleRule: HorizontalSingleQualifyRule, reservationService: QualifyReservationService) => {
+            singleRule.getMappings().forEach((qualifyPlaceMapping: QualifyMappingByPlace) => {
                 const fromPlace = qualifyPlaceMapping.getFromPlace();
                 if (filterPoule !== undefined && fromPlace.getPoule() !== filterPoule) {
                     return;
@@ -64,14 +65,20 @@ export class QualifyService {
     }
 
     protected setQualifierForPlaceMappingAndReserve(
-        qualifyPlaceMapping: QualifyPlaceMapping,
+        qualifyMapping: QualifyMappingByPlace|QualifyMappingByRank,
         reservationService: QualifyReservationService): void {
         
-        const poule = qualifyPlaceMapping.getFromPlace().getPoule();
-        const rank = qualifyPlaceMapping.getFromPlace().getPlaceNr();
+        let rank;
+        const poule = qualifyMapping.getFromPoule();
+        if (qualifyMapping instanceof QualifyMappingByPlace) {
+            rank = qualifyMapping.getFromPlace().getPlaceNr();
+        } else {
+            rank = qualifyMapping.getFromRank();
+        }
+
         const qualifiedPlace = this.getQualifiedPlace(poule, rank);
-        qualifyPlaceMapping.getToPlace().setQualifiedPlace(qualifiedPlace);
-        reservationService.reserve(qualifyPlaceMapping.getToPlace().getPoule().getNumber(), poule);
+        qualifyMapping.getToPlace().setQualifiedPlace(qualifiedPlace);
+        reservationService.reserve(qualifyMapping.getToPlace().getPoule().getNumber(), poule);
     }
 
     protected setQualifiersForRankedRuleAndReserve(rankedRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule, reservationService: QualifyReservationService): Place[] {
