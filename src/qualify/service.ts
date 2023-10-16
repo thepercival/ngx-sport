@@ -65,16 +65,12 @@ export class QualifyService {
     }
 
     protected setQualifierForPlaceMappingAndReserve(
-        qualifyMapping: QualifyMappingByPlace|QualifyMappingByRank,
+        qualifyMapping: QualifyMappingByPlace,
         reservationService: QualifyReservationService): void {
         
-        let rank;
-        const poule = qualifyMapping.getFromPoule();
-        if (qualifyMapping instanceof QualifyMappingByPlace) {
-            rank = qualifyMapping.getFromPlace().getPlaceNr();
-        } else {
-            rank = qualifyMapping.getFromRank();
-        }
+        const poule = qualifyMapping.getFromPoule();       
+        const rank = qualifyMapping.getFromPlace().getPlaceNr();
+       
 
         const qualifiedPlace = this.getQualifiedPlace(poule, rank);
         qualifyMapping.getToPlace().setQualifiedPlace(qualifiedPlace);

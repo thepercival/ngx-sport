@@ -2,6 +2,7 @@ import { HorizontalPoule } from '../../../poule/horizontal';
 import { Place } from '../../../place';
 import { QualifyGroup } from '../../group';
 import { HorizontalQualifyRule } from '../horizontal';
+import { QualifyTarget } from '../../target';
 
 export class HorizontalMultipleQualifyRule extends HorizontalQualifyRule {
 
@@ -25,8 +26,12 @@ export class HorizontalMultipleQualifyRule extends HorizontalQualifyRule {
         return this.toPlaces.indexOf(place) >= 0;
     }
 
-    public getRankByToPlace(toPlace: Place): number {
+    public getAbsoluteRankByToPlace(toPlace: Place): number {
         const idx = this.toPlaces.indexOf(toPlace);
+        if (this.getQualifyTarget() === QualifyTarget.Losers ) {
+            const nrOfHorPlaces = this.getFromHorizontalPoule().getPlaces().length;
+            return idx < 0 ? 0 : nrOfHorPlaces - idx;
+        }
         return idx < 0 ? 0 : idx + 1;
     }
 
@@ -38,9 +43,9 @@ export class HorizontalMultipleQualifyRule extends HorizontalQualifyRule {
         return this.toPlaces.length;
     }
 
-    public getNrOfDropouts(): number {
-        return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
-    }
+    // public getNrOfDropouts(): number {
+    //     return this.fromHorizontalPoule.getPlaces().length - this.getNrOfToPlaces();
+    // }
 
     detach() {
         this.getFromHorizontalPoule().setQualifyRuleNew(undefined);

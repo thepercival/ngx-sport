@@ -6,7 +6,7 @@ import { jsonBaseCompetition } from '../../data/competition';
 
 import { createGames } from '../../helpers/gamescreator';
 import { createTeamCompetitors } from '../../helpers/teamcompetitorscreator';
-import { QualifyTarget, StartLocationMap, StructureNameService } from '../../../public-api';
+import { QualifyDistribution, QualifyTarget, StartLocationMap, StructureNameService, VerticalSingleQualifyRule } from '../../../public-api';
 import { createPlanningConfigNoTime } from '../../helpers/planningConfigCreator';
 import { StructureOutput } from '../../helpers/structureOutput';
 
@@ -190,7 +190,7 @@ describe('StructureNameService', () => {
         const competitorMap = new StartLocationMap([firstTeamCompetitor]);
         const nameService = new StructureNameService(competitorMap);
         nameService.enableConsoleOutput();
-        const rootRound = structure.getSingleCategory().getRootRound();
+        const rootRound = structure.getSingleCategory().getRootRound();        
 
         // basics
         {
@@ -244,6 +244,8 @@ describe('StructureNameService', () => {
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false)).to.equal('2eD');
             expect(nameService.getPlaceFromName(winnersLosersFirstPlace, false, true)).to.equal('2e pl. wed. D');
         }
+
+        // (new StructureOutput()).toConsole(structure, console);
     });
 
     it('places fromname', () => {
@@ -303,6 +305,70 @@ describe('StructureNameService', () => {
             const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2); // 3e3
             expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('3e3');
             expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, true)).to.equal('3e van 2e pl. van onderen');
+        }
+    });
+
+    it('place fromname 3 vertical', () => {
+
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [5, 5, 5, 5], createPlanningConfigNoTime());
+        const firstTeamCompetitor = createTeamCompetitors(competition, structure.getRootRounds()).shift();
+        expect(firstTeamCompetitor).to.not.equal(undefined);
+        if (!firstTeamCompetitor) {
+            return
+        }
+        const competitorMap = new StartLocationMap([firstTeamCompetitor]);
+        const nameService = new StructureNameService(competitorMap);
+        nameService.enableConsoleOutput();
+        const rootRound = structure.getSingleCategory().getRootRound();
+
+        // basics
+        {
+            const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [3, 3, 3], QualifyDistribution.Vertical);
+            const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3, 3, 3], QualifyDistribution.Vertical);
+
+            const sr = losersRound.getParentQualifyGroup().getFirstSingleRule();
+            // (new StructureOutput()).toConsole(structure, console);
+
+            const winnersThirdPlaceThirdPoule = winnersRound.getPoule(3).getPlace(3);
+            expect(nameService.getPlaceFromName(winnersThirdPlaceThirdPoule, false, false)).to.equal('1e3');
+
+            const losersFirstPlaceFirstPoule = losersRound.getPoule(1).getPlace(1);
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('4e3');
+            
+        }
+    });
+
+    it('place fromname 3 vertical losers', () => {
+
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [3, 3, 3, 2], createPlanningConfigNoTime());
+        const firstTeamCompetitor = createTeamCompetitors(competition, structure.getRootRounds()).shift();
+        expect(firstTeamCompetitor).to.not.equal(undefined);
+        if (!firstTeamCompetitor) {
+            return
+        }
+        const competitorMap = new StartLocationMap([firstTeamCompetitor]);
+        const nameService = new StructureNameService(competitorMap);
+        nameService.enableConsoleOutput();
+        const rootRound = structure.getSingleCategory().getRootRound();
+
+        // basics
+        {
+            const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [3, 3], QualifyDistribution.Vertical);
+
+            // (new StructureOutput()).toConsole(structure, console);
+
+            const losersSecondPlaceFirstPoule = losersRound.getPoule(1).getPlace(2);
+            expect(nameService.getPlaceFromName(losersSecondPlaceFirstPoule, false, false)).to.equal('4e2');
+
+            const losersThirdPlaceFirstPoule = losersRound.getPoule(1).getPlace(3);
+            expect(nameService.getPlaceFromName(losersThirdPlaceFirstPoule, false, false)).to.equal('1e3');
+
+            const losersThirdPlaceSecondPoule = losersRound.getPoule(2).getPlace(3);
+            expect(nameService.getPlaceFromName(losersThirdPlaceSecondPoule, false, false)).to.equal('4e3');
         }
     });
 

@@ -16,7 +16,8 @@ export class VerticalQualifyRuleCreator {
             
         const childRound = qualifyGroup.getChildRound();
         let childPlaces = this.getRoundPlaces(childRound);
-        if (qualifyGroup.getTarget() === QualifyTarget.Losers) {
+        const qualifyTarget = qualifyGroup.getTarget();
+        if (qualifyTarget  === QualifyTarget.Losers) {
             childPlaces.reverse();
         }
         
@@ -26,23 +27,20 @@ export class VerticalQualifyRuleCreator {
             while ( fromHorPoulePlaces.length > 0 && childPlaces.length > 0) {
                 // SingleRule
                 if( fromHorPoulePlaces.length <= childPlaces.length) {                
-                    const placeMappings = this.fromPlacesToByRankMappings(fromHorPoulePlaces, childPlaces);
+                    const placeMappings = this.fromPlacesToByRankMappings(qualifyTarget, fromHorPoulePlaces, childPlaces);
                     previous = new VerticalSingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previous );                    
                 } else {
                     const toPlaces = [];
-
-                    let fromHorPoulePlace = fromHorPoulePlaces.shift();                    
-                    while( fromHorPoulePlace !== undefined && childPlaces.length > 0 ) {                        
+                    let nrOfHorPoulePlaces = fromHorPoulePlaces.length;
+                    while (nrOfHorPoulePlaces-- > 0 && childPlaces.length > 0 ) {                        
                         toPlaces.push(childPlaces.shift());
                         // placeMappings.push(new QualifyPlaceMapping(fromHorPoulePlace, childPlace));
-                        fromHorPoulePlace = fromHorPoulePlaces.shift();                    
                     }
-   
                     new VerticalMultipleQualifyRule(fromHorPoule, qualifyGroup, toPlaces );
                 }
             }   
         });
-        // console.log(qualifyGroup.getFirstVerticalRule());
+        // console.log(qualifyGroup.getFirstSingleRule());
     }
 
     protected getRoundPlaces(round: Round): Place[] {
@@ -65,8 +63,11 @@ export class VerticalQualifyRuleCreator {
         })
     }
 
-    protected fromPlacesToByRankMappings(fromHorPoulePlaces: Place[], childPlaces: Place[]): QualifyMappingByRank[] {
+    protected fromPlacesToByRankMappings(
+        qualifyTarget: QualifyTarget, fromHorPoulePlaces: Place[], childPlaces: Place[]): QualifyMappingByRank[] {
         const mapping = [];
+        let rank = qualifyTarget === QualifyTarget.Losers ? fromHorPoulePlaces.length : 1;
+
         let fromHorPoulePlace = fromHorPoulePlaces.shift();
         while (fromHorPoulePlace !== undefined) {
             
@@ -74,7 +75,9 @@ export class VerticalQualifyRuleCreator {
             if( childPoulePlace === undefined ) {
                 throw new Error('childPoulePlace should not be undefined');
             }
-            mapping.push(new QualifyMappingByRank(fromHorPoulePlace.getPoule(), fromHorPoulePlace.getPlaceNr() , childPoulePlace ) );
+            mapping.push(new QualifyMappingByRank(rank, childPoulePlace ) );
+            qualifyTarget === QualifyTarget.Losers ? rank-- : rank++;
+            
             fromHorPoulePlace = fromHorPoulePlaces.shift();
         }
         return mapping;

@@ -42,7 +42,7 @@ export class HorizontalPoule {
         return this.number;
     }
 
-    getPlaceNumber(): number {
+    getAbsoluteNumber(): number {
         if (this.getQualifyTarget() !== QualifyTarget.Losers) {
             return this.number;
         }

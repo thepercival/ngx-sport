@@ -1,4 +1,5 @@
 import { Poule } from "../poule";
+import { QualifyDistribution } from "./distribution";
 import { QualifyGroup, Round } from "./group";
 import { QualifyMappingByPlace } from "./mapping/byPlace";
 import { QualifyMappingByRank } from "./mapping/byRank";
@@ -26,21 +27,26 @@ export class PossibleFromMap {
 
     protected addGroup(group: QualifyGroup): void {
         
-        let singleRule = group.getFirstSingleRule();
-        while (singleRule !== undefined) {
-            singleRule.getMappings().forEach((mapping: QualifyMappingByPlace | QualifyMappingByRank) => this.addMapping(mapping));
-            singleRule = singleRule.getNext();
+        if (group.getDistribution() === QualifyDistribution.Vertical ) {
+            if (group.getFirstSingleRule() !== undefined || group.getMultipleRule() !== null) {
+                this.addGroupToMap(group);
+            }
+        } else {
+
+            let singleRule = group.getFirstSingleRule();
+            while (singleRule !== undefined) {
+                singleRule.getMappings().forEach((mapping: QualifyMappingByPlace | QualifyMappingByRank) => {
+                    if (mapping instanceof QualifyMappingByPlace) {
+                        this.addMappingToMap(mapping);
+                    } 
+                });
+                singleRule = singleRule.getNext();
+            }
+            const multipRule = group.getMultipleRule();
+            if (multipRule !== undefined) {
+                this.addGroupToMap(group);
+            }
         }
-        const multipRule = group.getMultipleRule();
-        if (multipRule === undefined) {
-            return;
-        }
-        this.empty = false;
-        const parentPoules = group.getParentRound().getPoules();
-        group.getChildRound().getPoules().forEach((childPoule: Poule) => {
-            this.map[childPoule.getNumber()] = parentPoules;
-        });
-        
     }
 
     public createParent(): PossibleFromMap | undefined {
@@ -55,10 +61,18 @@ export class PossibleFromMap {
         return new PossibleFromMap(parentQualifyGroup.getParentRound(), true);
     }
 
-    public addMapping(placeMapping: QualifyMappingByPlace | QualifyMappingByRank): void {
+    public addMappingToMap(placeMapping: QualifyMappingByPlace): void {
         this.empty = false;
         const childPouleNumber = placeMapping.getToPlace().getPoule().getNumber();
         this.map[childPouleNumber].push(placeMapping.getFromPoule());
+    }
+
+    protected addGroupToMap(group: QualifyGroup): void {
+        this.empty = false;
+        const parentPoules = group.getParentRound().getPoules();
+        group.getChildRound().getPoules().forEach((childPoule: Poule) => {
+            this.map[childPoule.getNumber()] = parentPoules;
+        });
     }
 
     public getFromPoules(childPoule: Poule): Poule[] {

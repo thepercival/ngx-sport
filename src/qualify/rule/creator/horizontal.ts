@@ -101,7 +101,7 @@ export class HorizontalQualifyRuleCreator {
             const bestFromPlace = this.removeBestHorizontalPlace(fromHorPoulePlaces, bestFromPoule);
             const placeMapping = new QualifyMappingByPlace(bestFromPlace, childRoundPlace);
             mappings.push(placeMapping);
-            this.possibleFromMap.addMapping(placeMapping);
+            this.possibleFromMap.addMappingToMap(placeMapping);
         }
         return mappings;
     }

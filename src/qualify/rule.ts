@@ -21,8 +21,4 @@ export class QualifyRule {
     getFromRound(): Round {
         return this.fromHorizontalPoule.getRound();
     }
-
-    getFromPlaceNumber(): number {
-        return this.fromHorizontalPoule.getPlaceNumber();
-    }
 }

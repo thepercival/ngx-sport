@@ -169,7 +169,7 @@ export class StructureNameService {
         const absolute = rule.getQualifyTarget() === QualifyTarget.Winners || balanced;
 
         const fromHorPoule = rule.getFromHorizontalPoule();
-        const fromNumber = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
+        const fromNumber = absolute ? fromHorPoule.getAbsoluteNumber() : fromHorPoule.getNumber();
 
         let name = this.getOrdinalOutput(fromNumber);
         if (rule.getQualifyTarget() === QualifyTarget.Losers && !absolute) {
@@ -184,31 +184,22 @@ export class StructureNameService {
         longName: boolean,
         absolute: boolean
     ): string {
-        const fromHorPoule = rule.getFromHorizontalPoule();
-        
-        // CONVERSION FROM HorPoule TO RANK
-        const fromRankContainer = absolute ? fromHorPoule.getPlaceNumber() : fromHorPoule.getNumber();
+        const fromHorPoule = rule.getFromHorizontalPoule();      
         
         let fromRank;
         if (rule instanceof VerticalSingleQualifyRule) {
             const byRankMapping = rule.getMappingByToPlace(toPlace);
             if (byRankMapping === undefined) {
                 throw Error('no mapping found');
-            }
+            }            
             fromRank = byRankMapping.getFromRank();
+            // console.log(fromRank);
         } else {
-            fromRank = rule.getRankByToPlace(toPlace);
+            fromRank = rule.getAbsoluteRankByToPlace(toPlace);
         }
 
-        if (rule.getQualifyTarget() === QualifyTarget.Losers) {
-            let total;
-            if (rule instanceof VerticalSingleQualifyRule) {
-                total = rule.getNrOfMappings();
-            } else {
-                total = rule.getNrOfToPlaces() + rule.getNrOfDropouts();
-            }
-            fromRank = (total + 1) - fromRank;
-        }
+        // CONVERSION FROM HorPoule TO RANK
+        const fromRankContainer = absolute ? fromHorPoule.getAbsoluteNumber() : fromHorPoule.getNumber();
 
         const fromRankOrdinal = this.getOrdinalOutput(fromRank);
         if (!longName) {
