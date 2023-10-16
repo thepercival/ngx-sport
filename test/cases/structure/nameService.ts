@@ -391,7 +391,7 @@ describe('StructureNameService', () => {
         {
             const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2], QualifyDistribution.Vertical);
 
-            (new StructureOutput()).toConsole(structure, console);
+            // (new StructureOutput()).toConsole(structure, console);
 
             const losersFirstPlaceFirstPoule = winnersRound.getPoule(1).getPlace(1);
             expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('1e1');
