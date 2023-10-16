@@ -372,4 +372,29 @@ describe('StructureNameService', () => {
         }
     });
 
+    it('place fromname 333 vertical to 22 winners', () => {
+
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [3, 3, 3], createPlanningConfigNoTime());
+        const firstTeamCompetitor = createTeamCompetitors(competition, structure.getRootRounds()).shift();
+        expect(firstTeamCompetitor).to.not.equal(undefined);
+        if (!firstTeamCompetitor) {
+            return
+        }
+        const competitorMap = new StartLocationMap([firstTeamCompetitor]);
+        const nameService = new StructureNameService(competitorMap);
+        nameService.enableConsoleOutput();
+        const rootRound = structure.getSingleCategory().getRootRound();
+
+        // basics
+        {
+            const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2, 2], QualifyDistribution.Vertical);
+
+            (new StructureOutput()).toConsole(structure, console);
+
+            const losersFirstPlaceFirstPoule = winnersRound.getPoule(1).getPlace(1);
+            expect(nameService.getPlaceFromName(losersFirstPlaceFirstPoule, false, false)).to.equal('1e1');
+        }
+    });
 });

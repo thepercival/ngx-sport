@@ -425,6 +425,44 @@ export class StructureEditor {
             && this.getNrOfQualifiersNext(next) >= this.getMinPlacesPerPouleSmall();
     }
 
+    /**
+* 1 : wanneer er een kw.groep van minimaal 2 horizontale poules is (grens h poule  moet minimaal twee door laten gaan) 
+* 2 : 2 kw.groepen van winners of losers.
+*/
+    areSomeQualifyGroupsEditable(parentRound: Round, target: QualifyTarget): boolean {
+        return this.areSomeQualifyGroupsSplittable(parentRound, target)
+            || this.areSomeQualifyGroupsMergable(parentRound, target);
+    }
+
+    areSomeQualifyGroupsSplittable(parentRound: Round, target: QualifyTarget): boolean {
+        return parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
+            return this.isQualifyGroupSplittable(qualifyGroup);
+        });
+    }
+
+    areSomeQualifyGroupsMergable(parentRound: Round, target: QualifyTarget): boolean {
+        let previous: QualifyGroup | undefined;
+        return parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
+            if (previous && this.areQualifyGroupsMergable(previous, qualifyGroup)) {
+                return true;
+            };
+            previous = qualifyGroup;
+            return false;
+        });
+    }
+
+    isQualifyGroupSplittable(qualifyGroup: QualifyGroup): boolean {
+        //console.log('isQualifyGroupSplittable',qualifyGroup);
+        let singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
+        while (singleRule !== undefined) {
+            if (this.isQualifyGroupSplittableAt(singleRule)) {
+                return true;
+            }
+            singleRule = singleRule.getNext();
+        }
+        return false;
+    }
+
     // horizontalPoule is split-points, from which qualifyGroup
     splitQualifyGroupFrom(qualifyGroup: QualifyGroup, singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) {
         const parentRound = qualifyGroup.getParentRound();
@@ -583,6 +621,8 @@ export class StructureEditor {
             });
         });
     }
+
+    
 }
 
 export interface PlaceRange extends VoetbalRange {
