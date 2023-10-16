@@ -429,18 +429,19 @@ export class StructureEditor {
 * 1 : wanneer er een kw.groep van minimaal 2 horizontale poules is (grens h poule  moet minimaal twee door laten gaan) 
 * 2 : 2 kw.groepen van winners of losers.
 */
-    areSomeQualifyGroupsEditable(parentRound: Round, target: QualifyTarget): boolean {
-        return this.areSomeQualifyGroupsSplittable(parentRound, target)
-            || this.areSomeQualifyGroupsMergable(parentRound, target);
+    isSomeQualifyGroupEditable(parentRound: Round, target: QualifyTarget): boolean {
+        return this.isSomeQualifyGroupSplittable(parentRound, target)
+            || this.isSomeQualifyGroupMergable(parentRound, target)
+            || this.hasSomeQualifyGroupASingleRule(parentRound, target);
     }
 
-    areSomeQualifyGroupsSplittable(parentRound: Round, target: QualifyTarget): boolean {
+    isSomeQualifyGroupSplittable(parentRound: Round, target: QualifyTarget): boolean {
         return parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
             return this.isQualifyGroupSplittable(qualifyGroup);
         });
     }
 
-    areSomeQualifyGroupsMergable(parentRound: Round, target: QualifyTarget): boolean {
+    isSomeQualifyGroupMergable(parentRound: Round, target: QualifyTarget): boolean {
         let previous: QualifyGroup | undefined;
         return parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
             if (previous && this.areQualifyGroupsMergable(previous, qualifyGroup)) {
@@ -448,6 +449,12 @@ export class StructureEditor {
             };
             previous = qualifyGroup;
             return false;
+        });
+    }
+
+    hasSomeQualifyGroupASingleRule(parentRound: Round, target: QualifyTarget): boolean {
+        return parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
+            return qualifyGroup.getFirstSingleRule() !== undefined;
         });
     }
 
