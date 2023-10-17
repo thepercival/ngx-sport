@@ -28,6 +28,7 @@ export class CategoryMapper {
 
     toObject(json: JsonCategory, firstRoundNumber: RoundNumber, disableCache?: boolean): Category {
         const category = new Category(firstRoundNumber.getCompetition(), json.name, json.number);
+        category.setAbbreviation(json.abbreviation);
 
         this.structureCellMapper.toObject(json.firstStructureCell, category, firstRoundNumber);
 
@@ -53,6 +54,7 @@ export class CategoryMapper {
             id: category.getId(),
             name: category.getName(),
             number: category.getNumber(),
+            abbreviation: category.getAbbreviation(),
             firstStructureCell: this.structureCellMapper.toJson(category.getFirstStructureCell()),
             rootRound: this.roundMapper.toJson(category.getRootRound())
         };

@@ -55,8 +55,9 @@ export class StructureEditor {
         const firstRoundNumber = new RoundNumber(competition, undefined);
         this.planningConfigMapper.toObject(jsonPlanningConfig, firstRoundNumber);
 
+        const newCategoryName = categoryName ?? Category.DefaultName;
         const category = this.addCategoryHelper(
-            categoryName ?? Category.DefaultName, 1, firstRoundNumber,
+            newCategoryName, newCategoryName.substring(0,1), 1, firstRoundNumber,
             new BalancedPouleStructure(...pouleStructure)
         );
 
@@ -74,12 +75,13 @@ export class StructureEditor {
 
     public addCategory(
         name: string,
-        number: number,
+        abbreviation: string | undefined,
+        number: number,        
         firstRoundNumber: RoundNumber,
         pouleStructure: BalancedPouleStructure): Category {
 
         // begin editing
-        const category = this.addCategoryHelper(name, number, firstRoundNumber, pouleStructure);
+        const category = this.addCategoryHelper(name, abbreviation, number, firstRoundNumber, pouleStructure);
         firstRoundNumber.getCompetitionSports().forEach((competitionSport: CompetitionSport) => {
             this.competitionSportEditor.addToCategory(competitionSport, category);
         });
@@ -92,6 +94,7 @@ export class StructureEditor {
 
     public addCategoryHelper(
         name: string,
+        abbreviation: string | undefined,
         number: number,
         firstRoundNumber: RoundNumber,
         pouleStructure: BalancedPouleStructure): Category {
@@ -100,6 +103,7 @@ export class StructureEditor {
         const competition = firstRoundNumber.getCompetition();
 
         const category = new Category(competition, name, number);
+        category.setAbbreviation(abbreviation);
         const structureCell = new StructureCell(category, firstRoundNumber);
         const rootRound = new Round(structureCell, undefined);
 

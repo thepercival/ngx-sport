@@ -8,6 +8,7 @@ export class Category extends Identifiable {
 
     public static readonly DefaultName = 'standaard';
     protected structureCells: StructureCell[] = [];
+    protected abbreviation: string|undefined;
 
     constructor(
         protected competition: Competition,
@@ -23,6 +24,14 @@ export class Category extends Identifiable {
 
     setName(name: string): void {
         this.name = name;
+    }
+
+    getAbbreviation(): string|undefined {
+        return this.abbreviation;
+    }
+
+    setAbbreviation(abbreviation: string|undefined): void {
+        this.abbreviation = abbreviation;
     }
 
     getNumber(): number {

@@ -832,7 +832,7 @@ describe('StructureEditor', () => {
         const category1 = structure.getSingleCategory();
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
 
-        const category2 = structureEditor.addCategory('j78', 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
+        const category2 = structureEditor.addCategory('j78', undefined, 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
         structure.getCategories().push(category2);
 
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
