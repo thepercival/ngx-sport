@@ -47,6 +47,8 @@ describe('QualifyService', () => {
         setAgainstScoreSingle(pouleOne, 3, 5, 5, 3);
         setAgainstScoreSingle(pouleOne, 4, 5, 5, 4);
 
+        // (new StructureOutput()).toConsole(structure, console);
+
         const qualifyService = new QualifyService(rootRound);
         qualifyService.setQualifiers();
 

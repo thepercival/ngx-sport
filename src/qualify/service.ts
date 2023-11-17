@@ -34,7 +34,7 @@ export class QualifyService {
                 if (filterPoule !== undefined && fromPlace.getPoule() !== filterPoule) {
                     return;
                 }
-                this.setQualifierForPlaceMappingAndReserve(qualifyPlaceMapping, reservationService);
+                this.setQualifierForPlaceMappingAndReserve(singleRule.getRank(), qualifyPlaceMapping, reservationService);
                 changedPlaces.push(qualifyPlaceMapping.getToPlace());
             });
         };
@@ -65,12 +65,11 @@ export class QualifyService {
     }
 
     protected setQualifierForPlaceMappingAndReserve(
+        rank: number,
         qualifyMapping: QualifyMappingByPlace,
         reservationService: QualifyReservationService): void {
         
         const poule = qualifyMapping.getFromPoule();       
-        const rank = qualifyMapping.getFromPlace().getPlaceNr();
-       
 
         const qualifiedPlace = this.getQualifiedPlace(poule, rank);
         qualifyMapping.getToPlace().setQualifiedPlace(qualifiedPlace);

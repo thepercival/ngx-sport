@@ -14,8 +14,8 @@ export class QualifyRule {
         return this.fromHorizontalPoule;
     }
 
-    getNumber(): number {
-        return this.fromHorizontalPoule.getNumber();
+    getRank(): number {
+        return this.fromHorizontalPoule.getAbsoluteNumber();
     }
 
     getFromRound(): Round {

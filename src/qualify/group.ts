@@ -91,7 +91,14 @@ export class QualifyGroup extends Identifiable {
     }
 
     getNrOfSingleRules(): number {
-        return this.getFirstSingleRule()?.getLast().getNumber() ?? 0;
+        let nrOfSingleRules = 0;
+        
+        let singleRule = this.firstSingleRule;
+        while  (singleRule !== undefined) {
+            nrOfSingleRules++;
+            singleRule = singleRule.getNext();
+        }
+        return nrOfSingleRules;
     }
 
     getRulesNrOfToPlaces(): number {
