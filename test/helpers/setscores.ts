@@ -2,7 +2,7 @@ import { AgainstGame, AgainstScore, AgainstSide, Poule, GameState } from "../../
 import { GamePhase } from "../../src/game/phase";
 
 export function setAgainstScoreSingle(poule: Poule, homePlaceNr: number, awayPlaceNr: number, homeGoals: number, awayGoals: number
-    , state?: number, homeExtraPoints?: number, awayExtraPoints?: number) {
+    , state?: GameState, homeExtraPoints?: number, awayExtraPoints?: number) {
     const homePlace = poule.getPlace(homePlaceNr);
     const awayPlace = poule.getPlace(awayPlaceNr);
     if (!homePlace || !awayPlace) {

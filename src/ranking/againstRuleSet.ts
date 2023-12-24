@@ -1,1 +1,1 @@
-export enum AgainstRuleSet { DiffFirst = 1, AmongFirst }
+export enum AgainstRuleSet { DiffFirst = 'diffFirst', AmongFirst = 'amongFirst' }

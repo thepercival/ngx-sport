@@ -1,1 +1,1 @@
-export enum AgainstSide { Home = 1, Away }
+export enum AgainstSide { Home = 'home', Away = 'away' }

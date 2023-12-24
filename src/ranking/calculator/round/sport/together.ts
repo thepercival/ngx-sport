@@ -29,6 +29,6 @@ export class TogetherSportRoundRankingCalculator extends SportRoundRankingCalcul
     }
 
     protected getFilteredGames(games: TogetherGame[]): TogetherGame[] {
-        return games.filter((game: TogetherGame) => this.gameStateMap[+game.getState()] !== undefined);
+        return games.filter((game: TogetherGame) => this.gameStateMap[game.getState()] !== undefined);
     }
 }

@@ -1,3 +1,3 @@
 export enum PlanningEditMode {
-    Auto = 1, Manual
+    Auto = 'auto', Manual = 'manual'
 }

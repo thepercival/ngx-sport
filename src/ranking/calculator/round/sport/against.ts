@@ -38,7 +38,7 @@ export class AgainstSportRoundRankingCalculator extends SportRoundRankingCalcula
     }
 
     protected getFilteredGames(games: AgainstGame[]): AgainstGame[] {
-        return games.filter((game: AgainstGame) => this.gameStateMap[+game.getState()] !== undefined);
+        return games.filter((game: AgainstGame) => this.gameStateMap[game.getState()] !== undefined);
     }
 
     private getGamesAmongEachOther = (places: Place[], games: AgainstGame[]): AgainstGame[] => {

@@ -1,1 +1,1 @@
-export enum SelfReferee { Disabled = 0, OtherPoules, SamePoule }
+export enum SelfReferee { Disabled = 'disabled', OtherPoules = 'otherPoules', SamePoule = 'samePoule' }

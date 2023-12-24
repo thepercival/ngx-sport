@@ -1,1 +1,1 @@
-export enum PointsCalculation { AgainstGamePoints = 0, Scores, Both }
+export enum PointsCalculation { AgainstGamePoints = 'gainstGamePoints', Scores = 'scores', Both = 'both' }

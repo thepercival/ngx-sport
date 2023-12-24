@@ -18,7 +18,7 @@ export abstract class SportRoundRankingCalculator {
         protected competitionSport: CompetitionSport,
         gameStates: GameState[]
     ) {
-        gameStates.forEach((state: GameState) => this.gameStateMap[+state] = true);
+        gameStates.forEach((state: GameState) => this.gameStateMap[state] = true);
         this.rankingRuleGetter = new RankingRuleGetter();
     }
 

@@ -1,1 +1,1 @@
-export enum GameMode { Single = 1, Against, AllInOneGame }
+export enum GameMode { Single = 'single', Against = 'against', AllInOneGame = 'allInOneGame' }

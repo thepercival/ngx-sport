@@ -64,7 +64,7 @@ export class GameMapper {
 
     protected toNewHelper(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame): AgainstGame | TogetherGame {
         game.setId(json.id);
-        game.setState(+json.state);
+        game.setState(json.state);
         if (json.field) {
             game.setField(this.fieldMapper.getFromCompetitionSport(json.field.id, game.getCompetitionSport()));
         }
@@ -126,7 +126,7 @@ export class GameMapper {
     }
 
     protected toExistingHelper(json: JsonAgainstGame | JsonTogetherGame, game: Game | TogetherGame) {
-        game.setState(+json.state);
+        game.setState(json.state);
         game.setStartDateTime(new Date(json.startDateTime));
         return game;
     }
