@@ -29,8 +29,7 @@ export class GameMapper {
         private gamePlaceMapper: GamePlaceMapper,
         private fieldMapper: FieldMapper,
         private refereeMapper: RefereeMapper,
-        private scoreMapper: ScoreMapper,
-        private competitionSportMapper: CompetitionSportMapper
+        private scoreMapper: ScoreMapper
     ) { }
 
     setPlaceMap(placeMap: PlaceMap) {
@@ -38,7 +37,7 @@ export class GameMapper {
     }
 
     toNew(json: JsonTogetherGame | JsonAgainstGame, poule: Poule, map: CompetitionSportMap): TogetherGame | AgainstGame {
-        const competitionSport = map[json.competitionSport.id];
+        const competitionSport = map[json.competitionSportId];
         if (competitionSport.getVariant() instanceof AgainstVariant) {
             return this.toNewAgainst(<JsonAgainstGame>json, poule, competitionSport);
         }
@@ -142,7 +141,7 @@ export class GameMapper {
         return {
             id: game.getId(),
             places: game.getAgainstPlaces().map(gamePlace => this.gamePlaceMapper.toJsonAgainst(gamePlace)),
-            competitionSport: this.competitionSportMapper.toJson(game.getCompetitionSport()),
+            competitionSportId: game.getCompetitionSport().getId(),
             batchNr: game.getBatchNr(),
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,
@@ -163,7 +162,7 @@ export class GameMapper {
         return {
             id: game.getId(),
             places: game.getTogetherPlaces().map(gamePlace => this.gamePlaceMapper.toJsonTogether(gamePlace)),
-            competitionSport: this.competitionSportMapper.toJson(game.getCompetitionSport()),
+            competitionSportId: game.getCompetitionSport().getId(),
             batchNr: game.getBatchNr(),
             field: field ? this.fieldMapper.toJson(field) : undefined,
             referee: referee ? this.refereeMapper.toJson(referee) : undefined,

@@ -47,7 +47,7 @@ export function createGames(roundNumber: RoundNumber) {
     const multiSports = roundNumber.getCompetition().hasMultipleSports();
     roundNumber.getPoules(undefined).forEach((poule: Poule) => {
         getJson(poule, multiSports).forEach((jsonGame: JsonAgainstGame): AgainstGame => {
-            const competitionSport = sportMap[jsonGame.competitionSport.id];
+            const competitionSport = sportMap[jsonGame.competitionSportId];
             return gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
     });

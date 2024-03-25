@@ -41,11 +41,11 @@ export class PlanningMapper {
         }
 
         jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
-            const competitionSport = sportMap[jsonGame.competitionSport.id];
+            const competitionSport = sportMap[jsonGame.competitionSportId];
             this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
         jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
-            const competitionSport = sportMap[jsonGame.competitionSport.id];
+            const competitionSport = sportMap[jsonGame.competitionSportId];
             this.gameMapper.toNewTogether(jsonGame, poule, competitionSport);
         });
         return poule.getGames().length > 0;

@@ -7,7 +7,7 @@ import { JsonSport } from "../../src/sport/json";
 
 
 export const jsonVoetbal: JsonSport = {
-    id: 0,
+    id: 1,
     name: 'voetbal',
     team: true,
     customId: 0,
@@ -16,7 +16,7 @@ export const jsonVoetbal: JsonSport = {
 };
 
 export const jsonHockey: JsonSport = {
-    id: 0,
+    id: 2,
     name: 'hockey',
     team: true,
     customId: 0,
@@ -25,7 +25,7 @@ export const jsonHockey: JsonSport = {
 };
 
 export const jsonBasketball: JsonSport = {
-    id: 0,
+    id: 3,
     name: 'basketbal',
     team: true,
     customId: 0,
@@ -51,7 +51,7 @@ export const jsonBaseCompetition: JsonCompetition = {
     },
     sports: [
         {
-            id: 0,
+            id: jsonVoetbal.id,
             sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -101,7 +101,7 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
     },
     sports: [
         {
-            id: 1,
+            id: jsonVoetbal.id,
             sport: jsonVoetbal,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -129,7 +129,7 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
             ],
         },
         {
-            id: 2,
+            id: jsonHockey.id,
             sport: jsonHockey,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,
@@ -157,7 +157,7 @@ export const jsonMultiSportsCompetition: JsonCompetition = {
             ],
         },
         {
-            id: 3,
+            id: jsonBasketball.id,
             sport: jsonBasketball,
             gameMode: GameMode.Against,
             nrOfHomePlaces: 1,

@@ -738,7 +738,7 @@ describe('RoundRankingCalculator', () => {
         }
         createGames(structure.getFirstRoundNumber());
 
-        setScoresHelper(pouleOne);
+        setScoresMultipleSportsHelper(pouleOne);
 
         const roundRankingCalculator = new RoundRankingCalculator();
         const roundRankingItems = roundRankingCalculator.getItemsForPoule(pouleOne);
@@ -776,7 +776,7 @@ describe('RoundRankingCalculator', () => {
         }
         createGames(structure.getFirstRoundNumber());
 
-        setScoresHelper(pouleOne);
+        setScoresMultipleSportsHelper(pouleOne);
 
         const roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
         const roundRankingItems = roundRankingCalculator.getItemsForPoule(pouleOne);
@@ -799,7 +799,7 @@ describe('RoundRankingCalculator', () => {
     });
 });
 
-function setScoresHelper(poule: Poule) {
+function setScoresMultipleSportsHelper(poule: Poule) {
     setAgainstScoreSingle(poule, 1, 2, 6, 0); // V
     setAgainstScoreSingle(poule, 3, 4, 1, 0); // V
     setAgainstScoreSingle(poule, 1, 4, 0, 3); // S2

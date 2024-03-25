@@ -12,7 +12,7 @@ export class VerticalQualifyRuleCreator {
     constructor() {
     }
 
-    public createRules(fromRoundHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup) {
+    public createRules(fromRoundHorPoules: HorizontalPoule[], qualifyGroup: QualifyGroup): HorizontalPoule[] {
             
         const childRound = qualifyGroup.getChildRound();
         let childPlaces = this.getRoundPlaces(childRound);
@@ -21,26 +21,30 @@ export class VerticalQualifyRuleCreator {
             childPlaces.reverse();
         }
         
+        let fromHorPoule: HorizontalPoule|undefined;
+        let fromHorPoulePlaces: Place[] = [];
         let previous: VerticalSingleQualifyRule | undefined;
-        fromRoundHorPoules.forEach((fromHorPoule: HorizontalPoule) => {            
-            const fromHorPoulePlaces = fromHorPoule.getPlaces().slice();
-            while ( fromHorPoulePlaces.length > 0 && childPlaces.length > 0) {
-                // SingleRule
-                if( fromHorPoulePlaces.length <= childPlaces.length) {                
-                    const placeMappings = this.fromPlacesToByRankMappings(qualifyTarget, fromHorPoulePlaces, childPlaces);
-                    previous = new VerticalSingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previous );                    
-                } else {
-                    const toPlaces = [];
-                    let nrOfHorPoulePlaces = fromHorPoulePlaces.length;
-                    while (nrOfHorPoulePlaces-- > 0 && childPlaces.length > 0 ) {                        
-                        toPlaces.push(childPlaces.shift());
-                        // placeMappings.push(new QualifyPlaceMapping(fromHorPoulePlace, childPlace));
-                    }
-                    new VerticalMultipleQualifyRule(fromHorPoule, qualifyGroup, toPlaces );
+        while (childPlaces.length > 0 && fromRoundHorPoules.length > 0) {
+            if (fromHorPoulePlaces.length === 0) {
+                fromHorPoule = fromRoundHorPoules.shift();
+                fromHorPoulePlaces = fromHorPoule.getPlaces().slice();
+            }
+        
+            // SingleRule
+            if( fromHorPoulePlaces.length <= childPlaces.length) {                
+                const placeMappings = this.fromPlacesToByRankMappings(qualifyTarget, fromHorPoulePlaces, childPlaces);
+                previous = new VerticalSingleQualifyRule(fromHorPoule, qualifyGroup, placeMappings, previous );                    
+            } else {
+                const toPlaces = [];
+                let nrOfHorPoulePlaces = fromHorPoulePlaces.length;
+                while (nrOfHorPoulePlaces-- > 0 && childPlaces.length > 0 ) {                        
+                    toPlaces.push(childPlaces.shift());
+                    // placeMappings.push(new QualifyPlaceMapping(fromHorPoulePlace, childPlace));
                 }
+                new VerticalMultipleQualifyRule(fromHorPoule, qualifyGroup, toPlaces );
             }   
-        });
-        // console.log(qualifyGroup.getFirstSingleRule());
+        };
+        return fromRoundHorPoules;      
     }
 
     protected getRoundPlaces(round: Round): Place[] {

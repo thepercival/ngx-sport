@@ -278,7 +278,7 @@ export class Round extends Identifiable {
     getPoule(number: number): Poule {
         const poule = this.getPoules().find(poule => poule.getNumber() === number);
         if (poule === undefined) {
-            throw Error('de poule kan niet gevonden worden');
+            throw Error('de poule kan niet gevonden worden.');
         }
         return poule;
     }
@@ -323,7 +323,7 @@ export class Round extends Identifiable {
     getPlace(placeLocation: PlaceLocation): Place {
         const place = this.getPoule(placeLocation.getPouleNr()).getPlace(placeLocation.getPlaceNr());
         if (place === undefined) {
-            throw Error('de poule kan niet gevonden worden');
+            throw Error('de plek kan niet gevonden worden');
         }
         return place;
     }

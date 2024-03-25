@@ -1,26 +1,10 @@
-import { AgainstSide, GameMode, JsonAgainstGame, GameState, PointsCalculation } from "../../../public-api";
+import { AgainstSide, JsonAgainstGame, GameState } from "../../../public-api";
 import { jsonVoetbal } from "../competition";
 
 export const jsonGames3Places: JsonAgainstGame[] = [
     {
         id: 0,
-        competitionSport: {
-            id: 0,
-            sport: jsonVoetbal,
-            gameMode: GameMode.Against,
-            nrOfHomePlaces: 1,
-            nrOfAwayPlaces: 1,
-            nrOfGamePlaces: 0,
-            nrOfH2H: 1,
-            nrOfGamesPerPlace: 0,
-            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
-            defaultWinPoints: 3,
-            defaultDrawPoints: 1,
-            defaultWinPointsExt: 2,
-            defaultDrawPointsExt: 1,
-            defaultLosePointsExt: 0,
-            fields: []
-        },
+        competitionSportId: jsonVoetbal.id,
         places: [
             {
                 id: 0,
@@ -50,23 +34,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
     },
     {
         id: 0,
-        competitionSport: {
-            id: 0,
-            sport: jsonVoetbal,
-            gameMode: GameMode.Against,
-            nrOfHomePlaces: 1,
-            nrOfAwayPlaces: 1,
-            nrOfGamePlaces: 0,
-            nrOfH2H: 1,
-            nrOfGamesPerPlace: 0,
-            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
-            defaultWinPoints: 3,
-            defaultDrawPoints: 1,
-            defaultWinPointsExt: 2,
-            defaultDrawPointsExt: 1,
-            defaultLosePointsExt: 0,
-            fields: []
-        },
+        competitionSportId: jsonVoetbal.id,
         places: [
             {
                 id: 0,
@@ -96,23 +64,7 @@ export const jsonGames3Places: JsonAgainstGame[] = [
     },
     {
         id: 0,
-        competitionSport: {
-            id: 0,
-            sport: jsonVoetbal,
-            gameMode: GameMode.Against,
-            nrOfHomePlaces: 1,
-            nrOfAwayPlaces: 1,
-            nrOfGamePlaces: 0,
-            nrOfH2H: 1,
-            nrOfGamesPerPlace: 0,
-            defaultPointsCalculation: PointsCalculation.AgainstGamePoints,
-            defaultWinPoints: 3,
-            defaultDrawPoints: 1,
-            defaultWinPointsExt: 2,
-            defaultDrawPointsExt: 1,
-            defaultLosePointsExt: 0,
-            fields: []
-        },
+        competitionSportId: jsonVoetbal.id,
         places: [
             {
                 id: 0,
