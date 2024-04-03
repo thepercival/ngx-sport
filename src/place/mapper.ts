@@ -19,9 +19,10 @@ export class PlaceMapper {
         }
         place.setId(json.id);
         place.setExtraPoints(json.extraPoints);
-        if (json.qualifiedPlace) {
+        if (json.qualifiedPlaceLocation) {
+            const qualifiedPlaceLocation = new PlaceLocation(json.qualifiedPlaceLocation.pouleNr, json.qualifiedPlaceLocation.placeNr);
             place.setQualifiedPlace(
-                poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(this.toLocation(json.qualifiedPlace))
+                poule.getRound().getParentQualifyGroup()?.getParentRound().getPlace(qualifiedPlaceLocation)
             );
         }
         return place;
@@ -32,13 +33,12 @@ export class PlaceMapper {
     }
 
     toJson(place: Place): JsonPlace {
-        const qualifiedPlace: Place | undefined = place.getQualifiedPlace();
         return {
             id: place.getId(),
             pouleNr: place.getPouleNr(),
             placeNr: place.getPlaceNr(),
             extraPoints: place.getExtraPoints(),
-            qualifiedPlace: qualifiedPlace ? this.toJson(qualifiedPlace) : undefined
+            qualifiedPlaceLocation: undefined
         };
     }
 

@@ -8,12 +8,12 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -38,12 +38,12 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Away
             }
         ],
@@ -68,12 +68,12 @@ export const jsonGames3Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlace: undefined },
+                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
                 side: AgainstSide.Away
             }
         ],

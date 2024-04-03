@@ -21,7 +21,7 @@ export class PlanningMapper {
         this.gameMapper.setPlaceMap(placeMap);
     }
 
-    toObject(jsonPoules: JsonPoule[], roundNumber: RoundNumber, sportMap: CompetitionSportMap): boolean {
+    toObject(jsonPoules: JsonPoule[], roundNumber: RoundNumber, competitionSportMap: CompetitionSportMap): boolean {
         const poules = roundNumber.getPoules(undefined);
         const complete = jsonPoules.every((jsonPoule: JsonPoule) => {
             const poule = poules.find((poule: Poule): boolean => {
@@ -30,22 +30,22 @@ export class PlanningMapper {
             if (poule === undefined) {
                 return false;
             }
-            return this.toPouleGames(jsonPoule, poule, sportMap);
+            return this.toPouleGames(jsonPoule, poule, competitionSportMap);
         });
         return jsonPoules.length > 0 && complete;
     }
 
-    protected toPouleGames(jsonPoule: JsonPoule, poule: Poule, sportMap: CompetitionSportMap): boolean {
+    protected toPouleGames(jsonPoule: JsonPoule, poule: Poule, competitionSportMap: CompetitionSportMap): boolean {
         if (jsonPoule.againstGames === undefined || jsonPoule.togetherGames === undefined) {
             return false;
         }
 
         jsonPoule.againstGames.forEach((jsonGame: JsonAgainstGame) => {
-            const competitionSport = sportMap[jsonGame.competitionSportId];
+            const competitionSport = competitionSportMap[jsonGame.competitionSportId];
             this.gameMapper.toNewAgainst(jsonGame, poule, competitionSport);
         });
         jsonPoule.togetherGames.forEach((jsonGame: JsonTogetherGame) => {
-            const competitionSport = sportMap[jsonGame.competitionSportId];
+            const competitionSport = competitionSportMap[jsonGame.competitionSportId];
             this.gameMapper.toNewTogether(jsonGame, poule, competitionSport);
         });
         return poule.getGames().length > 0;

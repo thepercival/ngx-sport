@@ -80,7 +80,7 @@ export class Competition extends Identifiable {
     }
 
     getSport(sport: Sport): CompetitionSport | undefined {
-        return this.sports.find(sportIt => sportIt.getSport() === sport);
+        return this.sports.find((competitionSport: CompetitionSport) => competitionSport.getSport() === sport);
     }
 
     hasMultipleSports(): boolean {

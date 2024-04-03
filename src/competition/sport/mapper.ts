@@ -101,11 +101,11 @@ export class CompetitionSportMapper {
     }
 
     getMap(competition: Competition): CompetitionSportMap {
-        const sportMap: CompetitionSportMap = {};
+        const competitionSportMap: CompetitionSportMap = {};
         competition.getSports().forEach((competitionSport: CompetitionSport) => {
-            sportMap[competitionSport.getId()] = competitionSport;
+            competitionSportMap[competitionSport.getId()] = competitionSport;
         });
-        return sportMap;
+        return competitionSportMap;
     }
 }
 

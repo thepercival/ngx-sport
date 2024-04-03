@@ -39,22 +39,22 @@ export class StructureMapper {
         });
         const structure = new Structure(categories, firstRoundNumber);
 
-        this.planningToObject(json, structure, competition, this.competitionSportMapper.getMap(competition))
+        this.planningToObject(json, structure, this.competitionSportMapper.getMap(competition))
         return structure;
     }
 
-    planningToObject(json: JsonStructure, structure: Structure, competition: Competition, sportMap: CompetitionSportMap): void {
+    planningToObject(json: JsonStructure, structure: Structure, competitionSportMap: CompetitionSportMap): void {
         this.initMaps(json.categories, structure.getRootRounds());
         this.planningMapper.setPlaceMap(this.placeMap);
-        this.planningToRoundNumber(structure.getFirstRoundNumber(), sportMap);
+        this.planningToRoundNumber(structure.getFirstRoundNumber(), competitionSportMap);
     }
 
-    protected planningToRoundNumber(roundNumber: RoundNumber, sportMap: CompetitionSportMap): void {
+    protected planningToRoundNumber(roundNumber: RoundNumber, competitionSportMap: CompetitionSportMap): void {
         const jsonPoules = this.poulesMap[roundNumber.getNumber()];
-        this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
+        this.planningMapper.toObject(jsonPoules, roundNumber, competitionSportMap);
         const nextRoundNumber = roundNumber.getNext();
         if (nextRoundNumber) {
-            this.planningToRoundNumber(nextRoundNumber, sportMap);
+            this.planningToRoundNumber(nextRoundNumber, competitionSportMap);
         }
     }
 

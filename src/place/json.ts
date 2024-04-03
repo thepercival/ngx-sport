@@ -4,5 +4,6 @@ export interface JsonPlace extends JsonPlaceLocation {
     id: number;
     name?: string;
     extraPoints: number;
-    qualifiedPlace: JsonPlace | undefined;
+    // qualifiedPlace: JsonPlace | undefined;
+    qualifiedPlaceLocation: JsonPlaceLocation | undefined;
 }
