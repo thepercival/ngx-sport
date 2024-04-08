@@ -8,24 +8,23 @@ import { JsonTogetherGamePlace } from './together/json';
 import { AgainstGamePlace } from './against';
 import { TogetherGamePlace } from './together';
 import { ScoreMapper } from '../../score/mapper';
-import { PlaceMapper } from '../../place/mapper';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GamePlaceMapper {
 
-    constructor(private scoreMapper: ScoreMapper, private placeMapper: PlaceMapper) { }
+    constructor(private scoreMapper: ScoreMapper) { }
 
     toAgainstObject(json: JsonAgainstGamePlace, game: AgainstGame): GamePlace {
-        const place = game.getPoule().getPlace(json.place.placeNr);
+        const place = game.getPoule().getPlace(json.placeNr);
         const gamePlace = new AgainstGamePlace(game, place, json.side);
         gamePlace.setId(json.id);
         return gamePlace;
     }
 
     toTogetherObject(json: JsonTogetherGamePlace, game: TogetherGame): GamePlace {
-        const place = game.getPoule().getPlace(json.place.placeNr);
+        const place = game.getPoule().getPlace(json.placeNr);
         const gamePlace = new TogetherGamePlace(game, place, json.gameRoundNumber);
         gamePlace.setId(json.id);
         json.scores.map(jsonScore => this.scoreMapper.toTogetherObject(jsonScore, gamePlace));
@@ -35,7 +34,7 @@ export class GamePlaceMapper {
     toJsonAgainst(gamePlace: AgainstGamePlace): JsonAgainstGamePlace {
         return {
             id: gamePlace.getId(),
-            place: this.placeMapper.toJson(gamePlace.getPlace()),
+            placeNr: gamePlace.getPlace().getPlaceNr(),
             side: gamePlace.getSide()
         };
     }
@@ -43,7 +42,7 @@ export class GamePlaceMapper {
     toJsonTogether(gamePlace: TogetherGamePlace): JsonTogetherGamePlace {
         const json = {
             id: gamePlace.getId(),
-            place: this.placeMapper.toJson(gamePlace.getPlace()),
+            placeNr: gamePlace.getPlace().getPlaceNr(),
             gameRoundNumber: gamePlace.getGameRoundNumber(),
             scores: []
         };

@@ -57,7 +57,7 @@ export function getFieldMapper(): FieldMapper {
 
 export function getGameMapper(): GameMapper {
     return new GameMapper(
-        new GamePlaceMapper(getScoreMapper(), new PlaceMapper()),
+        new GamePlaceMapper(getScoreMapper()),
         getFieldMapper(),
         getRefereeMapper(),
         getScoreMapper());
