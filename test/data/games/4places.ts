@@ -8,12 +8,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Away
             }
         ],
@@ -34,12 +34,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Away
             }
         ],
@@ -60,12 +60,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Away
             }
         ],
@@ -88,12 +88,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Away
             }
         ],
@@ -114,12 +114,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Away
             }
         ],
@@ -140,12 +140,12 @@ export const jsonGames4Places: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Away
             }
         ],
@@ -169,12 +169,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Away
             }
         ],
@@ -195,12 +195,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Away
             }
         ],
@@ -221,12 +221,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Away
             }
         ],
@@ -249,12 +249,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Away
             }
         ],
@@ -275,12 +275,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 1,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 3, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 3,
                 side: AgainstSide.Away
             }
         ],
@@ -301,12 +301,12 @@ export const jsonGames4PlacesMultipleSports: JsonAgainstGame[] = [
         places: [
             {
                 id: 0,
-                place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 2,
                 side: AgainstSide.Home
             },
             {
                 id: 0,
-                place: { placeNr: 4, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+                placeNr: 4,
                 side: AgainstSide.Away
             }
         ],

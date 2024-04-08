@@ -10,12 +10,12 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
     places: [
         {
             id: 0,
-            place: { placeNr: 1, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+            placeNr: 1,
             side: AgainstSide.Home
         },
         {
             id: 0,
-            place: { placeNr: 2, pouleNr: 1, id: 0, extraPoints: 0, qualifiedPlaceLocation: undefined },
+            placeNr: 2,
             side: AgainstSide.Away
         }
     ],
