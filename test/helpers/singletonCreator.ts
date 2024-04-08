@@ -79,14 +79,14 @@ export function getStructureMapper(): StructureMapper {
 export function getRoundNumberMapper(): RoundNumberMapper {
     return new RoundNumberMapper(
         new PlanningConfigMapper(),
-        new GameAmountConfigMapper(getCompetitionSportMapper()),
+        new GameAmountConfigMapper(),
     );
 }
 
 export function getRoundMapper(): RoundMapper {
     return new RoundMapper(
         new PouleMapper(new PlaceMapper()),
-        new ScoreConfigMapper(getCompetitionSportMapper()),
-        new AgainstQualifyConfigMapper(getCompetitionSportMapper())
+        new ScoreConfigMapper(),
+        new AgainstQualifyConfigMapper()
     );
 }

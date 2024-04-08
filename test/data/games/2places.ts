@@ -19,14 +19,10 @@ export const jsonGames2Places: JsonAgainstGame[] = [{
             side: AgainstSide.Away
         }
     ],
-    field: {
-        id: 1,
-        priority: 1,
-        name: '1'
-    },
+    fieldId: 1,
     state: GameState.Created,
     startDateTime: '2021-06-11T11:00:00.000000Z',
-    referee: undefined,
+    refereeId: undefined,
     refereeStructureLocation: undefined,
     scores: [],
     homeExtraPoints: 0,

@@ -79,8 +79,8 @@ export class Competition extends Identifiable {
         return this.sports.map((competitionSport: CompetitionSport) => competitionSport.getVariant());
     }
 
-    getSport(sport: Sport): CompetitionSport | undefined {
-        return this.sports.find((competitionSport: CompetitionSport) => competitionSport.getSport() === sport);
+    getSportById(id: string|number): CompetitionSport | undefined {
+        return this.sports.find((competitionSport: CompetitionSport) => competitionSport.getId() === id);
     }
 
     hasMultipleSports(): boolean {

@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 
 import { JsonAgainstQualifyConfig } from './json';
 import { Round } from '../group';
-import { CompetitionSportMapper } from '../../competition/sport/mapper';
 import { AgainstQualifyConfig } from '../againstConfig';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AgainstQualifyConfigMapper {
-    constructor(private competitionSportMapper: CompetitionSportMapper) { }
+    constructor() { }
 
     toObject(json: JsonAgainstQualifyConfig, round: Round, againstQualifyConfig?: AgainstQualifyConfig): AgainstQualifyConfig {
         if (againstQualifyConfig === undefined) {
-            const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, round.getCompetition());
+            const competitionSport = round.getCompetition().getSportById(json.competitionSportId);
+            if (competitionSport === undefined) {
+                throw new Error('competitionSport could not be found');
+            }
             againstQualifyConfig = new AgainstQualifyConfig(
                 competitionSport,
                 round,
@@ -38,7 +40,7 @@ export class AgainstQualifyConfigMapper {
     toJson(config: AgainstQualifyConfig): JsonAgainstQualifyConfig {
         return {
             id: config.getId(),
-            competitionSport: this.competitionSportMapper.toJson(config.getCompetitionSport()),
+            competitionSportId: config.getCompetitionSport().getId(),
             winPoints: config.getWinPoints(),
             drawPoints: config.getDrawPoints(),
             winPointsExt: config.getWinPointsExt(),

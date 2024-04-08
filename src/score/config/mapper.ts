@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSportMapper } from '../../competition/sport/mapper';
 import { ScoreConfig } from '../config';
 import { Round } from '../../qualify/group';
 import { JsonScoreConfig } from './json';
@@ -9,12 +8,12 @@ import { JsonScoreConfig } from './json';
 })
 export class ScoreConfigMapper {
 
-    constructor(private competitionSportMapper: CompetitionSportMapper) {
+    constructor() {
     }
 
     toObject(json: JsonScoreConfig, round: Round, config?: ScoreConfig, previous?: ScoreConfig): ScoreConfig {
         if (config === undefined) {
-            const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, round.getCompetition());
+            const competitionSport = round.getCompetition().getSportById(json.competitionSportId);
             config = new ScoreConfig(competitionSport, round, previous);
         }
         config.setId(json.id);
@@ -32,7 +31,7 @@ export class ScoreConfigMapper {
         const nextScoreConfig = scoreConfig.getNext();
         return {
             id: scoreConfig.getId(),
-            competitionSport: this.competitionSportMapper.toJson(scoreConfig.getCompetitionSport()),
+            competitionSportId: scoreConfig.getCompetitionSport().getId(),
             direction: scoreConfig.getDirection(),
             maximum: scoreConfig.getMaximum(),
             enabled: scoreConfig.getEnabled(),

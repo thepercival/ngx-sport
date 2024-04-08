@@ -7,7 +7,7 @@ import { JsonTogetherGame } from './together/json';
 import { JsonAgainstGame } from './against/json';
 import { AgainstGame } from './against';
 import { TogetherGame } from './together';
-import { CompetitionSportMap, CompetitionSportMapper } from '../competition/sport/mapper';
+import { CompetitionSportMap } from '../competition/sport/mapper';
 import { ScoreMapper } from '../score/mapper';
 import { FieldMapper } from '../field/mapper';
 import { RefereeMapper } from '../referee/mapper';
@@ -64,11 +64,11 @@ export class GameMapper {
     protected toNewHelper(json: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame): AgainstGame | TogetherGame {
         game.setId(json.id);
         game.setState(json.state);
-        if (json.field) {
-            game.setField(this.fieldMapper.getFromCompetitionSport(json.field.id, game.getCompetitionSport()));
+        if (json.fieldId) {
+            game.setField(this.fieldMapper.getFromCompetitionSport(json.fieldId, game.getCompetitionSport()));
         }
-        if (json.referee) {
-            game.setReferee(this.refereeMapper.getFromCompetition(json.referee.id, game.getCompetition()));
+        if (json.refereeId) {
+            game.setReferee(this.refereeMapper.getFromCompetition(json.refereeId, game.getCompetition()));
         }
 
         if (json.refereeStructureLocation) {
@@ -143,8 +143,8 @@ export class GameMapper {
             places: game.getAgainstPlaces().map(gamePlace => this.gamePlaceMapper.toJsonAgainst(gamePlace)),
             competitionSportId: game.getCompetitionSport().getId(),
             batchNr: game.getBatchNr(),
-            field: field ? this.fieldMapper.toJson(field) : undefined,
-            referee: referee ? this.refereeMapper.toJson(referee) : undefined,
+            fieldId: field?.getId(),
+            refereeId: referee?.getId(),
             state: game.getState(),
             refereeStructureLocation: refereePlace ? refereePlace.getStructureLocation() : undefined,
             startDateTime: game.getStartDateTime()?.toISOString(),
@@ -164,8 +164,8 @@ export class GameMapper {
             places: game.getTogetherPlaces().map(gamePlace => this.gamePlaceMapper.toJsonTogether(gamePlace)),
             competitionSportId: game.getCompetitionSport().getId(),
             batchNr: game.getBatchNr(),
-            field: field ? this.fieldMapper.toJson(field) : undefined,
-            referee: referee ? this.refereeMapper.toJson(referee) : undefined,
+            fieldId: field?.getId(),
+            refereeId: referee?.getId(),
             state: game.getState(),
             refereeStructureLocation: refereePlace ? refereePlace.getStructureLocation() : undefined,
             startDateTime: game.getStartDateTime()?.toISOString()

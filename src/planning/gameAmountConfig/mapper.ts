@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CompetitionSportMapper } from '../../competition/sport/mapper';
 
 import { RoundNumber } from '../../round/number';
 import { GameAmountConfig } from '../gameAmountConfig';
@@ -8,11 +7,14 @@ import { JsonGameAmountConfig } from './json';
     providedIn: 'root'
 })
 export class GameAmountConfigMapper {
-    constructor(private competitionSportMapper: CompetitionSportMapper) { }
+    constructor() { }
 
     toObject(json: JsonGameAmountConfig, roundNumber: RoundNumber, config?: GameAmountConfig): GameAmountConfig {
         if (config === undefined) {
-            const competitionSport = this.competitionSportMapper.toObject(json.competitionSport, roundNumber.getCompetition());
+            const competitionSport = roundNumber.getCompetition().getSportById(json.competitionSportId);
+            if (competitionSport === undefined) {
+                throw new Error('competitionSport could not be found');
+            }
             const newConfig = new GameAmountConfig(competitionSport, roundNumber, json.amount);
             config = newConfig;
         }
@@ -24,7 +26,7 @@ export class GameAmountConfigMapper {
     toJson(config: GameAmountConfig): JsonGameAmountConfig {
         return {
             id: config.getId(),
-            competitionSport: this.competitionSportMapper.toJson(config.getCompetitionSport()),
+            competitionSportId: config.getCompetitionSport().getId(),
             amount: config.getAmount()
         };
     }
