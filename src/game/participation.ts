@@ -4,7 +4,6 @@ import { TogetherGamePlace } from './place/together';
 
 export class GameParticipation extends Identifiable {
 
-
     constructor(protected gamePlace: TogetherGamePlace | AgainstGamePlace, protected gameRoundNumber: number) {
         super();
         gamePlace.getParticipations().push(this);
@@ -13,8 +12,4 @@ export class GameParticipation extends Identifiable {
     getGamePlace(): TogetherGamePlace | AgainstGamePlace {
         return this.gamePlace;
     }
-
-    // getScores(): TogetherScore[] {
-    //     return this.scores;
-    // }
 }
