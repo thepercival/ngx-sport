@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import { getCompetitionMapper, getStructureEditor } from '../../../helpers/singletonCreator';
 import { jsonBaseCompetition } from '../../../data/competition';
 import { createGames } from '../../../helpers/gamescreator';
-import { EndRankingCalculator, QualifyDistribution, QualifyService, QualifyTarget, StartLocationMap } from '../../../../public-api';
+import { EndRankingCalculator, QualifyDistribution, QualifyService, QualifyTarget, StartLocation, StartLocationMap, Team, TeamCompetitor } from '../../../../public-api';
 import { createTeamCompetitors } from '../../../helpers/teamcompetitorscreator';
 import { setAgainstScoreSingle } from '../../../helpers/setscores';
 import { createPlanningConfigNoTime } from '../../../helpers/planningConfigCreator';
@@ -371,5 +371,162 @@ describe('EndRankingCalculator', () => {
         expect(startLocation.getPouleNr()).to.equal(3);
         expect(startLocation.getPlaceNr()).to.equal(4);
         
+    });
+
+    it('2 roundnumbers, [3,3] => (W[2,2],(L[2]) VERTICAL', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+        const association = competition.getAssociation();
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [3, 3], createPlanningConfigNoTime());
+        
+        // const competitorMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
+        new TeamCompetitor(competition, new StartLocation(1, 1, 1), new Team(association, 'zes'));
+        new TeamCompetitor(competition, new StartLocation(1, 1, 2), new Team(association, 'vier'));
+        new TeamCompetitor(competition, new StartLocation(1, 1, 3), new Team(association, 'twee'));
+        new TeamCompetitor(competition, new StartLocation(1, 2, 1), new Team(association, 'vijf'));
+        new TeamCompetitor(competition, new StartLocation(1, 2, 2), new Team(association, 'drie'));
+        new TeamCompetitor(competition, new StartLocation(1, 2, 3), new Team(association, 'een'));
+
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
+
+        const winnersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2,2], QualifyDistribution.Vertical);
+        const losersRound = structureEditor.addChildRound(rootRound, QualifyTarget.Losers, [2]);
+
+        //(new StructureOutput()).toConsole(structure, console);
+
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
+        createGames(structure.getFirstRoundNumber());
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 2);
+        setAgainstScoreSingle(pouleOne, 1, 3, 1, 3);
+        setAgainstScoreSingle(pouleOne, 2, 3, 2, 3);
+
+        setAgainstScoreSingle(pouleTwo, 1, 2, 2, 4);
+        setAgainstScoreSingle(pouleTwo, 1, 3, 2, 6);
+        setAgainstScoreSingle(pouleTwo, 2, 3, 4, 6);
+
+        const secondRoundNumber = structure.getFirstRoundNumber().getNext();
+        expect(secondRoundNumber).to.not.equal(undefined);
+        if (!secondRoundNumber) {
+            return;
+        }
+        createGames(secondRoundNumber);
+
+        const winnersPoule1 = winnersRound.getPoule(1);
+        expect(winnersPoule1).to.not.equal(undefined);
+        if (!winnersPoule1) {
+            return;
+        }
+        setAgainstScoreSingle(winnersPoule1, 1, 2, 1, 0);
+
+        const winnersPoule2 = winnersRound.getPoule(2);
+        expect(winnersPoule2).to.not.equal(undefined);
+        if (!winnersPoule2) {
+            return;
+        }
+        setAgainstScoreSingle(winnersPoule2, 1, 2, 1, 0);
+
+        const losersPoule1 = losersRound.getPoule(1);
+        expect(losersPoule1).to.not.equal(undefined);
+        if (!losersPoule1) {
+            return;
+        }
+        setAgainstScoreSingle(losersPoule1, 1, 2, 0, 1);       
+
+        const qualifyService = new QualifyService(rootRound);
+        qualifyService.setQualifiers();
+
+        const rankingService = new EndRankingCalculator(defaultCat);
+        const items = rankingService.getItems();
+
+        const startLocationMap = new StartLocationMap(competition.getTeamCompetitors());
+        
+        const startLocationTmp = losersPoule1.getPlace(1).getStartLocation();
+        expect(startLocationTmp).to.not.equal(undefined);
+        const competitorTmp = startLocationMap.getCompetitor(startLocationTmp);
+        expect(competitorTmp).to.not.equal(undefined);
+        expect(competitorTmp.getName()).to.equal('zes');
+
+        let rank1 = items.shift();
+        expect(rank1).to.not.equal(undefined);
+        expect(rank1.getUniqueRank()).to.equal(1);
+        let startLocation = rank1.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(3);
+
+        const competitor1 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor1).to.not.equal(undefined);
+        expect(competitor1.getName()).to.equal('een');
+
+        let rank2 = items.shift();
+        expect(rank2).to.not.equal(undefined);
+        expect(rank2.getUniqueRank()).to.equal(2);
+        startLocation = rank2.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(3);
+
+        const competitor2 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor2).to.not.equal(undefined);
+        expect(competitor2.getName()).to.equal('twee');
+
+        let rank3 = items.shift();
+        expect(rank3).to.not.equal(undefined);
+        expect(rank3.getUniqueRank()).to.equal(3);
+        startLocation = rank3.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(2);
+
+        const competitor3 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor3).to.not.equal(undefined);
+        expect(competitor3.getName()).to.equal('drie');
+
+        let rank4 = items.shift();
+        expect(rank4).to.not.equal(undefined);
+        expect(rank4.getUniqueRank()).to.equal(4);
+        startLocation = rank4.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(2);
+
+        const competitor4 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor4).to.not.equal(undefined);
+        expect(competitor4.getName()).to.equal('vier');
+
+        let rank5 = items.shift();
+        expect(rank5).to.not.equal(undefined);
+        expect(rank5.getUniqueRank()).to.equal(5);
+        startLocation = rank5.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(2);
+        expect(startLocation.getPlaceNr()).to.equal(1);
+
+        const competitor5 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor5).to.not.equal(undefined);
+        expect(competitor5.getName()).to.equal('vijf');
+
+        let rank6 = items.shift();
+        expect(rank6).to.not.equal(undefined);
+        expect(rank6.getUniqueRank()).to.equal(6);
+        startLocation = rank6.getStartLocation();
+        expect(startLocation).to.not.equal(undefined);
+        expect(startLocation.getPouleNr()).to.equal(1);
+        expect(startLocation.getPlaceNr()).to.equal(1);
+
+        const competitor6 = startLocationMap.getCompetitor(startLocation);
+        expect(competitor6).to.not.equal(undefined);
+        expect(competitor6.getName()).to.equal('zes');
+
     });
 });
