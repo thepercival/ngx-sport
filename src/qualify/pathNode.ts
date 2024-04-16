@@ -4,13 +4,29 @@ export class QualifyPathNode {
     // private next: QualifyPathNode | undefined;
 
     constructor(private qualifyTarget: QualifyTarget | undefined, private qualifyGroupNumber: number, private previous?: QualifyPathNode) {
-
+        
     }
 
     createNext(qualifyTarget: QualifyTarget, qualifyGroupNumber: number): QualifyPathNode {
         const path = new QualifyPathNode(qualifyTarget, qualifyGroupNumber, this);
         // this.next = path;
         return path;
+    }
+
+    getPrevious(): QualifyPathNode|undefined {
+        return this.previous;
+    }
+
+    hasPrevious(): boolean {
+        return this.previous !== undefined;
+    }
+
+    getQualifyTarget(): QualifyTarget|undefined {
+        return this.qualifyTarget;
+    }
+
+    getQualifyGroupNumber(): number {
+        return this.qualifyGroupNumber;
     }
 
     pathToString(): string {
