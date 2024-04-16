@@ -10,9 +10,9 @@ export class QualifyPathNodeMapper {
     constructor() {
     }
 
-    toObject(pathNodeAsString: string): QualifyPathNode|undefined {
+    toObject(pathNodeAsString: string): QualifyPathNode {
         if (pathNodeAsString.length === 0) {
-            return undefined;
+            throw new Error('empty PathNode in StructureLocation');
         }
         return this.createRootPathNode(pathNodeAsString);
     }

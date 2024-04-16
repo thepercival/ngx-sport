@@ -104,6 +104,7 @@ export * from './src/qualify/againstConfig/mapper';
 export * from './src/qualify/againstConfig/service';
 export * from './src/qualify/distribution';
 export * from './src/qualify/group';
+export * from './src/qualify/pathNode/mapper'; 
 export * from './src/qualify/reservationservice';
 export * from './src/qualify/rule/horizontal';
 export * from './src/qualify/rule/horizontal/multiple';
