@@ -4,6 +4,7 @@ import { Poule } from './poule';
 import { HorizontalPoule } from './poule/horizontal';
 import { Round } from './qualify/group';
 import { QualifyTarget } from './qualify/target';
+import { StructureLocation } from './structure/location';
 
 export class Place extends PlaceLocation {
     protected id: number = 0;
@@ -36,8 +37,12 @@ export class Place extends PlaceLocation {
         return this.getRound().getPathNode().pathToString();
     }
 
-    getStructureLocation(): string {
-        return this.getPoule().getStructureLocation() + '.' + this.getPlaceNr();
+    getStructureLocation(): StructureLocation {
+        return new StructureLocation(
+            this.poule.getRound().getCategory().getNumber(),
+            this.poule.getRound().getPathNode(),
+            new PlaceLocation(this.pouleNr, this.placeNr)
+        );
     }
 
     private getHorizontalNumber(qualifyTarget: QualifyTarget): number {

@@ -18,6 +18,8 @@ import { AgainstVariant } from '../sport/variant/against';
 import { JsonTogetherGamePlace } from './place/together/json';
 import { JsonTogetherScore } from '../score/together/json';
 import { TogetherGamePlace } from './place/together';
+import { StructureLocation } from '../structure/location';
+import { StructureLocationMapper } from '../structure/location/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +31,8 @@ export class GameMapper {
         private gamePlaceMapper: GamePlaceMapper,
         private fieldMapper: FieldMapper,
         private refereeMapper: RefereeMapper,
-        private scoreMapper: ScoreMapper
+        private scoreMapper: ScoreMapper,
+        private structureLocationMapper: StructureLocationMapper
     ) { }
 
     setPlaceMap(placeMap: PlaceMap) {
@@ -72,17 +75,18 @@ export class GameMapper {
         }
 
         if (json.refereeStructureLocation) {
-            game.setRefereePlace(this.getRefereePlace(json.refereeStructureLocation));
+            const refereeStructureLocation = this.structureLocationMapper.toObject(json.refereeStructureLocation);
+            game.setRefereePlace(this.getRefereePlace(refereeStructureLocation));
         }
         game.setStartDateTime(new Date(json.startDateTime));
         return game;
     }
 
-    protected getRefereePlace(refereeStructureLocation: string): Place | undefined {
+    protected getRefereePlace(refereeStructureLocation: StructureLocation): Place | undefined {
         if (this.placeMap === undefined) {
             return undefined;
         }
-        return this.placeMap[refereeStructureLocation];
+        return this.placeMap[refereeStructureLocation.toString()];
     }
 
     toExisting(json: JsonTogetherGame | JsonAgainstGame, game: TogetherGame | AgainstGame): TogetherGame | AgainstGame {
@@ -138,6 +142,10 @@ export class GameMapper {
         const field = game.getField();
         const referee = game.getReferee();
         const refereePlace = game.getRefereePlace();
+        let refereeStructureLocation = undefined;
+        if ( refereePlace ) {
+            refereeStructureLocation = this.structureLocationMapper.toJson(refereePlace.getStructureLocation());
+        }
         return {
             id: game.getId(),
             places: game.getAgainstPlaces().map(gamePlace => this.gamePlaceMapper.toJsonAgainst(gamePlace)),
@@ -146,7 +154,7 @@ export class GameMapper {
             fieldId: field?.getId(),
             refereeId: referee?.getId(),
             state: game.getState(),
-            refereeStructureLocation: refereePlace ? refereePlace.getStructureLocation() : undefined,
+            refereeStructureLocation: refereeStructureLocation,
             startDateTime: game.getStartDateTime()?.toISOString(),
             scores: game.getScores().map(score => this.scoreMapper.toJsonAgainst(score)),
             gameRoundNumber: game.getGameRoundNumber(),
@@ -159,6 +167,10 @@ export class GameMapper {
         const field = game.getField();
         const referee = game.getReferee();
         const refereePlace = game.getRefereePlace();
+        let refereeStructureLocation = undefined;
+        if (refereePlace) {
+            refereeStructureLocation = this.structureLocationMapper.toJson(refereePlace.getStructureLocation());
+        }
         return {
             id: game.getId(),
             places: game.getTogetherPlaces().map(gamePlace => this.gamePlaceMapper.toJsonTogether(gamePlace)),
@@ -167,7 +179,7 @@ export class GameMapper {
             fieldId: field?.getId(),
             refereeId: referee?.getId(),
             state: game.getState(),
-            refereeStructureLocation: refereePlace ? refereePlace.getStructureLocation() : undefined,
+            refereeStructureLocation: refereeStructureLocation,
             startDateTime: game.getStartDateTime()?.toISOString()
         };
     }

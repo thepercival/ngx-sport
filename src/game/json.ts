@@ -1,4 +1,5 @@
 import { JsonIdentifiable } from '../identifiable/json';
+import { JsonStructureLocation } from '../structure/location/json';
 import { GameState } from './state';
 
 export interface JsonGame extends JsonIdentifiable {
@@ -8,5 +9,5 @@ export interface JsonGame extends JsonIdentifiable {
     refereeId: number | string | undefined;
     state: GameState;
     startDateTime: string;
-    refereeStructureLocation: string | undefined;
+    refereeStructureLocation: JsonStructureLocation | undefined;
 }

@@ -95,7 +95,7 @@ export class StructureMapper {
         rounds.forEach((round: Round) => {
             round.getPoules().forEach((poule: Poule) => {
                 poule.getPlaces().forEach((place: Place) => {
-                    this.placeMap[place.getStructureLocation()] = place;
+                    this.placeMap[place.getStructureLocation().toString()] = place;
                 });
             });
             this.initPlaceMap(round.getChildren());
