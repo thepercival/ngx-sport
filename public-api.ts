@@ -163,6 +163,7 @@ export * from './src/sport/variant/withPoule/equallyAssignCalculator';
 export * from './src/structure';
 export * from './src/structure/cell';
 export * from './src/structure/editor';
+export * from './src/structure/location/mapper';
 export * from './src/structure/mapper';
 export * from './src/structure/json';
 export * from './src/structure/placeRanges';

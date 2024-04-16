@@ -1,7 +1,8 @@
-import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper, CategoryMapper, CompetitionSportEditor } from "../../public-api";
+import { AssociationMapper, CompetitionMapper, CompetitionSportMapper, FieldMapper, GameAmountConfigService, GameMapper, GamePlaceMapper, LeagueMapper, PlaceMapper, PlaceRange, PlaceRanges, PlanningConfigMapper, PlanningMapper, AgainstQualifyConfigService, RefereeMapper, ScoreConfigService, ScoreMapper, SeasonMapper, SportMapper, StructureEditor, TeamCompetitorMapper, TeamMapper, StructureMapper, RoundNumberMapper, RoundMapper, CategoryMapper, CompetitionSportEditor, StructureLocationMapper } from "../../public-api";
 import { GameAmountConfigMapper } from "../../src/planning/gameAmountConfig/mapper";
 import { PouleMapper } from "../../src/poule/mapper";
 import { AgainstQualifyConfigMapper } from "../../src/qualify/againstConfig/mapper";
+import { QualifyPathNodeMapper } from "../../src/qualify/pathNode/mapper";
 import { ScoreConfigMapper } from "../../src/score/config/mapper";
 import { StructureCellMapper } from "../../src/structure/cell/mapper";
 
@@ -60,7 +61,8 @@ export function getGameMapper(): GameMapper {
         new GamePlaceMapper(getScoreMapper()),
         getFieldMapper(),
         getRefereeMapper(),
-        getScoreMapper());
+        getScoreMapper(),
+        new StructureLocationMapper(new QualifyPathNodeMapper()));
 }
 
 export function getScoreMapper(): ScoreMapper {

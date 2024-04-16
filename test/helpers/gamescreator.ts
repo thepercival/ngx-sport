@@ -27,7 +27,7 @@ export function createGames(roundNumber: RoundNumber) {
         roundNumber.getRounds(undefined).forEach((round: Round) => {
             round.getPoules().forEach((poule: Poule) => {
                 poule.getPlaces().forEach((place: Place) => {
-                    placeMap[place.getStructureLocation()] = place;
+                    placeMap[place.getStructureLocation().toString()] = place;
                 });
             });
         });

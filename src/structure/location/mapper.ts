@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { JsonStructureLocation } from './json';
 import { StructureLocation } from '../location';
 import { PlaceLocation } from '../../place/location';
-import { QualifyPathNode } from '../../qualify/pathNode';
 import { QualifyPathNodeMapper } from '../../qualify/pathNode/mapper';
 
 @Injectable({
