@@ -16,6 +16,7 @@ export function createPlanningConfigNoTime(): JsonPlanningConfig {
         minutesAfter: 0,
         perPoule: false,
         selfReferee: SelfReferee.Disabled,
-        nrOfSimSelfRefs: 0
+        nrOfSimSelfRefs: 0,
+        bestLast: false
     }
 }

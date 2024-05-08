@@ -15,4 +15,5 @@ export interface JsonPlanningConfig extends JsonIdentifiable {
     perPoule: boolean;
     selfReferee: SelfReferee;
     nrOfSimSelfRefs: number;
+    bestLast: boolean;
 }

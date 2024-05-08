@@ -27,7 +27,8 @@ export class PlanningConfigMapper {
                 0,
                 false,
                 SelfReferee.Disabled,
-                0
+                0,
+                false
             );
         }
         return new PlanningConfig(
@@ -42,7 +43,8 @@ export class PlanningConfigMapper {
             json.minutesAfter,
             json.perPoule,
             json.selfReferee,
-            json.nrOfSimSelfRefs);
+            json.nrOfSimSelfRefs,
+            json.bestLast);
     }
 
     toJson(config: PlanningConfig): JsonPlanningConfig {
@@ -58,7 +60,8 @@ export class PlanningConfigMapper {
             minutesAfter: config.getMinutesAfter(),
             perPoule: config.getPerPoule(),
             selfReferee: config.getSelfReferee(),
-            nrOfSimSelfRefs: config.getNrOfSimSelfRefs()
+            nrOfSimSelfRefs: config.getNrOfSimSelfRefs(),
+            bestLast: config.getBestLast()
         };
     }
 }
