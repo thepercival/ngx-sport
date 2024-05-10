@@ -25,7 +25,8 @@ export class TeamCompetitorMapper {
 
     updateObject(json: JsonCompetitor, teamCompetitor: TeamCompetitor) {
         json.present ? teamCompetitor.setPresent(json.present) : undefined;
-        json.info ? teamCompetitor.setInfo(json.info) : undefined;
+        json.publicInfo ? teamCompetitor.setPublicInfo(json.publicInfo) : undefined;
+        json.privateInfo ? teamCompetitor.setPrivateInfo(json.privateInfo) : undefined;
     }
 
     toJson(teamCompetitor: TeamCompetitor): JsonTeamCompetitor {
@@ -33,7 +34,8 @@ export class TeamCompetitorMapper {
             id: teamCompetitor.getId(),
             name: teamCompetitor.getName(),
             present: teamCompetitor.getPresent(),
-            info: teamCompetitor.getInfo(),
+            publicInfo: teamCompetitor.getPublicInfo(),
+            privateInfo: teamCompetitor.getPrivateInfo(),
             categoryNr: teamCompetitor.getStartLocation().getCategoryNr(),
             pouleNr: teamCompetitor.getStartLocation().getPouleNr(),
             placeNr: teamCompetitor.getStartLocation().getPlaceNr(),

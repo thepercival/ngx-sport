@@ -4,7 +4,8 @@ import { Identifiable } from './identifiable';
 
 export class CompetitorBase extends Identifiable {
     protected present: boolean = false;
-    protected info: string | undefined;
+    protected publicInfo: string | undefined;
+    protected privateInfo: string | undefined;
 
     constructor(protected competition: Competition, protected startLocation: StartLocation) {
         super();
@@ -18,12 +19,20 @@ export class CompetitorBase extends Identifiable {
         this.present = present;
     }
 
-    getInfo(): string | undefined {
-        return this.info;
+    getPublicInfo(): string | undefined {
+        return this.publicInfo;
     }
 
-    setInfo(info: string): void {
-        this.info = info;
+    setPublicInfo(info: string): void {
+        this.publicInfo = info;
+    }
+
+    getPrivateInfo(): string | undefined {
+        return this.privateInfo;
+    }
+
+    setPrivateInfo(info: string): void {
+        this.privateInfo = info;
     }
 
     getCompetition(): Competition {
@@ -40,7 +49,8 @@ export interface Competitor {
     getId(): string | number;
     getName(): string;
     getPresent(): boolean;
-    getInfo(): string | undefined;
+    getPublicInfo(): string | undefined;
+    getPrivateInfo(): string | undefined;
     getCompetition(): Competition;
     getStartLocation(): StartLocation;
 }

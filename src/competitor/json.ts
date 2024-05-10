@@ -4,5 +4,6 @@ export interface JsonCompetitor extends JsonStartLocation {
     name: string;
     id: string | number;
     present?: boolean;
-    info?: string;
+    publicInfo?: string;
+    privateInfo?: string;
 }
