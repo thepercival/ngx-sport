@@ -3,19 +3,19 @@ import { StartLocation } from './competitor/startLocation';
 import { Identifiable } from './identifiable';
 
 export class CompetitorBase extends Identifiable {
-    protected registered: boolean = false;
+    protected present: boolean = false;
     protected info: string | undefined;
 
     constructor(protected competition: Competition, protected startLocation: StartLocation) {
         super();
     }
 
-    getRegistered(): boolean {
-        return this.registered;
+    getPresent(): boolean {
+        return this.present;
     }
 
-    setRegistered(registered: boolean): void {
-        this.registered = registered;
+    setPresent(present: boolean): void {
+        this.present = present;
     }
 
     getInfo(): string | undefined {
@@ -39,7 +39,7 @@ export class CompetitorBase extends Identifiable {
 export interface Competitor {
     getId(): string | number;
     getName(): string;
-    getRegistered(): boolean;
+    getPresent(): boolean;
     getInfo(): string | undefined;
     getCompetition(): Competition;
     getStartLocation(): StartLocation;
