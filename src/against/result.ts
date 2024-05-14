@@ -1,1 +1,1 @@
-export enum AgainstResult { Win = 1, Draw, Loss }
+export enum AgainstResult { Win = 'win', Draw = 'draw', Loss = 'loss' }
