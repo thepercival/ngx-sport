@@ -130,6 +130,7 @@ export class StructureEditor {
             roundNumber.setStructureCell(previousStructureCell)
             roundNumber.setStructureCell(structureCell)
         });        
+        
     }
 
     // with new numbers
