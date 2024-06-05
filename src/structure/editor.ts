@@ -111,6 +111,39 @@ export class StructureEditor {
         return category;
     }
 
+    public switchCategories(structure: Structure, activeCategory: Category, forcedCategory: Category): void {
+        
+
+        // STEP 1 : SWITCH NUMBERS
+        const activeNewNr = forcedCategory.getNumber()
+        forcedCategory.setNumber(activeCategory.getNumber())
+        activeCategory.setNumber(activeNewNr);
+
+        // STEP 2 : UPDATE STRUCTURE CATEGORY-INDEX
+        const categories: Category[] = structure.getCategories();
+        this.switchInArray(categories, activeCategory, forcedCategory);
+
+        // STEP 3 : UPDATE ROUNDNUMBER STRUCTURECELL-INDEX
+        structure.getRoundNumbers().forEach( (roundNumber: RoundNumber): void => {
+            const previousStructureCell = activeCategory.getStructureCell(roundNumber);
+            const structureCell = forcedCategory.getStructureCell(roundNumber);
+            roundNumber.setStructureCell(previousStructureCell)
+            roundNumber.setStructureCell(structureCell)
+        });        
+    }
+
+    // with new numbers
+    private switchInArray(categories: Category[], previousCategory: Category, category: Category): void {
+        const idx = categories.indexOf(category);
+        const idxPrev = categories.indexOf(previousCategory);
+
+        if (idx >= 0 && idxPrev >= 0) {
+            var tmp = categories[idx];
+            categories[idx] = categories[idxPrev];
+            categories[idxPrev] = tmp;
+        }
+    }
+
     addChildRound(
         parentRound: Round, 
         qualifyTarget: QualifyTarget, 

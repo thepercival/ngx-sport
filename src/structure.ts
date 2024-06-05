@@ -36,6 +36,12 @@ export class Structure {
         return this.categories[0];
     }
 
+    getPreviousCategory(category: Category): Category|undefined {
+        return this.getCategories().find((categoryIt: Category) => {
+            return categoryIt.getNumber() === (category.getNumber() - 1);
+        });
+    }
+
     getRootRounds(): Round[] {
         return this.categories.map((category: Category): Round => {
             return category.getRootRound();

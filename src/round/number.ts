@@ -86,12 +86,12 @@ export class RoundNumber {
         return this.number;
     }
 
-    getStructureCells(categoryMap?: CategoryMap): StructureCell[] {
+    getStructureCells(existingCategoryMap?: CategoryMap): StructureCell[] {
         const structureCells = this.convertStructureCellMapToArray();
-        if (categoryMap === undefined) {
+        if (existingCategoryMap === undefined) {
             return structureCells;
         }
-        return structureCells.filter((cell: StructureCell) => categoryMap.has(cell.getCategory().getNumber()));
+        return structureCells.filter((cell: StructureCell) => existingCategoryMap.has(cell.getCategory().getNumber()));
     }
 
     private convertStructureCellMapToArray(): StructureCell[] {
