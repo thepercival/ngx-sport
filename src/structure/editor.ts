@@ -125,12 +125,26 @@ export class StructureEditor {
 
         // STEP 3 : UPDATE ROUNDNUMBER STRUCTURECELL-INDEX
         structure.getRoundNumbers().forEach( (roundNumber: RoundNumber): void => {
-            const previousStructureCell = activeCategory.getStructureCell(roundNumber);
-            const structureCell = forcedCategory.getStructureCell(roundNumber);
-            roundNumber.setStructureCell(previousStructureCell)
-            roundNumber.setStructureCell(structureCell)
+            let previousStructureCell = undefined
+            try {
+                previousStructureCell = activeCategory.getStructureCell(roundNumber);
+            }
+            catch (e) {
+            }
+            let structureCell = undefined
+            try {
+                structureCell = forcedCategory.getStructureCell(roundNumber);
+            }
+            catch (e) {
+            }
+            if (previousStructureCell !== undefined ) {
+                roundNumber.setStructureCell(previousStructureCell)
+            }
+            if (structureCell !== undefined) {
+                roundNumber.setStructureCell(structureCell)
+            }
         });        
-        
+
     }
 
     // with new numbers
