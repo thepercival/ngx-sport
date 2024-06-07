@@ -35,6 +35,12 @@ export class RoundRankingCalculator {
         return new TogetherSportRoundRankingCalculator(competitionSport, this.gameStates);
     }
 
+    getPlacesForPoule(poule: Poule): Place[] {
+        return this.getItemsForPoule(poule).map((rankingItem: RoundRankingItem) => {
+            return rankingItem.getPlace();
+        });
+    }
+
     getItemsForPoule(poule: Poule): RoundRankingItem[] {
         return this.convertSportRoundRankingsToRoundItems(
             poule.getPlaces(),

@@ -12,6 +12,7 @@ import { VerticalSingleQualifyRule } from '../../qualify/rule/vertical/single';
 import { VerticalMultipleQualifyRule } from '../../qualify/rule/vertical/multiple';
 import { HorizontalMultipleQualifyRule } from '../../qualify/rule/horizontal/multiple';
 import { QualifyDistribution } from '../../qualify/distribution';
+import { Poule } from '../../poule';
 
 export class EndRankingCalculator {
 
@@ -104,19 +105,23 @@ export class EndRankingCalculator {
 
     protected getPoulesDropouts(round: Round, nrOfDropouts: NrOfDropOuts): EndRankingItem[] {
         let dropOutPlaces = [];
-        const places = round.getPlaces(Round.ORDER_POULE_NUMBER);
-        let nrOfDropoutPlaces = round.getNrOfDropoutPlaces();
-        
+        let nrOfDropoutPlaces = round.getNrOfDropoutPlaces();        
         const nrOfWinners = round.getNrOfPlacesChildren(QualifyTarget.Winners);
+        const roundRankingCalculator = new RoundRankingCalculator();
         
-        places.splice(0, nrOfWinners);
+        let rankedPlaces: Place[] = [];
+        const poules = round.getPoules();
+        poules.forEach((poule: Poule) => rankedPlaces = rankedPlaces.concat(roundRankingCalculator.getPlacesForPoule(poule)));
+
+        rankedPlaces.splice(0, nrOfWinners);
         while (nrOfDropouts.amount > 0 && nrOfDropoutPlaces.amount > 0) {
-            const placeToAdd = places.shift();
-            dropOutPlaces.push(placeToAdd);
+            const placeToAdd = rankedPlaces.shift();
+            if( placeToAdd !== undefined) {
+                dropOutPlaces.push(placeToAdd);
+            }
             nrOfDropouts.amount--;
             nrOfDropoutPlaces.amount--;
         }
-
         return dropOutPlaces.map((dropOutPlace: Place) => {
             return new EndRankingItem(this.currentRank, this.currentRank++, dropOutPlace.getStartLocation());
         });

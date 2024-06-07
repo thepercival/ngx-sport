@@ -529,4 +529,96 @@ describe('EndRankingCalculator', () => {
         expect(competitor6.getName()).to.equal('zes');
 
     });
+
+    it('2 roundnumbers, [2,2] => W[2,2] VERTICAL', () => {
+        const competition = getCompetitionMapper().toObject(jsonBaseCompetition);
+        const association = competition.getAssociation();
+        const structureEditor = getStructureEditor();
+        const structure = structureEditor.create(competition, [2, 2], createPlanningConfigNoTime());
+
+        // const competitorMap = new StartLocationMap(createTeamCompetitors(competition, structure.getRootRounds()));
+        new TeamCompetitor(competition, new StartLocation(1, 1, 1), new Team(association, 'een'));
+        new TeamCompetitor(competition, new StartLocation(1, 1, 2), new Team(association, 'twee'));
+        new TeamCompetitor(competition, new StartLocation(1, 2, 1), new Team(association, 'drie'));
+        new TeamCompetitor(competition, new StartLocation(1, 2, 2), new Team(association, 'vier'));
+
+
+        const defaultCat = structure.getSingleCategory();
+        const rootRound = defaultCat.getRootRound();
+
+        const winnersRound12 = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2], QualifyDistribution.Vertical);
+        const winnersRound34 = structureEditor.addChildRound(rootRound, QualifyTarget.Winners, [2], QualifyDistribution.Vertical);
+
+        //(new StructureOutput()).toConsole(structure, console);
+
+        const pouleOne = rootRound.getPoule(1);
+        expect(pouleOne).to.not.equal(undefined);
+        if (!pouleOne) {
+            return;
+        }
+        const pouleTwo = rootRound.getPoule(2);
+        expect(pouleTwo).to.not.equal(undefined);
+        if (!pouleTwo) {
+            return;
+        }
+        createGames(structure.getFirstRoundNumber());
+        setAgainstScoreSingle(pouleOne, 1, 2, 1, 0);
+        setAgainstScoreSingle(pouleTwo, 1, 2, 2, 0);
+
+        const secondRoundNumber = structure.getFirstRoundNumber().getNext();
+        expect(secondRoundNumber).to.not.equal(undefined);
+        if (!secondRoundNumber) {
+            return;
+        }
+        createGames(secondRoundNumber);
+
+        const winnersPoule12 = winnersRound12.getPoule(1);
+        expect(winnersPoule12).to.not.equal(undefined);
+        if (!winnersPoule12) {
+            return;
+        }
+        setAgainstScoreSingle(winnersPoule12, 1, 2, 0, 1);
+
+        const winnersPoule34 = winnersRound34.getPoule(1);
+        expect(winnersPoule34).to.not.equal(undefined);
+        if (!winnersPoule34) {
+            return;
+        }
+        setAgainstScoreSingle(winnersPoule34, 1, 2, 1, 0);
+
+        const qualifyService = new QualifyService(rootRound);
+        qualifyService.setQualifiers();
+
+        const rankingService = new EndRankingCalculator(defaultCat);
+        const items = rankingService.getItems();
+
+        let rank1 = items.shift();
+        expect(rank1).to.not.equal(undefined);
+        expect(rank1.getUniqueRank()).to.equal(1);
+        let startLocation1 = rank1.getStartLocation();
+        expect(startLocation1).to.not.equal(undefined);
+        expect(startLocation1.getStartId()).to.equal('1.1.1');
+
+        let rank2 = items.shift();
+        expect(rank2).to.not.equal(undefined);
+        expect(rank2.getUniqueRank()).to.equal(2);
+        let startLocation2 = rank2.getStartLocation();
+        expect(startLocation2).to.not.equal(undefined);
+        expect(startLocation2.getStartId()).to.equal('1.2.1');
+
+        let rank3 = items.shift();
+        expect(rank3).to.not.equal(undefined);
+        expect(rank3.getUniqueRank()).to.equal(3);
+        let startLocation3 = rank3.getStartLocation();
+        expect(startLocation3).to.not.equal(undefined);
+        expect(startLocation3.getStartId()).to.equal('1.1.2');
+
+        let rank4 = items.shift();
+        expect(rank4).to.not.equal(undefined);
+        expect(rank4.getUniqueRank()).to.equal(4);
+        let startLocation4 = rank4.getStartLocation();
+        expect(startLocation4).to.not.equal(undefined);
+        expect(startLocation4.getStartId()).to.equal('1.2.2');
+
+    });
 });
