@@ -619,6 +619,5 @@ describe('EndRankingCalculator', () => {
         let startLocation4 = rank4.getStartLocation();
         expect(startLocation4).to.not.equal(undefined);
         expect(startLocation4.getStartId()).to.equal('1.2.2');
-
     });
 });
