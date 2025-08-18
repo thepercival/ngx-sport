@@ -67,7 +67,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thepercival/ngx-sport.git"
+    "url": "git+https://github.com/thepercival/ngx-sport.git"
   },
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.json",
