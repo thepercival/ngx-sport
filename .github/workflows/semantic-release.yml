@@ -2,8 +2,8 @@ name: Release Actions
 on: 
   push:
     branches:
-      - main
-      
+      - master
+
 
 jobs:
   release:
