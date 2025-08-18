@@ -7,4 +7,5 @@ export interface JsonPlayer extends JsonPeriod {
     team: JsonTeam;
     line: number;
     person?: JsonPerson;
+    marketValue: number;
 }

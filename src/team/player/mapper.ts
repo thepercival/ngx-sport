@@ -15,10 +15,13 @@ export class PlayerMapper {
 
     toObject(json: JsonPlayer, association: Association, person: Person): Player {
         const player = new Player(
-            this.teamMapper.toObject(json.team, association),
-            person,
-            new Date(json.start), new Date(json.end),
-            json.line);
+          this.teamMapper.toObject(json.team, association),
+          person,
+          new Date(json.start),
+          new Date(json.end),
+          json.line,
+          json.marketValue
+        );
 
         player.setId(json.id);
 
@@ -27,11 +30,12 @@ export class PlayerMapper {
 
     toJson(player: Player): JsonPlayer {
         return {
-            id: player.getId(),
-            team: this.teamMapper.toJson(player.getTeam()),
-            start: player.getStartDateTime().toISOString(),
-            end: player.getEndDateTime().toISOString(),
-            line: player.getLine()
+          id: player.getId(),
+          team: this.teamMapper.toJson(player.getTeam()),
+          start: player.getStartDateTime().toISOString(),
+          end: player.getEndDateTime().toISOString(),
+          line: player.getLine(),
+          marketValue: player.getMarketValue()
         };
     }
 }
