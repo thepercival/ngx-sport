@@ -6,7 +6,6 @@
   "bugs": {
     "url": "https://github.com/thepercival/ngx-sport/issues"
   },
-  "version": "1.0.103",
   "sideAffects": false,
   "devDependencies": {
     "@angular-devkit/schematics": "^17.0.0",
