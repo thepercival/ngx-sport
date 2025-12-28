@@ -13,7 +13,7 @@ export class AgainstQualifyConfigService {
         private againstQualifyConfigMapper: AgainstQualifyConfigMapper*/) {
     }
 
-    createDefault(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
+    createFirst(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
         const sport = competitionSport.getSport();
         const config = new AgainstQualifyConfig(competitionSport, round,
             competitionSport.getDefaultPointsCalculation(),
@@ -25,6 +25,33 @@ export class AgainstQualifyConfigService {
         );
         return config;
     }
+
+    createByPrevious(previous: AgainstQualifyConfig, competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
+        const sport = competitionSport.getSport();
+        const config = new AgainstQualifyConfig(competitionSport, round,
+            previous.getPointsCalculation(),
+            previous.getWinPoints(),
+            previous.getDrawPoints(),
+            previous.getWinPointsExt(),
+            previous.getDrawPointsExt(),
+            previous.getLosePointsExt()
+        );
+        return config;
+    }
+
+    // createDefaultJsonFromPrevious(competitionSport: CompetitionSport): JsonAgainstQualifyConfig {
+    //     const sport = competitionSport.getSport();
+    //     const config: JsonAgainstQualifyConfig = {competitionSportId
+    //         new AgainstQualifyConfig(competitionSport, round,
+    //         competitionSport.getDefaultPointsCalculation(),
+    //         competitionSport.getDefaultWinPoints(),
+    //         competitionSport.getDefaultDrawPoints(),
+    //         competitionSport.getDefaultWinPointsExt(),
+    //         competitionSport.getDefaultDrawPointsExt(),
+    //         competitionSport.getDefaultLosePointsExt()
+    //     );
+    //     return config;
+    // }
 
     removeFromRound(competitionSport: CompetitionSport, round: Round) {
         const qualifyagainstConfig = round.getAgainstQualifyConfig(competitionSport);

@@ -51,19 +51,29 @@ export class CompetitionSportEditor {
         const amount = (variant instanceof AgainstH2h) ? variant.getNrOfH2H() : variant.getNrOfGamesPerPlace();
         new GameAmountConfig(competitionSport, structure.getFirstRoundNumber(), amount);
 
+        let previousCategory = undefined;
         structure.getCategories().forEach((category: Category) => {
-            this.addToCategory(competitionSport, category);
+            this.addToCategory(competitionSport, category, previousCategory);
+            previousCategory = category;
         });
     }
 
-    addToCategory(competitionSport: CompetitionSport, category: Category) {
+    addToCategory(competitionSport: CompetitionSport, category: Category, previousCategory: Category|undefined) {
 
         // const variant = competitionSport.getVariant();
         // const amount = (variant instanceof AgainstH2h) ? variant.getNrOfH2H() : variant.getNrOfGamesPerPlace();
         // new GameAmountConfig(competitionSport, structure.getFirstRoundNumber(), amount);
         const rootRound = category.getRootRound();
+        
         this.scoreConfigService.createDefault(competitionSport, rootRound);
-        this.againstQualifyConfigService.createDefault(competitionSport, rootRound);
+
+        if( previousCategory !== undefined){
+            const previousRootRound = previousCategory.getRootRound();
+            const previousQualifyConfig = previousRootRound.getValidAgainstQualifyConfig(competitionSport);
+            this.againstQualifyConfigService.createByPrevious(previousQualifyConfig, competitionSport, rootRound);
+        } else {            
+            this.againstQualifyConfigService.createFirst(competitionSport, rootRound);
+        }
     }
 
     removeFromStructure(competitionSport: CompetitionSport, structure: Structure) {

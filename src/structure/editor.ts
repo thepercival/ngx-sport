@@ -78,12 +78,13 @@ export class StructureEditor {
         abbreviation: string | undefined,
         number: number,        
         firstRoundNumber: RoundNumber,
-        pouleStructure: BalancedPouleStructure): Category {
-
+        pouleStructure: BalancedPouleStructure,
+        previousCategory: Category): Category 
+    {    
         // begin editing
         const category = this.addCategoryHelper(name, abbreviation, number, firstRoundNumber, pouleStructure);
         firstRoundNumber.getCompetitionSports().forEach((competitionSport: CompetitionSport) => {
-            this.competitionSportEditor.addToCategory(competitionSport, category);
+            this.competitionSportEditor.addToCategory(competitionSport, category, previousCategory);
         });
         // end editing
         const rootRound = category.getRootRound();
@@ -92,7 +93,9 @@ export class StructureEditor {
         return category;
     }
 
-    public addCategoryHelper(
+    
+
+    private addCategoryHelper(
         name: string,
         abbreviation: string | undefined,
         number: number,

@@ -832,7 +832,10 @@ describe('StructureEditor', () => {
         const category1 = structure.getSingleCategory();
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
 
-        const category2 = structureEditor.addCategory('j78', undefined, 2, firstRoundNumber, new BalancedPouleStructure(...[5]));
+        const categories = structure.getCategories();
+        const lastCategory = categories[categories.length-1];
+
+        const category2 = structureEditor.addCategory('j78', undefined, 2, firstRoundNumber, new BalancedPouleStructure(...[5]), lastCategory);
         structure.getCategories().push(category2);
 
         expect(firstRoundNumber.getGameAmountConfigs().length).to.equal(1);
@@ -850,5 +853,4 @@ describe('StructureEditor', () => {
 
         expect(lastPlaceChildRound.getPoule(1).getStructureLocation()).to.equal('2.1L1L1.1');
     });
-
 });
