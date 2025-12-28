@@ -6,7 +6,6 @@ import { RoundNumber } from '../round/number';
 import { Structure } from '../structure';
 import { VoetbalRange } from '../range';
 import { JsonPlanningConfig } from '../planning/config/json';
-import { Injectable } from '@angular/core';
 import { QualifyTarget } from '../qualify/target';
 import { BalancedPouleStructure } from '../poule/structure/balanced';
 import { PlanningConfigMapper } from '../planning/config/mapper';
@@ -24,9 +23,7 @@ import { CompetitionSportEditor } from '../competition/sport/editor';
 import { CompetitionSportGetter } from '../competition/sport/getter';
 import { VerticalSingleQualifyRule } from '../qualify/rule/vertical/single';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class StructureEditor {
     private horPouleCreator: HorizontalPouleCreator;
     private rulesCreator: QualifyRuleCreator;
@@ -35,8 +32,7 @@ export class StructureEditor {
 
     constructor(
         private competitionSportEditor: CompetitionSportEditor,
-        private planningConfigMapper: PlanningConfigMapper/*,
-        @Inject('placeRanges') private placeRanges: PlaceRanges*/) {
+        private planningConfigMapper: PlanningConfigMapper) {
         this.horPouleCreator = new HorizontalPouleCreator();
         this.rulesCreator = new QualifyRuleCreator();
         this.removalValidator = new RemovalValidator();

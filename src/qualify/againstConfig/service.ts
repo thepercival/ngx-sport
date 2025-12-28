@@ -1,16 +1,12 @@
-import { Injectable } from '@angular/core';
 
 import { CompetitionSport } from '../../competition/sport';
 import { AgainstQualifyConfig } from '../againstConfig';
 import { Round } from '../group';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class AgainstQualifyConfigService {
 
-    constructor(/*private competitionSportMapper: CompetitionSportMapper,
-        private againstQualifyConfigMapper: AgainstQualifyConfigMapper*/) {
+    constructor() {
     }
 
     createFirst(competitionSport: CompetitionSport, round: Round): AgainstQualifyConfig {
