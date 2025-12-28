@@ -25,6 +25,9 @@ jobs:
           # if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm ci && npm run build && npm run test
       - run: npx semantic-release
         env:
