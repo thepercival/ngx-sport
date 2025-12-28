@@ -23,11 +23,10 @@ jobs:
       #     known_hosts: ${{secrets.KNOWN_HOSTS}}
           # config: #{{ secrets.CONFIG }} # ssh_config; optional
           # if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - run: npm ci && npm run build && npm run test
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
           
